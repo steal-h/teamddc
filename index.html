@@ -1,0 +1,39 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex"><title>TEAM DDC</title><link rel="icon" href="favicon.ico">
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#2B3022;color:#EEE8D5;font:16px Pretendard,'Malgun Gothic',sans-serif}
+form{background:#353B2A;border:1px solid #4A5038;border-radius:8px;padding:28px;display:grid;gap:12px;width:min(320px,90vw)}h1{margin:0;color:#F2A900;font-size:22px}
+input,button{font:inherit;padding:10px 12px;border-radius:6px;border:1px solid #4A5038;background:#2B3022;color:#EEE8D5}button{background:#F2A900;color:#14170F;font-weight:700;border:0;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}p{margin:0;color:#B7B39C;font-size:14px}.err{color:#FF8A7A}</style></head><body>
+<form id="f"><h1>TEAM DDC 시상식</h1><p>관리자에게 받은 공유 비밀번호를 입력하세요. 한 번 입력하면 이 브라우저에서는 다시 묻지 않아요.</p>
+<p class="err" id="err" hidden></p><input id="pw" type="password" autocomplete="current-password" aria-label="공유 비밀번호" required autofocus><button id="go">들어가기</button></form>
+<script>
+const $=s=>document.querySelector(s);
+const showErr=m=>{const e=$('#err');e.textContent=m;e.hidden=!m;};
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('ddc-view',1);r.onupgradeneeded=()=>r.result.createObjectStore('k');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
+async function idbPut(k,v){const d=await idb();return new Promise((res,rej)=>{const t=d.transaction('k','readwrite');t.objectStore('k').put(v,k);t.oncomplete=res;t.onerror=()=>rej(t.error);});}
+async function idbGet(k){const d=await idb();return new Promise(res=>{const r=d.transaction('k').objectStore('k').get(k);r.onsuccess=()=>res(r.result||null);r.onerror=()=>res(null);});}
+if(!window.isSecureContext||!window.crypto?.subtle||!('serviceWorker' in navigator)){showErr('이 브라우저(또는 시크릿·비공개 창)에서는 열 수 없어요. 일반 창에서 https 주소로 열어 주세요.');$('#go').disabled=true;}
+async function enter(){
+  const reg=await navigator.serviceWorker.register('sw.js');
+  await navigator.serviceWorker.ready;
+  (reg.active||navigator.serviceWorker.controller)?.postMessage('reset');
+  location.replace('app.html');
+}
+(async()=>{ if(location.search.includes('r=1')||$('#go').disabled) return;
+  try{ if(await idbGet('key')&&navigator.serviceWorker.controller) location.replace('app.html'); }catch{} })();
+$('#f').onsubmit=async e=>{
+  e.preventDefault(); showErr(''); const b=$('#go'); b.disabled=true; b.textContent='확인하는 중...';
+  try{
+    const meta=await (await fetch('meta.json',{cache:'no-cache'})).json();
+    const salt=Uint8Array.from(atob(meta.salt),c=>c.charCodeAt(0));
+    const base=await crypto.subtle.importKey('raw',new TextEncoder().encode($('#pw').value.normalize('NFC')),'PBKDF2',false,['deriveBits']);
+    const bits=await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt,iterations:meta.iter},base,512);
+    const key=await crypto.subtle.importKey('raw',bits.slice(0,32),'AES-GCM',false,['decrypt']);
+    const m=new Uint8Array(await (await fetch('m.bin',{cache:'no-cache'})).arrayBuffer());
+    try{ await crypto.subtle.decrypt({name:'AES-GCM',iv:m.slice(0,12)},key,m.slice(12)); }
+    catch{ showErr('비밀번호가 맞지 않아요.'); b.disabled=false; b.textContent='들어가기'; return; }
+    await idbPut('key',key);
+    await enter();
+  }catch(err){ showErr('열지 못했어요: '+(err.message||err)); b.disabled=false; b.textContent='들어가기'; }
+};
+</script></body></html>
