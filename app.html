@@ -33,6 +33,11 @@ button,input,select{font:inherit;color:inherit}
 .brand b{font:400 40px/0.95 var(--num);color:var(--accent)}
 .brand span{font:400 22px/1 var(--display)}
 .nav{display:flex;flex-wrap:wrap;gap:8px}
+/* 창이 좁아 제목 아래로 메뉴가 내려가면: 제목과 메뉴를 가운데로 */
+.top.stacked{flex-direction:column;align-items:center;text-align:center;gap:12px}
+.top.stacked .brand{justify-content:center}
+.top.stacked .nav{justify-content:center}
+.cards-head.stacked{justify-content:center;text-align:center}.cards-head.stacked p{flex-basis:100%;order:3}
 .btn{border:1px solid var(--line);background:transparent;color:var(--dust);padding:10px 16px;border-radius:3px;cursor:pointer;min-height:44px}
 .btn:hover{color:var(--bone);border-color:var(--dust)}
 .btn[aria-selected=true]{color:var(--accent);border-color:var(--accent);font-weight:700}
@@ -430,6 +435,7 @@ dialog[open]::backdrop{animation:fadein .22s ease-out}
 .rp-legend{padding:12px 14px;border-bottom:1px solid #2A2F21;display:grid;gap:8px}
 .rp-leg{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center}
 .rp-leg i{width:14px;height:14px;border-radius:50%;display:block}
+.rp-leg i.num{width:18px;height:18px;display:grid;place-items:center;font:700 11px/1 var(--num);color:#14170F;font-style:normal}
 .rp-leg b{font:400 18px/1.1 var(--display)}
 .rp-leg small{display:block;color:var(--dust);font-size:12px}
 .rp-leg em{font-style:normal;font:400 18px/1 var(--num)}
@@ -780,6 +786,22 @@ html.share-mode .pc .beam,html.share-mode .pc .meteor,html.share-mode .pc .ldot{
 .replay.rec .rp-top,.replay.rec .rp-ctl,.replay.rec .rp-side{display:none}
 .replay.rec .rp-body{grid-template-columns:1fr;grid-template-rows:1fr}
 .rp-hud #rpSpd{color:var(--accent)}
+/* 자동 카메라 분할 화면: 떨어져 있는 다른 팀원 무리를 오른쪽 아래 작은 화면으로 */
+.rp-pip{position:absolute;right:12px;bottom:12px;width:min(32%,380px);aspect-ratio:4/3;border:2px solid var(--accent);border-radius:6px;overflow:hidden;background:#14170F;
+  box-shadow:0 6px 24px rgba(0,0,0,.55);opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s;pointer-events:none;z-index:3}
+.rp-pip.on{opacity:1;transform:none}
+.rp-pip canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.rp-grp{display:none;gap:4px;flex-wrap:wrap;pointer-events:none}
+.rp-grp.on{display:flex}
+#rpGrpMain{position:absolute;left:14px;top:52px;z-index:2}
+#rpGrpSub{position:absolute;left:6px;top:6px;right:6px}
+.rp-grp span{display:inline-flex;align-items:center;gap:5px;background:rgba(20,23,15,.86);border:1px solid #3A4030;border-radius:999px;padding:3px 9px 3px 4px;font-size:12px;color:var(--bone);white-space:nowrap}
+.rp-grp span i{width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;font:700 11px/1 var(--num);color:#14170F;font-style:normal}
+.rp-grp span small{color:var(--dust);font-size:11px}
+.rp-grp span.down small{color:#FF8C6E}.rp-grp span.fight small{color:var(--accent)}
+.rp-grp b{font:700 11px/1 inherit;color:var(--accent);align-self:center;margin-right:2px;background:rgba(20,23,15,.86);border-radius:4px;padding:4px 6px}
+.replay.rec .rp-pip,.replay.rec #rpGrpMain{display:none}
+.rp-pip.on~.rp-hint{right:calc(min(32%,380px) + 24px)}
 .rp-hud span:empty{display:none}
 .rp-stage canvas{cursor:grab}
 .rp-stage canvas.drag{cursor:grabbing}
@@ -891,6 +913,8 @@ html.share-mode .pc .beam,html.share-mode .pc .meteor,html.share-mode .pc .ldot{
   .rp-hud{left:8px;top:8px;gap:6px}
   .rp-hud span{padding:4px 8px;font-size:12px}.rp-hud #rpClock{font-size:16px}
   .rp-hint{left:8px;right:8px;bottom:8px;font-size:12px}
+  .rp-pip{width:44%;right:8px;bottom:8px}.rp-pip.on~.rp-hint{display:none}
+  #rpGrpMain{left:8px;top:42px}.rp-grp span{font-size:11px;padding:2px 7px 2px 3px}.rp-grp span i{width:15px;height:15px;font-size:10px}
   .rp-ctl{gap:6px;padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
   .rp-ctl .btn{min-height:34px;padding:4px 9px;font-size:12.5px;flex:1 1 auto}
   .rp-time{order:-1;flex:1 1 100%;height:30px}
@@ -990,6 +1014,8 @@ body.viewer .viewer-badge{display:inline-flex;align-items:center;gap:6px;padding
     <div class="rp-stage">
       <canvas id="rpCanvas"></canvas>
       <div class="rp-hud"><span id="rpClock">00:00</span><span id="rpAlive"></span><span id="rpSpd"></span></div>
+      <div class="rp-grp" id="rpGrpMain" aria-live="off"></div>
+      <div class="rp-pip" id="rpPip" aria-hidden="true"><canvas id="rpPipCanvas"></canvas><div class="rp-grp" id="rpGrpSub"></div></div>
       <div class="rp-toast" id="rpToast"></div>
       <div class="rp-loading" id="rpLoading">리플레이 준비 중...</div>
       <div class="rp-reel" id="rpReel" aria-live="polite"></div>
@@ -1944,8 +1970,25 @@ const RP_DEFAULTS = {
   zoom_near_m: 160,    // 적이 아주 가까울 때 화면에 담는 최소 범위(m)
   zoom_fit: 2.6,       // 적과의 거리 × 이 값 = 화면 범위 (클수록 넓게)
   shake: 1,            // 폭발 화면 흔들림 세기 (0 = 끔)
+  pip: true,           // 자동 카메라 분할 화면 (팀원이 떨어져 있으면 오른쪽 아래에 다른 무리)
+  pip_split_m: 450,    // 무리끼리 이 거리(m)보다 멀어지면 분할 화면을 켬 (1.5초 이어질 때)
+  pip_join_m: 300,     // 이 거리(m) 안으로 다시 모이면 끔 (이 거리 안의 팀원은 한 무리)
 };
 try { if (matchMedia("(pointer:coarse)").matches || "ontouchstart" in window) document.documentElement.classList.add("touch"); } catch {}
+function fitHeader() {  // 제목 줄이 두 줄로 넘어가면 가운데 정렬 (넓으면 원래대로 양쪽 정렬)
+  const top = document.querySelector(".top"), brand = top && top.querySelector(".brand"), nav = top && top.querySelector(".nav");
+  if (top && brand && nav) {
+    top.classList.remove("stacked");
+    if (nav.getBoundingClientRect().top > brand.getBoundingClientRect().top + 8) top.classList.add("stacked");
+  }
+  for (const h of document.querySelectorAll(".cards-head")) {
+    h.classList.remove("stacked");
+    const kids = [...h.children].filter(k => k.offsetParent);
+    if (kids.length > 1 && kids.some(k => k.offsetTop > kids[0].offsetTop + 8)) h.classList.add("stacked");
+  }
+}
+addEventListener("resize", () => requestAnimationFrame(fitHeader));
+try { new ResizeObserver(() => requestAnimationFrame(fitHeader)).observe(document.body); } catch {}
 const rpCfg = () => ({...RP_DEFAULTS, ...((typeof state !== "undefined" && state && state.replay) || {})});
 const RP_COLORS = ["#F2A900", "#4FC3F7", "#F06292", "#9CCC65"];
 const rp = {data: null, t: 0, playing: false, speed: 1, follow: true, cine: true, curSpeed: 20, focus: null, reel: null, cam: {x: .5, y: .5, s: 1}, img: null,
@@ -1982,10 +2025,21 @@ function rpFixEmergency(R) {  // 비상호출: 태워 간 순간부터 바로 �
       if (lift && lift.t < sg.t0) { sg.pts = [[lift.t, lift.x, lift.y], ...sg.pts]; sg.t0 = lift.t; }
       sg._fixed = true;
     }
+    if (p.death != null && !p._airDeathFixed) {  // 공중(낙하산)에서 죽었는데 땅 위치가 탑승한 자리로 남아 있던 경우
+      p._airDeathFixed = true;
+      const died = R.events.find(e => e.k === "died" && e.who === p.nick && Math.abs(e.t - p.death) < 1.5);
+      const sg = (p.air || []).find(a => a.kind !== "start" && a.t0 < p.death && p.death - a.t1 < 40 && p.death - a.t1 >= 0);
+      const lastT = Math.max(-1, ...p.track.filter(q => q[1] != null && q[0] <= p.death).map(q => q[0]));
+      if (died && died.x != null && sg && lastT < sg.t0) {
+        sg.pts = [...sg.pts.filter(q => q[0] < p.death), [p.death, died.x, died.y]]; sg.t1 = p.death;
+        p.track = [...p.track.filter(q => q[0] < p.death - .05), [p.death - .05, null, null], [p.death, died.x, died.y], ...p.track.filter(q => q[0] > p.death)];
+      }
+    }
   }
 }
 function rpSetup(R) {
   rpFixEmergency(R);
+  rp.pip = null; $("#rpPip")?.classList.remove("on");
   rp.data = R; rp.names = Object.fromEntries(R.players.map(p => [p.nick, p.name]));
   rp.fights = rpBuildFights(R);
   if (!mapImgs[R.map]) { const img = new Image(); img.src = "api/map?code=" + encodeURIComponent(R.map); mapImgs[R.map] = img; }
@@ -2232,19 +2286,86 @@ function rpLegend(now) {
   rp.legendAt = now;
   $("#rpLegend").innerHTML = rp.data.players.map(p => {
     const st = statusAt(p, rp.t), k = rp.data.events.filter(e => e.k === "kill" && e.by === p.nick && e.t <= rp.t).length;
-    const sg = airAt(p, rp.t), onPlane = sg && (sg.jump == null || rp.t < sg.jump);
-    const txt = sg ? (sg.kind === "recall" ? (onPlane ? "블루칩 비행기" : "복귀 낙하 중") : sg.kind === "emergency" ? (onPlane ? "비상호출 이동" : "비상호출 낙하")
-      : (onPlane ? "비행기" : "낙하 중"))
-      : rp.t < (p.landed ?? 0) ? "대기 중" : st === "dead" ? "사망" : st === "down" ? "기절"
-      : vehAt(p, rp.t) ? (vehAt(p, rp.t)[2] ? "운전 중" : "차량 탑승") : "생존";
+    const txt = rpStatusText(p, rp.t);
     const off = !rp.paths || rp.hidePath.has(p.nick);
-    return `<div class="rp-leg ${st === "dead" ? "dead" : st === "down" ? "down" : ""} ${off ? "nopath" : ""}" data-path="${esc(p.nick)}" role="button" tabindex="0" aria-pressed="${!off}" title="눌러서 이 사람 동선 켜기·끄기"><i style="background:${RP_COLORS[p.slot % 4]}"></i>
+    return `<div class="rp-leg ${st === "dead" ? "dead" : st === "down" ? "down" : ""} ${off ? "nopath" : ""}" data-path="${esc(p.nick)}" role="button" tabindex="0" aria-pressed="${!off}" title="눌러서 이 사람 동선 켜기·끄기"><i class="num" style="background:${RP_COLORS[p.slot % 4]}">${p.slot + 1}</i>
       <div><b>${esc(p.name)}</b><small>${txt}</small></div><em>${k}킬</em></div>`;
   }).join("");
+  rpGroupStrips();
   const a = aliveAt(rp.t);
   $("#rpAlive").textContent = a && a[1] != null ? `생존 ${a[1]}명` : "";
   $("#rpClock").textContent = mmss(rp.t);
   if (!rp.dragging) $("#rpSeek").value = rp.t;
+}
+function rpStatusText(p, t) {
+    const st = statusAt(p, t);
+    const sg = airAt(p, t), onPlane = sg && (sg.jump == null || t < sg.jump);
+    return sg ? (sg.kind === "recall" ? (onPlane ? "블루칩 비행기" : "복귀 낙하 중") : sg.kind === "emergency" ? (onPlane ? "비상호출 이동" : "비상호출 낙하")
+      : (onPlane ? "비행기" : "낙하 중"))
+      : t < (p.landed ?? 0) ? "대기 중" : st === "dead" ? "사망" : st === "down" ? "기절"
+      : rpHealAt(p.hl, t) ? `${HEAL_NAME[rpHealAt(p.hl, t)[2]]} ${"bfm".includes(rpHealAt(p.hl, t)[2]) ? "회복" : "부스트"} 중`
+      : vehAt(p, t) ? (/brdm/i.test(vehAt(p, t)[3] || "") ? (vehAt(p, t)[2] ? "BRDM 운전 중" : "BRDM 탑승") : vehAt(p, t)[2] ? "운전 중" : "차량 탑승")
+      : rpGroupFighting([p], t) ? "교전 중" : "생존";
+}
+/* ───── 자동 카메라 분할 화면 ───── */
+function rpGroupsAt(t) {  // 살아 있는 팀원을 pip_join_m 안이면 한 무리로 (처음 비행기에 타 있는 동안은 제외)
+  const C = rpCfg(), R = rp.data, J = C.pip_join_m / R.size_m;
+  const live = R.players.map(p => {
+    if (statusAt(p, t) === "dead") return null;
+    const sg = airAt(p, t); if (sg && sg.kind === "start") return null;
+    const q = curPos(p, t); return q ? {p, q} : null;
+  }).filter(Boolean);
+  const G = [];
+  for (const m of live) {
+    const hit = G.filter(g => g.some(o => Math.hypot(o.q[0] - m.q[0], o.q[1] - m.q[1]) < J));
+    if (!hit.length) G.push([m]);
+    else { const first = hit[0]; first.push(m); for (const g of hit.slice(1)) { first.push(...g); G.splice(G.indexOf(g), 1); } }
+  }
+  return G;
+}
+function rpFightPts(t) {  // 지금 앞뒤 몇 초의 총격·피격 지점 (어느 무리가 싸우는지 보려고)
+  const f = rpFightAt(t); if (!f) return [];
+  return f.pts.filter(q => q.t >= t - 5 && q.t <= t + 3);
+}
+function rpGroupFighting(members, t, pts) {  // 이 무리 근처(250m)에서 교전 중인지 (점 개수)
+  pts = pts || rpFightPts(t); const R = rp.data, lim = 250 / R.size_m;
+  const qs = members.map(m => m.q || curPos(m.p || m, t)).filter(Boolean);
+  return pts.filter(q => qs.some(m => Math.hypot(q.x - m[0], q.y - m[1]) < lim)).length;
+}
+function rpUpdatePip(now, dt) {
+  const C = rpCfg(), R = rp.data, P = rp.pip || (rp.pip = {on: false, want: 0, main: [], sub: [], cam: {x: .5, y: .5, s: .3}});
+  const allow = C.pip && rpAuto() && !rp.reel;
+  const G = allow ? rpGroupsAt(rp.t) : [];
+  if (G.length < 2) { P.want = 0; P.on = false; }
+  else {
+    const pts = rpFightPts(rp.t);
+    const score = g => rpGroupFighting(g, rp.t, pts) * 10 + g.length + (g.some(m => P.main.includes(m.p.nick)) ? .5 : 0);
+    const order = [...G].sort((a, b) => score(b) - score(a));
+    const main = order[0], sub = order[1];
+    const gap = Math.min(...main.flatMap(a => sub.map(b => Math.hypot(a.q[0] - b.q[0], a.q[1] - b.q[1])))) * R.size_m;
+    if (!P.on) {
+      if (gap > C.pip_split_m) { P.want = P.want || now; if (now - P.want > 1500) { P.on = true; P.cam = null; } } else P.want = 0;
+    } else if (gap < C.pip_join_m) { P.on = false; P.want = 0; }
+    P.main = main.map(m => m.p.nick); P.sub = sub.map(m => m.p.nick);
+    if (P.on) {  // 보조 카메라: 그 무리 + 근처 교전 지점을 담음
+      const near = pts.filter(q => sub.some(m => Math.hypot(q.x - m.q[0], q.y - m.q[1]) < 250 / R.size_m)).map(q => [q.x, q.y]);
+      const all = [...sub.map(m => m.q), ...near], xs = all.map(q => q[0]), ys = all.map(q => q[1]);
+      const ts = Math.min(.35, Math.max(220 / R.size_m, Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) * 1.7));
+      const tx = (Math.min(...xs) + Math.max(...xs)) / 2, ty = (Math.min(...ys) + Math.max(...ys)) / 2;
+      if (!P.cam) P.cam = {x: tx, y: ty, s: ts};
+      const k = Math.min(1, dt * 2.4); P.cam.s += (ts - P.cam.s) * k; P.cam.x += (tx - P.cam.x) * k; P.cam.y += (ty - P.cam.y) * k;
+      const h = P.cam.s / 2; P.cam.x = Math.min(1 - h, Math.max(h, P.cam.x)); P.cam.y = Math.min(1 - h, Math.max(h, P.cam.y));
+    }
+  }
+  $("#rpPip").classList.toggle("on", !!P.on);
+}
+function rpGroupStrips() {  // 각 화면의 팀원 번호·상태
+  const P = rp.pip, on = !!(P && P.on);
+  const chip = nick => { const p = rp.data.players.find(x => x.nick === nick); if (!p) return "";
+    const st = statusAt(p, rp.t), txt = rpStatusText(p, rp.t);
+    return `<span class="${st === "down" ? "down" : txt === "교전 중" ? "fight" : ""}"><i style="background:${RP_COLORS[p.slot % 4]}">${p.slot + 1}</i>${esc(p.name)} <small>${txt}</small></span>`; };
+  $("#rpGrpMain").classList.toggle("on", on); $("#rpGrpSub").classList.toggle("on", on);
+  if (on) { $("#rpGrpMain").innerHTML = `<b>메인</b>${P.main.map(chip).join("")}`; $("#rpGrpSub").innerHTML = `<b>보조</b>${P.sub.map(chip).join("")}`; }
 }
 function rpClampCam() {
   const h = rp.cam.s / 2;
@@ -2254,14 +2375,18 @@ function rpCamera(dt) {
   const R = rp.data;
   if (rp.manual) { rpClampCam(); return; }  // 마우스로 직접 움직이는 중
   let tx = .5, ty = .5, ts = 1;
+  const split = rp.pip && rp.pip.on, inMain = p => !split || rp.pip.main.includes(p.nick);  // 분할 화면: 메인 화면은 메인 무리만
+  const mainPos = split ? R.players.filter(inMain).map(p => curPos(p, rp.t)).filter(Boolean) : [];
   if (rp.follow && rp.cine && rp.focus && rp.focus.pts) {  // 교전 장면으로 확대: 지금 앞뒤 몇 초의 총격·피격 지점을 화면에 담음
     const f = rp.focus;
     let near = f.pts.filter(q => q.t >= rp.t - 5 && q.t <= rp.t + 3);
+    if (split) near = near.filter(q => mainPos.some(m => Math.hypot(q.x - m[0], q.y - m[1]) < 300 / R.size_m));
+    if (!near.length && split && mainPos.length) near = mainPos.map(m => ({x: m[0], y: m[1]}));
     if (!near.length) near = [f.pts.reduce((a, q) => Math.abs(q.t - rp.t) < Math.abs(a.t - rp.t) ? q : a)];
     const pts = [];
     for (const q of near) { pts.push([q.x, q.y]); if (q.ax != null && Math.hypot(q.ax - q.x, q.ay - q.y) < .06) pts.push([q.ax, q.ay]); }
     for (const pl of R.players) {  // 근처에 있는 우리 팀도 함께
-      const pp = statusAt(pl, rp.t) !== "dead" && curPos(pl, rp.t);
+      const pp = statusAt(pl, rp.t) !== "dead" && inMain(pl) && curPos(pl, rp.t);
       if (pp && pts.some(q => Math.hypot(pp[0] - q[0], pp[1] - q[1]) < .04)) pts.push(pp);
     }
     const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
@@ -2269,7 +2394,7 @@ function rpCamera(dt) {
     ts = Math.min(.35, Math.max(minSpan, Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) * 1.7));
     tx = (Math.min(...xs) + Math.max(...xs)) / 2; ty = (Math.min(...ys) + Math.max(...ys)) / 2;
   } else if (rp.follow) {
-    const pts = R.players.filter(p => statusAt(p, rp.t) !== "dead").map(p => curPos(p, rp.t)).filter(Boolean);
+    const pts = R.players.filter(p => statusAt(p, rp.t) !== "dead" && inMain(p)).map(p => curPos(p, rp.t)).filter(Boolean);
     if (pts.length) {
       const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
       const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
@@ -2300,16 +2425,16 @@ function rpCamera(dt) {
   rp.cam.s += (ts - rp.cam.s) * ks; rp.cam.x += (tx - rp.cam.x) * k; rp.cam.y += (ty - rp.cam.y) * k;
   rpClampCam();
 }
-function rpDraw(dt, now) {
-  const c = $("#rpCanvas"), dpr = Math.min(2, devicePixelRatio || 1), W = c.clientWidth, H = c.clientHeight;
+function rpDraw(dt, now, view) {
+  const pip = !!view, c = pip ? view.c : $("#rpCanvas"), dpr = Math.min(2, devicePixelRatio || 1), W = c.clientWidth, H = c.clientHeight;
   if (!W || !H) return;
   if (c.width !== Math.round(W * dpr) || c.height !== Math.round(H * dpr)) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
   const ctx = c.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  rpCamera(dt);
-  const R = rp.data, cam = rp.cam, S = Math.min(W, H) / cam.s;
+  if (!pip) rpCamera(dt);
+  const R = rp.data, cam = pip ? view.cam : rp.cam, S = Math.min(W, H) / cam.s;
   const X = v => (v - cam.x) * S + W / 2, Y = v => (v - cam.y) * S + H / 2;
   ctx.fillStyle = "#14170F"; ctx.fillRect(0, 0, W, H);
-  const shk = rpShake(R, X, Y, W, H, cam); if (shk) ctx.translate(shk[0], shk[1]);  // 폭발 흔들림: 지도와 그림 전체를 흔듦
+  const shk = pip ? null : rpShake(R, X, Y, W, H, cam); if (shk) ctx.translate(shk[0], shk[1]);  // 폭발 흔들림: 지도와 그림 전체를 흔듦
   if (rp.img) { ctx.imageSmoothingQuality = "high"; ctx.drawImage(rp.img, X(0), Y(0), S, S); }
   else {
     ctx.fillStyle = "#2B3022"; ctx.fillRect(X(0), Y(0), S, S);
@@ -2397,7 +2522,8 @@ function rpDraw(dt, now) {
   }
   const M = S / R.size_m;  // 1m가 화면에서 몇 픽셀
   // 보급: 낙하산으로 내려오는 상자 → 착지 후 붉은 연기, 우리가 열면 '획득'
-  for (const [st, lt, px, py, by0, bt, ot0] of R.packages || []) {
+  for (const [st, lt, px, py, by0, bt, ot0, pk = ""] of R.packages || []) {
+    const box = pk === "f" ? "flarepackage" : "carepackage", bsz = pk === "f" ? 36 : 30;
     const by = by0 && bt >= lt ? by0 : null;  // 착지 전에 '획득'은 있을 수 없음 (예전 리플레이에서 상자가 섞인 경우)
     const ot = ot0 != null && ot0 >= lt ? ot0 : by ? bt : null, opened = ot != null && rp.t >= ot;
     if (rp.t < st) continue;
@@ -2408,17 +2534,24 @@ function rpDraw(dt, now) {
       ctx.save(); ctx.translate(x, y - drop); ctx.scale(sc, sc);
       ctx.beginPath(); ctx.arc(0, -24, 16, Math.PI, 0); ctx.fillStyle = "#EEE8D5"; ctx.fill(); ctx.strokeStyle = "#5A5446"; ctx.lineWidth = 1.2; ctx.stroke();
       ctx.beginPath(); ctx.moveTo(-15, -24); ctx.lineTo(-7, -9); ctx.moveTo(15, -24); ctx.lineTo(7, -9); ctx.moveTo(0, -24); ctx.lineTo(0, -9); ctx.stroke();
-      drawIcon(ctx, "carepackage", 0, 0, 30);
+      if (pk === "b") drawBRDM(ctx, 0, -4, 34, -Math.PI / 2, null); else drawIcon(ctx, box, 0, 0, bsz);
       ctx.restore();
+    } else if (pk === "b") {  // BRDM: 떨어진 자리에 서 있다가, 누가 타면 그 사람 아이콘이 BRDM으로 바뀜
+      if (ot != null && rp.t >= ot) continue;
+      drawBRDM(ctx, x, y, 34, -Math.PI / 2, null);
+      ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText("BRDM").width + 12;
+      ctx.fillStyle = "rgba(20,23,15,.88)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y + 20, tw, 17, 8); else ctx.rect(x - tw / 2, y + 20, tw, 17); ctx.fill();
+      ctx.fillStyle = "#FFD45A"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("BRDM", x, y + 29);
+      continue;
     } else {
       const age = rp.t - lt;
-      if (age < 120) for (let k = 0; k < 9; k++) {  // 붉은 연막 (바람에 날림)
+      if (age < 120) for (let k = 0; k < 9; k++) {  // 붉은 연막 (바람에 날림), 플레어 보급은 노랑
         const ph = ((rp.t * .45 + k / 9) % 1), sx = x + 4 + ph * 26 + Math.sin(k * 2.3 + rp.t) * 3, sy = y - 6 - ph * 44;
-        ctx.beginPath(); ctx.arc(sx, sy, 4 + ph * 9, 0, Math.PI * 2); ctx.fillStyle = `rgba(230,60,50,${(1 - ph) * .45 * Math.min(1, (120 - age) / 20)})`; ctx.fill();
+        ctx.beginPath(); ctx.arc(sx, sy, 4 + ph * 9, 0, Math.PI * 2); ctx.fillStyle = `rgba(${pk === "f" ? "255,214,40" : "230,60,50"},${(1 - ph) * .45 * Math.min(1, (120 - age) / 20)})`; ctx.fill();
       }
-      drawIcon(ctx, opened ? "carepackage_open" : "carepackage", x, y, 30, opened);  // 열린 뒤엔 CarePackage_Open
+      drawIcon(ctx, opened ? box + "_open" : box, x, y, bsz, opened);  // 열린 뒤엔 열린 상자 그림
       if (by && rp.t >= bt) {  // 우리 팀이 처음 꺼낸 순간부터 상자 아래에
-        const label = rpName(by) + " 획득";
+        const label = rpName(by) + (pk === "f" ? " 플레어 보급 획득" : " 획득");
         ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText(label).width + 12;
         ctx.fillStyle = "rgba(20,23,15,.88)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y + 13, tw, 17, 8); else ctx.rect(x - tw / 2, y + 13, tw, 17); ctx.fill();
         ctx.fillStyle = rpCol(by); ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(label, x, y + 22);
@@ -2437,34 +2570,6 @@ function rpDraw(dt, now) {
       ctx.fillStyle = `rgba(255,192,96,${(1 - q) * fade})`; ctx.fill(); }
     if (e < 3) drawBadge(ctx, "jerrycan", x2, y2 - R0 - 18, 24);
     if (e < .35) for (let k = 0; k < 14; k++) { const an = k / 14 * Math.PI * 2, d = e / .35 * R0 * 1.5; ctx.beginPath(); ctx.arc(x2 + Math.cos(an) * d, y2 + Math.sin(an) * d, 1.7, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,210,122,${1 - e / .35})`; ctx.fill(); }
-  }
-
-  // 다른 플레이어 사격: 1초에 4발씩 총구 화염 (맞힌 상대가 있으면 그쪽, 없으면 사방으로 짧게)
-  if (rp.foes) {
-    const FS = R.foe_shots || [];
-    let lo = 0, hi = FS.length;
-    while (lo < hi) { const m = (lo + hi) >> 1; if (FS[m][0] < rp.t - 1) lo = m + 1; else hi = m; }
-    for (let i = lo; i < FS.length && FS[i][0] <= rp.t; i++) {
-      const [ts, fx, fy, tx, ty] = FS[i], x1 = X(fx), y1 = Y(fy);
-      for (const off of [.05, .3, .55, .8]) {
-        const k = (rp.t - ts - off) / .09; if (k < 0 || k > 1) continue;
-        // 우리 팀과 같은 총구 화염 (방향을 모르면 마지막으로 움직인 방향으로)
-        const ang = tx != null ? Math.atan2(Y(ty) - y1, X(tx) - x1) : rpFoeHeading(fx, fy, ts);
-        rpMuzzle(ctx, x1, y1, ang, 1 - k);
-      }
-    }
-  }
-
-  // 우리 팀 사격: 쏜 방향으로 총구 화염만 (선은 실제로 맞힌 총알만 그림)
-  for (const [ts, slot, tx, ty] of R.shots || []) {
-    if (rp.t < ts || rp.t > ts + 1) continue;
-    const pl = R.players.find(p => p.slot === slot); const sp = pl && curPos(pl, rp.t);
-    if (!sp || statusAt(pl, rp.t) === "dead" || tx == null) continue;
-    const x1 = X(sp[0]), y1 = Y(sp[1]), ang = Math.atan2(Y(ty) - y1, X(tx) - x1);
-    for (const off of [.05, .3, .55, .8]) {  // 1초에 4발
-      const k = (rp.t - ts - off) / .09; if (k < 0 || k > 1) continue;
-      rpMuzzle(ctx, x1, y1, ang, 1 - k);
-    }
   }
 
   // 투척: 실제 궤적(포물선)으로 날아가 떨어진 뒤 종류별 효과
@@ -2571,31 +2676,6 @@ function rpDraw(dt, now) {
     }
     if (est && te < 2) { ctx.font = "600 10px Pretendard, sans-serif"; ctx.fillStyle = "rgba(238,232,213,.55)"; ctx.textAlign = "center"; ctx.fillText("추정 위치", x2, y2 + 18); }
   });
-  // 맞힌 총알: 가는 탄도선 + 탄착 스파크 + 데미지 숫자 (폭발·화염은 투척 효과가 따로 그림)
-  const HT = R.hits || [];
-  let lo2 = 0, hi2 = HT.length;
-  while (lo2 < hi2) { const m = (lo2 + hi2) >> 1; if (HT[m][0] < rp.t - 3.6) lo2 = m + 1; else hi2 = m; }  // 박격포·로켓은 2초 남짓 그려서
-  for (let hi = lo2; hi < HT.length && HT[hi][0] <= rp.t; hi++) {
-    const [ht, ax, ay, vx, vy, kind, side, dmg] = HT[hi], age = rp.t - ht;
-    if (ax == null || vx == null) continue;
-    const x1 = X(ax), y1 = Y(ay), x2 = X(vx), y2 = Y(vy);
-    if (kind === "m" && R.mortars) { if (dmg && age < 1.8) rpDmg(ctx, dmg, x2, y2, age / 1.8, side); continue; }  // 박격포는 아래 '박격포 궤적'이 그림 (데미지 숫자만)
-    if (kind === "p" || kind === "m") { rpHeavy(ctx, kind, x1, y1, x2, y2, age, side, dmg, hi); continue; }  // 판처파우스트·박격포
-    if (kind !== "g" || age > 1.8) continue;
-    if (age < .09) {  // 총구 화염 (우리 팀도, 적도)
-      rpMuzzle(ctx, x1, y1, Math.atan2(y2 - y1, x2 - x1), 1 - age / .09);
-    }
-    if (age < .35) {  // 가는 탄도선
-      ctx.globalAlpha = 1 - age / .35; ctx.strokeStyle = side === 0 ? "rgba(255,240,200,.9)" : "rgba(255,110,90,.6)"; ctx.lineWidth = side === 0 ? 1 : .8;
-      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.globalAlpha = 1;
-    }
-    if (age < .4) {  // 탄착 스파크
-      const k = age / .4;
-      for (let n = 0; n < (side === 0 ? 8 : 4); n++) { const an = ((Math.sin((hi + 1) * 12.9 + n * 78.2) * 43758.5) % 1 + 1) % 1 * Math.PI * 2, d = 3 + k * 11;
-        ctx.beginPath(); ctx.arc(x2 + Math.cos(an) * d, y2 + Math.sin(an) * d, 1.5, 0, Math.PI * 2); ctx.fillStyle = side === 0 ? `rgba(255,212,90,${1 - k})` : `rgba(255,110,90,${1 - k})`; ctx.fill(); }
-    }
-    if (dmg && age < 1.8) rpDmg(ctx, dmg, x2, y2, age / 1.8, side);  // 데미지 숫자 (우리가 준 건 노랑, 우리가 받은 건 빨강)
-  }
   // 기절·처치 순간: 맞은 자리에 퍼지는 고리만 (탄도선은 위에서 그리므로 선은 안 그림)
   rp.flashes = rp.flashes.filter(f => f.until > now);
   for (const f of rp.flashes) {
@@ -2605,39 +2685,6 @@ function rpDraw(dt, now) {
     ctx.beginPath(); ctx.arc(X(e.x), Y(e.y), 6 + (1 - a2) * 22, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1;
   }
 
-  // 적 (팀 번호별 색)
-  if (rp.foes && R.enemies) {
-    const big = cam.s < .3;
-    ctx.font = "700 10px Pretendard, 'Malgun Gothic', sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    const foeCars = [], foePlanes = [];
-    for (const en of R.enemies) {
-      if (!en.tr.length || rp.t < en.tr[0][0] || (en.d != null && rp.t > en.d)) continue;
-      const q = interp(en.tr, rp.t); if (!q) continue;
-      const x = X(q[0]), y = Y(q[1]); if (x < -20 || y < -20 || x > W + 20 || y > H + 20) continue;
-      const r = big ? 8 : 4;
-      const em = (en.em || []).find(a => rp.t >= a[0] && rp.t < a[2]), guessAir = !en.em && !en.vh && rpFoeInCar(en, rp.t) === "air";
-      if (em || guessAir) {  // 비상호출 비행기에 탄 적
-        const col = teamColor(en.tm || 0);
-        if (guessAir || rp.t < em[1]) {
-          if (!foePlanes.some(o => o.tm === en.tm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 300)) {
-            const a = interp(en.tr, rp.t - 1) || q, b = interp(en.tr, rp.t + 1) || q;
-            drawPlane(ctx, x, y, Math.atan2(Y(b[1]) - Y(a[1]), X(b[0]) - X(a[0])), col, big ? 9 : 7); foePlanes.push({q, tm: en.tm});
-          }
-        } else drawChute(ctx, x, y, col, null);
-        continue;
-      }
-      const down = (en.kn || []).some(([a, b]) => rp.t >= a && rp.t < b);  // 기절 중
-      if (!down && rpFoeInCar(en, rp.t)) {  // 차에 타면 핸들 (같은 차의 같은 팀은 하나만)
-        if (!foeCars.some(o => o.tm === en.tm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 40)) { drawWheel(ctx, x, y, big ? 9 : 6, teamColor(en.tm || 0)); foeCars.push({q, tm: en.tm}); }
-        continue;
-      }
-      ctx.globalAlpha = down ? .45 : 1;
-      ctx.beginPath(); ctx.arc(x, y, r + 1.5, 0, Math.PI * 2); ctx.fillStyle = "rgba(0,0,0,.65)"; ctx.fill();
-      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = down ? "#8C8C84" : teamColor(en.tm || 0); ctx.fill();
-      if (big) { ctx.fillStyle = down ? "#3A3A36" : "#14170F"; ctx.fillText(String(en.tm ?? ""), x, y + .5); }
-      ctx.globalAlpha = 1;
-    }
-  }
   // 박격포 궤적: 쏜 자리 → 높이 솟았다가 떨어진 자리 (실제 떨어진 시각에 맞춤), 떨어지면 폭발
   for (const [tf, fx, fy, ix, iy, ti, est, who, side] of R.mortars || []) {
     if (side && !rp.foes) continue;
@@ -2675,7 +2722,7 @@ function rpDraw(dt, now) {
   // 플레이어
   ctx.font = "700 12px Pretendard, 'Malgun Gothic', sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
   const labels = [], ground = [];
-  rp.dispPos = {};
+  rp.dispPos = {}; rp.dispR = {};
   for (const p of R.players) {
     const sg = airAt(p, rp.t);
     if (sg) {  // 비행기 또는 낙하산
@@ -2695,7 +2742,7 @@ function rpDraw(dt, now) {
       const label = onPlane ? (sg.kind === "recall" ? "블루칩 비행기" : sg.kind === "emergency" ? "비상호출" : "비행기") : "낙하 중";  // 이름은 빼고 상태만
       if (!labels.some(L => L.label === label && Math.hypot(L.x - x, L.ly - (y - 30)) < 40)) {
         ctx.font = "700 12px Pretendard, 'Malgun Gothic', sans-serif";
-        labels.push({x, ly: y - (onPlane ? 22 : 38), tw: ctx.measureText(label).width + 12, label, st: "ok", col});
+        labels.push({x, ly: y - (onPlane ? 22 : 44), tw: ctx.measureText(label).width + 12, label, st: "ok", col});
       }
       continue;
     }
@@ -2710,7 +2757,7 @@ function rpDraw(dt, now) {
     const near = Math.min(Infinity, ...ground.filter(o => o !== g).map(o => Math.hypot(o.x - g.x, o.y - g.y)));
     const full = g.hasAv || g.inCar ? C.avatar_r : 7, small = Math.max(5, full * C.crowd_scale);
     g.r = near >= C.crowd_dist ? full : small + (full - small) * Math.max(0, (near - C.crowd_dist * .5) / (C.crowd_dist * .5));  // 가까울수록 작게 (부드럽게)
-    rp.dispPos[g.p.nick] = [g.x, g.y];
+    rp.dispPos[g.p.nick] = [g.x, g.y]; rp.dispR[g.p.nick] = g.r;
   }
   const cars = [];  // 같은 차에 탄 팀원: 핸들 하나만 (운전자 색으로)
   for (const g of [...ground].filter(g => g.inCar).sort((a, b) => (b.drv ? 1 : 0) - (a.drv ? 1 : 0))) {
@@ -2726,7 +2773,8 @@ function rpDraw(dt, now) {
     ctx.globalAlpha = st === "dead" ? .5 : 1;
     const fillCol = st === "down" ? "#8C8C82" : col;  // 기절 중엔 회색
     if (st === "down") { ctx.beginPath(); ctx.arc(x, y, r + 7 + Math.sin(now / 140) * 3, 0, Math.PI * 2); ctx.strokeStyle = "#E0532F"; ctx.lineWidth = 2.5; ctx.stroke(); }
-    if (g.inCar) drawWheel(ctx, x, y, r, fillCol);  // 차에 타면 사진 대신 핸들
+    if (g.inCar && /brdm/i.test(g.inCar[3] || "")) drawBRDM(ctx, x, y, r * 2.9, rpHeading(g.p.nick, t => posAt(g.p, t)), fillCol);  // BRDM은 장갑차 그림
+    else if (g.inCar) drawWheel(ctx, x, y, r, fillCol);  // 차에 타면 사진 대신 핸들
     else {
       ctx.beginPath(); ctx.arc(x, y, r + 3, 0, Math.PI * 2); ctx.fillStyle = "#14170F"; ctx.fill();
       ctx.beginPath(); ctx.arc(x, y, r + 2, 0, Math.PI * 2); ctx.fillStyle = fillCol; ctx.fill();
@@ -2734,11 +2782,17 @@ function rpDraw(dt, now) {
     }
     if (st === "dead") cross(x, y, r - 1, "#EEE8D5", 2);
     ctx.globalAlpha = 1;
+    if (st !== "dead") {
+      const hl = rpHealAt(g.p.hl, rp.t); if (hl) drawHeal(ctx, x + r * .8, y - r * .8, Math.max(5.5, r * .5), hl);  // 회복템 쓰는 중
+      rpHpBar(ctx, g.p.hp, x, y + r + 6, Math.max(22, r * 2.4), g.r < C.avatar_r ? 3 : 4);  // 맞았을 때 잠깐 체력바
+    }
   }
   ctx.font = "700 12px Pretendard, 'Malgun Gothic', sans-serif";
-  for (const g of ground) {  // 이름표: 사람마다 하나씩 (붙어 있으면 아래 '쌓기'가 위로 비켜 줌)
-    const text = g.p.name + (g.st === "down" ? " 기절" : "");
-    labels.push({x: g.x, ly: g.y - g.r - 15, tw: ctx.measureText(text).width + 14, parts: [{text, col: g.st === "down" ? "#FFB4A2" : g.col}], sep: "",
+  for (const g of ground) {  // 이름표: 사람마다 하나씩, 붙어 있으면 사진처럼 작게 (겹치면 아래 '쌓기'가 위로 비켜 줌)
+    const text = g.p.name + (g.st === "down" ? " 기절" : ""), full = g.hasAv || g.inCar ? C.avatar_r : 7;
+    const sc = Math.max(.62, Math.min(1, g.r / full));
+    ctx.font = `700 ${12 * sc}px Pretendard, 'Malgun Gothic', sans-serif`;
+    labels.push({x: g.x, ly: g.y - g.r - 6 - 9 * sc, tw: ctx.measureText(text).width + 14 * sc, sc, parts: [{text, col: g.st === "down" ? "#FFB4A2" : g.col}], sep: "",
                  st: g.st === "dead" ? "dead" : "ok", col: g.col});
   }
 
@@ -2747,15 +2801,17 @@ function rpDraw(dt, now) {
   labels.sort((a, b) => b.ly - a.ly);
   const placed = [];
   for (const L of labels) {
+    const sc = L.sc || 1, lh = 18 * sc;
     let tries = 0;
-    while (tries++ < 6 && placed.some(q => Math.abs(q.x - L.x) < (q.tw + L.tw) / 2 && Math.abs(q.ly - L.ly) < 19)) L.ly -= 20;
+    while (tries++ < 6 && placed.some(q => Math.abs(q.x - L.x) < (q.tw + L.tw) / 2 && Math.abs(q.ly - L.ly) < ((q.sc || 1) * 18 + lh) / 2 + 1)) L.ly -= lh + 2;
     placed.push(L);
+    ctx.font = `700 ${12 * sc}px Pretendard, 'Malgun Gothic', sans-serif`;
     ctx.globalAlpha = L.st === "dead" ? .5 : 1;
     ctx.fillStyle = "rgba(20,23,15,.88)"; ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(L.x - L.tw / 2, L.ly - 9, L.tw, 18, 9); else ctx.rect(L.x - L.tw / 2, L.ly - 9, L.tw, 18);
-    ctx.fill(); ctx.strokeStyle = L.col; ctx.lineWidth = 1.5; ctx.stroke();
+    if (ctx.roundRect) ctx.roundRect(L.x - L.tw / 2, L.ly - lh / 2, L.tw, lh, lh / 2); else ctx.rect(L.x - L.tw / 2, L.ly - lh / 2, L.tw, lh);
+    ctx.fill(); ctx.strokeStyle = L.col; ctx.lineWidth = 1.5 * Math.max(.8, sc); ctx.stroke();
     if (L.parts) {  // 이름마다 그 사람 색
-      let cx = L.x - L.tw / 2 + 7; ctx.textAlign = "left";
+      let cx = L.x - L.tw / 2 + 7 * sc; ctx.textAlign = "left";
       L.parts.forEach((q, i) => {
         if (i) { ctx.fillStyle = "#8A8C80"; ctx.fillText(L.sep, cx, L.ly + .5); cx += ctx.measureText(L.sep).width; }
         ctx.fillStyle = q.col; ctx.fillText(q.text, cx, L.ly + .5); cx += ctx.measureText(q.text).width;
@@ -2764,6 +2820,112 @@ function rpDraw(dt, now) {
     } else { ctx.fillStyle = L.st === "down" ? "#FFB4A2" : "#EEE8D5"; ctx.fillText(L.label, L.x, L.ly + .5); }
     ctx.globalAlpha = 1;
   }
+  // 적 (팀 번호별 색): 우리 팀 아이콘·이름표보다 나중에 그려서 붙어 있을 때 적이 위에 보이게
+  const drawFoes = () => { if (rp.foes && R.enemies) {
+    const big = cam.s < .3;
+    ctx.font = "700 10px Pretendard, 'Malgun Gothic', sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    const foeCars = [], foePlanes = [];
+    for (const en of R.enemies) {
+      if (!en.tr.length || rp.t < en.tr[0][0] || (en.d != null && rp.t > en.d)) continue;
+      const q = interp(en.tr, rp.t); if (!q) continue;
+      const x = X(q[0]), y = Y(q[1]); if (x < -20 || y < -20 || x > W + 20 || y > H + 20) continue;
+      const r = big ? 8 : 4;
+      const em = (en.em || []).find(a => rp.t >= a[0] && rp.t < a[2]), guessAir = !en.em && !en.vh && rpFoeInCar(en, rp.t) === "air";
+      if (em || guessAir) {  // 비상호출 비행기에 탄 적
+        const col = teamColor(en.tm || 0);
+        if (guessAir || rp.t < em[1]) {
+          if (!foePlanes.some(o => o.tm === en.tm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 300)) {
+            const a = interp(en.tr, rp.t - 1) || q, b = interp(en.tr, rp.t + 1) || q;
+            drawPlane(ctx, x, y, Math.atan2(Y(b[1]) - Y(a[1]), X(b[0]) - X(a[0])), col, big ? 9 : 7); foePlanes.push({q, tm: en.tm});
+          }
+        } else {
+          drawChute(ctx, x, y, col, null);
+          ctx.font = "700 9px Pretendard, 'Malgun Gothic', sans-serif"; ctx.fillStyle = "#14170F"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+          ctx.fillText(String(en.tm ?? ""), x, y + .5);  // 팀 번호 (낙하산 아래 동그라미 안)
+        }
+        continue;
+      }
+      const down = (en.kn || []).some(([a, b]) => rp.t >= a && rp.t < b);  // 기절 중
+      if (!down && rpFoeInCar(en, rp.t)) {  // 차에 타면 핸들 (같은 차의 같은 팀은 하나만), BRDM은 장갑차
+        if (!foeCars.some(o => o.tm === en.tm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 40)) {
+          const vh = (en.vh || []).find(v => rp.t >= v[0] && rp.t <= v[1]);
+          if (vh && vh[2]) drawBRDM(ctx, x, y, big ? 28 : 20, rpHeading("e:" + en.n, t => interp(en.tr, t)), teamColor(en.tm || 0));
+          else drawWheel(ctx, x, y, big ? 9 : 6, teamColor(en.tm || 0));
+          foeCars.push({q, tm: en.tm});
+        }
+        rpHpBar(ctx, en.hp, x, y + (big ? 13 : 10), big ? 20 : 14, 3);
+        continue;
+      }
+      ctx.globalAlpha = down ? .45 : 1;
+      ctx.beginPath(); ctx.arc(x, y, r + 1.5, 0, Math.PI * 2); ctx.fillStyle = "rgba(0,0,0,.65)"; ctx.fill();
+      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = down ? "#8C8C84" : teamColor(en.tm || 0); ctx.fill();
+      if (big) { ctx.fillStyle = down ? "#3A3A36" : "#14170F"; ctx.fillText(String(en.tm ?? ""), x, y + .5); }
+      ctx.globalAlpha = 1;
+      const hl = rpHealAt(en.hl, rp.t); if (hl) drawHeal(ctx, x + r + 2, y - r - 2, big ? 5 : 4, hl);
+      rpHpBar(ctx, en.hp, x, y + r + 5, big ? 20 : 14, 3);
+    }
+  } };
+  drawFoes();
+  // 사격: 아이콘·이름표보다 위에 그려서 가까이서 쏠 때도 총구 화염과 탄도선이 보이게
+  const foeR = cam.s < .3 ? 8 : 4;
+  for (const [ht, ax, ay, vx, vy, kind, side, dmg] of R.hits || []) {  // 데미지 숫자를 먼저 (가까이서 쏠 때 총구 화염을 가리지 않게)
+    const age = rp.t - ht; if (age < 0 || age > 1.8 || !dmg || vx == null || ax == null) continue;
+    if (kind === "g" || (kind === "m" && R.mortars)) rpDmg(ctx, dmg, X(vx), Y(vy), age / 1.8, side);  // 우리가 준 건 노랑, 받은 건 빨강
+  }
+  // 다른 플레이어 사격: 1초에 4발씩 총구 화염 (맞힌 상대가 있으면 그쪽, 없으면 사방으로 짧게)
+  if (rp.foes) {
+    const FS = R.foe_shots || [];
+    let lo = 0, hi = FS.length;
+    while (lo < hi) { const m = (lo + hi) >> 1; if (FS[m][0] < rp.t - 1) lo = m + 1; else hi = m; }
+    for (let i = lo; i < FS.length && FS[i][0] <= rp.t; i++) {
+      const [ts, fx, fy, tx, ty] = FS[i], x1 = X(fx), y1 = Y(fy);
+      for (const off of [.05, .3, .55, .8]) {
+        const k = (rp.t - ts - off) / .09; if (k < 0 || k > 1) continue;
+        // 우리 팀과 같은 총구 화염 (방향을 모르면 마지막으로 움직인 방향으로)
+        const ang = tx != null ? Math.atan2(Y(ty) - y1, X(tx) - x1) : rpFoeHeading(fx, fy, ts);
+        rpMuzzle(ctx, x1, y1, ang, 1 - k, foeR + 2, tx != null ? Math.hypot(X(tx) - x1, Y(ty) - y1) : 99);
+      }
+    }
+  }
+
+  // 우리 팀 사격: 쏜 방향으로 총구 화염만 (선은 실제로 맞힌 총알만 그림)
+  for (const [ts, slot, tx, ty] of R.shots || []) {
+    if (rp.t < ts || rp.t > ts + 1) continue;
+    const pl = R.players.find(p => p.slot === slot); const sp = pl && curPos(pl, rp.t);
+    if (!sp || statusAt(pl, rp.t) === "dead" || tx == null) continue;
+    const x1 = X(sp[0]), y1 = Y(sp[1]), ang = Math.atan2(Y(ty) - y1, X(tx) - x1);
+    for (const off of [.05, .3, .55, .8]) {  // 1초에 4발
+      const k = (rp.t - ts - off) / .09; if (k < 0 || k > 1) continue;
+      rpMuzzle(ctx, x1, y1, ang, 1 - k, (rp.dispR[pl.nick] || 13) + 3, Math.hypot(X(tx) - x1, Y(ty) - y1));
+    }
+  }
+
+  // 맞힌 총알: 가는 탄도선 + 탄착 스파크 + 데미지 숫자 (폭발·화염은 투척 효과가 따로 그림)
+  const HT = R.hits || [];
+  let lo2 = 0, hi2 = HT.length;
+  while (lo2 < hi2) { const m = (lo2 + hi2) >> 1; if (HT[m][0] < rp.t - 3.6) lo2 = m + 1; else hi2 = m; }  // 박격포·로켓은 2초 남짓 그려서
+  for (let hi = lo2; hi < HT.length && HT[hi][0] <= rp.t; hi++) {
+    const [ht, ax, ay, vx, vy, kind, side, dmg] = HT[hi], age = rp.t - ht;
+    if (ax == null || vx == null) continue;
+    const x1 = X(ax), y1 = Y(ay), x2 = X(vx), y2 = Y(vy), dd = Math.hypot(x2 - x1, y2 - y1), r0 = side === 0 ? 16 : foeR + 2;
+    if (kind === "m" && R.mortars) continue;  // 박격포는 '박격포 궤적'이 그림 (데미지 숫자는 위에서)
+    if (kind === "p" || kind === "m") { rpHeavy(ctx, kind, x1, y1, x2, y2, age, side, dmg, hi); continue; }  // 판처파우스트·박격포
+    if (kind !== "g" || age > 1.8) continue;
+    if (age < .09) {  // 총구 화염 (우리 팀도, 적도)
+      rpMuzzle(ctx, x1, y1, Math.atan2(y2 - y1, x2 - x1), 1 - age / .09, r0, dd);
+    }
+    if (age < .35) {  // 가는 탄도선
+      ctx.globalAlpha = 1 - age / .35; ctx.strokeStyle = side === 0 ? "rgba(255,240,200,.9)" : "rgba(255,110,90,.6)"; ctx.lineWidth = side === 0 ? 1 : .8;
+      const s0 = dd > r0 * 2 ? r0 / dd : 0;  // 쏜 사람 아이콘 가장자리부터 (아주 가까우면 가운데부터)
+      ctx.beginPath(); ctx.moveTo(x1 + (x2 - x1) * s0, y1 + (y2 - y1) * s0); ctx.lineTo(x2, y2); ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    if (age < .4) {  // 탄착 스파크
+      const k = age / .4;
+      for (let n = 0; n < (side === 0 ? 8 : 4); n++) { const an = ((Math.sin((hi + 1) * 12.9 + n * 78.2) * 43758.5) % 1 + 1) % 1 * Math.PI * 2, d = 3 + k * 11;
+        ctx.beginPath(); ctx.arc(x2 + Math.cos(an) * d, y2 + Math.sin(an) * d, 1.5, 0, Math.PI * 2); ctx.fillStyle = side === 0 ? `rgba(255,212,90,${1 - k})` : `rgba(255,110,90,${1 - k})`; ctx.fill(); }
+    }
+  }
+  if (pip) return;  // 보조 화면은 축척 없이
   // 축척
   const m100 = S / R.size_m * 100, steps = [100, 200, 500, 1000, 2000];
   const stepM = steps.find(v => v * m100 / 100 >= 70) || 2000, px = stepM * m100 / 100;
@@ -2803,7 +2965,16 @@ function drawBadge(ctx, kind, x, y, sz = 30, spin = 0) {  // 투척 무기: 무�
 }
 function drawIcon(ctx, kind, x, y, sz, opened = false, spin = 0) {
   const im = replayImgs[kind];
-  if (kind === "carepackage_open" && !(im && im.complete && im.naturalWidth)) kind = "carepackage";  // 열린 상자 그림이 없으면 직접 그린 열린 상자
+  const hasIm = im && im.complete && im.naturalWidth;
+  if (!hasIm && (kind === "flarepackage" || kind === "flarepackage_open")) {  // 플레어 보급 그림이 없으면: 검은 상자 + 금색 뚜껑 + 별
+    const h = sz / 2; ctx.save(); ctx.translate(x, y);
+    ctx.fillStyle = "#fff"; ctx.fillRect(-h - 2, -h * .8 - 2, sz + 4, sz * .85 + 4);
+    ctx.fillStyle = "#282C26"; ctx.fillRect(-h, -h * .55, sz, sz * .65);
+    ctx.fillStyle = kind === "flarepackage" ? "#F2A900" : "#9A9A9A"; ctx.fillRect(-h, -h * .8, sz, sz * .2);
+    ctx.fillStyle = "#FF5C28"; ctx.beginPath(); ctx.arc(0, h * .15, h * .3, 0, Math.PI * 2); ctx.fill();
+    ctx.restore(); return;
+  }
+  if (kind === "carepackage_open" && !hasIm) kind = "carepackage";  // 열린 상자 그림이 없으면 직접 그린 열린 상자
   ctx.save(); ctx.translate(x, y); if (spin) ctx.rotate(spin);
   if (im && im.complete && im.naturalWidth) { ctx.drawImage(im, -sz / 2, -sz / 2, sz, sz); ctx.restore(); return; }
   const h = sz / 2;
@@ -2933,10 +3104,12 @@ function rpShake(R, X, Y, W, H, cam) {
   }
   return ox || oy ? [ox, oy] : null;
 }
-function rpMuzzle(ctx, x, y, ang, alpha) {  // 총구 화염 (우리 팀·적 공용 디자인)
+function rpMuzzle(ctx, x, y, ang, alpha, start = 10, dist = 99) {  // 총구 화염 (우리 팀·적 공용): 쏜 사람 아이콘 가장자리에서 시작
+  let s0 = start, L = 1;
+  if (dist < start + 20) { s0 = Math.max(3, Math.min(start, dist * .3)); L = Math.max(.55, Math.min(1, (dist - s0) / 14)); }  // 바로 앞에 쏠 때는 짧게
   ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.globalAlpha = Math.max(0, alpha);
-  ctx.fillStyle = "#FFD45A"; ctx.beginPath(); ctx.moveTo(10, 0); ctx.lineTo(24, -5); ctx.lineTo(20, 0); ctx.lineTo(24, 5); ctx.closePath(); ctx.fill();
-  ctx.fillStyle = "#FFFFFF"; ctx.beginPath(); ctx.arc(12, 0, 3, 0, Math.PI * 2); ctx.fill(); ctx.restore(); ctx.globalAlpha = 1;
+  ctx.fillStyle = "#FFD45A"; ctx.beginPath(); ctx.moveTo(s0, 0); ctx.lineTo(s0 + 14 * L, -5 * L); ctx.lineTo(s0 + 10 * L, 0); ctx.lineTo(s0 + 14 * L, 5 * L); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = "#FFFFFF"; ctx.beginPath(); ctx.arc(s0 + 2 * L, 0, 3 * L, 0, Math.PI * 2); ctx.fill(); ctx.restore(); ctx.globalAlpha = 1;
 }
 function rpFoeHeading(fx, fy, t) {  // 맞힌 대상을 모르는 적 사격: 그 자리에 있던 적이 움직이던 방향 (모르면 오른쪽)
   let best = null, bd = 1e9;
@@ -2954,6 +3127,60 @@ function rpFoeInCar(en, t) {  // 적이 차에 탔는지: 기록이 있으면 �
   const a = tr[i - 1], b = tr[i]; if (!a || !b || a[1] == null || b[1] == null || b[0] - a[0] > 12 || b[0] <= a[0]) return false;
   const v = Math.hypot(b[1] - a[1], b[2] - a[2]) * rp.data.size_m / (b[0] - a[0]);
   return v > 40 && !en.em ? "air" : v > 11;  // 시속 145km 넘게 움직이면 비행기 (예전 리플레이의 비상호출)
+}
+const HEAL_NAME = {b: "붕대", f: "구급상자", m: "의료용 키트", e: "에너지 드링크", p: "진통제", a: "아드레날린"};
+function rpHealAt(list, t) { return (list || []).find(h => t >= h[0] && t <= h[1]) || null; }
+function drawHeal(ctx, x, y, r, h) {  // 회복템 쓰는 중: 초록(회복)·노랑(부스트) 동그라미 + 십자 + 남은 시간 고리
+  const boost = !"bfm".includes(h[2]), k = Math.max(0, Math.min(1, (rp.t - h[0]) / Math.max(.1, h[1] - h[0])));
+  ctx.save();
+  ctx.beginPath(); ctx.arc(x, y, r + 2, 0, Math.PI * 2); ctx.fillStyle = "rgba(10,12,8,.9)"; ctx.fill();
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = boost ? "#E8A317" : "#3FA34D"; ctx.fill();
+  ctx.fillStyle = "#fff"; const a = r * .62, b = r * .2;
+  ctx.fillRect(x - a, y - b, a * 2, b * 2); ctx.fillRect(x - b, y - a, b * 2, a * 2);
+  ctx.beginPath(); ctx.arc(x, y, r + 2, -Math.PI / 2, -Math.PI / 2 + k * Math.PI * 2); ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.6; ctx.stroke();
+  ctx.restore();
+}
+function rpHpBar(ctx, list, x, y, w, h) {  // 맞으면 체력바가 2초 보였다가 1.2초 동안 사라짐 (방금 깎인 만큼은 흰색으로 잠깐)
+  if (!list || !list.length) return;
+  let lo = 0, hi = list.length;
+  while (lo < hi) { const m = (lo + hi) >> 1; if (list[m][0] <= rp.t) lo = m + 1; else hi = m; }
+  const i = lo - 1; if (i < 0) return;
+  const [ht, hp, dbno] = list[i], age = rp.t - ht; if (age > 3.2) return;
+  const prev = i > 0 && ht - list[i - 1][0] < 6 && list[i - 1][2] === dbno ? list[i - 1][1] : 100;
+  const alpha = age < 2 ? 1 : 1 - (age - 2) / 1.2, f = Math.max(0, Math.min(1, hp / 100)), chip = Math.max(f, Math.min(1, prev / 100));
+  ctx.save(); ctx.globalAlpha = Math.max(0, alpha);
+  ctx.fillStyle = "rgba(8,10,6,.85)"; ctx.fillRect(x - w / 2 - 1, y - 1, w + 2, h + 2);
+  if (age < .5 && chip > f) { ctx.fillStyle = `rgba(255,255,255,${1 - age / .5})`; ctx.fillRect(x - w / 2, y, w * chip, h); }
+  ctx.fillStyle = dbno ? "#E0532F" : f > .6 ? "#8BD16A" : f > .3 ? "#F2C94C" : "#E0532F";
+  ctx.fillRect(x - w / 2, y, w * f, h);
+  ctx.restore();
+}
+function rpHeading(key, posFn) {  // 움직이는 방향 (멈춰 있으면 마지막 방향 그대로)
+  rp.heads = rp.heads || {};
+  const a = posFn(rp.t - 1.5), b = posFn(rp.t + .5);
+  if (a && b && Math.hypot(b[0] - a[0], b[1] - a[1]) * rp.data.size_m > 1.5) rp.heads[key] = Math.atan2(b[1] - a[1], b[0] - a[0]);
+  return rp.heads[key] ?? -Math.PI / 2;
+}
+const BRDM_BY_MAP = {Desert_Main: "brdm_desert", Tiger_Main: "brdm_tiger", Neon_Main: "brdm_neon"};  // 맵마다 다른 위장 (그 외 맵은 기본 brdm)
+function drawBRDM(ctx, x, y, len, ang, col) {  // BRDM 장갑차 (위에서 본 모습, 앞이 가는 방향), 배경 없이 차만 + 포탑에 탄 사람·팀 색 점
+  const mk = BRDM_BY_MAP[rp.data?.map], mi = mk && replayImgs[mk];
+  const im = mi && mi.complete && mi.naturalWidth ? mi : replayImgs.brdm, w = len * .64;
+  ctx.save(); ctx.translate(x, y);
+  ctx.shadowColor = "rgba(0,0,0,.55)"; ctx.shadowBlur = 4; ctx.shadowOffsetY = 1.5;  // 지도 위에서 떠 보이게 그림자만
+  ctx.rotate(ang + Math.PI / 2);
+  if (im && im.complete && im.naturalWidth) ctx.drawImage(im, -w / 2, -len / 2, w, len);
+  else {
+    ctx.fillStyle = "#fff"; ctx.fillRect(-w / 2 - 1.5, -len / 2 - 1.5, w + 3, len + 3);
+    ctx.fillStyle = "#6A7A3E"; ctx.fillRect(-w / 2, -len / 2, w, len);
+    ctx.fillStyle = "#4A582C"; ctx.beginPath(); ctx.arc(0, 0, w * .3, 0, Math.PI * 2); ctx.fill();
+    ctx.fillRect(-1, -len / 2, 2, len / 2);
+  }
+  ctx.shadowColor = "transparent";
+  if (col) {  // 포탑 자리에 탄 사람(팀) 색 점
+    ctx.beginPath(); ctx.arc(0, 0, Math.max(3, len * .1) + 1.5, 0, Math.PI * 2); ctx.fillStyle = "#14170F"; ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, Math.max(3, len * .1), 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill();
+  }
+  ctx.restore();
 }
 function drawWheel(ctx, x, y, r, col) {  // 차량 핸들 아이콘 (플레이어 색 테두리)
   ctx.save();
@@ -2978,14 +3205,16 @@ function drawPlane(ctx, x, y, ang, col, size = 11) {
   ctx.fillStyle = col; ctx.fill(); ctx.strokeStyle = "rgba(0,0,0,.7)"; ctx.lineWidth = 1.5; ctx.stroke();
   ctx.restore();
 }
-function drawChute(ctx, x, y, col, av) {
-  const has = av && av.complete && av.naturalWidth, r = has ? 11 : 6;
+function drawChute(ctx, x, y, col, av) {  // 낙하 중: 사진(적은 팀 색 동그라미) 위에 작은 낙하산 배지
+  const has = av && av.complete && av.naturalWidth, r = has ? 13 : 6, rc = has ? 11 : 7, cy = y - r - rc * .45;
   ctx.save();
-  ctx.beginPath(); ctx.arc(x, y - r - 13, 13, Math.PI, 0); ctx.closePath(); ctx.fillStyle = col; ctx.fill();
-  ctx.strokeStyle = "rgba(0,0,0,.7)"; ctx.lineWidth = 1.2; ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x - 13, y - r - 13); ctx.lineTo(x - r * .7, y - r * .7); ctx.moveTo(x + 13, y - r - 13); ctx.lineTo(x + r * .7, y - r * .7); ctx.stroke();
-  ctx.beginPath(); ctx.arc(x, y, r + 2.5, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill();
+  ctx.beginPath(); ctx.arc(x, y, r + 3, 0, Math.PI * 2); ctx.fillStyle = "#14170F"; ctx.fill();
+  ctx.beginPath(); ctx.arc(x, y, r + 2, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill();
   if (has) { ctx.save(); ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.clip(); ctx.drawImage(av, x - r, y - r, r * 2, r * 2); ctx.restore(); }
+  ctx.strokeStyle = "#111"; ctx.lineWidth = has ? 1.6 : 1.2;  // 줄 (검정)
+  ctx.beginPath(); ctx.moveTo(x - rc * .85, cy); ctx.lineTo(x - r * .55, y - r * .8); ctx.moveTo(x + rc * .85, cy); ctx.lineTo(x + r * .55, y - r * .8); ctx.stroke();
+  ctx.beginPath(); ctx.arc(x, cy, rc + 1.6, Math.PI, 0); ctx.closePath(); ctx.fillStyle = "#111"; ctx.fill();  // 검정 테두리
+  ctx.beginPath(); ctx.arc(x, cy, rc, Math.PI, 0); ctx.closePath(); ctx.fillStyle = col; ctx.fill();
   ctx.restore();
 }
 const teamColor = tm => `hsl(${(tm * 67) % 360}, 75%, 62%)`;
@@ -3014,7 +3243,9 @@ function rpFrame(now) {
     if (rp.reel && rp.t >= rp.reel.end) { rp.t = rp.reel.end; rp.playing = false; }
     if (rp.t >= R.duration) { rp.playing = false; paintRpButtons(); }
   }
+  rpUpdatePip(now, dt);
   rpEvents(now); rpLegend(now); rpDraw(dt, now);
+  if (rp.pip && rp.pip.on && rp.pip.cam) rpDraw(dt, now, {c: $("#rpPipCanvas"), cam: rp.pip.cam});  // 오른쪽 아래 보조 화면
   rp.raf = requestAnimationFrame(rpFrame);
 }
 function rpNextFight() {  // '다음 교전' 버튼: 다음 교전이 시작되는 곳(첫 총격 fight_pre초 전)으로
