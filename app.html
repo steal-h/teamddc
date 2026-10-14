@@ -116,6 +116,25 @@ button,input,select{font:inherit;color:inherit}
 .bar i em{display:block;height:100%;background:var(--accent)}
 .bar span:last-child{text-align:right;color:var(--bone);font-variant-numeric:tabular-nums}
 .penalty{color:var(--flare);font-size:13px;margin-top:6px}
+.pc-key{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 12px}
+.pc-key div{background:var(--panel-2);border-radius:4px;padding:8px 6px 7px;text-align:center;min-width:0}
+.pc-key b{display:block;font:400 22px/1.1 var(--num);color:var(--bone);font-variant-numeric:tabular-nums}
+.pc-key span{display:block;font-size:11.5px;color:var(--dust);margin-top:3px;white-space:nowrap}
+.pc-grp{border-top:1px solid var(--line);padding:9px 0 8px}
+.pc-grp h4{margin:0 0 6px;font-size:11.5px;font-weight:700;letter-spacing:.06em;color:var(--accent);opacity:.85}
+.pc-grp .stats{margin:0;gap:0 12px;font-size:13.5px}
+.pc-grp .stats dt,.pc-grp .stats dd{padding:3px 0;border-bottom:1px dashed rgba(183,179,156,.12);line-height:1.35}
+.pc-grp .stats dt:nth-last-of-type(1),.pc-grp .stats dd:last-of-type{border-bottom:0}
+.pc-grp .stats dd small{color:var(--dust);font-weight:400;font-size:12px}
+.pc-grp .stats dd{white-space:nowrap}
+.pc-grp .bars{border-top:0;padding-top:0}
+.pcard .bar{grid-template-columns:44px 1fr 36px}
+.pcard .penalty,.pcard .best{font-size:12.5px;line-height:1.45;margin:6px 0 0;padding:6px 9px;border-radius:4px;background:var(--panel-2)}
+.pcard .penalty{background:rgba(224,83,47,.1)}
+.pc-earned .badges{display:flex!important;flex-direction:row!important;flex-wrap:wrap;gap:6px;justify-content:flex-start;margin:8px 0 0}
+.pc-earned .badges .bdg{margin:0;padding:5px 9px}
+.pc-newh{font-size:11.5px;font-weight:700;letter-spacing:.06em;color:#B48CF2;margin:10px 0 -2px}
+
 .best{font-size:13px;color:var(--dust);margin-top:10px}
 
 .split{display:grid;grid-template-columns:1fr;gap:6px}
@@ -435,9 +454,10 @@ dialog[open]::backdrop{animation:fadein .22s ease-out}
 .rp-body{display:grid;grid-template-columns:minmax(0,1fr) 300px;min-height:0}
 .rp-stage{position:relative;min-height:0;overflow:hidden}
 .rp-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.rp-hud{position:absolute;left:14px;top:12px;display:flex;gap:8px;pointer-events:none}
+.rp-hud{position:absolute;left:14px;top:12px;display:flex;flex-wrap:wrap;gap:8px;max-width:calc(100% - 28px);pointer-events:none}
 .rp-hud span{background:rgba(20,23,15,.82);border:1px solid #3A4030;border-radius:4px;padding:6px 12px;font-size:14px}
 .rp-hud #rpClock{font:400 20px/1 var(--num);color:var(--bone);padding:6px 12px 4px}
+.rp-hud span:empty{display:none}.rp-hud #rpPhase{color:#BFE0FF;border-color:#3D5C86}.rp-hud #rpPhase.moving{color:#fff;border-color:#7FB2FF;box-shadow:0 0 10px rgba(127,178,255,.45)}
 .rp-toast{position:absolute;left:50%;bottom:22px;transform:translateX(-50%) translateY(10px);opacity:0;pointer-events:none;background:rgba(20,23,15,.9);border:1px solid var(--accent);border-radius:999px;padding:10px 22px;font:400 22px/1.2 var(--display);transition:opacity .25s,transform .25s;white-space:nowrap}
 .rp-toast.on{opacity:1;transform:translateX(-50%)}
 .rp-toast.bad{border-color:var(--flare);color:#FFB4A2}
@@ -787,6 +807,11 @@ html.share-mode .pc .beam,html.share-mode .pc .meteor,html.share-mode .pc .ldot{
 .ach .prog{height:4px;background:var(--panel-2);border-radius:2px;margin-top:6px;overflow:hidden}
 .ach .prog em{display:block;height:100%;background:var(--dust)}
 .bdg.ach-new{border-color:#B48CF2;color:#D5C2FF}
+.bdg.ach-new.lv0{--ac:#C9875A}.bdg.ach-new.lv1{--ac:#C8CDD3}.bdg.ach-new.lv2{--ac:#F2B33D}.bdg.ach-new.lv3{--ac:#6FD3C3}
+.bdg.ach-new.lv4{--ac:#8EC5FF}.bdg.ach-new.lv5{--ac:#C59BFF}.bdg.ach-new.lv6{--ac:#FF7A5C}
+.bdg.ach-new[class*=lv]{border-color:var(--ac);color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent)}
+.bdg.ach-new.lv2,.bdg.ach-new.lv5,.bdg.ach-new.lv6{box-shadow:0 0 8px color-mix(in srgb,var(--ac) 45%,transparent)}
+.pc-key .kda b{color:var(--accent)}
 
 /* ───── 명장면 ───── */
 .rp-reel{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(ellipse at center,rgba(20,23,15,.78),rgba(20,23,15,.94));opacity:0;pointer-events:none;transition:opacity .35s;z-index:5;padding:20px}
@@ -819,7 +844,11 @@ html.share-mode .pc .beam,html.share-mode .pc .meteor,html.share-mode .pc .ldot{
 .rp-grp b{font:700 11px/1 inherit;color:var(--accent);align-self:center;margin-right:2px;background:rgba(20,23,15,.86);border-radius:4px;padding:4px 6px}
 .replay.rec .rp-pip,.replay.rec #rpGrpMain{display:none}
 .rp-pip.on~.rp-hint{right:calc(min(32%,380px) + 24px)}
-.rp-hud span:empty{display:none}
+.rp-stage{container-type:size}
+.rp-hud.rp-hud-tr{left:auto;right:14px;justify-content:flex-end}
+.rp-hud.rp-hud-br{left:auto;top:auto;right:14px;bottom:14px;justify-content:flex-end;align-items:center;transition:bottom .35s}
+.rp-stage:has(.rp-pip.on) .rp-hud.rp-hud-br{bottom:calc(min(32cqw,380px) * .75 + 26px)}
+.rp-hud #rpHazard{color:#FFC48A;border-color:#8A5A2A}.rp-hud #rpHazard.emp{color:#E2D2FF;border-color:#6E4FA8}.rp-hud #rpHazard.red{color:#FFB4A2;border-color:#8A3A2A}
 .rp-stage canvas{cursor:grab}
 .rp-stage canvas.drag{cursor:grabbing}
 .rp-hint{position:absolute;left:14px;bottom:14px;background:rgba(20,23,15,.82);border:1px solid #3A4030;border-radius:4px;padding:6px 12px;font-size:13px;color:var(--dust);transition:opacity .6s;pointer-events:none}
@@ -927,7 +956,8 @@ html.share-mode .pc .beam,html.share-mode .pc .meteor,html.share-mode .pc .ldot{
   .rp-legend{padding:8px 10px;gap:4px 10px}
   .rp-leg b{font-size:15px}.rp-leg em{font-size:15px}.rp-leg small{font-size:11px}
   .rp-feed{font-size:12.5px}.rp-feed div{padding:4px 10px}
-  .rp-hud{left:8px;top:8px;gap:6px}
+  .rp-hud{left:8px;top:8px;gap:6px}.rp-hud.rp-hud-tr{left:auto;right:8px}.rp-hud.rp-hud-br{left:auto;top:auto;right:8px;bottom:8px}
+  .rp-stage:has(.rp-pip.on) .rp-hud.rp-hud-br{bottom:calc(44cqw * .75 + 18px)}
   .rp-hud span{padding:4px 8px;font-size:12px}.rp-hud #rpClock{font-size:16px}
   .rp-hint{left:8px;right:8px;bottom:8px;font-size:12px}
   .rp-pip{width:44%;right:8px;bottom:8px}.rp-pip.on~.rp-hint{display:none}
@@ -1030,13 +1060,15 @@ body.viewer .viewer-badge{display:inline-flex;align-items:center;gap:6px;padding
   <div class="rp-body">
     <div class="rp-stage">
       <canvas id="rpCanvas"></canvas>
-      <div class="rp-hud"><span id="rpClock">00:00</span><span id="rpAlive"></span><span id="rpSpd"></span></div>
+      <div class="rp-hud"><span id="rpSpd"></span></div>
+      <div class="rp-hud rp-hud-tr"><span id="rpAlive"></span></div>
+      <div class="rp-hud rp-hud-br"><span id="rpHazard"></span><span id="rpPhase"></span><span id="rpClock">00:00</span></div>
       <div class="rp-grp" id="rpGrpMain" aria-live="off"></div>
       <div class="rp-pip" id="rpPip" aria-hidden="true"><canvas id="rpPipCanvas"></canvas><div class="rp-grp" id="rpGrpSub"></div></div>
       <div class="rp-toast" id="rpToast"></div>
       <div class="rp-loading" id="rpLoading">리플레이 준비 중...</div>
       <div class="rp-reel" id="rpReel" aria-live="polite"></div>
-      <div class="rp-hint" id="rpHint"><span class="hint-pc">마우스 휠로 확대·축소, 왼쪽 버튼으로 끌어서 이동, 두 번 클릭하면 자동 카메라</span><span class="hint-touch">두 손가락으로 확대·축소, 한 손가락으로 이동, 두 번 탭하면 자동 카메라</span></div>
+      <div class="rp-hint off" id="rpHint" hidden></div>
     </div>
     <aside class="rp-side"><div class="rp-legend" id="rpLegend"></div><div class="rp-feed" id="rpFeed" aria-label="교전 기록"></div></aside>
   </div>
@@ -1575,6 +1607,10 @@ function replayCard(r) {
         <button class="btn" id="btnReelSend">명장면 영상 디스코드 공유</button><button class="btn" id="btnReelSave">명장면 영상 저장</button></div></div>
     <p class="reel-msg" id="reelMsg" aria-live="polite"></p>`;
 }
+function kdaOf(t) {  // (킬 + 어시) ÷ 죽은 횟수 (예전 기록엔 죽은 횟수가 없어서 판 수 − 치킨으로 짐작)
+  const d = t.deaths ?? Math.max(0, (t.games || 0) - (t.wins || 0));
+  return (((t.kills || 0) + (t.assists || 0)) / Math.max(1, d)).toFixed(2);
+}
 function renderDay(r, report, reveal) {
   current = {result: r, report};
   const [first, ...rest] = r.ranking;
@@ -1584,28 +1620,25 @@ function renderDay(r, report, reveal) {
       <div class="name">${esc(p.name)}</div><div class="score"><b>${sc(p.total)}</b> 점</div>${badgesHtml(p)}</div>`).join("");
   const cards = r.ranking.map(p => {
     const m = p.metrics, t = p.totals, tl = p.tel;
-    const telRows = tl ? `
-        <dt>주무기</dt><dd>${tl.main_weapon ? `${esc(tl.main_weapon)} ${tl.main_weapon_kills}킬` : "-"}</dd>
-        <dt>기절→킬 마무리</dt><dd>${tl.convert_pct == null ? "-" : tl.convert_pct + "%"}</dd>
-        <dt>판당 받은 피해</dt><dd>${fmt(tl.taken_pg)}</dd>
-        <dt>최장거리 기절</dt><dd>${tl.longest_knock}m</dd>
-        <dt>첫 교전 선공</dt><dd>${tl.first_blood}회</dd>
-        <dt>블루칩으로 살린 인원</dt><dd>${tl.bluechip ?? 0}명</dd>
-        <dt>블루칩으로 복귀</dt><dd>${tl.recalled ?? 0}회</dd>` : "";
+    const row = (l, v) => `<dt>${l}</dt><dd>${v}</dd>`;
+    const group = (title, rows) => `<section class="pc-grp"><h4>${title}</h4><dl class="stats">${rows.join("")}</dl></section>`;
+    const telRows = tl ? group("세부 기록", [
+        row("주무기", tl.main_weapon ? `${esc(tl.main_weapon)} <small>${tl.main_weapon_kills}킬</small>` : "-"),
+        row("기절→킬 마무리", tl.convert_pct == null ? "-" : tl.convert_pct + "%"),
+        row("최장거리 기절", tl.longest_knock + "m"),
+        row("첫 교전 선공", tl.first_blood + "회"),
+        row("블루칩 살림 · 복귀", `${tl.bluechip ?? 0}명 · ${tl.recalled ?? 0}회`)]) : "";
     const bars = LABELS.map(([k, l]) => {
       const w = state.weights[k] || 1, v = p.parts[k] ?? 0, pct = Math.max(0, Math.min(100, v / w * 100));
       return `<div class="bar"><span>${l}</span><i><em style="width:${pct}%"></em></i><span>${v}</span></div>`;
     }).join("");
     return `<article class="pcard r${p.rank}">
       <header><b style="display:flex;align-items:center;gap:8px">${avatar(p, "sm", false)}${esc(p.name)}</b><span>${p.rank}위</span></header>
-      <dl class="stats">
-        <dt>판당 딜량</dt><dd>${fmt(m.damage)}</dd><dt>판당 킬</dt><dd>${m.kills}</dd>
-        <dt>판당 기절</dt><dd>${m.dbnos}</dd><dt>판당 어시</dt><dd>${m.assists}</dd>
-        <dt>판당 소생</dt><dd>${m.revives}</dd><dt>평균 생존</dt><dd>${m.survival_min}분</dd>
-        <dt>헤드샷 비율</dt><dd>${m.headshot_pct}%</dd>
-        <dt>치킨</dt><dd>${t.wins}회</dd><dt>최장거리 킬</dt><dd>${t.longest}m</dd><dt>팀킬</dt><dd>${t.teamkills}회</dd>${telRows}
-      </dl>
-      <div class="bars">${bars}</div>
+      <div class="pc-key"><div class="kda"><b>${kdaOf(t)}</b><span>KDA</span></div><div><b>${fmt(m.damage)}</b><span>판당 딜량</span></div><div><b>${m.kills}</b><span>판당 킬</span></div></div>
+      ${group("전투", [row("판당 기절", m.dbnos), row("판당 어시", m.assists), row("헤드샷 비율", m.headshot_pct + "%"), row("최장거리 킬", t.longest + "m")])}
+      ${group("생존 · 팀", [row("평균 생존", m.survival_min + "분"), row("판당 소생", m.revives), row("치킨", t.wins + "회"), ...(tl ? [row("판당 받은 피해", fmt(tl.taken_pg))] : []), row("팀킬", t.teamkills + "회")])}
+      ${telRows}
+      <section class="pc-grp"><h4>점수 구성</h4><div class="bars">${bars}</div></section>
       ${p.penalty ? `<div class="penalty">감점 −${p.penalty}점: ${[
         t.teamkills ? `팀킬 ${t.teamkills}회 −${+((state.weights.teamkill_penalty ?? 10) * t.teamkills).toFixed(1)}` : "",
         t.teamknocks ? `팀원 기절 ${t.teamknocks}회 −${+((state.weights.teamknock_penalty ?? 5) * t.teamknocks).toFixed(1)}` : "",
@@ -1614,7 +1647,8 @@ function renderDay(r, report, reveal) {
       ${p.best ? `<div class="best">최고의 판: ${esc(p.best.map)}에서 딜 ${fmt(p.best.damage)}, ${p.best.kills}킬, ${p.best.rank}등</div>` : ""}
       ${(p.badges || []).length || (r.new_achievements?.[p.nick] || []).length ? `<div class="pc-earned">
         ${badgesHtml(p, "left")}
-        ${(r.new_achievements?.[p.nick] || []).length ? `<div class="badges left">${r.new_achievements[p.nick].map(a => `<span class="bdg ach-new">새 업적: ${esc(a)}</span>`).join("")}</div>` : ""}</div>` : ""}
+        ${(r.new_achievements?.[p.nick] || []).length ? `<div class="pc-newh">새 업적</div><div class="badges left">${r.new_achievements[p.nick].map(a => { const t = typeof a === "string" ? a : a.t, lv = typeof a === "string" ? 0 : (a.lv ?? 0);
+          return `<span class="bdg ach-new lv${lv}" title="${TIER_NAMES[lv] || ""} 등급 업적">${esc(t)}</span>`; }).join("")}</div>` : ""}</div>` : ""}
     </article>`;
   }).join("");
   const hl = r.highlights.map(h => `<li class="${h.label === "팀킬범" || h.tone === "bad" ? "bad" : ""}"><div><small>${esc(h.label)}</small><b>${esc(h.name)}</b></div><span>${esc(h.value)}</span></li>`).join("");
@@ -1961,21 +1995,16 @@ async function ceremony(r) {
     $("#showClose").focus();
   } catch { /* 건너뛰기 */ }
 }
-async function ceremonyIntro(r, t, stage) {  // 시상식 시작: 제목이 쾅 → 오늘 요약 → 3·2·1 (오늘의 명장면처럼)
+async function ceremonyIntro(r, t, stage) {  // 시상식 시작: 제목이 쾅 → 오늘 요약 → 바로 시작
   const title = $("#showTitle"); title.classList.add("intro-hide");
   const ck = (r.games || []).filter(g => g.rank === 1).length, best = Math.min(...(r.games || []).map(g => g.rank || 99));
   const maps = (r.maps || []).map(m => m.map).slice(0, 3).join(" · ");
   stage.innerHTML = `<div class="show-intro"><div class="si-glow"></div><div class="si-big">TEAM DDC</div><div class="si-ttl">오늘의 시상식</div>
     <div class="si-sub">${esc(dateLabelOf(r))} · ${r.games_count}게임 · ${ck ? `치킨 ${ck}번` : `최고 ${best}등`}${maps ? ` · ${esc(maps)}` : ""}</div>
-    <div class="si-count" id="siCount"></div></div>`;
+    </div>`;
   sfx.slam?.();
   await wait(1900, t);
-  for (const n of [3, 2, 1]) {
-    const el = $("#siCount"); if (!el) break;
-    el.textContent = n; el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop");
-    sfx.ding(n === 1 ? 784 : 523.25);
-    await wait(620, t);
-  }
+  await wait(700, t);  // (카운트다운 없이 바로 시작)
   stage.querySelector(".show-intro")?.classList.add("out");
   await wait(380, t);
   stage.innerHTML = ""; title.classList.remove("intro-hide");
@@ -1998,8 +2027,10 @@ addEventListener("keydown", e => { if (e.key === "Escape" && !$("#show").classLi
 const RP_DEFAULTS = {
   fight_speed: 2,      // 교전 구간 재생 배속
   fight_pre: 1.5,      // 교전 시작: 첫 총격 몇 초 전부터
-  fight_post: 3,       // 교전 끝: 마지막 총격·피격 몇 초 뒤까지
-  fight_gap: 30,       // 이 초 안에 다시 총격이 있으면 같은 교전으로 이어 봄
+  fight_post: 2,       // 교전 끝: 마지막 총격·피격 몇 초 뒤까지
+  fight_gap: 12,       // 이 초 안에 다시 총격이 있으면 같은 교전으로 이어 봄 (카메라 확대 유지)
+  fight_lull: 5,       // 교전 중이라도 이 초 넘게 총소리가 없으면 교전 배속을 풀고 원래 배속으로 (다음 총격 직전에 다시 감속)
+  zone_view_phase: 3,  // 교전이 없을 때: 이 자기장 페이즈부터는 블루존 안 전체(남은 적들)가 보이게 넓게
   crowd_scale: .6,     // 팀원끼리 붙어 있을 때 사진 크기 (1 = 원래 크기)
   crowd_dist: 30,      // 화면에서 이 픽셀보다 가까우면 '붙어 있음'
   avatar_r: 13,        // 팀원 사진 반지름 (픽셀)
@@ -2045,19 +2076,33 @@ const rpName = nick => rp.names[nick] || nick;
 
 const rpCache = {}, mapImgs = {};
 function rpBuildFights(R) {
-  // 교전 구간: 우리 팀 사격·피격·기절·처치를 시간순으로 묶음. fight_gap초 안에 이어지면 한 교전으로 (후반에 줌이 들락날락하지 않게)
-  const C = rpCfg();
-  const pts = [];
-  for (const h of R.hits || []) if (h[1] != null && h[3] != null) pts.push({t: h[0], x: h[3], y: h[4], ax: h[1], ay: h[2]});
-  for (const sh of R.shots || []) if (sh[2] != null) { const pl = R.players.find(p => p.slot === sh[1]); pts.push({t: sh[0], x: sh[2], y: sh[3], who: pl && pl.nick}); }
-  for (const e of R.events) if (["kill", "knock", "died", "downed"].includes(e.k) && e.x != null) pts.push({t: e.t, x: e.x, y: e.y, ax: e.ax, ay: e.ay});
+  // 교전 구간: 우리 팀 사격·피격·기절·처치를 시간순으로 묶음. fight_gap초 안에 이어지면 한 교전 (카메라 확대 유지)
+  // 그 안에서 fight_lull초 넘게 조용한 틈은 '쉬는 구간'으로 따로 표시 → 배속은 원래대로 (교전 배속으로 질질 끌지 않게)
+  const C = rpCfg(), pts = [];
+  for (const h of R.hits || []) if (h[1] != null && h[3] != null) pts.push({t: h[0], x: h[3], y: h[4], ax: h[1], ay: h[2], w: 2});
+  for (const sh of R.shots || []) if (sh[2] != null) { const pl = R.players.find(p => p.slot === sh[1]); pts.push({t: sh[0], x: sh[2], y: sh[3], who: pl && pl.nick, w: sh[4] ? 1.5 : .5}); }
+  for (const e of R.events) if (["kill", "knock", "died", "downed"].includes(e.k) && e.x != null) pts.push({t: e.t, x: e.x, y: e.y, ax: e.ax, ay: e.ay, w: 5});
   pts.sort((a, b) => a.t - b.t);
   const F = [];
   for (const q of pts) {
     const f = F[F.length - 1];
     if (f && q.t - f.last <= C.fight_gap) { f.last = q.t; f.pts.push(q); } else F.push({first: q.t, last: q.t, pts: [q]});
   }
-  return F.map(f => ({t0: f.first - C.fight_pre, t1: f.last + C.fight_post, pts: f.pts}));  // 첫 총격 fight_pre초 전 ~ 마지막 fight_post초 뒤
+  // 맞힌 것·쓰러뜨린 것 없이 빈 총(맞은 곳 모르는 사격) 몇 발뿐이면 교전으로 보지 않음
+  const real = f => f.pts.some(q => q.w >= 1.5) || f.pts.length >= 6;
+  return F.filter(real).map(f => {
+    const segs = [];
+    for (const q of f.pts) { const sg = segs[segs.length - 1]; if (sg && q.t - sg[1] <= C.fight_lull) sg[1] = q.t; else segs.push([q.t, q.t]); }
+    return {t0: f.first - C.fight_pre, t1: f.last + C.fight_post, pts: f.pts, segs: segs.map(([a, b]) => [a - C.fight_pre, b + C.fight_post])};
+  });
+}
+function rpFightHot(f, t) { return !!f && f.segs.some(([a, b]) => t >= a && t <= b); }  // 지금 실제로 총소리가 나는 중인지
+function rpZonePhase(t) {  // 자기장 페이즈: 다음 자기장(흰 원)이 새로 정해질 때마다 1씩
+  const Z = rp.data.zones || []; let n = 0, prev = 0, last = null;
+  for (const z of Z) { if (z[0] > t) break; if (z[6] > 0 && Math.abs(z[6] - prev) > 1e-4) { n++; prev = z[6]; } last = z; }
+  if (!n) return null;
+  const now = zoneAt(t), soon = zoneAt(t + 3), moving = now && soon && soon.sr < now.sr - 1e-5;
+  return {n, moving, final: !!(last && !(last[6] > 0))};
 }
 function rpFightAt(t) { return (rp.fights || []).find(f => t >= f.t0 && t <= f.t1) || null; }
 function rpUpcomingFight(t) { return (rp.fights || []).find(f => f.t0 > t) || null; }  // (이름 주의: rpNextFight는 '다음 교전' 버튼)
@@ -2087,6 +2132,7 @@ function rpSetup(R) {
   rp.pip = null; $("#rpPip")?.classList.remove("on");
   rp.data = R; rp.names = Object.fromEntries(R.players.map(p => [p.nick, p.name]));
   rp.fights = rpBuildFights(R);
+  rp.hazards = rpBuildHazards(R);
   if (!mapImgs[R.map]) { const img = new Image(); img.src = "api/map?code=" + encodeURIComponent(R.map); mapImgs[R.map] = img; }
   rp.img = null;
   const img = mapImgs[R.map];
@@ -2100,7 +2146,7 @@ function rpSetup(R) {
     `<i style="left:${e.t / R.duration * 100}%;background:${e.k === "died" ? "#E0532F" : rpCol(e.by)}"></i>`).join("");
   rp.flashes = []; rp.focus = null; rp.reel = null; rp.curSpeed = rp.speed; rp.manual = false;
   rp.seed = R.id;
-  const hint = $("#rpHint"); hint.classList.remove("off"); clearTimeout(rp.hintT); rp.hintT = setTimeout(() => hint.classList.add("off"), 6000);
+
 }
 function rpStartLoop() {
   cancelAnimationFrame(rp.raf);
@@ -2144,7 +2190,7 @@ async function openReel(date, rec = false) {
   const tk = ++reelToken;
   if (!rec) ensureAudio();
   cancelAnimationFrame(rp.raf); rp.data = null;
-  ["#rpClock", "#rpAlive", "#rpSpd"].forEach(x => $(x).textContent = "");
+  ["#rpClock", "#rpAlive", "#rpPhase", "#rpSpd"].forEach(x => $(x).textContent = "");
   const box = $("#replay"); box.classList.remove("hidden"); box.classList.toggle("rec", rec);
   document.body.style.overflow = "hidden";
   $("#rpLoading").classList.remove("hidden");
@@ -2281,6 +2327,8 @@ function aliveAt(t) {
 function feedLine(e) {
   const c = rpCol(e.by), wd = [e.w, e.d ? e.d + "m" : ""].filter(Boolean).join(", ");
   if (e.k === "empick") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 비상호출</div>`;
+  if (e.k === "emfail") return `<div class="bad"><time>${mmss(e.t)}</time><b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b> 비상호출 탑승 실패</div>`;
+  if (e.k === "hazard") return `<div class="${e.end ? "" : "bad"}"><time>${mmss(e.t)}</time><b style="color:${e.col}">${esc(e.name)}</b> ${e.end ? "사라짐" : "발생"}</div>`;
   if (e.k === "emlift") return `<div><time>${mmss(e.t)}</time><b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b> 비상호출 비행기 탑승</div>`;
   if (e.k === "transmit") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 블루칩 송신${e.est ? " (추정)" : ""} → <b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b></div>`;
   if (e.k === "kill") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 처치 ${esc(e.who)} <small>${esc(wd)}</small></div>`;
@@ -2340,6 +2388,11 @@ function rpLegend(now) {
   const a = aliveAt(rp.t);
   $("#rpAlive").textContent = a && a[1] != null ? `생존 ${a[1]}명` : "";
   $("#rpClock").textContent = mmss(rp.t);
+  const hz = rpHazardsAt(rp.t)[0], hzEl = $("#rpHazard");
+  hzEl.textContent = hz ? `${hz.name} ${mmss(hz.age)}` : ""; hzEl.className = hz ? hz.kind : "";
+  const ph = rpZonePhase(rp.t), phEl = $("#rpPhase");
+  phEl.textContent = ph ? (ph.final ? `자기장 ${ph.n}페이즈 · 마지막` : `자기장 ${ph.n}페이즈${ph.moving ? " · 줄어드는 중" : ""}`) : "";
+  phEl.classList.toggle("moving", !!(ph && ph.moving));
   if (!rp.dragging) $("#rpSeek").value = rp.t;
 }
 function rpStatusText(p, t) {
@@ -2349,6 +2402,7 @@ function rpStatusText(p, t) {
       : (onPlane ? "비행기" : "낙하 중"))
       : t < (p.landed ?? 0) ? "대기 중" : st === "dead" ? "사망" : st === "down" ? "기절"
       : rpHealAt(p.hl, t) ? (rpHealAt(p.hl, t)[2] === "r" ? "차량 수리 중" : `${HEAL_NAME[rpHealAt(p.hl, t)[2]]} ${"bfm".includes(rpHealAt(p.hl, t)[2]) ? "회복" : "부스트"} 중`)
+      : vehAt(p, t) && /mortar/i.test(vehAt(p, t)[3] || "") ? "박격포 사용 중"
       : vehAt(p, t) ? (/brdm/i.test(vehAt(p, t)[3] || "") ? (vehAt(p, t)[2] ? "BRDM 운전 중" : "BRDM 탑승") : vehAt(p, t)[2] ? "운전 중" : "차량 탑승")
       : rpGroupFighting([p], t) ? "교전 중" : "생존";
 }
@@ -2377,19 +2431,39 @@ function rpGroupFighting(members, t, pts) {  // 이 무리 근처(250m)에서 �
   const qs = members.map(m => m.q || curPos(m.p || m, t)).filter(Boolean);
   return pts.filter(q => qs.some(m => Math.hypot(q.x - m[0], q.y - m[1]) < lim)).length;
 }
-function rpSceneScore(g, t) {  // 장면 중요도: 우리가 때리고 쓰러뜨리는 장면이 높고, 우리가 맞거나 지는 장면은 낮음
+function rpSceneTier(g, t) {  // 장면 등급: 3 = 킬, 2 = 기절, 1 = 사격·피격 등 교전 중, 0 = 조용함 (지금 앞뒤 몇 초)
   const R = rp.data, lim = 150 / R.size_m, qs = g.map(m => m.q), near = (x, y) => x != null && qs.some(q => Math.hypot(q[0] - x, q[1] - y) < lim);
   const nicks = new Set(g.map(m => m.p.nick));
-  let sc = 0;
+  let tier = 0;
+  for (const e of R.events) {
+    if (e.t < t - 5 || e.t > t + 1.5) continue;
+    const ours = nicks.has(e.by) || nicks.has(e.who) || near(e.x, e.y);
+    if (!ours) continue;
+    if (e.k === "kill" || e.k === "died") tier = Math.max(tier, 3);
+    else if (e.k === "knock" || e.k === "downed") tier = Math.max(tier, 2);
+  }
+  if (tier < 1) {
+    for (const h of R.hits || []) if (h[0] >= t - 4 && h[0] <= t + 1 && (near(h[1], h[2]) || near(h[3], h[4]))) { tier = 1; break; }
+  }
+  if (tier < 1) {
+    const slots = new Set(g.map(m => m.p.slot));
+    for (const sh of R.shots || []) if (sh[0] >= t - 3 && sh[0] <= t + 1 && slots.has(sh[1])) { tier = 1; break; }
+  }
+  return tier;
+}
+function rpSceneScore(g, t) {  // 장면 중요도: 등급(킬 > 기절 > 교전)이 먼저, 같은 등급이면 우리가 때리고 쓰러뜨리는 쪽이 높음
+  const R = rp.data, lim = 150 / R.size_m, qs = g.map(m => m.q), near = (x, y) => x != null && qs.some(q => Math.hypot(q[0] - x, q[1] - y) < lim);
+  const nicks = new Set(g.map(m => m.p.nick));
+  let sc = rpSceneTier(g, t) * 100;
   for (const h of R.hits || []) {
     if (h[0] < t - 8 || h[0] > t + 2) continue;
     if (h[6] === 0 && near(h[1], h[2])) sc += 3;        // 우리가 맞힘
-    else if (h[6] === 1 && near(h[3], h[4])) sc += .8;  // 우리가 맞음 (교전은 교전이지만 덜 중요)
+    else if (h[6] === 1 && near(h[3], h[4])) sc += 1.5; // 우리가 맞음
   }
   for (const e of R.events) {
     if (e.t < t - 10 || e.t > t + 2) continue;
     if ((e.k === "kill" || e.k === "knock") && nicks.has(e.by)) sc += e.k === "kill" ? 25 : 15;  // 우리가 쓰러뜨림·처치
-    if ((e.k === "downed" || e.k === "died") && nicks.has(e.who)) sc -= e.k === "died" ? 14 : 8;   // 우리가 짐
+    if ((e.k === "downed" || e.k === "died") && nicks.has(e.who)) sc += e.k === "died" ? 8 : 5;
   }
   return sc + g.length * .5;
 }
@@ -2400,6 +2474,11 @@ function rpUpdatePip(now, dt) {
   const off = () => { P.on = false; P.want = 0; P.leave = 0; };
   if (Math.abs(rp.t - (P.lastT ?? rp.t)) > 6) { off(); P.main = []; P.sub = []; }  // 장면을 크게 건너뛰면 새로 판단
   P.lastT = rp.t;
+  const aliveN = list => list.some(n => R.players.some(p => p.nick === n && statusAt(p, rp.t) !== "dead"));
+  if (P.on && P.main.length && !aliveN(P.main) && aliveN(P.sub)) {  // 메인 화면 팀원이 모두 죽음 → 보조 화면을 그대로 메인으로 (줌 그대로 이어서)
+    if (P.cam) rp.cam = {...P.cam};
+    [P.main, P.sub] = [P.sub, []]; P.swapAt = now; off(); P.cam = null;
+  }
   if (G.length < 2) {
     if (P.on && !(P.sub.length && P.sub.some(n => R.players.some(p => p.nick === n && statusAt(p, rp.t) !== "dead")))) off();  // 보조 쪽이 모두 죽음 → 바로 끔
     else if (P.on) { P.leave = P.leave || now; if (now - P.leave > C.pip_close_s * 1000 && now - P.since > C.pip_min_s * 1000) off(); }
@@ -2407,12 +2486,14 @@ function rpUpdatePip(now, dt) {
   } else {
     // 지난번 메인·보조와 겹치는 무리를 이어서 씀 (무리가 같으면 순서를 함부로 바꾸지 않음)
     const overlap = (g, list) => g.filter(m => list.includes(m.p.nick)).length;
-    let main = [...G].sort((a, b) => overlap(b, P.main) - overlap(a, P.main) || b.length - a.length)[0];
+    let main = [...G].sort((a, b) => overlap(b, P.main) - overlap(a, P.main) || rpSceneScore(b, rp.t) - rpSceneScore(a, rp.t) || b.length - a.length)[0];
+    if (P.on && P.cam && overlap(main, P.main) === 0 && overlap(main, P.sub) > 0) { const c = {...rp.cam}; rp.cam = {...P.cam}; P.cam = c; P.swapAt = now; }  // 메인이 바뀌면 화면도 서로 바꿔서 줌이 튀지 않게
     let sub = G.filter(g => g !== main).sort((a, b) => overlap(b, P.sub) - overlap(a, P.sub) || rpSceneScore(b, rp.t) - rpSceneScore(a, rp.t))[0];
     if (!P.main.length) {  // 처음: 중요한 장면을 메인으로
       if (rpSceneScore(sub, rp.t) > rpSceneScore(main, rp.t)) [main, sub] = [sub, main];
-    } else if (now - P.swapAt > C.pip_swap_s * 1000 && rpSceneScore(sub, rp.t) - rpSceneScore(main, rp.t) > C.pip_swap_margin) {
-      [main, sub] = [sub, main]; P.swapAt = now;  // 보조 쪽이 확실히 더 중요해졌을 때만 바꿈
+    } else if ((rpSceneTier(sub, rp.t) > rpSceneTier(main, rp.t) && now - P.swapAt > (rpSceneTier(sub, rp.t) >= 2 ? 1500 : 3500))  // 더 높은 등급(킬 > 기절 > 교전)이 생기면 바로 메인으로
+               || (now - P.swapAt > C.pip_swap_s * 1000 && rpSceneTier(sub, rp.t) === rpSceneTier(main, rp.t) && rpSceneScore(sub, rp.t) - rpSceneScore(main, rp.t) > C.pip_swap_margin)) {
+      [main, sub] = [sub, main]; P.swapAt = now;  // 같은 등급이면 보조 쪽이 확실히 더 중요해졌을 때만 바꿈
       if (P.cam) { const c = {...rp.cam}; rp.cam = {...P.cam}; P.cam = c; }  // 화면을 서로 바꿔서 끊기지 않게
     }
     const gap = Math.min(...main.flatMap(a => sub.map(b => Math.hypot(a.q[0] - b.q[0], a.q[1] - b.q[1])))) * R.size_m;
@@ -2441,7 +2522,7 @@ function rpGroupStrips() {  // 각 화면의 팀원 번호·상태
   const chip = nick => { const p = rp.data.players.find(x => x.nick === nick); if (!p) return "";
     const st = statusAt(p, rp.t), txt = rpStatusText(p, rp.t);
     return `<span class="${st === "down" ? "down" : txt === "교전 중" ? "fight" : ""}"><i style="background:${RP_COLORS[p.slot % 4]}">${p.slot + 1}</i>${esc(p.name)} <small>${txt}</small></span>`; };
-  $("#rpGrpMain").classList.toggle("on", on); $("#rpGrpSub").classList.toggle("on", on);
+  $("#rpGrpMain").classList.remove("on"); $("#rpGrpSub").classList.remove("on"); return;  // 화면 위 안내 문구(메인·보조 팀원 표시)는 없앰
   if (on) { $("#rpGrpMain").innerHTML = `<b>메인</b>${P.main.map(chip).join("")}`; $("#rpGrpSub").innerHTML = `<b>보조</b>${P.sub.map(chip).join("")}`; }
 }
 function rpClampCam() {
@@ -2451,10 +2532,12 @@ function rpClampCam() {
 function rpCamera(dt) {
   const R = rp.data;
   if (rp.manual) { rpClampCam(); return; }  // 마우스로 직접 움직이는 중
-  let tx = .5, ty = .5, ts = 1;
+  let tx = rp.cam.x, ty = rp.cam.y, ts = rp.cam.s;  // 따라갈 사람이 없을 땐 지금 화면 그대로 (갑자기 전체 지도로 줌아웃하지 않게)
   const split = rp.pip && rp.pip.on, inMain = p => !split || rp.pip.main.includes(p.nick);  // 분할 화면: 메인 화면은 메인 무리만
   const mainPos = split ? R.players.filter(inMain).map(p => curPos(p, rp.t)).filter(Boolean) : [];
-  if (rp.follow && rp.cine && rp.focus && rp.focus.pts) {  // 교전 장면으로 확대: 지금 앞뒤 몇 초의 총격·피격 지점을 화면에 담음
+  // 교전 확대: 총소리가 나는 중이거나, 마지막 총격 6초 안 / 다음 총격 3초 전부터. 그 밖(교전이 식은 틈)은 넓게 따라가기
+  const fz = rp.focus && rp.focus.pts && (rp.focusHot || rp.focus.pts.some(q => q.t >= rp.t - 6 && q.t <= rp.t + 3 + rpCfg().fight_pre));
+  if (rp.follow && rp.cine && fz) {  // 교전 장면으로 확대: 지금 앞뒤 몇 초의 총격·피격 지점을 화면에 담음
     const f = rp.focus;
     let near = f.pts.filter(q => q.t >= rp.t - 5 && q.t <= rp.t + 3);
     if (split) near = near.filter(q => mainPos.some(m => Math.hypot(q.x - m[0], q.y - m[1]) < 300 / R.size_m));
@@ -2466,6 +2549,15 @@ function rpCamera(dt) {
       const pp = statusAt(pl, rp.t) !== "dead" && inMain(pl) && curPos(pl, rp.t);
       if (pp && pts.some(q => Math.hypot(pp[0] - q[0], pp[1] - q[1]) < .04)) pts.push(pp);
     }
+    if (rp.t - f.t0 < 3) {  // 교전 시작 3초: 상대 팀까지 담는 '설정 샷' (누구와 어디서 붙는지 먼저 보여 줌)
+      const lim = 300 / R.size_m, ours = pts.slice();
+      for (const en of R.enemies || []) {
+        if (!en.tr.length || rp.t < en.tr[0][0] || (en.d != null && rp.t > en.d)) continue;
+        const q = interp(en.tr, rp.t); if (q && ours.some(o => Math.hypot(o[0] - q[0], o[1] - q[1]) < lim)) pts.push(q);
+      }
+    }
+    const kill = R.events.find(e => (e.k === "kill" || e.k === "knock") && e.x != null && rp.t - e.t >= 0 && rp.t - e.t < 1.6 && (!split || rp.pip.main.includes(e.by)));
+    if (kill) { pts.length = 0; pts.push([kill.x, kill.y]); if (kill.ax != null) pts.push([kill.ax, kill.ay]); }  // 쓰러뜨린 순간: 쏜 사람과 맞은 사람으로 잠깐 당겨서
     const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
     const minSpan = Math.min(1, 220 / R.size_m);  // 교전은 220m 범위까지 크게 확대
     ts = Math.min(.35, Math.max(minSpan, Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) * 1.7));
@@ -2481,7 +2573,10 @@ function rpCamera(dt) {
       ts = Math.min(1, zoneSpan, Math.max(minSpan, Math.max(x1 - x0, y1 - y0) * 1.7 + minSpan * .3));
       tx = (x0 + x1) / 2; ty = (y0 + y1) / 2;
       // 가장 가까운 적과의 거리: 멀면 넓게, 가까우면 크게 (거리는 천천히 따라가서 줌이 들락날락하지 않게)
-      const C = rpCfg(), far = C.zoom_far_m / R.size_m;
+      // 단, 실제 교전 기운(최근 15초·앞으로 8초 안에 400m 안 총격)이 있을 때만 크게. 교전이 끝났거나 안 일어나면 넓게 돌아감
+      const C = rpCfg(), far = C.zoom_far_m / R.size_m, lim4 = 400 / R.size_m;
+      const heat = (rp.fights || []).some(f => f.t1 >= rp.t - 15 && f.t0 <= rp.t + 8 && f.pts.some(q => q.t >= rp.t - 15 && q.t <= rp.t + 8 && pts.some(m => Math.hypot(q.x - m[0], q.y - m[1]) < lim4)));
+      rp.heatK = (rp.heatK ?? 0) + ((heat ? 1 : 0) - (rp.heatK ?? 0)) * Math.min(1, dt * (heat ? 1.5 : .6));
       let dmin = far, foe = null;
       for (const en of R.enemies || []) {
         if (!en.tr.length || rp.t < en.tr[0][0] || (en.d != null && rp.t > en.d)) continue;
@@ -2490,15 +2585,49 @@ function rpCamera(dt) {
       }
       const step = Math.min(1, dt * (dmin < (rp.encD ?? far) ? 1.2 : .45));  // 다가올 땐 조금 빨리, 멀어질 땐 천천히
       rp.encD = rp.encD == null ? dmin : rp.encD + (dmin - rp.encD) * step;
-      if (rp.encD < far * .95) {
+      const closeK = rp.encD < 120 / R.size_m ? .45 : 0;  // 교전 기운이 없어도 아주 가까우면(120m) 조금은 확대 (초반 마주침)
+      const hk = Math.max(rp.heatK, closeK);
+      if (rp.encD < far * .95 && hk > .01) {
         const want = Math.max(C.zoom_near_m / R.size_m, rp.encD * C.zoom_fit, Math.max(x1 - x0, y1 - y0) * 1.4);
-        const mix = Math.max(0, Math.min(1, (far - rp.encD) / (far * .5)));  // far 근처에선 거의 그대로 → 서서히 확대
+        const mix = Math.max(0, Math.min(1, (far - rp.encD) / (far * .5))) * hk;  // far 근처에선 거의 그대로 → 서서히 확대
         ts = ts + (Math.min(ts, want) - ts) * mix;
         if (foe && rp.encD < far * .6) { tx = tx + (foe[0] - tx) * .3 * mix; ty = ty + (foe[1] - ty) * .3 * mix; }  // 적 쪽도 화면에 담기게 살짝
       }
+      // 자기장 압박: 다음 자기장(흰 원) 밖이면 팀과 흰 원 가장자리(들어가야 할 곳)를 함께 → 어디로 이동하는지 보이게
+      const cxm = (x0 + x1) / 2, cym = (y0 + y1) / 2, dW = Zn && Zn.wr > 0 ? Math.hypot(cxm - Zn.wx, cym - Zn.wy) : 0;
+      const rot = !heat && Zn && Zn.wr > 0 && dW > Zn.wr;
+      rp.rotK = (rp.rotK ?? 0) + ((rot ? 1 : 0) - (rp.rotK ?? 0)) * Math.min(1, dt * .7);
+      if (rp.rotK > .01 && Zn && Zn.wr > 0 && dW > 0) {
+        const ex = Zn.wx + (cxm - Zn.wx) / dW * Zn.wr, ey = Zn.wy + (cym - Zn.wy) / dW * Zn.wr;  // 흰 원의 가장 가까운 지점
+        const bx0 = Math.min(x0, ex), bx1 = Math.max(x1, ex), by0 = Math.min(y0, ey), by1 = Math.max(y1, ey);
+        const zs = Math.min(1, Math.max(ts, Math.max(bx1 - bx0, by1 - by0) * 1.35));
+        ts += (zs - ts) * rp.rotK; tx += ((bx0 + bx1) / 2 - tx) * rp.rotK; ty += ((by0 + by1) / 2 - ty) * rp.rotK;
+      }
+      // 교전이 없을 때: 자기장 zone_view_phase 페이즈부터는 블루존 안 전체(살아남은 적들)가 보이게
+      const ph = rpZonePhase(rp.t), zv = !heat && ph && ph.n >= C.zone_view_phase && Zn && Zn.sr > 0;
+      rp.zoneK = (rp.zoneK ?? 0) + ((zv ? 1 : 0) - (rp.zoneK ?? 0)) * Math.min(1, dt * .8);
+      if (rp.zoneK > .01 && Zn && Zn.sr > 0) {
+        const bx0 = Math.min(x0, Zn.sx - Zn.sr), bx1 = Math.max(x1, Zn.sx + Zn.sr), by0 = Math.min(y0, Zn.sy - Zn.sr), by1 = Math.max(y1, Zn.sy + Zn.sr);
+        const zs = Math.min(1, Math.max(bx1 - bx0, by1 - by0) * 1.12);
+        ts += (Math.max(ts, zs) - ts) * rp.zoneK; tx += ((bx0 + bx1) / 2 - tx) * rp.zoneK; ty += ((by0 + by1) / 2 - ty) * rp.zoneK;
+      }
+      // 빠르게 움직일 때(차량·비행기·빨리감기): 가는 방향으로 미리 화면을 옮기고 넓게 → 화면이 따라가지 못해 답답하지 않게
+      const back = R.players.filter(p => statusAt(p, rp.t) !== "dead" && inMain(p)).map(p => curPos(p, rp.t - 2)).filter(Boolean);
+      if (back.length === pts.length) {
+        const avg = (a, i) => a.reduce((s, q) => s + q[i], 0) / a.length;
+        let vx = (avg(pts, 0) - avg(back, 0)) / 2, vy = (avg(pts, 1) - avg(back, 1)) / 2;  // 게임 1초에 지도 비율로 얼마나
+        if (Math.hypot(vx, vy) > .02) vx = vy = 0;  // 순간이동(비행기 탑승·복귀 등)은 무시
+        const spd = Math.max(1, rp.curSpeed || 1), vs = Math.hypot(vx, vy) * spd;  // 실제 1초에 지나가는 거리
+        rp.fastK = (rp.fastK ?? 0) + (Math.min(1, Math.max(0, (vs / Math.max(.02, ts) - .08) / .22)) - (rp.fastK ?? 0)) * Math.min(1, dt * 2);
+        if (rp.fastK > .01) {
+          const lx = Math.max(-.3, Math.min(.3, vx * spd * 2.2)), ly = Math.max(-.3, Math.min(.3, vy * spd * 2.2));  // 2.2초 뒤에 있을 곳 쪽으로
+          tx += lx * .55 * rp.fastK; ty += ly * .55 * rp.fastK;
+          ts = Math.min(1, ts + (Math.hypot(lx, ly) * 1.6 + ts * .35) * rp.fastK);
+        }
+      } else rp.fastK = 0;
     }
   } else rp.encD = null;
-  const k = Math.min(1, dt * 2.4), ks = Math.min(1, dt * (rp.focus ? 2.4 : 1.1));  // 따라가기 줌은 더 부드럽게
+  const fk = rp.fastK || 0, k = Math.min(1, dt * (2.4 + fk * 3)), ks = Math.min(1, dt * (fz ? 2.4 : 1.1 + fk * 1.6));  // 따라가기 줌은 더 부드럽게 (빠를 땐 빨리 따라감)
   rp.cam.s += (ts - rp.cam.s) * ks; rp.cam.x += (tx - rp.cam.x) * k; rp.cam.y += (ty - rp.cam.y) * k;
   rpClampCam();
 }
@@ -2533,22 +2662,13 @@ function rpDraw(dt, now, view) {
     }
   }
   if (z && z.wr > 0) { ctx.beginPath(); ctx.arc(X(z.wx), Y(z.wy), z.wr * S, 0, Math.PI * 2); ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.lineWidth = 2; ctx.stroke(); }
-  if (z && z.rr > 0) {  // 레드존: 맥박 치는 붉은 영역 + 안에서 떨어지는 폭격
-    const cx = X(z.rx), cy = Y(z.ry), rr = z.rr * S, pulse = .22 + Math.sin(now / 260) * .07;
-    ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.fillStyle = `rgba(224,60,40,${pulse})`; ctx.fill();
-    ctx.save(); ctx.setLineDash([8, 6]); ctx.strokeStyle = "rgba(255,90,60,.95)"; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore();
-    const slot = Math.floor(rp.t * 2.5);  // 같은 시각엔 같은 자리에 터지도록 시간으로 위치를 정함
-    for (let k = 0; k < 7; k++) {
-      const h = (n) => ((Math.sin((slot - k) * 91.7 + k * 13.3 + n * 7.1) * 43758.5) % 1 + 1) % 1;
-      const age = ((rp.t * 2.5) - (slot - k)) / 2.5;  // 터진 지 몇 초
-      if (age > 1.2) continue;
-      const ang = h(1) * Math.PI * 2, dist = Math.sqrt(h(2)) * rr, bx = cx + Math.cos(ang) * dist, by = cy + Math.sin(ang) * dist;
-      const a = Math.max(0, 1 - age / 1.2), br = 4 + age * 26;
-      ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,170,60,${a * .55})`; ctx.fill();
-      ctx.beginPath(); ctx.arc(bx, by, br * .45, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,240,190,${a * .8})`; ctx.fill();
-    }
-    ctx.font = "700 13px Pretendard, 'Malgun Gothic', sans-serif"; ctx.textAlign = "center"; ctx.fillStyle = "#FFB4A2";
-    ctx.fillText("레드존", cx, cy - rr - 8);
+  // 맵별 방해 요소: 레드존(공통) · 모래폭풍(미라마) · EMP 존(론도) 등 — 실제 기록된 자리·크기·시각대로
+  const hzNow = rpHazardsAt(rp.t);
+  for (const h of hzNow) {
+    const cx = X(h.x), cy = Y(h.y), rr = h.r * S;
+    if (h.kind === "sand") rpSandZone(ctx, cx, cy, rr, now, h, pip);
+    else if (h.kind === "emp") rpEmpZone(ctx, cx, cy, rr, now, h);
+    else rpRedZone(ctx, cx, cy, rr, now, pip, h);
   }
   // 첫 비행기 동선 (지도 끝에서 끝까지 점선 + 날아가는 비행기)
   const planesDrawn = [];  // 그린 비행기 (같은 비행기를 팀원 수만큼 겹쳐 그리지 않게)
@@ -2631,6 +2751,7 @@ function rpDraw(dt, now, view) {
       ctx.restore();
     } else if (pk === "b") {  // BRDM: 떨어진 자리에 서 있다가, 누가 타면 그 사람 아이콘이 BRDM으로 바뀜
       if (ot != null && rp.t >= ot) continue;
+      const gone = rpBrdmTaken(R, px, py, lt); if (gone != null && rp.t >= gone) continue;  // 예전 기록: 근처 BRDM에 누가 탔으면 없앰
       drawBRDM(ctx, x, y, 34, -Math.PI / 2, null);
       ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText("BRDM").width + 12;
       ctx.fillStyle = "rgba(20,23,15,.88)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y + 20, tw, 17, 8); else ctx.rect(x - tw / 2, y + 20, tw, 17); ctx.fill();
@@ -2665,6 +2786,15 @@ function rpDraw(dt, now, view) {
     if (e < .35) for (let k = 0; k < 14; k++) { const an = k / 14 * Math.PI * 2, d = e / .35 * R0 * 1.5; ctx.beginPath(); ctx.arc(x2 + Math.cos(an) * d, y2 + Math.sin(an) * d, 1.7, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,210,122,${1 - e / .35})`; ctx.fill(); }
   }
 
+  // BRDM: 모두 내려도 세워 둔 자리에 계속 표시 (마지막으로 탄 팀 번호와 함께), 터지면 사라짐
+  for (const k in R.brdms || {}) {
+    const b = R.brdms[k], ev = b.ev; let e = null;
+    for (const q of ev) { if (q[0] > rp.t) break; e = q; }
+    if (!e || e[4] > 0 || (b.boom && rp.t >= b.boom[0])) continue;
+    const x = X(e[1]), y = Y(e[2]), ours = e[3] === R.our_team, col = ours ? "#F2A900" : teamColor(e[3] || 0);
+    ctx.globalAlpha = .9; drawBRDM(ctx, x, y, 34, e[5] ?? -Math.PI / 2, col); ctx.globalAlpha = 1;
+    if (e[3] != null) drawTeamTag(ctx, x + 13, y - 11, e[3], col, true);
+  }
   // 투척: 실제 궤적(포물선)으로 날아가 떨어진 뒤 종류별 효과
   const allThrows = [...(R.throws || []).map(q => [q, 0]), ...(rp.foes ? (R.foe_throws || []).map(q => [q, 1]) : [])];  // 적이 우리 쪽으로 던진 것도
   allThrows.forEach(([[tt, tx, ty, who, kind, ix, iy, est, boomAt], foe], idx) => {
@@ -2807,7 +2937,7 @@ function rpDraw(dt, now, view) {
   }
   for (const e of R.events) {  // 비상호출: 부른 자리에 노란 기둥 + 깜빡이는 표시 (태워 갈 때까지)
     if (e.k !== "empick") continue;
-    const lift = R.events.find(x => x.k === "emlift" && x.t >= e.t), until = lift ? lift.t + 2 : e.t + 120;
+    const lift = R.events.find(x => (x.k === "emlift" || x.k === "emfail") && x.t >= e.t), until = lift ? lift.t + 2 : e.t + 120;
     const age = rp.t - e.t; if (age < 0 || rp.t > until) continue;
     rpBeam(ctx, X(e.x), Y(e.y), age, until - e.t, "235,200,40", "255,230,120", `${rpName(e.by)} 비상호출`, "#FFE9A0", now, .7);
   }
@@ -2869,7 +2999,7 @@ function rpDraw(dt, now, view) {
     ctx.save(); ctx.beginPath(); ctx.moveTo(g.x, g.y); ctx.arc(g.x, g.y, R1, a - half, a + half); ctx.closePath();
     const gr = ctx.createRadialGradient(g.x, g.y, g.r * .8, g.x, g.y, R1);
     gr.addColorStop(0, "rgba(255,255,255,.5)"); gr.addColorStop(.75, "rgba(255,255,255,.18)"); gr.addColorStop(1, "rgba(255,255,255,0)");
-      ctx.fillStyle = gr; ctx.fill(); ctx.restore();
+    ctx.fillStyle = gr; ctx.fill(); ctx.restore();
   }
   for (const g of drawOrder) {
     if (g.hideIcon) continue;
@@ -2879,8 +3009,10 @@ function rpDraw(dt, now, view) {
     if (st === "down") { ctx.beginPath(); ctx.arc(x, y, r + 7 + Math.sin(now / 140) * 3, 0, Math.PI * 2); ctx.strokeStyle = "#E0532F"; ctx.lineWidth = 2.5; ctx.stroke(); }
     if (g.inCar && /brdm/i.test(g.inCar[3] || "")) {  // BRDM은 장갑차 그림 (테두리 = 탄 사람 색) + 맞으면 차량 체력바
       drawBRDM(ctx, x, y, r * 2.9, rpHeading(g.p.nick, t => posAt(g.p, t)), fillCol);
+      if (R.our_team != null) drawTeamTag(ctx, x + r * 1.15, y - r * 1.05, R.our_team, "#F2A900");
       rpHpBar(ctx, rpCarHp(g.inCar[4]), x, y + r * 1.75, Math.max(30, r * 2.6), 4, true);
     }
+    else if (g.inCar && /mortar/i.test(g.inCar[3] || "")) drawMortarSeat(ctx, x, y, r, fillCol, rp.t, g.p.nick);  // 박격포 설치·사용 중: 박격포 그림
     else if (g.inCar) drawWheel(ctx, x, y, r, fillCol);  // 차에 타면 사진 대신 핸들
     else {
       ctx.beginPath(); ctx.arc(x, y, r + 3, 0, Math.PI * 2); ctx.fillStyle = "#14170F"; ctx.fill();
@@ -2956,7 +3088,8 @@ function rpDraw(dt, now, view) {
       if (!down && rpFoeInCar(en, rp.t)) {  // 차에 타면 핸들 (같은 차의 같은 팀은 하나만), BRDM은 장갑차
         if (!foeCars.some(o => o.tm === en.tm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 40)) {
           const vh = (en.vh || []).find(v => rp.t >= v[0] && rp.t <= v[1]);
-          if (vh && vh[2]) { drawBRDM(ctx, x, y, big ? 28 : 20, rpHeading("e:" + en.n, t => interp(en.tr, t)), teamColor(en.tm || 0)); rpHpBar(ctx, rpCarHp(vh[3]), x, y + (big ? 18 : 14), big ? 26 : 20, 3, true); }
+          if (vh && vh[2] === 2) drawMortarSeat(ctx, x, y, big ? 9 : 7, teamColor(en.tm || 0), rp.t, en.n);
+          else if (vh && vh[2]) { drawBRDM(ctx, x, y, big ? 28 : 20, rpHeading("e:" + en.n, t => interp(en.tr, t)), teamColor(en.tm || 0)); drawTeamTag(ctx, x + (big ? 12 : 9), y - (big ? 11 : 8), en.tm, teamColor(en.tm || 0)); rpHpBar(ctx, rpCarHp(vh[3]), x, y + (big ? 18 : 14), big ? 26 : 20, 3, true); }
           else drawWheel(ctx, x, y, big ? 9 : 6, teamColor(en.tm || 0));
           foeCars.push({q, tm: en.tm});
         }
@@ -3065,12 +3198,23 @@ function rpDraw(dt, now, view) {
         ctx.beginPath(); ctx.arc(x2 + Math.cos(an) * d, y2 + Math.sin(an) * d, 1.5, 0, Math.PI * 2); ctx.fillStyle = side === 0 ? `rgba(255,212,90,${1 - k})` : `rgba(255,110,90,${1 - k})`; ctx.fill(); }
     }
   }
+  if (!pip) for (const h of hzNow) {  // 우리 팀이 방해 요소 안에 있으면 화면 가장자리를 그 색으로 + 경고
+    const inside = R.players.some(p => { if (statusAt(p, rp.t) === "dead") return false; const q = curPos(p, rp.t); return q && Math.hypot(q[0] - h.x, q[1] - h.y) < h.r; });
+    if (!inside) continue;
+    if (shk) ctx.translate(-shk[0], -shk[1]);
+    const g = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .35, W / 2, H / 2, Math.hypot(W, H) * .6);
+    g.addColorStop(0, `rgba(${h.rgb},0)`); g.addColorStop(1, `rgba(${h.rgb},${.28 + Math.sin(now / 200) * .1})`); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    if (h.kind === "sand") rpSandstorm(ctx, W, H, now, .8);  // 모래폭풍 안: 화면 전체에 모래바람
+    rpLabel(ctx, `⚠ ${h.name} 안`, W / 2, 26, h.col, .9 + Math.sin(now / 200) * .1);
+    if (shk) ctx.translate(shk[0], shk[1]);
+    break;
+  }
   if (pip) return;  // 보조 화면은 축척 없이
   // 축척
   const m100 = S / R.size_m * 100, steps = [100, 200, 500, 1000, 2000];
   const stepM = steps.find(v => v * m100 / 100 >= 70) || 2000, px = stepM * m100 / 100;
-  ctx.strokeStyle = "#EEE8D5"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(W - 20 - px, H - 22); ctx.lineTo(W - 20, H - 22); ctx.stroke();
-  ctx.fillStyle = "#EEE8D5"; ctx.textAlign = "right"; ctx.fillText(stepM >= 1000 ? stepM / 1000 + "km" : stepM + "m", W - 20, H - 34);
+  ctx.strokeStyle = "#EEE8D5"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(20, H - 22); ctx.lineTo(20 + px, H - 22); ctx.stroke();  // 축척은 왼쪽 아래 (오른쪽 아래는 시간·자기장)
+  ctx.fillStyle = "#EEE8D5"; ctx.textAlign = "left"; ctx.fillText(stepM >= 1000 ? stepM / 1000 + "km" : stepM + "m", 20, H - 34);
 }
 function rpFightHide() {  // 자동 연출로 교전을 확대해 보는 동안: 마지막 교전 뒤 3초까지 이어서 숨김 (중간에 깜빡이지 않게)
   return !!(rp.data && rp.cine && !rp.manual && rp.follow && rpFightAt(rp.t));
@@ -3080,14 +3224,16 @@ function rpTargetSpeed() {
   const C = rpCfg(), fs = C.fight_speed;
   let sp = rp.reel ? C.reel_speed : rp.speed;
   if (!rpAuto()) { rp.focus = null; return sp; }  // 직접 볼 때는 고른 배속 그대로 (교전 배속·빨리감기 없음)
-  const f = rpFightAt(rp.t);
-  if (f) { rp.focus = f; rp.focusUntil = f.t1; return fs; }  // 교전은 fight_speed 배속
-  rp.focus = null;
-  const nf = rpUpcomingFight(rp.t);
-  if (nf) {
-    const lead = nf.t0 - rp.t;  // 교전 시작까지 남은 게임 시간
-    if (lead < sp * .9) return Math.max(fs, Math.min(sp, lead * 1.1));  // 미리 감속해서 교전 시작점에 교전 배속으로 도착
+  const f = rpFightAt(rp.t), hot = rpFightHot(f, rp.t);
+  rp.focus = f; rp.focusHot = hot; if (f) rp.focusUntil = f.t1;
+  if (hot) return fs;  // 총소리가 나는 동안만 교전 배속
+  // 다음 총격(같은 교전의 다음 구간, 또는 다음 교전)까지: 원래 배속으로 가다가 직전에 감속해서 교전 배속으로 도착
+  const nseg = f && f.segs.find(sg => sg[0] > rp.t), nf = rpUpcomingFight(rp.t), next = nseg ? nseg[0] : nf ? nf.t0 : null;
+  if (next != null) {
+    const lead = next - rp.t;
+    if (lead < sp * .9) return Math.max(fs, Math.min(sp, lead * 1.1));
   }
+  if (f) return sp;  // 교전 중 잠깐 조용한 틈: 원래 배속 (빨리감기는 안 함)
   if (!rp.reel && sp >= 10 && (!nf || nf.t0 - rp.t > 25)) return Math.max(sp, C.quiet_speed);  // 조용한 구간은 빨리감기 (1·4배는 그대로)
   return sp;
 }
@@ -3403,6 +3549,217 @@ function drawWheel(ctx, x, y, r, col) {  // 차량 핸들 아이콘 (플레이�
   ctx.beginPath(); ctx.arc(x, y, r * .24, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill();  // 가운데
   ctx.restore();
 }
+const rpHash = (a, b = 0) => ((Math.sin(a * 12.9898 + b * 78.233) * 43758.5453) % 1 + 1) % 1;
+function rpRedZone(ctx, cx, cy, rr, now, pip, h) {  // 레드존: 붉은 영역 + 하늘에서 떨어지는 포탄(그림자·궤적) → 폭발 → 연기·그을린 자국
+  const pulse = .2 + Math.sin(now / 260) * .07;
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2);
+  const g0 = ctx.createRadialGradient(cx, cy, rr * .2, cx, cy, rr); g0.addColorStop(0, `rgba(224,60,40,${pulse * .7})`); g0.addColorStop(1, `rgba(224,60,40,${pulse + .08})`);
+  ctx.fillStyle = g0; ctx.fill(); ctx.setLineDash([8, 6]); ctx.lineDashOffset = -now / 40; ctx.strokeStyle = "rgba(255,90,60,.95)"; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore();
+  const rate = 3, slot = Math.floor(rp.t * rate), sc = Math.max(.6, Math.min(2.2, rr / 120));
+  const spot = k => { const an = rpHash(k, 1) * Math.PI * 2, d = Math.sqrt(rpHash(k, 2)) * rr * .96; return [cx + Math.cos(an) * d, cy + Math.sin(an) * d]; };
+  for (let k = slot - 18; k <= slot + 2; k++) {  // 6초 전 ~ 곧 떨어질 것까지
+    if (rpHash(k, 3) < .25) continue;  // 가끔 빈 박자 (규칙적으로 보이지 않게)
+    const age = rp.t - k / rate, [bx, by] = spot(k);
+    if (age < 0) {  // 떨어지는 중: 땅에 그림자(점점 진하게) + 위에서 내려오는 불빛 줄기
+      const u = Math.max(0, 1 + age / .65); if (u <= 0) continue;
+      ctx.beginPath(); ctx.ellipse(bx, by, 6 * sc * (1.4 - u * .6), 3 * sc * (1.4 - u * .6), 0, 0, Math.PI * 2); ctx.fillStyle = `rgba(0,0,0,${.15 + u * .35})`; ctx.fill();
+      const hx = bx + 26 * sc * (1 - u), hy = by - 70 * sc * (1 - u);
+      ctx.save(); ctx.strokeStyle = `rgba(255,220,160,${.35 + u * .5})`; ctx.lineWidth = 2; ctx.shadowColor = "#FFB060"; ctx.shadowBlur = 6;
+      ctx.beginPath(); ctx.moveTo(hx + 10 * sc, hy - 26 * sc); ctx.lineTo(hx, hy); ctx.stroke(); ctx.restore();
+      continue;
+    }
+    if (age > 6) continue;
+    if (age < 6) {  // 그을린 자국 (6초 동안 서서히)
+      ctx.save(); ctx.globalAlpha = Math.min(1, age / .3) * (1 - age / 6) * .7; const gg = ctx.createRadialGradient(bx, by, 0, bx, by, 13 * sc);
+      gg.addColorStop(0, "rgba(20,10,6,.9)"); gg.addColorStop(1, "rgba(40,20,10,0)"); ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(bx, by, 13 * sc, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    }
+    if (age < .12) rpGlowC(ctx, bx, by, 34 * sc, "255,245,210", 1 - age / .12);  // 섬광
+    if (age < 1.1) {  // 불덩이 + 충격파
+      const a = 1 - age / 1.1, br = (5 + age * 24) * sc;
+      ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,150,50,${a * .6})`; ctx.fill();
+      ctx.beginPath(); ctx.arc(bx, by, br * .45, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,240,190,${a * .85})`; ctx.fill();
+      rpRing(ctx, bx, by, (8 + age * 46) * sc, "rgba(255,220,180,1)", 1.5, a * .7);
+    }
+    if (age < 4 && !pip) for (let j = 0; j < 3; j++) rpPuff(ctx, bx + (rpHash(k, 5 + j) - .5) * 14 * sc, by - age * 7 * sc - j * 4 * sc, (6 + age * 5 + j * 2) * sc, 70, .4 * (1 - age / 4));  // 연기
+  }
+  if (h) rpHazardTag(ctx, h, cx, cy, rr);
+}
+const HZ_STYLE = {
+  red: {name: "레드존", col: "#FFB4A2", rgb: "220,40,20"},
+  sand: {name: "모래폭풍", col: "#FFC48A", rgb: "196,140,70"},
+  emp: {name: "EMP 존", col: "#E2D2FF", rgb: "150,90,255"},
+  black: {name: "블랙존", col: "#C8C8C8", rgb: "40,40,40"},
+};
+function rpBuildHazards(R) {  // 기록된 방해 요소 → 구간들 [{kind, name, t0, t1, ser: [[t, x, y, r]]}] + 발생·사라짐 기록을 교전 기록에 넣음
+  const series = [];
+  const redKind = R.map === "Desert_Main" ? "sand" : "red";  // 미라마는 레드존 대신 모래폭풍 (25.1 패치)
+  series.push([redKind, (R.zones || []).map(z => [z[0], z[7], z[8], z[9]])]);
+  for (const [key, ser] of Object.entries(R.hz || {})) {
+    const k = key.toLowerCase(), kind = /sand|storm/.test(k) || R.map === "Desert_Main" ? "sand" : /emp|electro|magnet/.test(k) || R.map === "Neon_Main" ? "emp" : /black/.test(k) ? "black" : "red";
+    series.push([kind, ser]);
+  }
+  const out = [];
+  for (const [kind, ser] of series) {
+    let cur = null;
+    for (const q of ser) {
+      if (q[3] > 0) {
+        const jump = cur && Math.hypot(q[1] - cur.ser[cur.ser.length - 1][1], q[2] - cur.ser[cur.ser.length - 1][2]) > Math.max(q[3], .05) * 1.5;  // 새 자리에 다시 생김
+        if (!cur || jump) { if (cur) out.push(cur); cur = {kind, ...HZ_STYLE[kind], t0: q[0], t1: q[0], ser: []}; }
+        cur.ser.push(q); cur.t1 = q[0];
+      } else if (cur) { cur.t1 = q[0]; out.push(cur); cur = null; }
+    }
+    if (cur) { cur.t1 = Math.max(cur.t1, R.duration || cur.t1); out.push(cur); }
+  }
+  if (!R._hzEv) {  // 교전 기록 줄에 '발생 / 사라짐'
+    R._hzEv = true;
+    for (const h of out) {
+      const q = h.ser[0];
+      R.events.push({t: h.t0, k: "hazard", name: h.name, col: h.col, x: q[1], y: q[2]});
+      if (h.t1 < (R.duration || 1e9) - 5) R.events.push({t: h.t1, k: "hazard", name: h.name, col: h.col, end: true});
+    }
+    R.events.sort((a, b) => a.t - b.t);
+  }
+  return out;
+}
+function rpHazardsAt(t) {  // 지금 있는 방해 요소: 위치·크기를 기록 사이에서 부드럽게 (모래폭풍은 움직임)
+  const res = [];
+  for (const h of rp.hazards || []) {
+    if (t < h.t0 || t > h.t1) continue;
+    const S = h.ser; let i = 0; while (i < S.length - 1 && S[i + 1][0] <= t) i++;
+    const a = S[i], b = S[Math.min(i + 1, S.length - 1)], k = b[0] > a[0] ? Math.max(0, Math.min(1, (t - a[0]) / (b[0] - a[0]))) : 0;
+    const x = a[1] + (b[1] - a[1]) * k, y = a[2] + (b[2] - a[2]) * k, r = a[3] + (b[3] - a[3]) * k;
+    const dt = Math.max(1, b[0] - a[0]), vx = (b[1] - a[1]) / dt, vy = (b[2] - a[2]) / dt;  // 움직이는 방향 (지도 비율 / 초)
+    res.push({...h, x, y, r, vx, vy, age: t - h.t0, left: h.t1 - t});
+  }
+  return res;
+}
+function rpHazardTag(ctx, h, cx, cy, rr) {  // 이름 + 지난 시간 (진행 상황)
+  ctx.font = "700 13px Pretendard, 'Malgun Gothic', sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+  rpLabel(ctx, `${h.name} · ${mmss(h.age)}`, cx, cy - rr - 10, h.col, 1);
+}
+function rpSandZone(ctx, cx, cy, rr, now, h, pip) {  // 미라마 모래폭풍: 누런 먼지 덩어리 + 안에서 소용돌이치는 모래 + 가는 방향 화살표
+  const T = now / 1000;
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.clip();
+  const g = ctx.createRadialGradient(cx, cy, rr * .1, cx, cy, rr); g.addColorStop(0, "rgba(190,140,70,.55)"); g.addColorStop(.75, "rgba(200,150,80,.42)"); g.addColorStop(1, "rgba(210,160,90,.18)");
+  ctx.fillStyle = g; ctx.fillRect(cx - rr, cy - rr, rr * 2, rr * 2);
+  const n = pip ? 50 : 140;
+  ctx.lineCap = "round";
+  for (let i = 0; i < n; i++) {  // 소용돌이 모래 줄기
+    const r0 = Math.sqrt(rpHash(i, 11)) * rr, an = rpHash(i, 12) * Math.PI * 2 + T * (.25 + .5 * (1 - r0 / rr)), L = 6 + rpHash(i, 13) * 14;
+    const x = cx + Math.cos(an) * r0, y = cy + Math.sin(an) * r0, ta = an + Math.PI / 2;
+    ctx.strokeStyle = `rgba(245,222,170,${.25 + rpHash(i, 14) * .45})`; ctx.lineWidth = 1 + rpHash(i, 15) * 1.5;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(ta) * L, y + Math.sin(ta) * L); ctx.stroke();
+  }
+  for (let k = 0; k < 5; k++) { const an = k * 1.3 + T * .2, d = rr * (.2 + .15 * k); rpPuff(ctx, cx + Math.cos(an) * d, cy + Math.sin(an) * d, rr * .35, 150, .25); }
+  ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.setLineDash([10, 7]); ctx.lineDashOffset = -now / 50;
+  ctx.strokeStyle = "rgba(255,196,138,.95)"; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore();
+  const sp = Math.hypot(h.vx, h.vy);
+  if (sp > 1e-6) {  // 가는 방향
+    const ax = h.vx / sp, ay = h.vy / sp, sx = cx + ax * rr, sy = cy + ay * rr, L = 26;
+    ctx.save(); ctx.strokeStyle = "#FFC48A"; ctx.fillStyle = "#FFC48A"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + ax * L, sy + ay * L); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(sx + ax * (L + 9), sy + ay * (L + 9)); ctx.lineTo(sx + ax * L - ay * 7, sy + ay * L + ax * 7); ctx.lineTo(sx + ax * L + ay * 7, sy + ay * L - ax * 7); ctx.fill(); ctx.restore();
+  }
+  rpHazardTag(ctx, h, cx, cy, rr);
+}
+function rpEmpZone(ctx, cx, cy, rr, now, h) {  // 론도 EMP 존: 보랏빛 전자기장 + 안쪽에서 퍼지는 물결 + 튀는 번개
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2);
+  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rr); g.addColorStop(0, "rgba(150,90,255,.12)"); g.addColorStop(1, `rgba(150,90,255,${.32 + Math.sin(now / 300) * .06})`);
+  ctx.fillStyle = g; ctx.fill(); ctx.clip();
+  for (let k = 0; k < 4; k++) { const d = ((now / 1800 + k / 4) % 1) * rr; ctx.beginPath(); ctx.arc(cx, cy, d, 0, Math.PI * 2); ctx.strokeStyle = `rgba(200,170,255,${(1 - d / rr) * .45})`; ctx.lineWidth = 2; ctx.stroke(); }
+  ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.strokeStyle = "#C7A8FF"; ctx.lineWidth = 2.2; ctx.shadowColor = "#A070FF"; ctx.shadowBlur = 10; ctx.stroke(); ctx.restore();
+  const tick = Math.floor(now / 110);
+  ctx.save(); ctx.strokeStyle = "#EFE6FF"; ctx.shadowColor = "#A070FF"; ctx.shadowBlur = 10; ctx.lineCap = "round";
+  for (let b = 0; b < 8; b++) {
+    if (rpHash(tick, b + 40) < .35) continue;
+    const an = rpHash(tick, b) * Math.PI * 2, d0 = Math.sqrt(rpHash(tick, b + 7)) * rr * .9, len = Math.min(rr * .5, 16 + rpHash(tick, b + 9) * 30);
+    let px = cx + Math.cos(an) * d0, py = cy + Math.sin(an) * d0, dir = rpHash(tick, b + 2) * Math.PI * 2;
+    ctx.lineWidth = 1 + rpHash(tick, b + 3) * 1.4; ctx.beginPath(); ctx.moveTo(px, py);
+    for (let i = 1; i <= 5; i++) { dir += (rpHash(i, tick + b) - .5) * 1.4; px += Math.cos(dir) * len / 5; py += Math.sin(dir) * len / 5; ctx.lineTo(px, py); }
+    ctx.stroke();
+  }
+  ctx.restore();
+  rpHazardTag(ctx, h, cx, cy, rr);
+}
+function rpRondoField(ctx, cx, cy, R0, W, H, now) {  // 론도 자기장: 경계 밖으로 퍼지는 보랏빛 물결 + 경계에서 튀는 번개
+  ctx.save(); ctx.beginPath(); ctx.rect(-50, -50, W + 100, H + 100); ctx.arc(cx, cy, R0, 0, Math.PI * 2, true); ctx.clip("evenodd");
+  for (let k = 0; k < 4; k++) {  // 바깥으로 퍼지는 물결
+    const d = ((now / 22 + k * 55) % 220), a = (1 - d / 220) * .5;
+    ctx.beginPath(); ctx.arc(cx, cy, R0 + d, 0, Math.PI * 2); ctx.strokeStyle = `rgba(178,120,255,${a})`; ctx.lineWidth = 2; ctx.stroke();
+  }
+  const g = ctx.createRadialGradient(cx, cy, R0, cx, cy, R0 + 60); g.addColorStop(0, `rgba(150,80,255,${.22 + Math.sin(now / 300) * .06})`); g.addColorStop(1, "rgba(150,80,255,0)");
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R0 + 60, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+  const tick = Math.floor(now / 110);
+  ctx.save(); ctx.strokeStyle = "#E6D8FF"; ctx.shadowColor = "#A070FF"; ctx.shadowBlur = 10; ctx.lineCap = "round";
+  for (let b = 0; b < 7; b++) {  // 번개: 0.11초마다 새 자리
+    if (rpHash(tick, b + 40) < .35) continue;
+    const an = rpHash(tick, b) * Math.PI * 2, len = 18 + rpHash(tick, b + 9) * 40, segs = 6;
+    let px = cx + Math.cos(an) * R0, py = cy + Math.sin(an) * R0;
+    if (px < -40 || py < -40 || px > W + 40 || py > H + 40) continue;
+    ctx.lineWidth = 1 + rpHash(tick, b + 3) * 1.4; ctx.beginPath(); ctx.moveTo(px, py);
+    for (let i = 1; i <= segs; i++) {
+      const rr = R0 + (rpHash(tick, b + 20) < .5 ? 1 : -1) * len * i / segs, aj = an + (rpHash(tick * 7 + i, b) - .5) * .06;
+      ctx.lineTo(cx + Math.cos(aj) * rr + (rpHash(i, tick + b) - .5) * 6, cy + Math.sin(aj) * rr + (rpHash(i + 5, tick + b) - .5) * 6);
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+const rpSand = Array.from({length: 170}, (_, i) => [rpHash(i, 1), rpHash(i, 2), .5 + rpHash(i, 3), rpHash(i, 4)]);
+function rpSandstorm(ctx, W, H, now, amt) {  // 미라마 모래바람: 누런 먼지 안개(바람이 셌다 약했다) + 날리는 모래 줄기 + 흘러가는 먼지 구름
+  const T = now / 1000, gust = .5 + .5 * Math.sin(T * .45) * Math.sin(T * .17 + 1), wx = Math.cos(.35), wy = Math.sin(.35);
+  ctx.save();
+  ctx.fillStyle = `rgba(206,160,92,${(.10 + gust * .12) * amt})`; ctx.fillRect(0, 0, W, H);
+  for (let k = 0; k < 4; k++) {  // 큰 먼지 구름
+    const sp = 40 + k * 18, x = ((rpHash(k, 7) * (W + 600) + T * sp) % (W + 600)) - 300, y = rpHash(k, 8) * H + Math.sin(T * .3 + k) * 40;
+    const r = 180 + k * 50, g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, `rgba(214,172,108,${(.16 + gust * .16) * amt})`); g.addColorStop(1, "rgba(214,172,108,0)"); ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  ctx.lineCap = "round";
+  for (const [a, b, v, c] of rpSand) {  // 모래 줄기
+    const sp = (220 + v * 260) * (.6 + gust * .8), x = ((a * (W + 200) + T * sp * wx) % (W + 200)) - 100, y = ((b * (H + 200) + T * sp * wy + Math.sin(T * 2 + c * 9) * 8) % (H + 200)) - 100;
+    const L = (6 + v * 12) * (.6 + gust);
+    ctx.strokeStyle = `rgba(245,222,170,${(.3 + c * .4) * (.5 + gust * .5) * amt})`; ctx.lineWidth = 1 + c * 1.4;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - wx * L, y - wy * L); ctx.stroke();
+  }
+  ctx.restore();
+}
+function rpBrdmTaken(R, px, py, lt) {  // 떨어진 BRDM 근처(120m)에서 처음 누가 BRDM에 탄 시각
+  const key = px + "," + py; R._bt = R._bt || {}; if (key in R._bt) return R._bt[key];
+  const lim = 120 / R.size_m, near = (x, y) => x != null && Math.hypot(x - px, y - py) < lim; let best = null;
+  const take = t => { if (t >= lt - 5 && (best == null || t < best)) best = t; };
+  for (const b of Object.values(R.brdms || {})) for (const e of b.ev) if (near(e[1], e[2])) take(e[0]);
+  for (const p of R.players) for (const v of p.veh || []) if (/brdm/i.test(v[3] || "")) { const q = posAt(p, v[0]); if (q && near(q[0], q[1])) take(v[0]); }
+  for (const en of R.enemies || []) for (const v of en.vh || []) if (v[2] === 1) { const q = interp(en.tr, v[0]); if (q && near(q[0], q[1])) take(v[0]); }
+  return (R._bt[key] = best);
+}
+function drawTeamTag(ctx, x, y, tm, col, parked = false) {  // BRDM 위의 작은 팀 번호 (세워 둔 차는 점선 테두리)
+  if (tm == null) return;
+  const t = String(tm); ctx.save(); ctx.font = "800 9.5px Pretendard, 'Malgun Gothic', sans-serif";
+  const w = Math.max(15, ctx.measureText(t).width + 8);
+  ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - w / 2, y - 7.5, w, 15, 7.5); else ctx.rect(x - w / 2, y - 7.5, w, 15);
+  ctx.fillStyle = parked ? "rgba(20,23,15,.85)" : col; ctx.fill();
+  ctx.lineWidth = 1.5; ctx.strokeStyle = parked ? col : "#14170F"; if (parked) ctx.setLineDash([2, 2]); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = parked ? col : "#14170F"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(t, x, y + .5); ctx.restore();
+}
+function drawMortarSeat(ctx, x, y, r, col, t, who) {  // 박격포를 설치해 쓰는 중: 사람 색 테두리 원 안에 박격포 (쏜 직후엔 포구가 번쩍)
+  const R0 = r + 4, im = replayImgs.mortar, ok = im && im.complete && im.naturalWidth;
+  ctx.save(); ctx.beginPath(); ctx.arc(x, y, R0 + 2, 0, Math.PI * 2); ctx.fillStyle = "rgba(10,12,8,.9)"; ctx.fill();
+  ctx.lineWidth = 2.5; ctx.strokeStyle = col; ctx.stroke(); ctx.restore();
+  if (ok) {  // 어두운 박격포 그림이 지도 위에서 묻히지 않게 밝은 색 실루엣으로
+    const sil = rpSilhouette(im, "#F1EAD2"), sz = R0 * 1.6, k = sz / Math.max(im.naturalWidth, im.naturalHeight);
+    ctx.drawImage(sil, x - im.naturalWidth * k / 2, y - im.naturalHeight * k / 2, im.naturalWidth * k, im.naturalHeight * k);
+  }
+  else {  // 그림이 없으면 간단한 박격포 (포신 + 받침)
+    ctx.save(); ctx.translate(x, y); ctx.strokeStyle = "#D8D3BC"; ctx.lineCap = "round";
+    ctx.lineWidth = Math.max(2.5, r * .38); ctx.beginPath(); ctx.moveTo(-r * .45, r * .5); ctx.lineTo(r * .4, -r * .6); ctx.stroke();
+    ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(-r * .7, r * .62); ctx.lineTo(r * .7, r * .62); ctx.moveTo(r * .05, -r * .1); ctx.lineTo(r * .55, r * .62); ctx.stroke(); ctx.restore();
+  }
+  const R = rp.data, last = (R.mortars || []).filter(q => q[0] <= t && t - q[0] < .5 && q[7] === who).pop();
+  if (last) rpGlowC(ctx, x, y - R0 * .4, R0 * 1.6, "255,220,150", 1 - (t - last[0]) / .5);  // 발사 섬광
+}
 function drawPlane(ctx, x, y, ang, col, size = 11) {
   ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
   ctx.beginPath();
@@ -3440,12 +3797,12 @@ function rpFrame(now) {
   const dt = Math.min(.1, (now - rp.last) / 1000); rp.last = now;
   const target = rpTargetSpeed();
   rp.curSpeed += (target - rp.curSpeed) * Math.min(1, dt * (target < rp.curSpeed ? 6 : 3));
-  $("#rpSpd").textContent = (rpAuto() && rp.playing ? (rp.focus ? `교전 ${+rpCfg().fight_speed.toFixed(2)}배속` : `${Math.round(rp.curSpeed)}배속`) : "") + (rpFightHide() ? " · 동선 숨김" : "");
+  $("#rpSpd").textContent = (rpAuto() && rp.playing ? (rp.focusHot ? `교전 ${+rpCfg().fight_speed.toFixed(2)}배속` : `${Math.round(rp.curSpeed)}배속`) : "") + (rpFightHide() ? " · 동선 숨김" : "");
   if (rp.playing && !rp.dragging) {
     let nt = Math.min(R.duration, rp.t + dt * rp.curSpeed);
-    if (rpAuto() && !rp.reel && !rpFightAt(rp.t)) {  // 빨리 가다가 교전 시작을 건너뛰지 않게
-      const nf = rpUpcomingFight(rp.t);
-      if (nf && nt >= nf.t0) { nt = nf.t0; rp.curSpeed = rpCfg().fight_speed; }
+    if (rpAuto() && !rp.reel && !rp.focusHot) {  // 빨리 가다가 교전(또는 교전 중 다음 총격) 시작을 건너뛰지 않게
+      const f = rpFightAt(rp.t), nseg = f && f.segs.find(sg => sg[0] > rp.t), nf = rpUpcomingFight(rp.t), next = nseg ? nseg[0] : nf ? nf.t0 : null;
+      if (next != null && nt >= next) { nt = next; rp.curSpeed = rpCfg().fight_speed; }
     }
     rp.t = nt;
     if (rp.reel && rp.t >= rp.reel.end) { rp.t = rp.reel.end; rp.playing = false; }
