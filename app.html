@@ -1159,6 +1159,10 @@ body.viewer .viewer-badge{display:inline-flex;align-items:center;gap:6px;padding
         <label>붙어 있을 때 사진 크기 <input type="number" id="rpCfgCrowd" min="0.3" max="1" step="0.05"></label>
         <label>교전 시작: 첫 총격 몇 초 전 <input type="number" id="rpCfgPre" min="0" max="10" step="0.5"></label>
         <label>교전 끝: 마지막 총격 몇 초 뒤 <input type="number" id="rpCfgPost" min="0" max="15" step="0.5"></label>
+        <label>한 교전으로 묶는 간격(초) <input type="number" id="rpCfgGap" min="3" max="60" step="1"></label>
+        <label>교전 중 쉬는 틈(초): 넘으면 원래 배속 <input type="number" id="rpCfgLull" min="1" max="30" step="0.5"></label>
+        <label>넓게 보기 시작 자기장 페이즈 <input type="number" id="rpCfgZone" min="1" max="9" step="1"></label>
+        <label>기절·처치 당겨 보기 최대 거리(m, 0 = 끔) <input type="number" id="rpCfgPunch" min="0" max="600" step="10"></label>
       </div>
       <p class="help">자동 카메라로 볼 때만 적용돼요. 교전 구간은 교전 배속으로 천천히, 교전이 없는 구간은 빨리감기 배속으로 빠르게 지나가요(10배 이상으로 볼 때). 마우스로 지도를 움직이거나 '전체 지도 보기'로 보면 고른 배속 그대로예요. 사진 크기는 1이 원래 크기예요. 저장하면 친구 화면과 웹 공유에도 반영돼요.</p>
     </div>
@@ -2029,8 +2033,11 @@ const RP_DEFAULTS = {
   fight_pre: 1.5,      // 교전 시작: 첫 총격 몇 초 전부터
   fight_post: 2,       // 교전 끝: 마지막 총격·피격 몇 초 뒤까지
   fight_gap: 12,       // 이 초 안에 다시 총격이 있으면 같은 교전으로 이어 봄 (카메라 확대 유지)
-  fight_lull: 5,       // 교전 중이라도 이 초 넘게 총소리가 없으면 교전 배속을 풀고 원래 배속으로 (다음 총격 직전에 다시 감속)
-  zone_view_phase: 3,  // 교전이 없을 때: 이 자기장 페이즈부터는 블루존 안 전체(남은 적들)가 보이게 넓게
+  fight_lull: 5,
+  punch_near_m: 40,    // 기절·처치 순간 당겨 보기: 이 거리(m)보다 가까우면 가장 세게
+  punch_far_m: 250,    // 이 거리(m)보다 멀면 당기지 않음 (먼 저격은 넓게 그대로)
+  punch_min_m: 110,    // 당겨도 화면에 담는 최소 범위(m)       // 교전 중이라도 이 초 넘게 총소리가 없으면 교전 배속을 풀고 원래 배속으로 (다음 총격 직전에 다시 감속)
+  zone_view_phase: 4,  // 교전이 없을 때: 이 자기장 페이즈부터는 블루존 안 전체(남은 적들)가 보이게 넓게
   crowd_scale: .6,     // 팀원끼리 붙어 있을 때 사진 크기 (1 = 원래 크기)
   crowd_dist: 30,      // 화면에서 이 픽셀보다 가까우면 '붙어 있음'
   avatar_r: 13,        // 팀원 사진 반지름 (픽셀)
@@ -2557,11 +2564,18 @@ function rpCamera(dt) {
       }
     }
     const kill = R.events.find(e => (e.k === "kill" || e.k === "knock") && e.x != null && rp.t - e.t >= 0 && rp.t - e.t < 1.6 && (!split || rp.pip.main.includes(e.by)));
-    if (kill) { pts.length = 0; pts.push([kill.x, kill.y]); if (kill.ax != null) pts.push([kill.ax, kill.ay]); }  // 쓰러뜨린 순간: 쏜 사람과 맞은 사람으로 잠깐 당겨서
     const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
     const minSpan = Math.min(1, 220 / R.size_m);  // 교전은 220m 범위까지 크게 확대
     ts = Math.min(.35, Math.max(minSpan, Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) * 1.7));
     tx = (Math.min(...xs) + Math.max(...xs)) / 2; ty = (Math.min(...ys) + Math.max(...ys)) / 2;
+    if (kill && kill.ax != null) {  // 쓰러뜨린 순간: 쏜 사람과 맞은 사람 쪽으로 잠깐 당김 — 가까운 교전일수록 세게, 먼 저격은 거의 그대로
+      const dm = Math.hypot(kill.ax - kill.x, kill.ay - kill.y) * R.size_m, C = rpCfg();
+      const w = Math.max(0, Math.min(1, (C.punch_far_m - dm) / Math.max(1, C.punch_far_m - C.punch_near_m))) * (1 - (rp.t - kill.t) / 1.6);
+      if (w > 0) {
+        const ks = Math.max(C.punch_min_m / R.size_m, dm / R.size_m * 1.8), kx = (kill.x + kill.ax) / 2, ky = (kill.y + kill.ay) / 2;
+        ts += (Math.min(ts, ks) - ts) * w; tx += (kx - tx) * w; ty += (ky - ty) * w;
+      }
+    }
   } else if (rp.follow) {
     const pts = R.players.filter(p => statusAt(p, rp.t) !== "dead" && inMain(p)).map(p => curPos(p, rp.t)).filter(Boolean);
     if (pts.length) {
@@ -4075,6 +4089,7 @@ function openSettings() {
     + "다른 집에서 접속하려면 관리자와 친구 모두 Tailscale(무료)을 설치해 같은 네트워크에 들어가면 돼요. 같은 공유기라면 바로 돼요.";
   const rc = rpCfg();
   $("#rpCfgSpeed").value = rc.fight_speed; $("#rpCfgPre").value = rc.fight_pre; $("#rpCfgPost").value = rc.fight_post; $("#rpCfgCrowd").value = rc.crowd_scale; $("#rpCfgQuiet").value = rc.quiet_speed; $("#rpCfgShake").value = rc.shake;
+  $("#rpCfgGap").value = rc.fight_gap ?? 12; $("#rpCfgLull").value = rc.fight_lull ?? 5; $("#rpCfgZone").value = rc.zone_view_phase ?? 4; $("#rpCfgPunch").value = rc.punch_far_m ?? 250;
   const pb = state.publish || {};
   $("#pubOn").checked = !!pb.enabled; $("#pubRepo").value = pb.repo || ""; $("#pubToken").value = "";
   $("#pubToken").placeholder = pb.token_set ? "저장돼 있어요 (바꿀 때만 입력)" : "github_pat_… 또는 ghp_…";
@@ -4145,7 +4160,9 @@ $("#settingsForm").addEventListener("submit", async e => {
   if ($("#webhook").value.trim()) body.webhook = $("#webhook").value.trim();
   body.share = {enabled: $("#shareOn").checked, pin: $("#sharePin").value.trim()};
   body.publish = pubBody();
-  body.replay = {fight_speed: +$("#rpCfgSpeed").value || 2, fight_pre: +$("#rpCfgPre").value, fight_post: +$("#rpCfgPost").value, crowd_scale: +$("#rpCfgCrowd").value || .6, quiet_speed: +$("#rpCfgQuiet").value || 60, shake: $("#rpCfgShake").value === "" ? 1 : +$("#rpCfgShake").value};
+  body.replay = {fight_speed: +$("#rpCfgSpeed").value || 2, fight_pre: +$("#rpCfgPre").value, fight_post: +$("#rpCfgPost").value, crowd_scale: +$("#rpCfgCrowd").value || .6, quiet_speed: +$("#rpCfgQuiet").value || 60, shake: $("#rpCfgShake").value === "" ? 1 : +$("#rpCfgShake").value,
+    fight_gap: +$("#rpCfgGap").value || 12, fight_lull: +$("#rpCfgLull").value || 5, zone_view_phase: +$("#rpCfgZone").value || 4,
+    punch_far_m: $("#rpCfgPunch").value === "" ? 250 : +$("#rpCfgPunch").value};
   body.weights = Object.fromEntries([...document.querySelectorAll("[data-w]")].map(i => [i.dataset.w, +i.value || 0]));
   body.fair = {shrink_games: +$("#wShrink").value || 0};
   body.abs_full = Object.fromEntries([...document.querySelectorAll("[data-abs]")].map(i => [i.dataset.abs, +i.value || 0]));
