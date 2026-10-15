@@ -347,7 +347,8 @@ html.share-mode,html.share-mode body{background:var(--field)}
 @media (prefers-reduced-motion:reduce){.si-big,.si-ttl,.si-sub,.si-count.pop,.si-glow{animation:none}}
 .show-row{position:absolute;bottom:4vh;left:0;right:0;display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
 .show-skip{position:absolute;top:18px;right:18px;z-index:4}
-.show-done{display:flex;justify-content:center;margin-top:2.4vh;position:relative;z-index:4;visibility:visible}
+.show-done{display:flex;gap:10px;position:absolute;right:max(18px,2vw);bottom:4vh;z-index:5;visibility:visible}  /* 오른쪽 아래 구석: 가운데 무대를 밀지 않음 */
+@media (max-width:1100px){.show-done{left:0;right:0;justify-content:center;bottom:2.5vh}.show-row{bottom:calc(2.5vh + 60px)!important}.show-inner{padding-bottom:max(18vh,150px)}}
 .show-done.hidden{display:none!important}
 .show-done.hidden.reserve{display:flex!important;visibility:hidden}
 .show-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.4vh}
@@ -384,7 +385,7 @@ html.share-mode,html.share-mode body{background:var(--field)}
 .ceremony.spot::after{content:"";position:absolute;width:70vmin;height:70vmin;left:50%;top:46%;margin:-35vmin 0 0 -35vmin;border-radius:50%;background:radial-gradient(circle,rgba(242,169,0,.22),transparent 65%);animation:sweep 1.3s ease-in-out infinite alternate;pointer-events:none}
 .champ-show{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.6vh;position:relative;z-index:2}
 .show-trophy{width:clamp(80px,min(12vw,17vh),220px);height:auto;animation:drop .9s cubic-bezier(.3,1.4,.5,1) both}
-.show-champ-name{font:400 clamp(72px,min(13vw,21vh),240px)/1 var(--display);color:var(--bone);animation:zoom 1s cubic-bezier(.2,.9,.2,1) .25s both,glow 2.4s ease-in-out 1.3s infinite}
+.show-champ-name{font:400 clamp(64px,min(13vw,18vh),230px)/1 var(--display);color:var(--bone);animation:zoom 1s cubic-bezier(.2,.9,.2,1) .25s both,glow 2.4s ease-in-out 1.3s infinite}
 .show-line{color:var(--dust);font-size:clamp(14px,1.4vw,22px);animation:enter .6s ease-out 1.1s both}
 .champ-show .show-award,.champ-show .show-score{animation:enter .6s ease-out .9s both}
 .flash{position:fixed;inset:0;background:#FFF4CF;animation:flash .7s ease-out both;pointer-events:none;z-index:1}
@@ -415,6 +416,31 @@ html.share-mode,html.share-mode body{background:var(--field)}
 .av-md{width:84px;height:84px;margin-bottom:6px}
 .av-lg{width:132px;height:132px}
 .av-show{width:clamp(80px,min(13vw,18vh),200px);height:clamp(80px,min(13vw,18vh),200px);margin-bottom:1vh}
+.av .tier-fx{position:absolute;pointer-events:none;z-index:3}
+#showTitle{z-index:5}  /* 레전드 불길이 제목을 덮지 않게 (위치는 원래대로 위쪽 고정) */
+.av .av-mark{z-index:4}
+.show-card>:not(.av),.champ-show>:not(.champ-top){position:relative;z-index:4}  /* 연출이 글자를 가리지 않게 */
+.av img.face{transition:filter .8s}
+.av.tier-down img.face{filter:grayscale(1) brightness(.55)}
+/* 점수 바로 아래: 등급 글자가 굴러 바뀜 */
+.tier-slot{height:2.3em;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,min(1.6vw,2.5vh),24px);margin-top:.4vh}
+.tchg{display:inline-flex;align-items:center;gap:.4em;white-space:nowrap;line-height:1;font-weight:900}
+.tchg .pill{display:inline-flex;align-items:center;height:1.9em;padding:0 .8em;border-radius:.5em;border:2px solid var(--oc);background:rgba(10,12,9,.75);color:var(--oc);transition:border-color .35s,color .35s,box-shadow .35s;position:relative;overflow:hidden}
+.tchg .win{height:1.2em;overflow:hidden;display:block}
+.tchg .reel{display:flex;flex-direction:column;transition:transform .55s cubic-bezier(.3,1.35,.5,1)}
+.tchg .reel span{height:1.2em;display:flex;align-items:center;justify-content:center}
+.tchg .tag{font-size:.8em;padding:.45em .6em;border-radius:.45em;opacity:0;transform:scale(.6);transition:opacity .25s,transform .35s cubic-bezier(.2,1.6,.4,1)}
+.tchg.up .tag{background:#46d27a;color:#0c1a10}
+.tchg.down .tag{background:#ff4d4d;color:#fff}
+.tchg.up .reel{transform:translateY(0)}.tchg.down .reel{transform:translateY(-50%)}
+.tchg.go.up .reel{transform:translateY(-50%)}.tchg.go.down .reel{transform:translateY(0)}
+.tchg.go .pill{border-color:var(--nc);color:var(--nc)}
+.tchg.go.up .pill{box-shadow:0 0 16px var(--nc)}
+.tchg.go.up .pill::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);animation:tshine .8s .25s ease-out both}
+.tchg.go.down .pill{animation:tthud .45s .2s both}
+.tchg.show .tag{opacity:1;transform:none}
+@keyframes tshine{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@keyframes tthud{0%{transform:none}30%{transform:translateY(3px)}55%{transform:translateY(-1px) rotate(-1.5deg)}100%{transform:none}}
 .av-champ{width:clamp(80px,min(12vw,16vh),200px);height:clamp(80px,min(12vw,16vh),200px);animation:drop .9s cubic-bezier(.3,1.4,.5,1) both}
 .av-champ img.face{border-width:5px;box-shadow:0 0 6vmin rgba(242,169,0,.45)}
 
@@ -2094,6 +2120,154 @@ async function slotDecide(t, stage, top2) {
   await wait(700, t);
 }
 
+/* ───── 시상식: 선수 사진 둘레의 등급 효과 + 점수 발표 뒤 승급·강등 ─────
+   등급별 효과(사진 바깥만): 언커먼 UC-10 · 레어 UC-08 · 에픽 UC-03 · 유니크 UN-02 · 스페셜 SP-01 · 레전드 LG-01(불꽃 강화, 고리 없음)
+   승급 순간: 유니크 = UN-08 폭죽, 스페셜 = SP-06 금빛 번개, 레전드 = LG-10 핏빛 오로라 + 운석, 그 아래 = 빛 고리 한 번
+   강등: 효과가 꺼지고 사진이 어두워진 뒤 새 등급 효과가 흐리게 다시 켜짐 */
+const TierFX = (() => {
+  const TAU = Math.PI * 2;
+  const COLS = {common: [154, 107, 74], uncommon: [95, 191, 106], rare: [127, 178, 229], epic: [180, 140, 242], unique: [255, 138, 43], special: [242, 179, 61], legend: [255, 64, 64]};
+  let X, T, C, R, F, COL, CL, CS;
+  const rnd = (i, s = 0) => { const x = Math.sin(i * 127.1 + s * 311.7) * 43758.5453; return x - Math.floor(x); };
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+  const eOut = u => 1 - Math.pow(1 - u, 3);
+  const rg = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  const lighten = (c, k) => c.map(v => Math.round(v + (255 - v) * k));
+  const mix = (a, b, u) => a.map((v, i) => Math.round(v + (b[i] - v) * u));
+  const P = (a, r) => [C + Math.cos(a) * r, C + Math.sin(a) * r];
+  const cycle = (i, L, s) => ((T + rnd(i, s) * L) % L) / L;
+  const SPR = {};
+  function spr(c, hot) {
+    const key = c + (hot ? "h" : ""); if (SPR[key]) return SPR[key];
+    const s = document.createElement("canvas"); s.width = s.height = 64; const x = s.getContext("2d"), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, `rgba(${hot ? "255,255,235" : c},1)`); g.addColorStop(.25, `rgba(${c},.85)`); g.addColorStop(.6, `rgba(${c},.22)`); g.addColorStop(1, `rgba(${c},0)`);
+    x.fillStyle = g; x.fillRect(0, 0, 64, 64); return SPR[key] = s;
+  }
+  function dot(x, y, s, c, a, hot) { if (a <= 0 || s <= 0) return; X.globalAlpha = Math.min(1, a); X.drawImage(spr(Array.isArray(c) ? c.join(",") : c, hot), x - s, y - s, s * 2, s * 2); X.globalAlpha = 1; }
+  function ring(r, lw, st) { X.beginPath(); X.arc(C, C, r, 0, TAU); X.lineWidth = lw; X.strokeStyle = st; X.stroke(); }
+  function sweepRing(r, w, a0, span, c, a) {
+    const n = 24; X.lineCap = "round";
+    for (let k = 0; k < n; k++) { const u = k / n; X.beginPath(); X.arc(C, C, r, a0 - span * u, a0 - span * (u + 1 / n), true); X.strokeStyle = rg(c, a * (1 - u)); X.lineWidth = w * (1 - u * .6); X.stroke(); }
+  }
+  function glow(pts, w, c, a) {
+    X.lineCap = X.lineJoin = "round"; X.beginPath(); pts.forEach((p, i) => i ? X.lineTo(p[0], p[1]) : X.moveTo(p[0], p[1]));
+    X.strokeStyle = rg(c, a * .18); X.lineWidth = w * 5; X.stroke(); X.strokeStyle = rg(c, a * .6); X.lineWidth = w * 2; X.stroke(); X.strokeStyle = `rgba(255,255,255,${a * .9})`; X.lineWidth = w * .7; X.stroke();
+  }
+  function bolt(x0, y0, x1, y1, seed, disp = .35, it = 5) {
+    let pts = [[x0, y0], [x1, y1]];
+    for (let k = 0; k < it; k++) { const n = []; for (let i = 0; i < pts.length - 1; i++) { const a = pts[i], b = pts[i + 1], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, o = (rnd(seed * 31 + k * 7 + i, 5) - .5) * L * disp; n.push(a, [(a[0] + b[0]) / 2 - dy / L * o, (a[1] + b[1]) / 2 + dx / L * o]); } n.push(pts.at(-1)); pts = n; }
+    return pts;
+  }
+  function flames(n, big, hotC, midC, s0 = 0) {
+    for (let i = 0; i < n; i++) {
+      const L = .55 + rnd(i, 11 + s0) * .55, ph = cycle(i, L, 12 + s0), a = rnd(i, 13 + s0) * TAU, [sx, sy] = P(a, R * .97);
+      const up = .55 + .45 * Math.max(0, -Math.sin(a)), lift = R * (.55 + rnd(i, 14 + s0) * .5) * big * up;
+      const x = sx + Math.cos(a) * R * .12 * ph + Math.sin(T * 6 + i) * R * .03 * ph, y = sy + Math.sin(a) * R * .06 * ph - lift * ph;
+      const sz = R * (.3 - .22 * ph) * Math.sqrt(big), al = (ph < .15 ? ph / .15 : 1 - (ph - .15) / .85) * .75 * F;
+      dot(x, y, sz, ph < .35 ? hotC : ph < .7 ? midC : CS, al, ph < .3);
+    }
+  }
+  /* 등급별 계속 나오는 효과 */
+  const LOOP = {
+    uncommon() { const a = T * 1.8; sweepRing(R * 1.01, Math.max(4, R * .08), a, 2.4, CL, F); const [x, y] = P(a, R * 1.01); dot(x, y, R * .22, CL, F, true); },  // UC-10 테두리 혜성
+    rare() { sweepRing(R * 1.12, Math.max(3, R * .06), T * 2.2, 1.6, CL, F); sweepRing(R * 1.12, Math.max(3, R * .06), T * 2.2 + Math.PI, 1.6, COL, F); },  // UC-08 쫓는 두 호
+    epic() { for (let j = 0; j < 3; j++) for (let k = 0; k < 10; k++) { const [x, y] = P(T * 1.4 + j * TAU / 3 - k * .07, R * 1.17); dot(x, y, R * (.09 - k * .007), CL, (1 - k / 10) * F, k === 0); } },  // UC-03 세 점 궤도
+    unique() { for (let i = 0; i < 80; i++) { const a = i / 80 * TAU, k = .5 + .5 * Math.sin(a * 3 - T * 5), fl = .7 + .3 * Math.sin(T * 13 + i * 2.7), [x, y] = P(a, R * (1.06 + .04 * Math.sin(T * 7 + i)));  // UN-02 불의 고리
+      dot(x, y, R * (.12 + .1 * k) * fl, k > .6 ? "255,210,120" : CS, (.35 + .5 * k) * F, k > .8); } },
+    special() { flames(110, 1, "255,200,90", "255,150,50"); },  // SP-01 황금 불길
+    legend() { flames(150, 1.55, "255,210,110", "255,90,40"); flames(90, 1.05, "255,240,190", "255,140,60", 40); },  // LG-01 강화 (고리 없음)
+  };
+  /* 승급 순간 한 번 */
+  function fireworks(u) {  // UN-08 폭죽: 둘레 곳곳에서 차례로 터짐
+    for (let j = 0; j < 6; j++) { const t0 = j * .16, ph = clamp((u - t0) / .9); if (ph <= 0 || ph >= 1) continue;
+      const [cx, cy] = P(-Math.PI / 2 + (j - 2.5) * .62 + rnd(j, 3) * .3, R * (1.35 + rnd(j, 2) * .3)), e = eOut(clamp(ph / .5));
+      for (let i = 0; i < 16; i++) { const a = i / 16 * TAU, d = R * .42 * e; dot(cx + Math.cos(a) * d, cy + Math.sin(a) * d + R * .18 * ph * ph, R * .06, i % 2 ? "255,225,150" : CS, (1 - ph), true); }
+      dot(cx, cy, R * .3 * (1 - ph), "255,240,200", (1 - ph) * .8, true); }
+  }
+  function lightning(u) {  // SP-06 금빛 번개: 바깥에서 테두리로 연달아 내리꽂힘
+    for (let j = 0; j < 5; j++) { const t0 = j * .14, ph = clamp((u - t0) / .32); if (ph <= 0 || ph >= 1) continue;
+      const a = -Math.PI / 2 + (rnd(j, 1) - .5) * 3.4, [x0, y0] = P(a + (rnd(j, 2) - .5) * .5, R * 2), [x1, y1] = P(a, R), al = 1 - ph;
+      glow(bolt(x0, y0, x1, y1, j * 13 + Math.floor(u * 30)), Math.max(1.4, R * .032), [255, 210, 90], al); dot(x1, y1, R * .45, "255,210,90", al * .9, true); }
+    const fl = Math.max(0, 1 - u / .5); if (fl > 0) { const g = X.createRadialGradient(C, C, R, C, C, R * 1.8); g.addColorStop(0, `rgba(255,225,150,${fl * .5})`); g.addColorStop(1, "rgba(255,225,150,0)"); X.fillStyle = g; X.fillRect(0, 0, C * 2, C * 2); }
+  }
+  function auroraMeteors(u) {  // LG-10 핏빛 오로라 + 운석: 붉은 오로라가 피어나고 불붙은 운석이 사진 쪽으로 떨어짐
+    const env = Math.sin(clamp(u / 2) * Math.PI);  // 0→1→0
+    X.filter = `blur(${Math.max(3, R * .07)}px)`;
+    for (let b = 0; b < 3; b++) { const c2 = b === 1 ? [255, 150, 60] : b === 2 ? [200, 40, 90] : CL, rad = R * (1.15 + b * .13), a0 = u * (1.2 + b * .4) * (b % 2 ? -1 : 1) + b * 2;
+      for (let k = 0; k < 36; k++) { const v = k / 35, a = a0 + v * 3.8, r2 = rad + Math.sin(v * 9 + u * 5 + b) * R * .06; X.strokeStyle = rg(c2, Math.sin(v * Math.PI) * env); X.lineWidth = R * (.22 - b * .04); X.beginPath(); X.arc(C, C, r2, a, a + .11); X.stroke(); } }
+    X.filter = "none";
+    for (let j = 0; j < 5; j++) { const t0 = .1 + j * .22, ph = clamp((u - t0) / .45); if (ph <= 0) continue;
+      const a = -Math.PI / 2 + (rnd(j, 4) - .5) * 2.6, [ex, ey] = P(a, R * 1.02), sx = ex + R * 2.2, sy = ey - R * 1.6;
+      if (ph < 1) { const x = sx + (ex - sx) * ph, y = sy + (ey - sy) * ph; for (let k = 0; k < 14; k++) dot(x + k * R * .08, y - k * R * .058, R * (.14 - k * .008), k < 2 ? "255,230,180" : "255,110,50", (1 - k / 14) * .9, k === 0); }
+      else { const h = clamp((u - t0 - .45) / .4); if (h < 1) { dot(ex, ey, R * .5 * (1 - h * .5), "255,170,90", (1 - h), true); ring(R * (1.02 + h * .35), 2, rg([255, 190, 120], (1 - h) * .8)); } } }
+  }
+  function shock(u) { if (u >= 1) return; ring(R * (1.02 + eOut(u) * .8), R * .07 * (1 - u) + 1, rg(CL, (1 - u) * .9)); }
+  const BURST = {unique: [fireworks, 1.9], special: [lightning, 1.2], legend: [auroraMeteors, 2.2]};
+
+  function attach(avEl, tier) {  // avEl: .av 요소. 반환값의 change(새 등급, "up"|"down")로 바뀜 연출
+    if (!avEl || !avEl.querySelector("img.face")) return null;
+    avEl.querySelector(".tier-fx")?.remove();
+    const size = avEl.offsetWidth, K = 4, dpr = Math.min(2, devicePixelRatio || 1);
+    const cv = document.createElement("canvas"); cv.className = "tier-fx";
+    cv.width = cv.height = Math.round(size * K * dpr); cv.style.width = cv.style.height = size * K + "px"; cv.style.left = cv.style.top = -(size * (K - 1) / 2) + "px";
+    avEl.appendChild(cv);
+    const ctx = cv.getContext("2d"), W = size * K;
+    // 레이어: 지금 보이는 효과(cur), 꺼지는 효과(old)
+    const st = {cur: {tier, a: 1, t0: performance.now()}, old: null, ringFrom: COLS[tier] || COLS.common, ringTo: COLS[tier] || COLS.common, ringT: -1, burst: null, dim: 1};
+    const layer = (L, now, alpha) => {
+      const fn = LOOP[L.tier]; if (!fn || alpha <= 0) return;
+      T = (now - L.t0) / 1000; COL = COLS[L.tier]; CL = lighten(COL, .55); CS = COL.join(","); F = alpha * eOut(clamp(T / .6));
+      X.save(); fn(); X.restore();
+    };
+    function frame(now) {
+      if (!cv.isConnected) return;
+      X = ctx; C = W / 2; R = size / 2;
+      X.setTransform(dpr, 0, 0, dpr, 0, 0); X.clearRect(0, 0, W, W);
+      X.save(); X.beginPath(); X.rect(0, 0, W, W); X.arc(C, C, R * .985, 0, TAU, true); X.clip("evenodd"); X.globalCompositeOperation = "lighter";
+      if (st.old) { const u = clamp((now - st.old.end0) / st.old.dur), flick = st.old.flicker ? (Math.sin(now / 28) > 0 ? 1 : .35) : 1; layer(st.old, now, (1 - u) * flick); if (u >= 1) st.old = null; }
+      layer(st.cur, now, st.cur.a * st.dim);
+      if (st.burst) { const u = (now - st.burst.t0) / 1000 / st.burst.dur; COL = COLS[st.burst.tier]; CL = lighten(COL, .55); CS = COL.join(","); R = size / 2; X.save(); st.burst.fn(u * st.burst.span); X.restore(); if (u >= 1) st.burst = null; }
+      X.restore();
+      // 테두리 색: 예전 등급 → 새 등급
+      const ru = st.ringT < 0 ? 1 : clamp((now - st.ringT) / 500), rc = mix(st.ringFrom, st.ringTo, ru);
+      X.globalCompositeOperation = "source-over"; ring(R * .985, Math.max(3, R * .065), rg(rc, 1)); ring(R * .95, Math.max(1, R * .015), rg(lighten(rc, .55), .85));
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+    return {
+      change(newTier, kind) {
+        const now = performance.now();
+        st.old = {...st.cur, end0: now, dur: kind === "down" ? 600 : 450, flicker: kind === "down"};
+        st.ringFrom = COLS[st.cur.tier] || COLS.common; st.ringTo = COLS[newTier] || COLS.common;
+        if (kind === "up") {
+          st.cur = {tier: newTier, a: 1, t0: now + (newTier === "legend" ? 700 : 250)}; st.ringT = now + 150;
+          const b = BURST[newTier]; st.burst = b ? {fn: b[0], span: b[1], dur: b[1], t0: now, tier: newTier} : {fn: shock, span: 1, dur: .8, t0: now, tier: newTier};
+          if (b) { sfx.revive?.(); if (newTier !== "unique" && soundOn() && audio) { const t = audio.currentTime; sfx.noise(t, .3, .45, 2000, "highpass"); sfx.tone(70, t, .35, .3, "sawtooth"); } }
+          else sfx.revive?.();
+        } else {
+          st.cur = {tier: newTier, a: .55, t0: now + 1100}; st.ringT = now + 500;  // 꺼졌다가 새 등급 효과가 흐리게 다시 켜짐
+          avEl.classList.add("tier-down");
+          if (soundOn() && audio) { const t = audio.currentTime; sfx.tone(330, t, .18, .18, "triangle"); sfx.tone(220, t + .16, .3, .18, "triangle"); }
+        }
+      },
+    };
+  }
+  function slotHtml(cd) {  // 점수 바로 아래 자리: 예전 등급 글자가 굴러 새 등급으로 바뀜
+    if (!cd || !cd.move || !cd.prev_tier) return "";
+    const up = cd.move > 0, oc = COLS[cd.prev_tier] || COLS.common, nc = COLS[cd.tier] || COLS.common, a = TIER[cd.prev_tier] || "", b = TIER[cd.tier] || "";
+    const reel = up ? [a, b] : [b, a];
+    return `<div class="tier-slot"><span class="tchg ${up ? "up" : "down"}" style="--oc:rgb(${oc});--nc:rgb(${nc})"><span class="pill"><span class="win"><span class="reel"><span>${reel[0]}</span><span>${reel[1]}</span></span></span></span><span class="tag">${up ? "▲ 승급" : "▼ 강등"}</span></span></div>`;
+  }
+  return {attach, slotHtml, COLS};
+})();
+async function tierChange(scope, fx, cd, t) {  // 점수 발표 뒤: 효과 전환 + 글자 굴림 + 꼬리표
+  if (!cd || !cd.move) return;
+  const kind = cd.move > 0 ? "up" : "down", el = scope.querySelector(".tchg");
+  fx?.change(cd.tier, kind);
+  el?.classList.add("go");
+  await wait(450, t);
+  el?.classList.add("show");
+}
 async function ceremony(r) {
   const t = ++showToken;
   const stage = $("#showStage"), row = $("#showRow");
@@ -2109,13 +2283,19 @@ async function ceremony(r) {
     await ceremonyIntro(r, t, stage);
     for (const p of r.ranking.slice(2).reverse()) {
       const worst = p.rank === 4;
+      const cd = (r.cards || {})[p.nick];
       stage.innerHTML = `<div class="show-card enter ${worst ? "worst" : ""}">${avatar(p, "show") || medal(p.rank, "show-medal")}
         <div class="show-rank">${p.rank}위</div><div class="show-award">${esc(p.award)}</div>
-        <div class="show-name">${esc(p.name)}</div><div class="show-score"><b>${sc(p.total)}</b> 점</div>
+        <div class="show-name">${esc(p.name)}</div><div class="show-score"><b>${sc(p.total)}</b> 점</div>${TierFX.slotHtml(cd)}
         ${(() => { const bad = worst && (p.badges || []).find(b => b.tone === "bad");
           return bad ? `<div><span class="stamp bad">${esc(bad.text)}</span></div>` : badgesHtml(p); })()}</div>`;
+      const fx = cd ? TierFX.attach(stage.querySelector(".av"), cd.move ? (cd.prev_tier || cd.tier) : cd.tier) : null;  // 사진 둘레 등급 효과 (바뀌면 예전 등급부터)
       sfx.ding(523.25);  // 3등과 4등 같은 효과음
-      await wait(worst ? 2300 : 1800, t);
+      if (cd && cd.move) {  // 점수 발표 1초 뒤 등급 바뀜
+        await wait(1000, t);
+        await tierChange(stage, fx, cd, t);
+        await wait(2300, t);
+      } else await wait(worst ? 2300 : 1800, t);
       row.insertAdjacentHTML("afterbegin", `<div class="show-mini enter">${avatar(p, "xs", false)}${medal(p.rank, "mini-medal")}<div><small>${p.rank}위</small><b>${esc(p.name)}</b></div></div>`);
       stage.innerHTML = "";
       await wait(300, t);
@@ -2129,13 +2309,20 @@ async function ceremony(r) {
     sfx.fanfare();
     $("#showDone").classList.add("reserve");
     const big = (f.badges || []).find(b => b.tone === "fire" || b.tone === "record");
+    const fcd = (r.cards || {})[f.nick];
     stage.innerHTML = `<div class="flash"></div><div class="champ-show"><div class="champ-top">${avatar(f, "champ") || trophy("show-trophy")}</div>
       <div class="show-award gold">최우수 플레이어</div><div class="show-champ-name">${esc(f.name)}</div>
-      <div class="show-score big"><b id="countUp">0.0</b> 점</div>
+      <div class="show-score big"><b id="countUp">0.0</b> 점</div>${TierFX.slotHtml(fcd)}
       <div class="show-line">판당 딜량 ${fmt(f.metrics.damage)}, 판당 킬 ${f.metrics.kills}, 평균 생존 ${f.metrics.survival_min}분</div>
       ${big ? "" : badgesHtml(f)}</div>`;
     confetti(t);
     countUp($("#countUp"), f.total, 1500, t);
+    const ffx = fcd ? TierFX.attach($(".champ-top .av"), fcd.move ? (fcd.prev_tier || fcd.tier) : fcd.tier) : null;
+    if (fcd && fcd.move) {  // 1등은 점수가 다 올라간 뒤 등급 바뀜
+      await wait(1700, t);
+      await tierChange(stage, ffx, fcd, t);
+      await wait(1600, t);
+    }
     if (big) {  // 큰 칭호는 3초 뒤 도장 '쾅'
       await wait(2500, t);
       $(".champ-top")?.insertAdjacentHTML("beforeend", `<span class="stamp top">${esc(big.text)}</span>`);
