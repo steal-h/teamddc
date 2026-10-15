@@ -116,6 +116,46 @@ button,input,select{font:inherit;color:inherit}
 .bar i em{display:block;height:100%;background:var(--accent)}
 .bar span:last-child{text-align:right;color:var(--bone);font-variant-numeric:tabular-nums}
 .penalty{color:var(--flare);font-size:13px;margin-top:6px}
+/* 수상자 상세 기록: 선수 카드 등급 색 띠 + 높은 등급 효과 + 승급·강등 */
+.pcard{position:relative;--tb:var(--line);--tg:120,120,100}
+.pcard.t-legend{--tb:#FF4040;--tg:255,64,64}.pcard.t-special{--tb:#F2B33D;--tg:242,179,61}.pcard.t-unique{--tb:#FF8A2B;--tg:255,138,43}
+.pcard.t-epic{--tb:#B48CF2;--tg:180,140,242}.pcard.t-rare{--tb:#7FB2E5;--tg:127,178,229}.pcard.t-uncommon{--tb:#5FBF6A;--tg:95,191,106}.pcard.t-common{--tb:#9A6B4A;--tg:154,107,74}
+.pcard[class*=" t-"]{border-top:4px solid var(--tb)!important}
+.pcard header b{white-space:nowrap;min-width:0}
+.pcard .pc-rk{flex:none;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:6px;text-align:right}
+.pcard .pc-rk em{font:400 18px/1 var(--num);font-style:normal;color:var(--dust);margin-right:-1px}
+.pcard .pc-tline{display:flex;align-items:center;gap:3px;justify-content:flex-end}
+.pcard .pc-tier{font:700 11.5px/1 Pretendard,sans-serif;color:var(--tb);display:inline-flex;align-items:center;gap:4px;white-space:nowrap;padding:0;border:0;border-radius:0;background:none}
+.pcard .pc-tier b{font:800 12.5px/1 var(--num);color:var(--bone)}
+.pc-move{font-style:normal;font:800 10.5px/1 Pretendard,sans-serif;padding:3px 6px;border-radius:999px;white-space:nowrap}
+.pc-move.up{background:rgba(95,191,106,.18);color:#8BE08F;box-shadow:0 0 10px rgba(95,191,106,.35);animation:mvpulse 1.6s ease-in-out infinite alternate}
+.pc-move.down{background:rgba(224,83,47,.16);color:#FF8C6E}
+@keyframes mvpulse{to{box-shadow:0 0 16px rgba(95,191,106,.6)}}
+/* 등급 효과: 단계마다 하나씩 더해짐 (언커먼 위쪽 빛 → 레어 외곽 빛 → 에픽 띠 빛 흐름 → 유니크 아지랑이·불씨 → 스페셜 노란 용암 띠) */
+.pcard .fx{position:absolute;pointer-events:none}
+.pcard .fx.tg{left:0;right:0;top:0;height:90px;background:linear-gradient(rgba(var(--tg),.26),transparent);z-index:0}
+.pcard>*:not(.fx){position:relative;z-index:1}
+.pcard.t-rare,.pcard.t-epic,.pcard.t-unique,.pcard.t-special,.pcard.t-legend{box-shadow:0 0 22px rgba(var(--tg),.28)}
+.pcard .fx.bs{left:0;right:0;top:-4px;height:4px;z-index:3;background:linear-gradient(90deg,transparent,#fff,transparent) -60% 0/40% 100% no-repeat;animation:tbshine 2.8s linear infinite}
+@keyframes tbshine{to{background-position:160% 0}}
+.pcard .fx.ht{left:0;right:0;top:-34px;height:38px;z-index:0;background:linear-gradient(transparent,rgba(var(--tg),.28));filter:blur(4px);transform-origin:bottom;animation:tierheat 1.2s ease-in-out infinite alternate}
+@keyframes tierheat{to{transform:scaleY(1.25);opacity:.6}}
+.pcard .fx.em{left:0;right:0;top:-6px;height:0;z-index:4}
+.pcard .fx.em i{position:absolute;top:0;width:3px;height:3px;border-radius:50%;background:#ffd36b;box-shadow:0 0 6px 2px rgba(var(--tg),.9);animation:tierrise var(--d) linear infinite;opacity:0}
+@keyframes tierrise{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),-90px)}}
+.pcard .fx.lv{left:0;right:0;top:-5px;height:6px;z-index:2;background:linear-gradient(90deg,#F2B33D,#fff3b0,#F2B33D,#ffcc33,#F2B33D) 0 0/200% 100%;animation:tierlava 2.2s linear infinite;box-shadow:0 0 12px rgba(255,214,90,.95)}
+@keyframes tierlava{to{background-position:200% 0}}
+/* 레전드: 강한 외곽 빛 + 붉은 용암 띠 + 회전하는 불의 고리 테두리 */
+.pcard.t-legend{box-shadow:0 0 34px rgba(255,64,64,.45),0 0 70px rgba(255,64,64,.18)}
+.pcard .fx.lv.red{background:linear-gradient(90deg,#FF4040,#ffd36b,#FF4040,#ff4a1c,#FF4040) 0 0/200% 100%;box-shadow:0 0 12px rgba(255,64,64,.95)}
+@property --tfa{syntax:"<angle>";inherits:false;initial-value:0deg}
+.pcard .fx.fb{inset:-7px -3px -3px -3px;z-index:2;padding:3px;background:conic-gradient(from var(--tfa),#ff4a1c,#ffd36b,#ff4a1c,#FF4040,#ff4a1c);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;filter:blur(1.5px) drop-shadow(0 0 6px #ff6a2a);animation:tierfb 2.4s linear infinite}
+@keyframes tierfb{to{--tfa:360deg}}
+.pcard.promo{animation:promoin 1.2s ease-out}
+@keyframes promoin{0%{box-shadow:0 0 0 rgba(95,191,106,0)}40%{box-shadow:0 0 32px rgba(95,191,106,.7)}100%{}}
+@media (prefers-reduced-motion:reduce){.pcard .fx,.pc-move.up{animation:none!important}}
+
 .pc-key{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 12px}
 .pc-key div{background:var(--panel-2);border-radius:4px;padding:8px 6px 7px;text-align:center;min-width:0}
 .pc-key b{display:block;font:400 22px/1.1 var(--num);color:var(--bone);font-variant-numeric:tabular-nums}
@@ -131,7 +171,13 @@ button,input,select{font:inherit;color:inherit}
 .pcard .bar{grid-template-columns:44px 1fr 36px}
 .pcard .penalty,.pcard .best{font-size:12.5px;line-height:1.45;margin:6px 0 0;padding:6px 9px;border-radius:4px;background:var(--panel-2)}
 .pcard .penalty{background:rgba(224,83,47,.1)}
-.pc-earned .badges{display:flex!important;flex-direction:row!important;flex-wrap:wrap;gap:6px;justify-content:flex-start;margin:8px 0 0}
+.pc-earned .badges,.pc-earn .badges{display:flex!important;flex-direction:row!important;flex-wrap:wrap;gap:6px;justify-content:flex-start;margin:0}
+.cards .pcard{display:grid;grid-template-rows:subgrid;grid-row:span 9;row-gap:0;align-content:start}
+.pcard>header,.pcard>.pc-key{align-self:start}
+.pc-notes{display:flex;flex-direction:column;gap:6px;padding:4px 0 10px}.pc-notes .penalty,.pc-notes .best{margin:0!important}
+.pc-earn{align-self:stretch}.pc-earn .badges .bdg{margin:0;padding:5px 9px}
+.pc-earn h4.newh{color:#B48CF2}
+.pc-none{margin:0;font-size:12px;color:var(--dust);opacity:.6}
 .pc-earned .badges .bdg{margin:0;padding:5px 9px}
 .pc-newh{font-size:11.5px;font-weight:700;letter-spacing:.06em;color:#B48CF2;margin:10px 0 -2px}
 
@@ -200,6 +246,36 @@ dialog h3{margin:0 0 4px;font:400 24px/1.2 var(--display)}
 .prow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+/* 설정 (탭) */
+.set-dlg{width:min(780px,96vw);max-height:92vh;overflow:hidden}
+.set-dlg form{padding:0;display:flex;flex-direction:column;max-height:92vh}
+.set-head{padding:18px 24px 0;border-bottom:1px solid var(--line)}
+.set-tabs{display:flex;gap:2px;margin-top:10px;overflow-x:auto;scrollbar-width:none}
+.set-tabs::-webkit-scrollbar{display:none}
+.set-tabs button{background:none;border:0;border-bottom:2px solid transparent;color:var(--dust);padding:8px 14px 10px;font:600 14px/1 inherit;cursor:pointer;white-space:nowrap}
+.set-tabs button.on{color:var(--bone);border-bottom-color:var(--accent)}
+.set-tabs button:hover{color:var(--bone)}
+.set-body{padding:18px 24px 6px;overflow-y:auto;overflow-x:hidden;height:min(600px,68vh);scrollbar-width:none}
+.set-body::-webkit-scrollbar{display:none}
+.set-pane{display:none}.set-pane.on{display:block;animation:fadein .18s ease-out}
+.set-dlg .help{overflow-wrap:anywhere;font-size:12.5px;line-height:1.5}
+.set-dlg .help.status{color:var(--bone);opacity:.85}
+.set-dlg .field>span small{font-weight:400;color:var(--dust);font-size:12px;margin-left:6px}
+.set-dlg textarea{min-height:110px;width:100%;resize:vertical}
+.set-sub{margin:14px 0 8px;font-size:12px;letter-spacing:.06em;color:var(--accent);font-weight:700}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 12px}
+.three label,.set-dlg .two label{display:grid;gap:5px;font-size:13px;color:var(--dust);min-width:0}
+.three input{background:var(--field);border:1px solid var(--line);border-radius:3px;padding:7px 9px;width:100%;color:var(--bone)}
+.set-btns{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
+[data-pane="deco"] .field{grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+[data-pane="deco"] .field:last-child{border-bottom:0}
+[data-pane="deco"] .field>span,[data-pane="deco"] .vol-row{grid-column:1/-1}
+[data-pane="deco"] .set-btns{margin:0;grid-column:2;grid-row:2/4;align-self:center}
+.check.big{margin-bottom:12px;color:var(--bone)}
+.vol-row{display:flex;align-items:center;gap:10px}.vol-row input{flex:1;accent-color:var(--accent)}.vol-row b{width:44px;text-align:right}
+.set-dlg .dlg-actions{margin:0;padding:12px 24px;border-top:1px solid var(--line);background:var(--panel)}
+@media (max-width:640px){.three{grid-template-columns:1fr 1fr}.set-dlg .two{grid-template-columns:1fr}.set-body{height:min(560px,66vh);padding:14px 16px 6px}.set-head{padding:14px 16px 0}.set-dlg .dlg-actions{padding:10px 16px}}
+
 
 /* 공유 이미지 (캡처 전용) */
 #shareCard{width:1000px;background:var(--field);color:var(--bone);padding:40px 44px 30px;display:none}
@@ -457,7 +533,66 @@ dialog[open]::backdrop{animation:fadein .22s ease-out}
 .rp-hud{position:absolute;left:14px;top:12px;display:flex;flex-wrap:wrap;gap:8px;max-width:calc(100% - 28px);pointer-events:none}
 .rp-hud span{background:rgba(20,23,15,.82);border:1px solid #3A4030;border-radius:4px;padding:6px 12px;font-size:14px}
 .rp-hud #rpClock{font:400 20px/1 var(--num);color:var(--bone);padding:6px 12px 4px}
-.rp-hud span:empty{display:none}.rp-hud #rpPhase{color:#BFE0FF;border-color:#3D5C86}.rp-hud #rpPhase.moving{color:#fff;border-color:#7FB2FF;box-shadow:0 0 10px rgba(127,178,255,.45)}
+.rp-hud span:empty{display:none}
+/* 팀 현황판 (남은 팀이 4팀 이하일 때) */
+/* 팀원 HUD (메인 화면 아래) */
+.rp-teams{position:absolute;top:12px;left:50%;transform:translateX(-50%) translateY(-6px);display:flex;gap:8px;pointer-events:none;z-index:2;opacity:0;transition:opacity .4s,transform .4s}
+.rp-teams.on{opacity:1;transform:translateX(-50%)}
+.rp-teams .tm{display:flex;align-items:center;gap:6px;background:rgba(14,16,11,.86);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:4px 12px 4px 4px;white-space:nowrap}
+.rp-teams .tm.out{opacity:.35}
+.rp-teams .tn{width:28px;height:28px;border-radius:50%;background:var(--tc);color:#14170F;display:grid;place-items:center;font:900 12px/1 Arial,sans-serif;box-shadow:0 0 10px color-mix(in srgb,var(--tc) 70%,transparent);margin-right:2px}
+.rp-teams .tm.ours{border-color:#F2A900;background:linear-gradient(90deg,rgba(242,169,0,.22),rgba(14,16,11,.88) 55%);box-shadow:0 0 16px rgba(242,169,0,.35);padding-left:3px}
+.rp-teams .logo{width:32px;height:32px;border-radius:50%;display:block;box-shadow:0 0 0 2px #F2A900,0 0 12px rgba(242,169,0,.7);background:#2B3022}
+.rp-teams .tm.ours{padding-left:12px}
+.rp-teams .tm.ours .tag{font:900 16px/28px Arial,sans-serif;letter-spacing:.1em;color:#FFE08A;margin-right:4px;text-shadow:0 0 6px rgba(255,200,60,.9),0 0 14px rgba(242,169,0,.75),0 0 26px rgba(242,169,0,.45);animation:ddcglow 2.4s ease-in-out infinite alternate}
+@keyframes ddcglow{from{text-shadow:0 0 5px rgba(255,200,60,.8),0 0 12px rgba(242,169,0,.6)}to{text-shadow:0 0 8px rgba(255,220,90,1),0 0 18px rgba(242,169,0,.9),0 0 32px rgba(242,169,0,.55)}}
+.rp-teams svg{width:12px;height:18px;display:block}
+.rp-teams em{font-style:normal;font:800 13px/1 Arial,sans-serif;color:#E8E2CC;margin-left:4px}.rp-teams em small{font-size:10px;color:#9a9682;margin-left:1px}
+.rp-phud-row{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;pointer-events:none;z-index:2;transition:right .35s}
+.rp-phud{position:static;display:flex;gap:8px;pointer-events:none;zoom:var(--hud,1);max-width:100%}
+.rp-teams{zoom:var(--teamz,1)}
+.rp-phud .ph{width:156px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:5px 9px;align-items:center;background:rgba(30,34,26,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px;transition:opacity .3s,filter .3s}
+.rp-phud .ph .pic{width:44px;height:44px;border-radius:8px;grid-row:span 2;outline:2px solid var(--pc);outline-offset:0;object-fit:cover;background:var(--pc);display:grid;place-items:center;font:900 18px/1 Arial;color:#14170F}
+.rp-phud .ph .nm{font-size:13px;font-weight:800;display:flex;justify-content:space-between;gap:6px;white-space:nowrap;min-width:0}
+.rp-phud .ph .nm span{overflow:hidden;text-overflow:ellipsis}.rp-phud .ph .nm em{font-style:normal;color:#F2A900;flex:none}
+.rp-phud .hp{height:6px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden}
+.rp-phud .hp i{display:block;height:100%;background:linear-gradient(90deg,#9be37a,#e8f5c8);transition:width .3s}
+.rp-phud .ph.low .hp i{background:linear-gradient(90deg,#E0532F,#FFB08F)}.rp-phud .ph.down .hp i{background:#E0532F}
+.rp-phud .st{grid-column:1/-1;font-size:11px;display:flex;align-items:center;gap:6px;color:#cfc9b1;white-space:nowrap;overflow:hidden}
+.rp-phud .st b{width:17px;height:17px;border-radius:4px;display:grid;place-items:center;font-size:10px;background:rgba(255,255,255,.1);flex:none}
+.rp-phud .st.fight{color:#FFD772}.rp-phud .st.fight b{background:rgba(242,169,0,.25)}.rp-phud .st.heal{color:#9be37a}.rp-phud .st.heal b{background:rgba(155,227,122,.2)}
+.rp-phud .st.down{color:#FF8C6E}.rp-phud .st.down b{background:rgba(224,83,47,.3)}.rp-phud .st.car b{background:rgba(127,178,229,.25)}
+.rp-phud .ph.dead{opacity:.45;filter:grayscale(1)}.rp-phud .ph.down{border-color:rgba(224,83,47,.6);animation:phdown 1s ease-in-out infinite alternate}
+@keyframes phdown{to{box-shadow:0 0 14px rgba(224,83,47,.45)}}
+.rp-toast{bottom:84px!important}
+@container (max-width:1060px){.rp-stage .rp-hud.rp-hud-br{bottom:calc(14px + 70px * var(--hud,1) + 8px)}}  /* 좁은 화면에서만 팀원 카드와 겹치지 않게 위로 */
+
+
+.rp-sum{position:absolute;inset:0;z-index:5;display:grid;place-items:center;background:rgba(12,14,9,.72);backdrop-filter:blur(3px);animation:fadein .3s ease-out;padding:16px}
+.rp-sum[hidden]{display:none}
+.rp-sum .card{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:6px;width:min(680px,100%);max-height:100%;overflow:auto;scrollbar-width:none;padding:20px 22px;position:relative}
+.rp-sum h3{margin:0;font:400 26px/1.2 var(--display)}.rp-sum .sub{color:var(--dust);font-size:13px;margin:4px 0 16px}
+.rp-sum .x{position:absolute;right:12px;top:10px;background:none;border:0;color:var(--dust);font-size:22px;cursor:pointer}
+.rp-sum .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.rp-sum .tiles div{background:var(--panel-2);border-radius:5px;padding:10px 12px}
+.rp-sum .tiles b{display:block;font:400 26px/1.1 var(--num);color:var(--bone)}.rp-sum .tiles b small{font-size:14px;color:var(--dust);margin-left:2px}
+.rp-sum .tiles span{font-size:12px;color:var(--dust)}
+.rp-sum .tiles .hi b{color:var(--accent)}
+.rp-sum table{width:100%;border-collapse:collapse;font-size:13.5px}
+.rp-sum th{color:var(--dust);font-weight:400;font-size:12px;text-align:right;padding:4px 6px}.rp-sum th:first-child,.rp-sum td:first-child{text-align:left}
+.rp-sum td{padding:7px 6px;border-top:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+.rp-sum td i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.rp-sum .best{margin-top:12px;font-size:13px;color:var(--dust)}.rp-sum .best b{color:var(--bone)}
+.rp-sum .btns{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+@media (max-width:560px){.rp-sum .tiles{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){.rp-phud-row{display:none!important}.rp-phud{display:none!important;max-width:calc(100% - 16px);bottom:6px}.rp-phud .ph{width:auto;flex:1;padding:4px 6px}.rp-phud .ph .st{display:none}.rp-teams{top:44px;gap:4px}.rp-teams .tm em{display:none}.rp-teams .tm{padding:3px 7px 3px 3px;gap:3px}.rp-teams svg{width:9px;height:14px}.rp-teams .tn{width:22px;height:22px;font-size:10px}.rp-teams .logo{width:24px;height:24px}.rp-teams .tm.ours .tag{display:none}}
+/* 교전 강도 그래프 (재생 막대 위) */
+.rp-graph{position:absolute;left:8px;right:8px;top:0;height:16px;width:calc(100% - 16px);pointer-events:none;z-index:1}
+/* 장면 전환 */
+.rp-wipe{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;background:radial-gradient(ellipse at center,rgba(20,23,15,0) 30%,rgba(20,23,15,.85));backdrop-filter:blur(0px)}
+.rp-wipe.go{animation:rpwipe .45s ease-out}
+@keyframes rpwipe{0%{opacity:0;backdrop-filter:blur(0)}35%{opacity:1;backdrop-filter:blur(6px)}100%{opacity:0;backdrop-filter:blur(0)}}
+.rp-hud #rpPhase{color:#BFE0FF;border-color:#3D5C86}.rp-hud #rpPhase.moving{color:#fff;border-color:#7FB2FF;box-shadow:0 0 10px rgba(127,178,255,.45)}
 .rp-toast{position:absolute;left:50%;bottom:22px;transform:translateX(-50%) translateY(10px);opacity:0;pointer-events:none;background:rgba(20,23,15,.9);border:1px solid var(--accent);border-radius:999px;padding:10px 22px;font:400 22px/1.2 var(--display);transition:opacity .25s,transform .25s;white-space:nowrap}
 .rp-toast.on{opacity:1;transform:translateX(-50%)}
 .rp-toast.bad{border-color:var(--flare);color:#FFB4A2}
@@ -1062,6 +1197,10 @@ body.viewer .viewer-badge{display:inline-flex;align-items:center;gap:6px;padding
       <canvas id="rpCanvas"></canvas>
       <div class="rp-hud"><span id="rpSpd"></span></div>
       <div class="rp-hud rp-hud-tr"><span id="rpAlive"></span></div>
+      <div class="rp-teams" id="rpTeams" aria-label="남은 팀 현황"></div>
+      <div class="rp-phud-row"><div class="rp-phud" id="rpPhud" aria-label="팀원 상태"></div></div>
+      <div class="rp-wipe" id="rpWipe"></div>
+      <div class="rp-sum" id="rpSum" hidden></div>
       <div class="rp-hud rp-hud-br"><span id="rpHazard"></span><span id="rpPhase"></span><span id="rpClock">00:00</span></div>
       <div class="rp-grp" id="rpGrpMain" aria-live="off"></div>
       <div class="rp-pip" id="rpPip" aria-hidden="true"><canvas id="rpPipCanvas"></canvas><div class="rp-grp" id="rpGrpSub"></div></div>
@@ -1076,11 +1215,12 @@ body.viewer .viewer-badge{display:inline-flex;align-items:center;gap:6px;padding
     <button class="btn primary" id="rpPlay">일시정지</button>
     <button class="btn" id="rpBack">10초 뒤로</button>
     <button class="btn" id="rpNext">다음 교전</button>
+    <button class="btn" id="rpSumBtn">판 요약</button>
     <button class="btn" id="rpCine" aria-pressed="true">자동 연출 켜짐</button>
     <button class="btn" id="rpFoes" aria-pressed="true">적 표시 켜짐</button>
     <button class="btn" id="rpPaths" aria-pressed="true">동선 켜짐</button>
-    <div class="rp-time"><input type="range" id="rpSeek" min="0" max="100" step="0.5" value="0" aria-label="재생 위치"><div class="rp-ticks" id="rpTicks"></div></div>
-    <div class="rp-speed" role="group" aria-label="재생 속도"><button data-sp="1">1배</button><button data-sp="4">4배</button><button data-sp="10">10배</button><button data-sp="40">40배</button></div>
+    <div class="rp-time"><input type="range" id="rpSeek" min="0" max="100" step="0.5" value="0" aria-label="재생 위치"><canvas class="rp-graph" id="rpGraph" aria-hidden="true"></canvas><div class="rp-ticks" id="rpTicks"></div></div>
+    <div class="rp-speed" role="group" aria-label="재생 속도"><button data-sp="1">1배</button><button data-sp="4">4배</button><button data-sp="10" title="교전은 교전 배속, 조용한 구간은 설정한 빨리감기 배속">설정 배속</button><button data-sp="40">40배</button></div>
   </div>
 </div>
 
@@ -1100,86 +1240,88 @@ body.viewer .viewer-badge{display:inline-flex;align-items:center;gap:6px;padding
   <div class="dlg-actions"><button class="btn primary" id="scoreClose">닫기</button></div>
 </div></dialog>
 
-<dialog id="dlg">
+<dialog id="dlg" class="set-dlg">
   <form method="dialog" id="settingsForm">
-    <h3>설정</h3>
-    <label class="field"><span>PUBG API 키</span>
-      <input type="password" id="apiKey" autocomplete="off">
-      <p class="help"><a href="https://developer.pubg.com" target="_blank" rel="noopener">developer.pubg.com</a>에서 무료로 발급받을 수 있어요.</p>
-    </label>
-    <label class="field"><span>디스코드 웹후크 주소</span>
-      <input type="password" id="webhook" autocomplete="off">
-      <p class="help">디스코드 채널 설정 › 연동 › 웹후크 › 새 웹후크 › 웹후크 URL 복사. 넣어두면 '디스코드 채널에 공유' 버튼 하나로 기록 이미지가 올라가요.</p>
-    </label>
-    <div class="field"><span>플레이어 (닉네임은 대소문자까지 정확히)</span>
-      <div id="playerRows"></div>
-    </div>
-    <div class="two">
-      <label class="field"><span>하루 시작 시각</span><select id="dayStart"></select></label>
-      <label class="field"><span>같이 한 판 기준</span>
-        <select id="minTogether">
-          <option value="2">2명 이상 같은 팀</option>
-          <option value="3">3명 이상 같은 팀</option>
-          <option value="4">4명 모두 같은 팀</option>
-        </select>
-      </label>
-    </div>
-    <div class="field"><span>플레이어 사진</span>
-      <p class="help">images/players 폴더에 이름이나 닉네임으로 사진을 넣으면(예: 깐부.png, steal_h.jpg) 시상식, 결과 화면, 공유 이미지에 얼굴이 나와요. 정사각형 사진이 가장 예뻐요. 이름 뒤에 다른 글자가 붙어도 괜찮아요(예: 깐부 사진.jpg).<span id="pimgStatus" style="display:block;margin-top:6px;color:var(--bone)"></span></p>
-      <div><button class="btn" type="button" id="btnOpenPlayers">플레이어 사진 폴더 열기</button></div>
-    </div>
-    <div class="field"><span>점수 배점</span>
-      <div class="wgrid" id="wgrid"></div>
-      <p class="help" id="wsum"></p>
-    </div>
-    <div class="field"><span>무기 이름 고치기</span>
-      <textarea id="wnames" spellcheck="false" placeholder="AUG A3 = AUG"></textarea>
-      <p class="help">한 줄에 하나씩 '공식 이름 = 보여줄 이름'으로 적어요. 지난 기록에도 바로 반영돼요.</p>
-    </div>
-    <div class="field"><span>친구 조회 공유</span>
-      <label class="check"><input type="checkbox" id="shareOn"> 친구들이 각자 PC에서 기록을 볼 수 있게 하기 (조회 전용)</label>
-      <label>공유 비밀번호 <input type="text" id="sharePin" maxlength="40" autocomplete="off" placeholder="친구들에게만 알려줄 비밀번호"></label>
-      <p class="help" id="shareInfo"></p>
-      <div><button class="btn" type="button" id="btnPrebuild">친구들이 볼 리플레이 미리 만들기</button></div>
-    </div>
-    <div class="field"><span>웹 공유 (GitHub Pages) — 관리자 PC가 꺼져 있어도 볼 수 있어요</span>
-      <label class="check"><input type="checkbox" id="pubOn"> 분석·저장할 때마다 친구용 웹사이트에 자동으로 올리기</label>
-      <label>GitHub 저장소 <input type="text" id="pubRepo" maxlength="100" autocomplete="off" spellcheck="false" placeholder="아이디/저장소 이름 (예: steal-h/ddc-awards)"></label>
-      <label>GitHub 토큰 <input type="password" id="pubToken" maxlength="200" autocomplete="off" placeholder="github_pat_… 또는 ghp_…"></label>
-      <p class="help">기록·리플레이·선수 사진은 위의 <b>공유 비밀번호(6자 이상)</b>로 암호화돼서 올라가요. 비밀번호를 모르면 파일을 받아도 읽을 수 없어요. 배그 API 키·디스코드 주소·GitHub 토큰은 올라가지 않아요.
-        저장소는 <b>공개(Public)</b>로 만들어야 무료 웹사이트가 돼요. 토큰은 GitHub → Settings → Developer settings → Personal access tokens 에서 그 저장소의 <b>Contents 읽기·쓰기</b>(Pages 쓰기도 있으면 좋아요) 권한으로 만들어요.</p>
-      <p class="help" id="pubInfo"></p>
-      <div><button class="btn" type="button" id="btnPublish">지금 웹에 올리기</button></div>
-    </div>
-    <div class="field"><span>리플레이 설정</span>
+    <div class="set-head"><h3>설정</h3>
+      <nav class="set-tabs" role="tablist">
+        <button type="button" data-tab="basic" class="on">기본</button><button type="button" data-tab="score">점수</button>
+        <button type="button" data-tab="web">웹 공유</button><button type="button" data-tab="replay">리플레이</button><button type="button" data-tab="deco">꾸미기</button>
+      </nav></div>
+    <div class="set-body">
+    <section class="set-pane on" data-pane="basic">
       <div class="two">
-        <label>교전 배속 <input type="number" id="rpCfgSpeed" min="0.25" max="10" step="0.25"></label>
-        <label>조용한 구간 빨리감기 배속 <input type="number" id="rpCfgQuiet" min="10" max="200" step="5"></label>
-        <label>폭발 화면 흔들림 (0 = 끔) <input type="number" id="rpCfgShake" min="0" max="3" step="0.25"></label>
-        <label>붙어 있을 때 사진 크기 <input type="number" id="rpCfgCrowd" min="0.3" max="1" step="0.05"></label>
-        <label>교전 시작: 첫 총격 몇 초 전 <input type="number" id="rpCfgPre" min="0" max="10" step="0.5"></label>
-        <label>교전 끝: 마지막 총격 몇 초 뒤 <input type="number" id="rpCfgPost" min="0" max="15" step="0.5"></label>
-        <label>한 교전으로 묶는 간격(초) <input type="number" id="rpCfgGap" min="3" max="60" step="1"></label>
-        <label>교전 중 쉬는 틈(초): 넘으면 원래 배속 <input type="number" id="rpCfgLull" min="1" max="30" step="0.5"></label>
-        <label>넓게 보기 시작 자기장 페이즈 <input type="number" id="rpCfgZone" min="1" max="9" step="1"></label>
-        <label>기절·처치 당겨 보기 최대 거리(m, 0 = 끔) <input type="number" id="rpCfgPunch" min="0" max="600" step="10"></label>
+        <label class="field"><span>PUBG API 키</span><input type="password" id="apiKey" autocomplete="off">
+          <p class="help"><a href="https://developer.pubg.com" target="_blank" rel="noopener">developer.pubg.com</a>에서 무료 발급</p></label>
+        <label class="field"><span>디스코드 웹후크</span><input type="password" id="webhook" autocomplete="off">
+          <p class="help">채널 설정 › 연동 › 웹후크 › URL 복사</p></label>
       </div>
-      <p class="help">자동 카메라로 볼 때만 적용돼요. 교전 구간은 교전 배속으로 천천히, 교전이 없는 구간은 빨리감기 배속으로 빠르게 지나가요(10배 이상으로 볼 때). 마우스로 지도를 움직이거나 '전체 지도 보기'로 보면 고른 배속 그대로예요. 사진 크기는 1이 원래 크기예요. 저장하면 친구 화면과 웹 공유에도 반영돼요.</p>
-    </div>
-    <div class="field"><span>리플레이 그림</span>
-      <p class="help">images/replay 폴더에 그림을 넣으면 리플레이의 보급·투척 무기 아이콘이 그 그림으로 바뀌어요. 파일 이름은 한글이나 영어 모두 돼요:
-        수류탄(grenade), 화염병(molotov), 연막탄(smoke), 섬광탄(flash), 점착 폭탄(sticky), C4, 블루존 수류탄(bluezone), 보급(carepackage), 열린 보급, 낙하 보급, 신호탄(flare), 판처파우스트(panzerfaust), 박격포(mortar), 연료통(jerrycan).
-        <span id="rpImgStatus" style="display:block;margin-top:6px;color:var(--bone)"></span></p>
-      <div><button class="btn" type="button" id="btnOpenReplayImgs">리플레이 그림 폴더 열기</button></div>
-    </div>
-    <div class="field"><span>효과음과 음악</span>
-      <label style="display:flex;align-items:center;gap:10px">크기 <input type="range" id="vol" min="0" max="100" step="5" style="flex:1;accent-color:var(--accent)"><b id="volTxt" style="width:44px;text-align:right"></b></label>
-      <p class="help">sounds 폴더에 아래 이름으로 파일(mp3, ogg, wav, m4a)을 넣으면 기본 소리 대신 나와요. bgm(시상식 배경음악), reveal(3·4위 공개), tick(슬롯 돌아가는 소리), stop(슬롯 멈춤), fanfare(1등 발표), kill(리플레이 킬). <span id="sndStatus"></span></p>
-      <div><button class="btn" type="button" id="btnOpenSounds">sounds 폴더 열기</button></div>
-    </div>
-    <div class="field"><span>트로피와 메달 이미지</span>
-      <p class="help">images 폴더에 trophy, gold, silver, bronze 라는 이름으로 그림 파일(png, jpg, webp)을 넣으면 기본 그림 대신 들어가요. <span id="imgStatus"></span></p>
-      <div><button class="btn" type="button" id="btnOpenImages">images 폴더 열기</button></div>
+      <div class="field"><span>플레이어 <small>닉네임은 대소문자까지 정확히</small></span><div id="playerRows"></div></div>
+      <div class="two">
+        <label class="field"><span>하루 시작 시각</span><select id="dayStart"></select></label>
+        <label class="field"><span>같이 한 판 기준</span>
+          <select id="minTogether"><option value="2">2명 이상 같은 팀</option><option value="3">3명 이상 같은 팀</option><option value="4">4명 모두 같은 팀</option></select></label>
+      </div>
+      <div class="field"><span>무기 이름 고치기 <small>한 줄에 '공식 이름 = 보여줄 이름'</small></span>
+        <textarea id="wnames" spellcheck="false" placeholder="AUG A3 = AUG"></textarea></div>
+    </section>
+    <section class="set-pane" data-pane="score">
+      <div class="field"><span>점수 배점</span><div class="wgrid" id="wgrid"></div><p class="help" id="wsum"></p></div>
+    </section>
+    <section class="set-pane" data-pane="web">
+      <label class="check big"><input type="checkbox" id="pubOn"> 분석·저장할 때마다 웹에 자동으로 올리기</label>
+      <div class="two">
+        <label class="field"><span>GitHub 저장소</span><input type="text" id="pubRepo" maxlength="100" autocomplete="off" spellcheck="false" placeholder="아이디/저장소 (예: steal-h/ddc-awards)"></label>
+        <label class="field"><span>GitHub 토큰</span><input type="password" id="pubToken" maxlength="200" autocomplete="off" placeholder="github_pat_… 또는 ghp_…"></label>
+      </div>
+      <label class="field"><span>공유 비밀번호 <small>6자 이상 · 친구들에게만 알려주세요</small></span><input type="text" id="sharePin" maxlength="40" autocomplete="off"></label>
+      <p class="help">기록은 이 비밀번호로 암호화돼서 올라가요. API 키·웹후크·토큰은 올라가지 않아요. 저장소는 공개(Public), 토큰은 Contents 읽기·쓰기 권한으로 만들어요.</p>
+      <p class="help status" id="pubInfo"></p>
+      <div class="set-btns"><button class="btn primary" type="button" id="btnPublish">지금 웹에 올리기</button></div>
+      <div hidden><input type="checkbox" id="shareOn"><p id="shareInfo"></p><button type="button" id="btnPrebuild"></button></div>
+    </section>
+    <section class="set-pane" data-pane="replay">
+      <p class="help">자동 카메라로 볼 때만 적용돼요.</p>
+      <h4 class="set-sub">재생 속도</h4>
+      <div class="three">
+        <label>교전 배속 <input type="number" id="rpCfgSpeed" min="0.25" max="10" step="0.25"></label>
+        <label>조용한 구간 배속 <input type="number" id="rpCfgQuiet" min="10" max="200" step="5"></label>
+        <label>교전 중 쉬는 틈(초) <input type="number" id="rpCfgLull" min="1" max="30" step="0.5"></label>
+      </div>
+      <h4 class="set-sub">교전 구간</h4>
+      <div class="three">
+        <label>시작: 첫 총격 전(초) <input type="number" id="rpCfgPre" min="0" max="10" step="0.5"></label>
+        <label>끝: 마지막 총격 뒤(초) <input type="number" id="rpCfgPost" min="0" max="15" step="0.5"></label>
+        <label>한 교전 묶는 간격(초) <input type="number" id="rpCfgGap" min="3" max="60" step="1"></label>
+      </div>
+      <h4 class="set-sub">카메라</h4>
+      <div class="three">
+        <label>적 근접 최소 범위(m) <input type="number" id="rpCfgNear" min="80" max="800" step="10"></label>
+        <label>적 근접 줌 배율 <input type="number" id="rpCfgFit" min="1" max="8" step="0.1"></label>
+        <label>킬 당겨 보기 거리(m) <input type="number" id="rpCfgPunch" min="0" max="600" step="10"></label>
+        <label>넓게 보기 시작 페이즈 <input type="number" id="rpCfgZone" min="1" max="9" step="1"></label>
+        <label>폭발 흔들림 <input type="number" id="rpCfgShake" min="0" max="3" step="0.25"></label>
+        <label>붙어 있을 때 사진 크기 <input type="number" id="rpCfgCrowd" min="0.3" max="1" step="0.05"></label>
+        <label>팀원 카드 크기 <input type="number" id="rpCfgHud" min="0.6" max="1.6" step="0.05"></label>
+        <label>팀 현황판 크기 <input type="number" id="rpCfgTeam" min="0.6" max="1.6" step="0.05"></label>
+      </div>
+      <p class="help">줌 배율은 낮을수록 크게, 높을수록 넓게 · 당겨 보기 0 = 끔 · 흔들림 0 = 끔</p>
+      <div class="set-btns"><button class="btn" type="button" id="btnRpRecommend">추천값으로 채우기</button></div>
+    </section>
+    <section class="set-pane" data-pane="deco">
+      <div class="field"><span>플레이어 사진 <small>images/players 에 이름·닉네임으로 (예: 깐부.png)</small></span>
+        <p class="help status" id="pimgStatus"></p>
+        <div class="set-btns"><button class="btn" type="button" id="btnOpenPlayers">사진 폴더 열기</button></div></div>
+      <div class="field"><span>리플레이 그림 <small>images/replay 에 수류탄·연막탄·보급·박격포 등 이름으로</small></span>
+        <p class="help status" id="rpImgStatus"></p>
+        <div class="set-btns"><button class="btn" type="button" id="btnOpenReplayImgs">그림 폴더 열기</button></div></div>
+      <div class="field"><span>효과음과 음악 <small>sounds 에 bgm · reveal · tick · stop · fanfare · kill</small></span>
+        <label class="vol-row">크기 <input type="range" id="vol" min="0" max="100" step="5"><b id="volTxt"></b></label>
+        <p class="help status" id="sndStatus"></p>
+        <div class="set-btns"><button class="btn" type="button" id="btnOpenSounds">sounds 폴더 열기</button></div></div>
+      <div class="field"><span>트로피·메달 <small>images 에 trophy · gold · silver · bronze</small></span>
+        <p class="help status" id="imgStatus"></p>
+        <div class="set-btns"><button class="btn" type="button" id="btnOpenImages">images 폴더 열기</button></div></div>
+    </section>
     </div>
     <div class="dlg-actions">
       <button class="btn" value="cancel" formnovalidate>닫기</button>
@@ -1636,23 +1778,28 @@ function renderDay(r, report, reveal) {
       const w = state.weights[k] || 1, v = p.parts[k] ?? 0, pct = Math.max(0, Math.min(100, v / w * 100));
       return `<div class="bar"><span>${l}</span><i><em style="width:${pct}%"></em></i><span>${v}</span></div>`;
     }).join("");
-    return `<article class="pcard r${p.rank}">
-      <header><b style="display:flex;align-items:center;gap:8px">${avatar(p, "sm", false)}${esc(p.name)}</b><span>${p.rank}위</span></header>
+    const cd = (r.cards || {})[p.nick], tr = cd ? cd.tier : null;
+    const mv = cd && cd.move ? `<i class="pc-move ${cd.move > 0 ? "up" : "down"}" title="${TIER[cd.prev_tier] || ""} → ${TIER[cd.tier] || ""}">${cd.move > 0 ? "▲ 승급" : "▼ 강등"}</i>` : "";
+    const tierChip = cd ? `<span class="pc-tline">${mv}<span class="pc-tier">${TIER[tr] || ""} <b>${cd.ovr}</b></span></span>` : "";
+    const lvl = ["common", "uncommon", "rare", "epic", "unique", "special", "legend"].indexOf(tr);
+    const embers = n => `<div class="fx em">${Array.from({length: n}, (_, i) => `<i style="left:${(i * 37 + 11) % 97}%;--d:${(1.6 + (i * 7 % 10) / 6).toFixed(2)}s;--dx:${((i * 13) % 40) - 20}px;animation-delay:${((i * 5) % 30) / 10}s"></i>`).join("")}</div>`;
+    const fx = (lvl >= 1 ? `<div class="fx tg"></div>` : "") + (lvl >= 3 ? `<div class="fx bs"></div>` : "") + (lvl >= 4 ? `<div class="fx ht"></div>` + embers(lvl >= 6 ? 14 : lvl >= 5 ? 12 : 9) : "") + (lvl >= 5 ? `<div class="fx lv${lvl >= 6 ? " red" : ""}"></div>` : "") + (lvl >= 6 ? `<div class="fx fb"></div>` : "");
+    return `<article class="pcard r${p.rank} ${tr ? "t-" + tr : ""} ${cd && cd.move > 0 ? "promo" : ""}">${fx}
+      <header><b style="display:flex;align-items:center;gap:8px">${avatar(p, "sm", false)}${esc(p.name)}</b><span class="pc-rk"><em>${p.rank}위</em>${tierChip}</span></header>
       <div class="pc-key"><div class="kda"><b>${kdaOf(t)}</b><span>KDA</span></div><div><b>${fmt(m.damage)}</b><span>판당 딜량</span></div><div><b>${m.kills}</b><span>판당 킬</span></div></div>
       ${group("전투", [row("판당 기절", m.dbnos), row("판당 어시", m.assists), row("헤드샷 비율", m.headshot_pct + "%"), row("최장거리 킬", t.longest + "m")])}
       ${group("생존 · 팀", [row("평균 생존", m.survival_min + "분"), row("판당 소생", m.revives), row("치킨", t.wins + "회"), ...(tl ? [row("판당 받은 피해", fmt(tl.taken_pg))] : []), row("팀킬", t.teamkills + "회")])}
-      ${telRows}
+      ${telRows || "<div></div>"}
       <section class="pc-grp"><h4>점수 구성</h4><div class="bars">${bars}</div></section>
-      ${p.penalty ? `<div class="penalty">감점 −${p.penalty}점: ${[
+      <div class="pc-notes">${p.penalty ? `<div class="penalty">감점 −${p.penalty}점: ${[
         t.teamkills ? `팀킬 ${t.teamkills}회 −${+((state.weights.teamkill_penalty ?? 10) * t.teamkills).toFixed(1)}` : "",
         t.teamknocks ? `팀원 기절 ${t.teamknocks}회 −${+((state.weights.teamknock_penalty ?? 5) * t.teamknocks).toFixed(1)}` : "",
         t.suicides ? `자살 ${t.suicides}회 −${+((state.weights.suicide_penalty ?? 5) * t.suicides).toFixed(1)}` : "",
         t.downed ? `기절당함 ${t.downed}회 −${+((state.weights.downed_penalty ?? .5) * t.downed).toFixed(1)}` : ""].filter(Boolean).join(", ")}</div>` : ""}
-      ${p.best ? `<div class="best">최고의 판: ${esc(p.best.map)}에서 딜 ${fmt(p.best.damage)}, ${p.best.kills}킬, ${p.best.rank}등</div>` : ""}
-      ${(p.badges || []).length || (r.new_achievements?.[p.nick] || []).length ? `<div class="pc-earned">
-        ${badgesHtml(p, "left")}
-        ${(r.new_achievements?.[p.nick] || []).length ? `<div class="pc-newh">새 업적</div><div class="badges left">${r.new_achievements[p.nick].map(a => { const t = typeof a === "string" ? a : a.t, lv = typeof a === "string" ? 0 : (a.lv ?? 0);
-          return `<span class="bdg ach-new lv${lv}" title="${TIER_NAMES[lv] || ""} 등급 업적">${esc(t)}</span>`; }).join("")}</div>` : ""}</div>` : ""}
+      ${p.best ? `<div class="best">최고의 판: ${esc(p.best.map)}에서 딜 ${fmt(p.best.damage)}, ${p.best.kills}킬, ${p.best.rank}등</div>` : ""}</div>
+      <section class="pc-grp pc-earn"><h4>칭호</h4>${badgesHtml(p, "left") || `<p class="pc-none">없음</p>`}</section>
+      <section class="pc-grp pc-earn"><h4 class="newh">새 업적</h4>${(r.new_achievements?.[p.nick] || []).length ? `<div class="badges left">${r.new_achievements[p.nick].map(a => { const t = typeof a === "string" ? a : a.t, lv = typeof a === "string" ? 0 : (a.lv ?? 0);
+          return `<span class="bdg ach-new lv${lv}" title="${TIER_NAMES[lv] || ""} 등급 업적">${esc(t)}</span>`; }).join("")}</div>` : `<p class="pc-none">없음</p>`}</section>
     </article>`;
   }).join("");
   const hl = r.highlights.map(h => `<li class="${h.label === "팀킬범" || h.tone === "bad" ? "bad" : ""}"><div><small>${esc(h.label)}</small><b>${esc(h.name)}</b></div><span>${esc(h.value)}</span></li>`).join("");
@@ -2024,6 +2171,15 @@ function closeShow() {
 }
 $("#showSkip").onclick = closeShow;
 $("#showClose").onclick = () => { closeShow(); setTimeout(() => $(".plaque")?.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block: "start"}), 50); };
+addEventListener("keydown", e => {  // E = 맨 위로, D = 맨 아래로 (글자 입력 중·창이 열려 있을 땐 무시, 한글 자판이어도 됨)
+  if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+  if (e.code !== "KeyE" && e.code !== "KeyD") return;
+  const t = e.target, tag = (t && t.tagName) || "";
+  if (/INPUT|TEXTAREA|SELECT/.test(tag) || (t && t.isContentEditable)) return;
+  if (document.querySelector("dialog[open]") || !$("#replay").classList.contains("hidden") || !$("#show").classList.contains("hidden")) return;
+  e.preventDefault();
+  scrollTo({top: e.code === "KeyE" ? 0 : document.documentElement.scrollHeight, behavior: reduceMotion ? "auto" : "smooth"});
+});
 addEventListener("keydown", e => { if (e.key === "Escape" && !$("#show").classList.contains("hidden") && $("#replay").classList.contains("hidden")) closeShow(); });
 
 /* ───── 리플레이 ───── */
@@ -2037,14 +2193,16 @@ const RP_DEFAULTS = {
   punch_near_m: 40,    // 기절·처치 순간 당겨 보기: 이 거리(m)보다 가까우면 가장 세게
   punch_far_m: 250,    // 이 거리(m)보다 멀면 당기지 않음 (먼 저격은 넓게 그대로)
   punch_min_m: 110,    // 당겨도 화면에 담는 최소 범위(m)       // 교전 중이라도 이 초 넘게 총소리가 없으면 교전 배속을 풀고 원래 배속으로 (다음 총격 직전에 다시 감속)
-  zone_view_phase: 4,  // 교전이 없을 때: 이 자기장 페이즈부터는 블루존 안 전체(남은 적들)가 보이게 넓게
+  zone_view_phase: 4,
+  hud_scale: 1,        // 팀원 카드 크기 (1 = 기본)
+  team_scale: 1,       // 팀 현황판 크기  // 교전이 없을 때: 이 자기장 페이즈부터는 블루존 안 전체(남은 적들)가 보이게 넓게
   crowd_scale: .6,     // 팀원끼리 붙어 있을 때 사진 크기 (1 = 원래 크기)
   crowd_dist: 30,      // 화면에서 이 픽셀보다 가까우면 '붙어 있음'
   avatar_r: 13,        // 팀원 사진 반지름 (픽셀)
   quiet_speed: 60,     // 자동 카메라: 10배 이상으로 볼 때 교전 없는 구간 빨리감기 배속
   reel_speed: 12,      // 명장면 재생 배속
   zoom_far_m: 600,     // 자동 카메라: 가장 가까운 적이 이 거리(m)보다 멀면 넓게 봄
-  zoom_near_m: 160,    // 적이 아주 가까울 때 화면에 담는 최소 범위(m)
+  zoom_near_m: 260,    // 적이 아주 가까울 때 화면에 담는 최소 범위(m)
   zoom_fit: 2.6,       // 적과의 거리 × 이 값 = 화면 범위 (클수록 넓게)
   shake: 1,            // 폭발 화면 흔들림 세기 (0 = 끔)
   facing: true,        // 우리 팀이 바라보는 방향 (시야 부채꼴)
@@ -2149,6 +2307,7 @@ function rpSetup(R) {
   $("#rpTitle").textContent = R.map_name;
   $("#rpSub").textContent = `${R.time} 시작, ${R.mode}, 최종 ${R.rank === 1 ? "치킨" : R.rank + "등"} (${R.teams}팀)`;
   $("#rpSeek").max = R.duration;
+  rp.graphKey = null; requestAnimationFrame(rpDrawGraph);
   $("#rpTicks").innerHTML = R.events.filter(e => e.k === "kill" || e.k === "died").map(e =>
     `<i style="left:${e.t / R.duration * 100}%;background:${e.k === "died" ? "#E0532F" : rpCol(e.by)}"></i>`).join("");
   rp.flashes = []; rp.focus = null; rp.reel = null; rp.curSpeed = rp.speed; rp.manual = false;
@@ -2163,6 +2322,7 @@ async function getReplayData(id) {
   return rpCache[id] || (rpCache[id] = await api("api/replay?id=" + encodeURIComponent(id)));
 }
 async function openReplay(id) {
+  { const sm = document.getElementById("rpSum"); if (sm) sm.hidden = true; }
   ensureAudio(); reelToken++;
   cancelAnimationFrame(rp.raf); rp.data = null;
   $("#replay").classList.remove("hidden", "rec"); document.body.style.overflow = "hidden";
@@ -2381,9 +2541,148 @@ function rpEvents(now) {
   }
   rp.seen = idx; renderFeed();
 }
+const ddcLogo = () => state?.replay_images?.ddc_logo || "favicon.ico";  // 팀 로고 (웹 공유에서도 같은 그림)
+function rpTeamBoard() {  // 남은 팀이 4팀 이하가 되면 화면 위에 팀별 생존 인원 ●●◐○ 과 킬 수
+  const R = rp.data, el = $("#rpTeams"), a = aliveAt(rp.t);
+  const teams = new Map();
+  const add = (tm, st) => { if (tm == null) return; const o = teams.get(tm) || {tm, m: []}; o.m.push(st); teams.set(tm, o); };
+  for (const p of R.players) add(R.our_team ?? -1, statusAt(p, rp.t));
+  for (const en of R.enemies || []) {
+    if (en.tm == null || en.tm === R.our_team) continue;
+    const dead = en.d != null && rp.t >= en.d, down = (en.kn || []).some(([x, y]) => rp.t >= x && rp.t < y);
+    add(en.tm, dead ? "dead" : down ? "down" : "ok");
+  }
+  let live = [...teams.values()].filter(o => o.m.some(s => s !== "dead"));
+  const nAlive = o => o.m.filter(s => s !== "dead").length;
+  if (a && a[2] != null && live.length > a[2]) {  // 죽은 기록이 빠진 팀이 섞이면: 우리 팀 + 살아 있는 인원이 많은 순으로 남은 팀 수만큼
+    live.sort((x, y) => (y.tm === (R.our_team ?? -1)) - (x.tm === (R.our_team ?? -1)) || nAlive(y) - nAlive(x)); live = live.slice(0, a[2]);
+  }
+  const n = a && a[2] != null ? a[2] : live.length;
+  if (!(n <= 4 && live.length && live.length <= 6)) { el.classList.remove("on"); return; }
+  const kills = tm => tm === (R.our_team ?? -1) && !R.team_kills ? R.events.filter(e => e.k === "kill" && e.t <= rp.t).length
+    : (R.team_kills || []).filter(([t, k]) => t <= rp.t && k === tm).length;
+  const order = st => st === "ok" ? 0 : st === "down" ? 1 : 2;
+  const person = (st, c) => { const f = st === "ok" ? c : st === "down" ? "none" : "#3a3e33", sk = st === "down" ? "#E0532F" : "none";
+    return `<svg viewBox="0 0 12 18"><circle cx="6" cy="4" r="3.2" fill="${f}" stroke="${sk}" stroke-width="1.6"/><path d="M1 17v-5a5 5 0 0 1 10 0v5z" fill="${f}" stroke="${sk}" stroke-width="1.6"/></svg>`; };
+  const html = live.sort((x, y) => (y.tm === (R.our_team ?? -1)) - (x.tm === (R.our_team ?? -1)) || kills(y.tm) - kills(x.tm)).map(o => {
+    const ours = o.tm === (R.our_team ?? -1), col = ours ? "#F2A900" : teamColor(o.tm);
+    const ppl = o.m.slice().sort((x, y) => order(x) - order(y)).map(st => person(st, col)).join("");
+    const k = kills(o.tm), kh = R.team_kills || ours ? `<em>${k}<small>킬</small></em>` : "";
+    const head = ours ? `<span class="tag">DDC</span>` : `<span class="tn">${o.tm}</span>`;
+    return `<div class="tm ${ours ? "ours" : ""}" style="--tc:${col}">${head}${ppl}${kh}</div>`;
+  }).join("");
+  if (el.innerHTML !== html) el.innerHTML = html;
+  el.classList.add("on");
+}
+function rpHpNow(p, t) {  // 지금 체력 (맞은 기록 + 회복템으로 짐작)
+  const st = statusAt(p, t); if (st === "dead") return 0;
+  let hp = 100, last = -1;
+  for (const h of p.hp || []) { if (h[0] > t) break; hp = h[1]; last = h[0]; }
+  for (const e of rp.data.events) { if (e.t > t) break; if (e.t > last && e.who === p.nick && (e.k === "revive")) { hp = 5; last = e.t; } if (e.t > last && e.who === p.nick && (e.k === "recall")) { hp = 100; last = e.t; } }
+  for (const h of p.hl || []) {
+    if (h[1] < last || h[0] > t) continue;
+    const done = t >= h[1], k = h[2];
+    if (k === "b" && done) hp = Math.min(75, Math.max(hp, hp + 10));
+    else if (k === "f" && done) hp = Math.max(hp, 75);
+    else if (k === "m" && done) hp = 100;
+    else if (k === "r") continue;
+    else if ("epa".includes(k) && done) hp = Math.min(100, hp + Math.min(40, (t - h[1]) * 1.2));
+  }
+  return Math.max(0, Math.min(100, hp));
+}
+function rpPlayerHud() {  // 메인 화면 아래: 팀원 체력바 + 지금 상태
+  const R = rp.data, el = $("#rpPhud");
+  const html = R.players.map(p => {
+    const st = statusAt(p, rp.t), txt = rpStatusText(p, rp.t), hp = rpHpNow(p, rp.t), heal = rpHealAt(p.hl, rp.t);
+    const k = R.events.filter(e => e.k === "kill" && e.by === p.nick && e.t <= rp.t).length;
+    const car = /운전|탑승|BRDM|박격포/.test(txt) && st === "ok";
+    const cls = st === "down" ? "down" : heal ? "heal" : txt === "교전 중" ? "fight" : car ? "car" : "";
+    const icon = {down: "!", heal: "✚", fight: "🔫", car: "🚙"}[cls] || (st === "dead" ? "✕" : /비행|낙하|헬기|비상/.test(txt) ? "🪂" : "·");
+    const label = heal ? (HEAL_NAME[heal[2]] || "회복") + " 사용 중" : st === "down" ? "기절" : st === "dead" ? "사망" : txt;
+    const av = rp.avatars[p.nick], src = av && av.complete && av.naturalWidth ? av.src : null;
+    const pic = src ? `<img class="pic" src="${esc(src)}" alt="">` : `<span class="pic">${p.slot + 1}</span>`;
+    return `<div class="ph ${st === "dead" ? "dead" : st === "down" ? "down" : hp < 35 ? "low" : ""}" style="--pc:${RP_COLORS[p.slot % 4]}">${pic}
+      <div class="nm"><span>${esc(p.name)}</span><em>${k}킬</em></div><div class="hp"><i style="width:${st === "dead" || st === "down" ? 0 : hp}%"></i></div>
+      <div class="st ${cls}"><b>${icon}</b>${esc(label)}</div></div>`;
+  }).join("");
+  if (el.innerHTML !== html) el.innerHTML = html;
+}
+function rpDrawGraph() {  // 재생 막대 위 '교전 강도' 그래프: 10초마다 총격·피격·기절·처치를 더해 높이로
+  const R = rp.data, c = $("#rpGraph"); if (!R || !c) return;
+  const W = c.clientWidth, H = c.clientHeight; if (!W) return;
+  const key = R.id + W; if (rp.graphKey === key) return; rp.graphKey = key;
+  const dpr = Math.min(2, devicePixelRatio || 1); c.width = W * dpr; c.height = H * dpr;
+  const x = c.getContext("2d"); x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, W, H);
+  const bin = Math.max(5, R.duration / 160), n = Math.ceil(R.duration / bin) + 1, v = new Array(n).fill(0);
+  for (const f of rp.fights || []) for (const q of f.pts) v[Math.floor(q.t / bin)] += q.w || 1;
+  const sm = v.map((_, i) => (v[i - 1] || 0) * .25 + v[i] * .5 + (v[i + 1] || 0) * .25), mx = Math.max(1, ...sm);
+  const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "rgba(242,169,0,.9)"); g.addColorStop(1, "rgba(242,169,0,.15)");
+  x.beginPath(); x.moveTo(0, H);
+  sm.forEach((val, i) => x.lineTo(i * bin / R.duration * W, H - Math.pow(val / mx, .7) * (H - 1)));
+  x.lineTo(W, H); x.closePath(); x.fillStyle = g; x.fill();
+}
+addEventListener("resize", () => { rp.graphKey = null; if (rp.data) rpDrawGraph(); });
+function rpSummary(R) {  // 판 요약 숫자 계산
+  const segDist = (pts, from, to, inVeh) => {  // 이동 거리(m): 도보·차량 따로
+    let walk = 0, car = 0;
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i]; if (a[1] == null || b[1] == null || b[0] < from || a[0] > to) continue;
+      const d = Math.hypot(b[1] - a[1], b[2] - a[2]) * R.size_m; if (d / Math.max(.5, b[0] - a[0]) > 120) continue;  // 순간이동(비행기 등) 제외
+      if (inVeh((a[0] + b[0]) / 2)) car += d; else walk += d;
+    }
+    return [walk, car];
+  };
+  const rows = R.players.map(p => {
+    const deathE = R.events.filter(e => e.k === "died" && e.who === p.nick).pop();
+    const end = p.death ?? (deathE ? deathE.t : R.duration);
+    const land = (p.air || []).find(a => a.kind === "start"); const t0 = land ? (land.t1 ?? 0) : 0;
+    const [walk, car] = segDist(p.track || [], 0, end, t => (p.veh || []).some(v => t >= v[0] && t <= v[1]));
+    return {p, alive: end, kills: R.events.filter(e => e.k === "kill" && e.by === p.nick).length, knocks: R.events.filter(e => e.k === "knock" && e.by === p.nick).length,
+      downed: R.events.filter(e => e.k === "downed" && e.who === p.nick).length, walk, car, t0};
+  });
+  const fights = (rp.fights || []).map(f => {
+    const ev = R.events.filter(e => e.t >= f.t0 && e.t <= f.t1);
+    const win = ev.filter(e => e.k === "kill" || e.k === "knock").length, lose = ev.filter(e => e.k === "died" || e.k === "downed").length;
+    const dmg = (R.hits || []).filter(h => h[0] >= f.t0 && h[0] <= f.t1 && h[6] === 0).reduce((a, h) => a + (h[7] || 0), 0);
+    return {f, win, lose, dmg, real: win + lose > 0 || dmg > 0};
+  }).filter(x => x.real);
+  const won = fights.filter(x => x.win > x.lose).length, best = fights.slice().sort((a, b) => b.dmg - a.dmg)[0];
+  return {rows, fights, won, best};
+}
+function rpShowSummary() {
+  const R = rp.data, S = rpSummary(R), el = $("#rpSum");
+  const surv = Math.max(...S.rows.map(r => r.alive)), tk = S.rows.reduce((a, r) => a + r.kills, 0);
+  const km = m => m >= 1000 ? (m / 1000).toFixed(1) + "<small>km</small>" : Math.round(m) + "<small>m</small>";
+  const walk = S.rows.reduce((a, r) => a + r.walk, 0) / Math.max(1, S.rows.length), car = S.rows.reduce((a, r) => a + r.car, 0) / Math.max(1, S.rows.length);
+  el.innerHTML = `<div class="card"><button class="x" aria-label="닫기">×</button>
+    <h3>${R.rank === 1 ? "🍗 치킨!" : `${R.rank}등`} · ${esc(R.map_name)}</h3><div class="sub">${esc(R.time)} 시작 · ${esc(R.mode)} · ${R.teams}팀</div>
+    <div class="tiles">
+      <div class="hi"><b>${mmss(surv)}</b><span>팀 생존 시간</span></div>
+      <div class="hi"><b>${tk}<small>킬</small></b><span>팀 킬</span></div>
+      <div><b>${S.fights.length}<small>회</small></b><span>교전 수</span></div>
+      <div><b>${S.fights.length ? Math.round(S.won / S.fights.length * 100) : 0}<small>%</small></b><span>교전 승률 (${S.won}승 ${S.fights.length - S.won}패)</span></div>
+      <div><b>${km(walk)}</b><span>1인 평균 도보 이동</span></div>
+      <div><b>${km(car)}</b><span>1인 평균 차량 이동</span></div>
+    </div>
+    <table><thead><tr><th>팀원</th><th>생존</th><th>킬</th><th>기절시킴</th><th>기절당함</th><th>도보</th><th>차량</th></tr></thead><tbody>
+    ${S.rows.map(r => `<tr><td><i style="background:${RP_COLORS[r.p.slot % 4]}"></i>${esc(r.p.name)}</td><td>${mmss(r.alive)}</td><td>${r.kills}</td><td>${r.knocks}</td><td>${r.downed}</td>
+      <td>${km(r.walk).replace(/<\/?small>/g, "")}</td><td>${km(r.car).replace(/<\/?small>/g, "")}</td></tr>`).join("")}
+    </tbody></table>
+    ${S.best && S.best.dmg ? `<div class="best">최대 딜 교전: <b>${mmss(S.best.f.t0 + rpCfg().fight_pre)}</b> · 팀 딜 <b>${Math.round(S.best.dmg)}</b> · ${S.best.win}기절·처치 / ${S.best.lose}피해</div>` : ""}
+    <div class="btns">${S.best && S.best.dmg ? `<button class="btn" data-go="${S.best.f.t0}">그 교전 보기</button>` : ""}<button class="btn primary" data-close>닫기</button></div></div>`;
+  el.hidden = false;
+  el.querySelector(".x").onclick = el.querySelector("[data-close]").onclick = () => { el.hidden = true; };
+  const go = el.querySelector("[data-go]"); if (go) go.onclick = () => { el.hidden = true; rp.t = +go.dataset.go; rp.flashes = []; rp.manual = false; rp.playing = true; paintRpButtons(); };
+  el.onclick = e => { if (e.target === el) el.hidden = true; };
+}
+function rpWipe() { const w = $("#rpWipe"); if (!w) return; w.classList.remove("go"); void w.offsetWidth; w.classList.add("go"); }
 function rpLegend(now) {
   if (now - rp.legendAt < 250) return;
   rp.legendAt = now;
+  { const st = $(".rp-stage"), C = rpCfg(), hs = String(C.hud_scale || 1), ts = String(C.team_scale || 1);
+    if (st && st.style.getPropertyValue("--hud") !== hs) st.style.setProperty("--hud", hs);
+    if (st && st.style.getPropertyValue("--teamz") !== ts) st.style.setProperty("--teamz", ts); }
+  rpTeamBoard(); rpPlayerHud();
   $("#rpLegend").innerHTML = rp.data.players.map(p => {
     const st = statusAt(p, rp.t), k = rp.data.events.filter(e => e.k === "kill" && e.by === p.nick && e.t <= rp.t).length;
     const txt = rpStatusText(p, rp.t);
@@ -2484,7 +2783,7 @@ function rpUpdatePip(now, dt) {
   const aliveN = list => list.some(n => R.players.some(p => p.nick === n && statusAt(p, rp.t) !== "dead"));
   if (P.on && P.main.length && !aliveN(P.main) && aliveN(P.sub)) {  // 메인 화면 팀원이 모두 죽음 → 보조 화면을 그대로 메인으로 (줌 그대로 이어서)
     if (P.cam) rp.cam = {...P.cam};
-    [P.main, P.sub] = [P.sub, []]; P.swapAt = now; off(); P.cam = null;
+    [P.main, P.sub] = [P.sub, []]; P.swapAt = now; off(); P.cam = null; rpWipe();
   }
   if (G.length < 2) {
     if (P.on && !(P.sub.length && P.sub.some(n => R.players.some(p => p.nick === n && statusAt(p, rp.t) !== "dead")))) off();  // 보조 쪽이 모두 죽음 → 바로 끔
@@ -2494,14 +2793,14 @@ function rpUpdatePip(now, dt) {
     // 지난번 메인·보조와 겹치는 무리를 이어서 씀 (무리가 같으면 순서를 함부로 바꾸지 않음)
     const overlap = (g, list) => g.filter(m => list.includes(m.p.nick)).length;
     let main = [...G].sort((a, b) => overlap(b, P.main) - overlap(a, P.main) || rpSceneScore(b, rp.t) - rpSceneScore(a, rp.t) || b.length - a.length)[0];
-    if (P.on && P.cam && overlap(main, P.main) === 0 && overlap(main, P.sub) > 0) { const c = {...rp.cam}; rp.cam = {...P.cam}; P.cam = c; P.swapAt = now; }  // 메인이 바뀌면 화면도 서로 바꿔서 줌이 튀지 않게
+    if (P.on && P.cam && overlap(main, P.main) === 0 && overlap(main, P.sub) > 0) { const c = {...rp.cam}; rp.cam = {...P.cam}; P.cam = c; P.swapAt = now; rpWipe(); }  // 메인이 바뀌면 화면도 서로 바꿔서 줌이 튀지 않게
     let sub = G.filter(g => g !== main).sort((a, b) => overlap(b, P.sub) - overlap(a, P.sub) || rpSceneScore(b, rp.t) - rpSceneScore(a, rp.t))[0];
     if (!P.main.length) {  // 처음: 중요한 장면을 메인으로
       if (rpSceneScore(sub, rp.t) > rpSceneScore(main, rp.t)) [main, sub] = [sub, main];
     } else if ((rpSceneTier(sub, rp.t) > rpSceneTier(main, rp.t) && now - P.swapAt > (rpSceneTier(sub, rp.t) >= 2 ? 1500 : 3500))  // 더 높은 등급(킬 > 기절 > 교전)이 생기면 바로 메인으로
                || (now - P.swapAt > C.pip_swap_s * 1000 && rpSceneTier(sub, rp.t) === rpSceneTier(main, rp.t) && rpSceneScore(sub, rp.t) - rpSceneScore(main, rp.t) > C.pip_swap_margin)) {
       [main, sub] = [sub, main]; P.swapAt = now;  // 같은 등급이면 보조 쪽이 확실히 더 중요해졌을 때만 바꿈
-      if (P.cam) { const c = {...rp.cam}; rp.cam = {...P.cam}; P.cam = c; }  // 화면을 서로 바꿔서 끊기지 않게
+      if (P.cam) { const c = {...rp.cam}; rp.cam = {...P.cam}; P.cam = c; rpWipe(); }  // 화면을 서로 바꿔서 끊기지 않게
     }
     const gap = Math.min(...main.flatMap(a => sub.map(b => Math.hypot(a.q[0] - b.q[0], a.q[1] - b.q[1])))) * R.size_m;
     if (!P.on) {
@@ -2563,17 +2862,25 @@ function rpCamera(dt) {
         const q = interp(en.tr, rp.t); if (q && ours.some(o => Math.hypot(o[0] - q[0], o[1] - q[1]) < lim)) pts.push(q);
       }
     }
-    const kill = R.events.find(e => (e.k === "kill" || e.k === "knock") && e.x != null && rp.t - e.t >= 0 && rp.t - e.t < 1.6 && (!split || rp.pip.main.includes(e.by)));
+    // 기절·처치 당겨 보기: 0.5초 전부터 천천히 당겼다가 1초 머물고 1.2초에 걸쳐 천천히 풀어 줌 (순간 줌인·줌아웃 꿀렁임 없이)
+    const sstep = (a, b, v) => { const u = Math.max(0, Math.min(1, (v - a) / (b - a))); return u * u * (3 - 2 * u); };
+    const envOf = e => { const d = rp.t - e.t; return sstep(-.5, .3, d) * (1 - sstep(1.3, 2.5, d)); };
+    let kill = null, kEnv = 0;
+    for (const e of R.events) {
+      if (e.t < rp.t - 2.5) continue; if (e.t > rp.t + .5) break;
+      if ((e.k === "kill" || e.k === "knock") && e.x != null && (!split || rp.pip.main.includes(e.by))) { const v = envOf(e); if (v > kEnv) { kEnv = v; kill = e; } }
+    }
     const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
-    const minSpan = Math.min(1, 220 / R.size_m);  // 교전은 220m 범위까지 크게 확대
-    ts = Math.min(.35, Math.max(minSpan, Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) * 1.7));
+    const zk = rpCfg().zoom_fit / 2.6;  // 적 근접 줌 배율 (2.6 = 기본): 낮추면 교전 화면도 더 크게, 높이면 더 넓게
+    const minSpan = Math.min(1, rpCfg().zoom_near_m * 1.15 * zk / R.size_m);
+    ts = Math.min(.35 * Math.max(1, zk), Math.max(minSpan, Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) * 1.7 * zk));
     tx = (Math.min(...xs) + Math.max(...xs)) / 2; ty = (Math.min(...ys) + Math.max(...ys)) / 2;
     if (kill && kill.ax != null) {  // 쓰러뜨린 순간: 쏜 사람과 맞은 사람 쪽으로 잠깐 당김 — 가까운 교전일수록 세게, 먼 저격은 거의 그대로
       const dm = Math.hypot(kill.ax - kill.x, kill.ay - kill.y) * R.size_m, C = rpCfg();
-      const w = Math.max(0, Math.min(1, (C.punch_far_m - dm) / Math.max(1, C.punch_far_m - C.punch_near_m))) * (1 - (rp.t - kill.t) / 1.6);
-      if (w > 0) {
-        const ks = Math.max(C.punch_min_m / R.size_m, dm / R.size_m * 1.8), kx = (kill.x + kill.ax) / 2, ky = (kill.y + kill.ay) / 2;
-        ts += (Math.min(ts, ks) - ts) * w; tx += (kx - tx) * w; ty += (ky - ty) * w;
+      const w = Math.max(0, Math.min(1, (C.punch_far_m - dm) / Math.max(1, C.punch_far_m - C.punch_near_m))) * kEnv;
+      if (w > 0) {  // 너무 크게 당기지 않게: 지금 화면의 65%까지만
+        const ks = Math.max(Math.max(C.punch_min_m, C.zoom_near_m * .7) / R.size_m, dm / R.size_m * 1.8, ts * .65), kx = (kill.x + kill.ax) / 2, ky = (kill.y + kill.ay) / 2;
+        ts += (Math.min(ts, ks) - ts) * w; tx += (kx - tx) * w * .7; ty += (ky - ty) * w * .7;
       }
     }
   } else if (rp.follow) {
@@ -2602,7 +2909,7 @@ function rpCamera(dt) {
       const closeK = rp.encD < 120 / R.size_m ? .45 : 0;  // 교전 기운이 없어도 아주 가까우면(120m) 조금은 확대 (초반 마주침)
       const hk = Math.max(rp.heatK, closeK);
       if (rp.encD < far * .95 && hk > .01) {
-        const want = Math.max(C.zoom_near_m / R.size_m, rp.encD * C.zoom_fit, Math.max(x1 - x0, y1 - y0) * 1.4);
+        const want = Math.max(C.zoom_near_m * C.zoom_fit / 2.6 / R.size_m, rp.encD * C.zoom_fit, Math.max(x1 - x0, y1 - y0) * 1.4);
         const mix = Math.max(0, Math.min(1, (far - rp.encD) / (far * .5))) * hk;  // far 근처에선 거의 그대로 → 서서히 확대
         ts = ts + (Math.min(ts, want) - ts) * mix;
         if (foe && rp.encD < far * .6) { tx = tx + (foe[0] - tx) * .3 * mix; ty = ty + (foe[1] - ty) * .3 * mix; }  // 적 쪽도 화면에 담기게 살짝
@@ -2617,6 +2924,13 @@ function rpCamera(dt) {
       }
     }
   } else rp.encD = null;
+  // 멀리 떨어진 곳으로 넘어갈 때(다른 무리·장면): 길게 미끄러지지 않고 짧은 흐림과 함께 바로 넘어감
+  const nowMs = performance.now();
+  if (Math.hypot(tx - rp.cam.x, ty - rp.cam.y) > Math.max(rp.cam.s, ts) * 1.3 && nowMs - (rp.cutAt || 0) > 1500) {
+    rp.cutAt = nowMs; rpWipe();
+    const target = {x: tx, y: ty, s: Math.max(ts, rp.cam.s * .8)};
+    setTimeout(() => { if (!rp.manual) { rp.cam = {...target}; rpClampCam(); } }, 150);
+  }
   const k = Math.min(1, dt * 2.4), ks = Math.min(1, dt * (fz ? 2.4 : 1.1));  // 따라가기 줌은 더 부드럽게
   rp.cam.s += (ts - rp.cam.s) * ks; rp.cam.x += (tx - rp.cam.x) * k; rp.cam.y += (ty - rp.cam.y) * k;
   rpClampCam();
@@ -2696,8 +3010,9 @@ function rpDraw(dt, now, view) {
       const x = X(q[1]), y = Y(q[2]); if (started) ctx.lineTo(x, y); else { ctx.moveTo(x, y); started = true; }
     }
     const cur = posAt(p, rp.t); if (cur && started) ctx.lineTo(X(cur[0]), Y(cur[1]));
-    ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.lineWidth = 5; ctx.stroke();
-    ctx.strokeStyle = RP_COLORS[p.slot % 4]; ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.save(); ctx.globalAlpha = .45;  // 동선은 반투명하게 (지도·아이콘이 가려지지 않게)
+    ctx.strokeStyle = "rgba(0,0,0,.4)"; ctx.lineWidth = 4; ctx.stroke();
+    ctx.strokeStyle = RP_COLORS[p.slot % 4]; ctx.lineWidth = 2.2; ctx.stroke(); ctx.restore();
   }
   // 교전 표시
   const cross = (x, y, r, col, w) => { ctx.strokeStyle = "rgba(0,0,0,.6)"; ctx.lineWidth = w + 2.5; ctx.beginPath(); ctx.moveTo(x - r, y - r); ctx.lineTo(x + r, y + r); ctx.moveTo(x + r, y - r); ctx.lineTo(x - r, y + r); ctx.stroke(); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.stroke(); };
@@ -2710,7 +3025,8 @@ function rpDraw(dt, now, view) {
   }
   const M = S / R.size_m;  // 1m가 화면에서 몇 픽셀
   // 보급: 낙하산으로 내려오는 상자 → 착지 후 붉은 연기, 우리가 열면 '획득'
-  for (const [st, lt, px, py, by0, bt, ot0, pk = ""] of R.packages || []) {
+  for (let [st, lt, px, py, by0, bt, ot0, pk = ""] of R.packages || []) {
+    if (lt - st < 3) st = lt - (pk === "b" ? 22 : 15);  // 떨어지기 시작한 기록이 없으면(착지 기록만 있음) 착지 전 몇 초를 낙하산으로
     const box = pk === "f" ? "flarepackage" : "carepackage", bsz = pk === "f" ? 36 : 30;
     if (rp.t >= st - 5 && rp.t < st + 7) {  // 보급·플레어 보급·BRDM: 치누크 헬기가 지나가며 떨어뜨림
       const rt = R.plane, dx = rt ? rt.vx : 1, dy = rt ? rt.vy : 0, dl = Math.hypot(dx, dy) || 1, v = 60 / R.size_m, u = (rp.t - st) * v;
@@ -2725,15 +3041,11 @@ function rpDraw(dt, now, view) {
       const k = (rp.t - st) / (lt - st), sc = .55 + .45 * k, drop = (1 - k) * 46;
       ctx.beginPath(); ctx.ellipse(x, y + 4, 9 * sc, 4 * sc, 0, 0, Math.PI * 2); ctx.fillStyle = "rgba(0,0,0,.35)"; ctx.fill();
       ctx.save(); ctx.translate(x, y - drop); ctx.scale(sc, sc);
-      if (pk === "b") {  // BRDM: 큰 화물 낙하산 (줄무늬) + 줄 4개
-        const sway = Math.sin(rp.t * 1.6) * .08; ctx.rotate(sway);
-        ctx.strokeStyle = "#1A1A16"; ctx.lineWidth = 1.2; ctx.beginPath();
-        for (const [ax, bx2] of [[-24, -9], [-9, -5], [9, 5], [24, 9]]) { ctx.moveTo(ax, -40); ctx.lineTo(bx2, -14); }
-        ctx.stroke();
-        for (let k = 0; k < 6; k++) { ctx.beginPath(); ctx.moveTo(0, -40); ctx.arc(0, -40, 26, Math.PI + k * Math.PI / 6, Math.PI + (k + 1) * Math.PI / 6); ctx.closePath(); ctx.fillStyle = k % 2 ? "#C9B98A" : "#5E6B3A"; ctx.fill(); }
-        ctx.beginPath(); ctx.arc(0, -40, 26, Math.PI, 0); ctx.strokeStyle = "#1A1A16"; ctx.lineWidth = 1.6; ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(-26, -40); ctx.lineTo(26, -40); ctx.stroke();
-      } else {
+      const sway = Math.sin(rp.t * 1.6) * .06; ctx.rotate(sway);
+      if (pk === "b" && R.map === "Desert_Main") rpChute(ctx, "foil");      // 미라마 BRDM: 사막색 대형 패러포일
+      else if (pk === "b") rpChute(ctx, "foil", ["#5E6B3A", "#6E7B48", "#56622F"]);  // BRDM: 군용 사각 패러포일
+      else if (pk === "f") rpChute(ctx, "triple");                          // 플레어 보급: 삼중 낙하산
+      else {
         ctx.beginPath(); ctx.arc(0, -24, 16, Math.PI, 0); ctx.fillStyle = "#EEE8D5"; ctx.fill(); ctx.strokeStyle = "#5A5446"; ctx.lineWidth = 1.2; ctx.stroke();
         ctx.beginPath(); ctx.moveTo(-15, -24); ctx.lineTo(-7, -9); ctx.moveTo(15, -24); ctx.lineTo(7, -9); ctx.moveTo(0, -24); ctx.lineTo(0, -9); ctx.stroke();
       }
@@ -3203,8 +3515,8 @@ function rpDraw(dt, now, view) {
   // 축척
   const m100 = S / R.size_m * 100, steps = [100, 200, 500, 1000, 2000];
   const stepM = steps.find(v => v * m100 / 100 >= 70) || 2000, px = stepM * m100 / 100;
-  ctx.strokeStyle = "#EEE8D5"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(20, H - 22); ctx.lineTo(20 + px, H - 22); ctx.stroke();  // 축척은 왼쪽 아래 (오른쪽 아래는 시간·자기장)
-  ctx.fillStyle = "#EEE8D5"; ctx.textAlign = "left"; ctx.fillText(stepM >= 1000 ? stepM / 1000 + "km" : stepM + "m", 20, H - 34);
+  ctx.strokeStyle = "#EEE8D5"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(20, 74); ctx.lineTo(20 + px, 74); ctx.stroke();  // 축척은 왼쪽 위 (아래는 팀원 카드·시간)
+  ctx.fillStyle = "#EEE8D5"; ctx.textAlign = "left"; ctx.fillText(stepM >= 1000 ? stepM / 1000 + "km" : stepM + "m", 20, 64);
 }
 function rpFightHide() {  // 자동 연출로 교전을 확대해 보는 동안: 마지막 교전 뒤 3초까지 이어서 숨김 (중간에 깜빡이지 않게)
   return !!(rp.data && rp.cine && !rp.manual && rp.follow && rpFightAt(rp.t));
@@ -3751,9 +4063,30 @@ function drawTeamTag(ctx, x, y, tm, col, parked = false) {  // BRDM 위의 작�
   ctx.lineWidth = 1.5; ctx.strokeStyle = parked ? col : "#14170F"; if (parked) ctx.setLineDash([2, 2]); ctx.stroke(); ctx.setLineDash([]);
   ctx.fillStyle = parked ? col : "#14170F"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(t, x, y + .5); ctx.restore();
 }
+function rpChute(c, kind, foilCols) {  // 낙하산 (0,0 = 매달린 물건 위치, 위쪽이 하늘)
+  const P = Math.PI, line = (pts, to, col = "#1A1A16", w = 1) => { c.strokeStyle = col; c.lineWidth = w; c.beginPath(); for (const [a, b] of pts) { c.moveTo(a, b); c.lineTo(to[0], to[1]); } c.stroke(); };
+  const dome = (cx, cy, r, cols, k = 6) => {
+    for (let i = 0; i < k; i++) { c.beginPath(); c.moveTo(cx, cy); c.arc(cx, cy, r, P + i * P / k, P + (i + 1) * P / k); c.closePath(); c.fillStyle = cols[i % cols.length]; c.fill(); }
+    c.beginPath(); c.arc(cx, cy, r, P, 0); c.strokeStyle = "#1A1A16"; c.lineWidth = 1.3; c.stroke();
+    c.beginPath(); c.moveTo(cx - r, cy); c.quadraticCurveTo(cx, cy + r * .18, cx + r, cy); c.stroke();
+    const g = c.createRadialGradient(cx - r * .35, cy - r * .6, 1, cx, cy - r * .3, r); g.addColorStop(0, "rgba(255,255,255,.4)"); g.addColorStop(1, "rgba(255,255,255,0)");
+    c.fillStyle = g; c.beginPath(); c.arc(cx, cy, r, P, 0); c.fill();
+  };
+  if (kind === "triple") {  // 플레어 보급
+    for (const [dx, dy, r] of [[-15, -28, 11], [15, -28, 11], [0, -37, 12]]) { line([[dx - r, dy], [dx + r, dy]], [0, -8]); dome(dx, dy, r, ["#EDE6CF", "#C9BFA0"]); }
+  } else if (kind === "quad") {  // BRDM
+    for (const [dx, dy] of [[-27, -40], [-9, -51], [9, -51], [27, -40]]) { line([[dx - 11, dy], [dx + 11, dy]], [0, -16], "#111", .9); dome(dx, dy, 11, ["#D6C9A0", "#B8A878"]); }
+    c.fillStyle = "#6b5434"; c.fillRect(-16, 20, 32, 4); c.strokeStyle = "#2b2010"; c.lineWidth = 1; c.strokeRect(-16, 20, 32, 4);
+  } else if (kind === "foil") {  // 미라마 BRDM: 사막색 패러포일
+    line([[-30, -42], [-15, -42], [0, -42], [15, -42], [30, -42]], [0, -16]);
+    const w = 64, h = 13, k = 7, cols = foilCols || ["#C9B27E", "#D8C391", "#B89E66"];
+    for (let i = 0; i < k; i++) { c.fillStyle = cols[i % 3]; c.beginPath(); if (c.roundRect) c.roundRect(-w / 2 + i * w / k, -48 + Math.abs(i - 3) * 1.2, w / k + .5, h, 2); else c.rect(-w / 2 + i * w / k, -48, w / k, h); c.fill(); }
+    c.strokeStyle = "#1A1A16"; c.lineWidth = 1.2; c.beginPath(); if (c.roundRect) c.roundRect(-w / 2, -48, w, h + 4, 5); else c.rect(-w / 2, -48, w, h + 4); c.stroke();
+  }
+}
 function drawMortarSeat(ctx, x, y, r, col, t, who) {  // 박격포를 설치해 쓰는 중: 실제 박격포 그림 (배경 없이) + 팀 색 테두리, 쏜 직후엔 포구가 번쩍
   const im = replayImgs.mortar_seat, ok = im && im.complete && im.naturalWidth;
-  const h = r * 4.4, w = ok ? h * im.naturalWidth / im.naturalHeight : h * .9;
+  const h = r * 3, w = ok ? h * im.naturalWidth / im.naturalHeight : h * .9;
   if (ok) {
     const o = Math.max(1.6, h * .045), sil = rpSilhouette(im, col);
     ctx.save(); ctx.shadowColor = "rgba(0,0,0,.65)"; ctx.shadowBlur = 4;
@@ -3814,7 +4147,7 @@ function rpFrame(now) {
     }
     rp.t = nt;
     if (rp.reel && rp.t >= rp.reel.end) { rp.t = rp.reel.end; rp.playing = false; }
-    if (rp.t >= R.duration) { rp.playing = false; paintRpButtons(); }
+    if (rp.t >= R.duration) { rp.playing = false; paintRpButtons(); if (!rp.reel) rpShowSummary(); }
   }
   rpUpdatePip(now, dt);
   rpEvents(now); rpLegend(now); rpDraw(dt, now);
@@ -3830,6 +4163,7 @@ $("#rpClose").onclick = closeReplay;
 $("#rpPlay").onclick = () => { if (!rp.data) return; if (rp.t >= rp.data.duration) rp.t = 0; rp.playing = !rp.playing; ensureAudio(); paintRpButtons(); };
 $("#rpBack").onclick = () => { if (rp.data) { rp.t = Math.max(0, rp.t - 10); rp.flashes = []; } };
 $("#rpNext").onclick = () => rp.data && rpNextFight();
+$("#rpSumBtn").onclick = () => rp.data && rpShowSummary();
 $("#rpView").onclick = () => { if (rp.manual) { rp.manual = false; rp.follow = true; } else rp.follow = !rp.follow; paintRpButtons(); };
 $("#rpFoes").onclick = () => { rp.foes = !rp.foes; try { localStorage.setItem("ddc_foes", rp.foes ? "1" : "0"); } catch {} paintRpButtons(); };
 try { rp.foes = localStorage.getItem("ddc_foes") !== "0"; } catch { rp.foes = true; }
@@ -4051,13 +4385,13 @@ function openSettings() {
     `<option value="${h}" ${h === state.day_start_hour ? "selected" : ""}>${h === 0 ? "자정" : h === 12 ? "낮 12시" : (h < 7 ? "새벽 " : "오전 ") + h + "시"}부터</option>`).join("");
   $("#minTogether").value = String(state.min_together);
   const have = ["trophy","gold","silver","bronze"].filter(k => state.images?.[k]);
-  $("#imgStatus").textContent = have.length ? `지금 쓰는 그림: ${have.join(", ")}` : "지금은 기본 그림을 쓰고 있어요.";
+  $("#imgStatus").textContent = have.length ? `사용 중: ${have.join(", ")}` : "기본 그림 사용 중";
   const WK = [["damage", "딜량"], ["kills", "킬"], ["dbnos", "기절"], ["assists", "어시"], ["revives", "소생"], ["survival", "생존"],
     ["bluechip_per_person", "블루칩 1명당 보너스"], ["bluechip", "블루칩 보너스 최대"],
     ["teamkill_penalty", "팀킬 1회당 감점"], ["teamknock_penalty", "팀원 기절시킴 1회당 감점"], ["suicide_penalty", "자살 1회당 감점"], ["downed_penalty", "기절당함 1회당 감점"]];
   const AK = [["damage", "판당 딜량"], ["kills", "판당 킬"], ["dbnos", "판당 기절"], ["assists", "판당 어시"], ["revives", "판당 소생"], ["survival_min", "판당 생존(분)"], ["curve", "점수 곡선 (1 직선, 0.5 너그럽게)"]];
   $("#wgrid").innerHTML = WK.map(([k, l]) => `<label>${l}<input type="number" min="0" max="200" step="0.5" data-w="${k}" value="${state.weights[k] ?? 0}"></label>`).join("")
-    + `<label>판 수 보정 (0이면 안 함)<input type="number" min="0" max="20" step="0.5" id="wShrink" value="${state.fair?.shrink_games ?? 2}"></label>`
+
     + `<p class="help" style="grid-column:1/-1;margin:6px 0 0">만점 기준 (판당 이만큼 하면 그 항목 만점)</p>`
     + AK.map(([k, l]) => `<label>${l}<input type="number" min="0.1" step="0.1" data-abs="${k}" value="${state.abs_full?.[k] ?? ""}"></label>`).join("");
   const sumW = () => { const v = k => +($(`[data-w="${k}"]`).value || 0);
@@ -4067,14 +4401,13 @@ function openSettings() {
   const rs = state.replay_img_scan || {}, RN = {grenade: "수류탄", molotov: "화염병", smoke: "연막탄", flash: "섬광탄", sticky: "점착 폭탄", c4: "C4",
     bluezone: "블루존 수류탄", carepackage: "보급", carepackage_open: "열린 보급", carepackage_flying: "낙하 보급", flare: "신호탄",
     panzerfaust: "판처파우스트", mortar: "박격포", jerrycan: "연료통"};
-  const rl = [(rs.mine || []).length ? `내 그림으로 바뀐 것: ${rs.mine.map(k => RN[k] || k).join(", ")}` : "아직 넣은 그림이 없어서 배그 공식 아이콘을 쓰고 있어요."];
-  if ((rs.unmatched || []).length) rl.push(`⚠ 무엇의 그림인지 모르는 파일: ${rs.unmatched.join(", ")} → 위 이름 중 하나로 바꿔주세요`);
+  const rl = [(rs.mine || []).length ? `바꾼 그림: ${rs.mine.map(k => RN[k] || k).join(", ")}` : "기본 아이콘 사용 중"];
+  if ((rs.unmatched || []).length) rl.push(`⚠ 이름이 맞지 않는 파일 ${rs.unmatched.length}개 (${rs.unmatched.slice(0, 3).join(", ")}${rs.unmatched.length > 3 ? " …" : ""})`);
   if ((rs.unsupported || []).length) rl.push(`⚠ 읽을 수 없는 형식: ${rs.unsupported.join(", ")} → png, jpg, webp로 저장해 주세요`);
-  if (rs.folder) rl.push(`이 프로그램이 보는 폴더: ${rs.folder}`);
   $("#rpImgStatus").innerHTML = rl.map(esc).join("<br>");
   const sh = state.share || {};
   $("#shareOn").checked = !!sh.enabled; $("#sharePin").value = "";
-  $("#sharePin").placeholder = sh.pin_set ? "비밀번호가 설정돼 있어요 (바꿀 때만 입력)" : "친구들에게만 알려줄 비밀번호";
+  $("#sharePin").placeholder = sh.pin_set ? "설정돼 있어요 (바꿀 때만 입력)" : "6자 이상";
   const addr = (sh.addresses || []).map(a => `<code>${esc(a)}</code>`).join(" 또는 ");
   $("#shareInfo").innerHTML = (sh.enabled !== sh.running_shared
       ? `<b>설정을 바꿨어요. 프로그램을 껐다 켜야 적용돼요.</b><br>` : "")
@@ -4084,21 +4417,21 @@ function openSettings() {
   const rc = rpCfg();
   $("#rpCfgSpeed").value = rc.fight_speed; $("#rpCfgPre").value = rc.fight_pre; $("#rpCfgPost").value = rc.fight_post; $("#rpCfgCrowd").value = rc.crowd_scale; $("#rpCfgQuiet").value = rc.quiet_speed; $("#rpCfgShake").value = rc.shake;
   $("#rpCfgGap").value = rc.fight_gap ?? 12; $("#rpCfgLull").value = rc.fight_lull ?? 5; $("#rpCfgZone").value = rc.zone_view_phase ?? 4; $("#rpCfgPunch").value = rc.punch_far_m ?? 250;
+  $("#rpCfgNear").value = rc.zoom_near_m ?? 260; $("#rpCfgFit").value = rc.zoom_fit ?? 2.6; $("#rpCfgHud").value = rc.hud_scale ?? 1; $("#rpCfgTeam").value = rc.team_scale ?? 1;
   const pb = state.publish || {};
   $("#pubOn").checked = !!pb.enabled; $("#pubRepo").value = pb.repo || ""; $("#pubToken").value = "";
   $("#pubToken").placeholder = pb.token_set ? "저장돼 있어요 (바꿀 때만 입력)" : "github_pat_… 또는 ghp_…";
   renderPub(pb);
   $("#vol").value = Math.round(volume * 100); $("#volTxt").textContent = Math.round(volume * 100) + "%";
   const snd = Object.keys(state.sounds || {});
-  $("#sndStatus").textContent = snd.length ? `지금 쓰는 파일: ${snd.join(", ")}` : "지금은 기본 소리를 쓰고 있어요.";
+  $("#sndStatus").textContent = snd.length ? `사용 중: ${snd.join(", ")}` : "기본 소리 사용 중";
   const withPic = state.players.filter(p => pimg(p)).map(p => p.name);
   const noPic = state.players.filter(p => !pimg(p)).map(p => p.name);
   const sc = state.player_img_scan || {};
-  const lines = [withPic.length ? `사진 있음: ${withPic.join(", ")}` : "아직 인식된 사진이 없어요."];
+  const lines = [withPic.length ? `사진 있음: ${withPic.join(", ")}` : "인식된 사진 없음"];
   if (withPic.length && noPic.length) lines.push(`사진 없음: ${noPic.join(", ")}`);
-  if ((sc.unmatched || []).length) lines.push(`⚠ 누구 사진인지 모르는 파일: ${sc.unmatched.join(", ")} → 파일 이름을 이름이나 닉네임으로 바꿔주세요`);
+  if ((sc.unmatched || []).length) lines.push(`⚠ 누구 사진인지 모르는 파일 ${sc.unmatched.length}개 (${sc.unmatched.slice(0, 3).join(", ")}${sc.unmatched.length > 3 ? " …" : ""})`);
   if ((sc.unsupported || []).length) lines.push(`⚠ 읽을 수 없는 형식: ${sc.unsupported.join(", ")} → png, jpg, webp로 저장해 주세요`);
-  if (sc.folder) lines.push(`이 프로그램이 보는 폴더: ${sc.folder}`);
   $("#pimgStatus").innerHTML = lines.map(esc).join("<br>");
   $("#dlg").showModal();
 }
@@ -4118,8 +4451,8 @@ function renderPub(pb) {
   const lines = [];
   if (pb.running) lines.push("올리는 중이에요… " + esc((pb.log || []).slice(-1)[0] || ""));
   else if (pb.error) lines.push(`<span style="color:var(--flare)">⚠ ${esc(pb.error)}</span>`);
-  if (!pb.running && pb.last) lines.push(`마지막으로 올린 때: ${esc(pb.last.time)} · 친구들에게 알려줄 주소: <code>${esc(pb.last.url)}</code>`);
-  else if (!pb.running && !pb.error) lines.push("아직 올린 적이 없어요. 저장소와 토큰을 넣고 '지금 웹에 올리기'를 눌러보세요. 처음엔 몇 분 걸려요.");
+  if (!pb.running && pb.last) lines.push(`마지막 업로드 ${esc(pb.last.time)} · 주소 <code>${esc(pb.last.url)}</code>`);
+  else if (!pb.running && !pb.error) lines.push("아직 올린 적 없음 · 처음엔 몇 분 걸려요");
   if (info) info.innerHTML = lines.join("<br>");
   if (pb.running && !pubTimer) pubTimer = setInterval(pollPub, 1500);
   if (!pb.running && pubTimer) { clearInterval(pubTimer); pubTimer = null; }
@@ -4130,12 +4463,20 @@ $("#btnPublish").onclick = async () => {
   const b = $("#btnPublish"); b.disabled = true;
   try {
     const pin = $("#sharePin").value.trim();
-    await api("api/settings", {share: {enabled: $("#shareOn").checked, pin}, publish: pubBody()});
+    await api("api/settings", {share: {enabled: false, pin}, publish: pubBody()});
     await api("api/publish", {});
     state = await api("api/state"); renderPub(state.publish);
   } catch (e) { alert(e.message); }
   b.disabled = false;
 };
+document.querySelectorAll(".set-tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".set-tabs button").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".set-pane").forEach(p => p.classList.toggle("on", p.dataset.pane === b.dataset.tab));
+  $(".set-body").scrollTop = 0;
+});
+const RP_RECOMMEND = {rpCfgSpeed: 2, rpCfgQuiet: 60, rpCfgLull: 4, rpCfgPre: 1.5, rpCfgPost: 2, rpCfgGap: 10,
+  rpCfgNear: 260, rpCfgFit: 2.6, rpCfgPunch: 200, rpCfgZone: 4, rpCfgShake: 1, rpCfgCrowd: .6, rpCfgHud: 1, rpCfgTeam: 1};
+$("#btnRpRecommend").onclick = () => { for (const [id, v] of Object.entries(RP_RECOMMEND)) $("#" + id).value = v; };
 $("#btnOpenImages").onclick = () => api("api/open_images", {}).catch(e => alert(e.message));
 $("#btnPrebuild").onclick = () => { $("#dlg").close(); runJob("api/prebuild", {refresh: false}); };
 $("#btnOpenReplayImgs").onclick = () => api("api/open_images", {replay: true}).catch(e => alert(e.message));
@@ -4152,13 +4493,14 @@ $("#settingsForm").addEventListener("submit", async e => {
     day_start_hour: +$("#dayStart").value, min_together: +$("#minTogether").value };
   if ($("#apiKey").value.trim()) body.api_key = $("#apiKey").value.trim();
   if ($("#webhook").value.trim()) body.webhook = $("#webhook").value.trim();
-  body.share = {enabled: $("#shareOn").checked, pin: $("#sharePin").value.trim()};
+  body.share = {enabled: false, pin: $("#sharePin").value.trim()};  // 친구 조회 공유(같은 네트워크)는 없앰 — 웹 공유만
   body.publish = pubBody();
   body.replay = {fight_speed: +$("#rpCfgSpeed").value || 2, fight_pre: +$("#rpCfgPre").value, fight_post: +$("#rpCfgPost").value, crowd_scale: +$("#rpCfgCrowd").value || .6, quiet_speed: +$("#rpCfgQuiet").value || 60, shake: $("#rpCfgShake").value === "" ? 1 : +$("#rpCfgShake").value,
     fight_gap: +$("#rpCfgGap").value || 12, fight_lull: +$("#rpCfgLull").value || 5, zone_view_phase: +$("#rpCfgZone").value || 4,
-    punch_far_m: $("#rpCfgPunch").value === "" ? 250 : +$("#rpCfgPunch").value};
+    punch_far_m: $("#rpCfgPunch").value === "" ? 250 : +$("#rpCfgPunch").value,
+    zoom_near_m: +$("#rpCfgNear").value || 260, zoom_fit: +$("#rpCfgFit").value || 2.6, hud_scale: +$("#rpCfgHud").value || 1, team_scale: +$("#rpCfgTeam").value || 1};
   body.weights = Object.fromEntries([...document.querySelectorAll("[data-w]")].map(i => [i.dataset.w, +i.value || 0]));
-  body.fair = {shrink_games: +$("#wShrink").value || 0};
+  body.fair = {shrink_games: 0};  // 판 수 보정은 없앰 (항상 끔)
   body.abs_full = Object.fromEntries([...document.querySelectorAll("[data-abs]")].map(i => [i.dataset.abs, +i.value || 0]));
   body.weapon_names = Object.fromEntries($("#wnames").value.split("\n").map(l => l.split("=").map(x => x.trim())).filter(x => x.length === 2 && x[0] && x[1]));
   const changedScore = JSON.stringify(body.weights) !== JSON.stringify(Object.fromEntries(Object.keys(body.weights).map(k => [k, +state.weights[k] || 0])))
