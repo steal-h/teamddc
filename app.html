@@ -655,6 +655,14 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 .rp-feed small{color:var(--dust)}
 .rp-feed .bad{color:#FFB4A2}
 .rp-feed .good{color:#B9D99B}
+.rp-feed .kf{display:flex;align-items:center;gap:4px;flex-wrap:nowrap;color:var(--bone);white-space:nowrap}
+.rp-feed .kf time{margin-right:2px;font-size:12px}
+.rp-feed .kf .kc-btn{margin-left:auto}
+.rp-feed .kf.bad{background:rgba(224,83,47,.08)}
+.rp-feed .kf b{font-weight:700;min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kf-tn{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--tc);color:#15180F;font:600 11.5px/1 var(--num)}
+.kf-w{width:34px;height:12px;fill:#EEE8D5;flex:none;margin:0 2px}
+.kf-k{width:12px;height:12px;color:#EEE8D5;flex:none}
 .rp-ctl{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid #2A2F21;flex-wrap:wrap}
 .rp-ctl .btn{min-height:40px}
 .rp-time{flex:1 1 260px;position:relative;height:40px;display:flex;align-items:center}
@@ -751,6 +759,7 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 .rp-stage.kc::before,.rp-stage.kc::after{height:7%}
 .rp-stage.kc #rpCanvas{filter:saturate(.75) contrast(1.08)}
 .rp-kc{position:absolute;top:calc(7% + 10px);left:50%;transform:translateX(-50%);z-index:7;display:flex;align-items:center;gap:10px;padding:7px 10px 7px 14px;border-radius:10px;background:rgba(14,10,10,.82);border:1px solid rgba(224,83,47,.7);box-shadow:0 6px 20px rgba(0,0,0,.45);white-space:nowrap;max-width:calc(100% - 24px)}
+.rp-kc[hidden]{display:none}
 .rp-kc .kc-tag{color:#FF6A55;font-weight:900;letter-spacing:.06em;font-size:12px;animation:kcblink 1s steps(2) infinite}
 .rp-kc b{font-size:14px;overflow:hidden;text-overflow:ellipsis}
 @keyframes kcblink{50%{opacity:.35}}
@@ -1218,7 +1227,7 @@ body.viewer .viewer-badge{display:inline-flex;align-items:center;gap:6px;padding
       <label class="date">날짜 <input type="date" id="date"></label>
       <button class="btn viewer-only" id="btnViewDay" type="button">이 날 보기</button>
       <label class="check"><input type="checkbox" id="optRefresh" checked> dak.gg 전적 갱신</label>
-      <label class="check"><input type="checkbox" id="optAll"> 솔로 판도 포함</label>
+      <label class="check" title="네 명이 다 같이 한 판만 점수에 넣어요"><input type="checkbox" id="optFour"> 4인 판만</label>
       <label class="check"><input type="checkbox" id="optSave" checked> 누적에 저장</label>
       <label class="check"><input type="checkbox" id="optShow" checked> 시상식 연출</label>
       <label class="check"><input type="checkbox" id="optSound" checked> 효과음</label>
@@ -1570,12 +1579,12 @@ function cardHtml(p, tag = "button") {
     <div class="pc-stats">${STATS.map(([k, l]) => `<div><span>${l}</span><b>${c.stats[k]}</b></div>`).join("")}</div>
     <div class="pc-foot">최근 14일, ${c.days}일 ${c.games}게임</div></${tag}>`;
 }
-function wstatsHtml(list, n = 3, col) {  // 무기별 성적: [이름, 킬, 기절, 피해, 맞힘, 머리] — 피해 막대 + 킬·기절·헤드샷 비율
+function wstatsHtml(list, n = 3, col) {  // 무기별 성적: [이름, 킬, 기절, 피해, 맞힘, 머리, 쏜 횟수, 맞힌 횟수] — 피해 막대 + 킬·기절·명중률·헤드샷 비율
   const L = (list || []).slice(0, n); if (!L.length) return "";
   const max = Math.max(1, ...L.map(q => q[3]));
-  return `<div class="wst"${col ? ` style="--wc:${col}"` : ""}>${L.map(([w, k, kn, d, h, hd]) => `<div><b>${esc(w)}</b><span>${fmt(d)} 피해</span>
+  return `<div class="wst"${col ? ` style="--wc:${col}"` : ""}>${L.map(([w, k, kn, d, h, hd, sh, ah]) => `<div><b>${esc(w)}</b><span>${fmt(d)} 피해</span>
     <i><em style="width:${Math.max(3, d / max * 100)}%"></em></i>
-    <small><span>${k}킬</span><span>${kn}기절</span><span>${h}발 명중</span>${h ? `<span class="hs">헤드 ${Math.round(hd / h * 100)}%</span>` : ""}</small></div>`).join("")}</div>`;
+    <small><span>${k}킬</span><span>${kn}기절</span>${sh ? `<span title="${ah}/${sh}발">명중률 ${Math.min(100, Math.round(ah / sh * 100))}%</span>` : ""}${h ? `<span class="hs">헤드 ${Math.round(hd / h * 100)}%</span>` : ""}</small></div>`).join("")}</div>`;
 }
 async function loadCards() {
   $("#cards").innerHTML = `<div class="notice">카드를 만드는 중...</div>`;
@@ -1695,10 +1704,10 @@ $("#tierClose").onclick = () => { tierObs?.disconnect(); $("#tierDlg").close(); 
 
 /* ───── 분석 ───── */
 $("#btnAnalyze").onclick = () => (ensureAudio(), runJob("api/analyze", {
-  date: $("#date").value, refresh: $("#optRefresh").checked, include_all: $("#optAll").checked, save: $("#optSave").checked }));
+  date: $("#date").value, refresh: $("#optRefresh").checked, only_full: $("#optFour").checked, save: $("#optSave").checked }));
 $("#btnBackfill").onclick = () => {
   if (!confirm("최근 14일 기록을 모두 분석해서 누적에 저장할까요?\n이미 저장된 날짜도 다시 계산돼요.")) return;
-  runJob("api/backfill", { include_all: $("#optAll").checked, refresh: $("#optRefresh").checked });
+  runJob("api/backfill", { only_full: $("#optFour").checked, refresh: $("#optRefresh").checked });
 };
 async function runJob(path, body) {
   if (!state?.has_key) return openSettings();
@@ -1777,7 +1786,7 @@ function setBusy(b) {
 function renderError(msg) { $("#awards").innerHTML = `<div class="notice error"><strong>분석하지 못했어요</strong>${esc(msg)}</div>`; }
 function renderEmpty(date) {
   $("#awards").innerHTML = `<div class="notice"><strong>${esc(date)}에는 같이 한 경기가 없어요</strong>
-    방금 끝난 판은 몇 분 뒤에 다시 분석해 보세요. 혼자 한 판까지 보려면 '솔로 판도 포함'을 켜세요.</div>`;
+    방금 끝난 판은 몇 분 뒤에 다시 분석해 보세요.</div>`;
 }
 async function openDay(date, reveal = false) {
   try {
@@ -1884,8 +1893,7 @@ function renderDay(r, report, reveal) {
       ${telRows || "<div></div>"}
       <section class="pc-grp"><h4>점수 구성</h4><div class="bars">${bars}</div></section>
       <div class="pc-notes">${p.penalty ? `<div class="penalty">감점 −${p.penalty}점: ${[
-        t.teamkills ? `팀킬 ${t.teamkills}회 −${+((state.weights.teamkill_penalty ?? 10) * t.teamkills).toFixed(1)}` : "",
-        t.teamknocks ? `팀원 기절 ${t.teamknocks}회 −${+((state.weights.teamknock_penalty ?? 5) * t.teamknocks).toFixed(1)}` : "",
+        (t.teamkills || t.teamknocks) ? `팀킬·팀원 기절 ${(t.teamkills || 0) + (t.teamknocks || 0)}회 −${+((state.weights.teamkill_penalty ?? 10) * ((t.teamkills || 0) + (t.teamknocks || 0))).toFixed(1)}` : "",
         t.suicides ? `자살 ${t.suicides}회 −${+((state.weights.suicide_penalty ?? 5) * t.suicides).toFixed(1)}` : "",
         t.downed ? `기절당함 ${t.downed}회 −${+((state.weights.downed_penalty ?? .5) * t.downed).toFixed(1)}` : ""].filter(Boolean).join(", ")}</div>` : ""}
       ${p.best ? `<div class="best">최고의 판: ${esc(p.best.map)}에서 딜 ${fmt(p.best.damage)}, ${p.best.kills}킬, ${p.best.rank}등</div>` : ""}</div>
@@ -1913,7 +1921,7 @@ function renderDay(r, report, reveal) {
   const bg = mapUrl(r);
   $("#awards").innerHTML = `
     <div class="hero">${bg ? `<img class="hero-bg" src="${bg}" alt="" onerror="this.remove()">` : ""}
-    <div class="ceremony-head"><p>${dateLabel}, 같이 한 판 ${r.games_count}게임${r.solo_included ? " (솔로 판 포함)" : ""}</p>
+    <div class="ceremony-head"><p>${dateLabel}, 같이 한 판 ${r.games_count}게임${r.solo_included ? " (솔로 판 포함)" : r.four_only ? " (4인 판만)" : ""}</p>
       <h2>${esc(dayHeadline(r))}</h2></div>
     <div class="${reveal ? "reveal" : ""}">
       <div class="plaque"><div>
@@ -2798,6 +2806,51 @@ function aliveAt(t) {
   for (const a of A) { if (a[0] > t) break; v = a; }
   return v;
 }
+/* 킬 로그 (배그 화면처럼): [팀 번호] 쏜 사람 [무기 그림] (기절 표시) 맞은 사람 [팀 번호] */
+const WEAP_ICON = {
+  ar: "M1 6 6 4h6V3h18v1h9v1.5h-9V7h-8l-2 4h-3l1-4h-5l-2 2H6L4 8H1z",
+  sr: "M0 7l6-2h8v1l25-.4v1L16 7.4 12 8.5 5 9.5 0 9zM14 2.5h10v2H14z",
+  smg: "M6 5l4-1h16v1h6v1.5h-6v1h-6l-2 4.5h-3l1-4.5h-4l-2 2H7z",
+  sg: "M0 7l7-2h6v-.5h26V6H24v1.5h-8L14 8 7 9.5H0z",
+  pistol: "M12 3h16v3h-8l-1 1-1 5h-5l1-5-2-1z",
+  lmg: "M1 6 6 4h6V3h18v1h9v1.5h-9V7h-6l-2 4h-3l1-4h-7l-2 2H6L4 8H1zM33 6l-2 6h1.4l1.6-5zM35 6l2 6h-1.4l-1.6-5z",
+  throw: "M16 4h6l1 2h-2a5 5 0 1 1-6 0zM22 3h5v1.4h-5z",
+  melee: "M14 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zM18 6.2h20v1.6H18z",
+  boom: "M2 5h28v4H2zM30 4l8 3-8 3zM8 9h3l1 3H7z",
+  car: "M4 8l3-4h14l5 4h8v4H4zM9 12a2 2 0 1 0 0 .1zM28 12a2 2 0 1 0 0 .1z",
+  other: "M20 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM19 0h2v14h-2zM13 6h14v2H13z",
+};
+function weapCat(w) {
+  const n = String(w || "").toLowerCase();
+  if (!n) return "other";
+  if (/수류탄|grenade|몰로|molotov|c4|점착|sticky|연막|smoke|섬광|flash|throw/.test(n)) return "throw";
+  if (/판처|panzer|박격포|mortar|로켓|rocket|폭발|explo|레드존|red ?zone/.test(n)) return "boom";
+  if (/팬|pan|마체테|machete|낫|sickle|크로우|crowbar|주먹|punch|근접|melee/.test(n)) return "melee";
+  if (/차량|vehicle|uaz|dacia|buggy|brdm|오토바이|motor|트럭|truck|보트|boat|로드킬|roadkill|car/.test(n)) return "car";
+  if (/m249|dp-?28|mg3|lmg/.test(n)) return "lmg";
+  if (/kar98|awm|m24|mosin|win94|lynx|crossbow|석궁|vss|mini|sks|slr|mk14|mk12|qbu|dragunov|dmr|m110/.test(n)) return "sr";
+  if (/s1897|s686|s12k|dbs|o12|sawed|소드|샷건|shotgun/.test(n)) return "sg";
+  if (/p92|p1911|r1895|p18c|r45|deagle|데저트|skorpion|스콜피온|권총|pistol|flare|플레어/.test(n)) return "pistol";
+  if (/ump|vector|벡터|mp5|tommy|토미|uzi|우지|pp-?19|bizon|mp9|p90|js9/.test(n)) return "smg";
+  return "ar";
+}
+const weapIcon = w => `<svg class="kf-w" viewBox="0 0 40 14" aria-label="${esc(w || "")}"><title>${esc(w || "")}</title><path d="${WEAP_ICON[weapCat(w)]}"/></svg>`;
+const KNOCK_ICON = `<svg class="kf-k" viewBox="0 0 14 14" aria-label="기절"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="7" cy="7" r="1.8" fill="currentColor"/></svg>`;
+function rpTeamOf(name) {
+  const R = rp.data; if (!R) return null;
+  if (!R._teamOf) { R._teamOf = new Map((R.enemies || []).map(en => [en.n, en.tm])); }
+  return R._teamOf.get(name) ?? null;
+}
+function kfBox(tm, ours) { if (tm == null) return ""; return `<span class="kf-tn" style="--tc:${ours ? "#F2A900" : teamColor(tm)}">${tm}</span>`; }
+function killLine(e, k) {  // k: kill(우리가 처치) · knock(우리가 기절시킴) · died(우리가 죽음) · downed(우리가 기절당함)
+  const ourT = rp.data.our_team, mine = k === "kill" || k === "knock";
+  const atk = mine ? rpName(e.by) : (e.by || "?"), vic = mine ? (e.who || "?") : rpName(e.who);
+  const atkT = mine ? ourT : rpTeamOf(e.by), vicT = mine ? rpTeamOf(e.who) : ourT;
+  const atkC = mine ? rpCol(e.by) : "#FF8A7A", vicC = mine ? "#FF8A7A" : rpCol(e.who);
+  const kcb = (k === "died" || k === "downed") && e.x != null ? `<button class="kc-btn" type="button" data-kc="${rp.data.events.indexOf(e)}" title="죽기 직전 8초를 그 자리에서 다시 보기">킬캠</button>` : "";
+  return `<div class="kf ${mine ? "" : "bad"}" title="${esc([e.w, e.d ? e.d + "m" : ""].filter(Boolean).join(", "))}"><time>${mmss(e.t)}</time>
+    ${kfBox(atkT, mine)}<b style="color:${atkC}">${esc(atk)}</b>${e.w ? weapIcon(e.w) : ""}${k === "knock" || k === "downed" ? KNOCK_ICON : ""}<b style="color:${vicC}">${esc(vic)}</b>${kfBox(vicT, !mine)}${kcb}</div>`;
+}
 function feedLine(e) {
   const c = rpCol(e.by), wd = [e.w, e.d ? e.d + "m" : ""].filter(Boolean).join(", ");
   if (e.k === "empick") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 비상호출</div>`;
@@ -2805,11 +2858,7 @@ function feedLine(e) {
   if (e.k === "hazard") return `<div class="${e.end ? "" : "bad"}"><time>${mmss(e.t)}</time><b style="color:${e.col}">${esc(e.name)}</b> ${e.end ? "사라짐" : "발생"}</div>`;
   if (e.k === "emlift") return `<div><time>${mmss(e.t)}</time><b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b> 비상호출 비행기 탑승</div>`;
   if (e.k === "transmit") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 블루칩 송신${e.est ? " (추정)" : ""} → <b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b></div>`;
-  if (e.k === "kill") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 처치 ${esc(e.who)} <small>${esc(wd)}</small></div>`;
-  if (e.k === "knock") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 기절시킴 ${esc(e.who)} <small>${esc(wd)}</small></div>`;
-  const kcb = e.x != null ? `<button class="kc-btn" type="button" data-kc="${rp.data.events.indexOf(e)}" title="죽기 직전 8초를 그 자리에서 다시 보기">킬캠</button>` : "";
-  if (e.k === "died") return `<div class="bad"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 사망, ${esc(e.by)} <small>${esc(wd)}</small>${kcb}</div>`;
-  if (e.k === "downed") return `<div class="bad"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 기절당함, ${esc(e.by)}${kcb}</div>`;
+  if (e.k === "kill" || e.k === "knock" || e.k === "died" || e.k === "downed") return killLine(e, e.k);
   if (e.k === "revive") return `<div class="good"><time>${mmss(e.t)}</time><b>${esc(rpName(e.by))}</b> → ${esc(rpName(e.who))} 소생</div>`;
   if (e.k === "recall") return `<div class="good"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 블루칩 복귀 착지</div>`;
   if (e.k === "board") return `<div class="good"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 블루칩 헬기 탑승</div>`;
@@ -3304,13 +3353,10 @@ function rpDraw(dt, now, view) {
     }
   }
   for (const q of R.hz_hits || []) {  // 실제로 폭격·폭풍 피해를 받은 자리 (모든 선수): 레드존·블랙존은 폭발, 나머지는 작은 표시
-    const age = rp.t - q[0]; if (age < 0) break; if (age > 1.4) continue;
+    const age = rp.t - q[0]; if (age < 0) break; if (age > (q[3] === "red" || q[3] === "black" ? 8 : 1.4)) continue;
     const bx = X(q[1]), by = Y(q[2]);
-    if (q[3] === "red" || q[3] === "black") {
-      if (age < .15) rpGlowC(ctx, bx, by, 30, "255,240,200", 1 - age / .15);
-      const a = 1 - age / 1.4; ctx.beginPath(); ctx.arc(bx, by, 4 + age * 18, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,140,50,${a * .55})`; ctx.fill();
-      rpRing(ctx, bx, by, 6 + age * 34, "rgba(255,220,180,1)", 1.5, a * .7);
-    } else rpRing(ctx, bx, by, 4 + age * 10, q[3] === "snow" || q[3] === "blizzard" ? "rgba(220,240,255,1)" : "rgba(255,200,120,1)", 1.5, 1 - age / 1.4);
+    if (q[3] === "red" || q[3] === "black") rpBlast(ctx, bx, by, age, Math.max(.6, Math.min(1.6, S / 2000)), Math.round(q[0] * 10), pip);
+    else rpRing(ctx, bx, by, 4 + age * 10, q[3] === "snow" || q[3] === "blizzard" ? "rgba(220,240,255,1)" : "rgba(255,200,120,1)", 1.5, 1 - age / 1.4);
   }
   // 첫 비행기 동선 (지도 끝에서 끝까지 점선 + 날아가는 비행기)
   const planesDrawn = [];  // 그린 비행기 (같은 비행기를 팀원 수만큼 겹쳐 그리지 않게)
@@ -4208,40 +4254,71 @@ function drawWheel(ctx, x, y, r, col) {  // 차량 핸들 아이콘 (플레이�
   ctx.restore();
 }
 const rpHash = (a, b = 0) => ((Math.sin(a * 12.9898 + b * 78.233) * 43758.5453) % 1 + 1) % 1;
-function rpRedZone(ctx, cx, cy, rr, now, pip, h) {  // 레드존: 붉은 영역 + 하늘에서 떨어지는 포탄(그림자·궤적) → 폭발 → 연기·그을린 자국
-  const pulse = .2 + Math.sin(now / 260) * .07;
-  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2);
-  const g0 = ctx.createRadialGradient(cx, cy, rr * .2, cx, cy, rr); g0.addColorStop(0, `rgba(224,60,40,${pulse * .7})`); g0.addColorStop(1, `rgba(224,60,40,${pulse + .08})`);
-  ctx.fillStyle = g0; ctx.fill(); ctx.setLineDash([8, 6]); ctx.lineDashOffset = -now / 40; ctx.strokeStyle = "rgba(255,90,60,.95)"; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore();
-  const rate = 3, slot = Math.floor(rp.t * rate), sc = Math.max(.6, Math.min(2.2, rr / 120));
-  const spot = k => { const an = rpHash(k, 1) * Math.PI * 2, d = Math.sqrt(rpHash(k, 2)) * rr * .96; return [cx + Math.cos(an) * d, cy + Math.sin(an) * d]; };
-  for (let k = slot - 18; k <= slot + 2; k++) {  // 6초 전 ~ 곧 떨어질 것까지
-    if (rpHash(k, 3) < .25) continue;  // 가끔 빈 박자 (규칙적으로 보이지 않게)
+function rpBlast(c, x, y, age, sc, seed, pip) {  // 포탄 폭발: 섬광 → 겹겹이 부푸는 불덩이 → 흙먼지 충격파 → 튀는 불티 → 피어오르는 연기 → 그을음·남은 불씨
+  if (age < 0 || age > 8) return;
+  if (age < 8) {  // 그을린 자국 (8초 동안 서서히)
+    const a = Math.min(1, age / .25) * (1 - age / 8) * .75, g = c.createRadialGradient(x, y, 0, x, y, 15 * sc);
+    g.addColorStop(0, `rgba(18,9,5,${a})`); g.addColorStop(.6, `rgba(30,16,8,${a * .6})`); g.addColorStop(1, "rgba(40,20,10,0)");
+    c.fillStyle = g; c.beginPath(); c.arc(x, y, 15 * sc, 0, Math.PI * 2); c.fill();
+  }
+  if (age > .4 && age < 3.5) for (let j = 0; j < 3; j++) {  // 남은 불씨
+    const fl = .5 + .5 * Math.sin(age * 20 + j * 2 + seed), ex = x + (rpHash(seed, 40 + j) - .5) * 12 * sc, ey = y + (rpHash(seed, 50 + j) - .5) * 10 * sc;
+    rpGlowC(c, ex, ey, 4 * sc * fl, "255,150,50", (1 - age / 3.5) * .9);
+  }
+  if (age < .1) rpGlowC(c, x, y, 46 * sc, "255,250,225", 1 - age / .1);  // 섬광
+  if (age < .55) {  // 흙먼지 충격파 (두꺼운 갈색 고리 + 얇은 흰 고리)
+    const u = age / .55, r = (6 + (1 - Math.pow(1 - u, 3)) * 46) * sc;
+    c.save(); c.globalAlpha = (1 - u) * .55; c.strokeStyle = "rgb(120,96,70)"; c.lineWidth = 9 * sc * (1 - u * .6); c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.stroke(); c.restore();
+    rpRing(c, x, y, r * 1.05, "rgba(255,240,220,1)", 1.4, (1 - u) * .8);
+  }
+  if (age < .9) {  // 불덩이: 여러 덩어리가 부풀며 붉게 식음
+    const u = age / .9;
+    for (let j = 0; j < 6; j++) {
+      const an = rpHash(seed, j) * Math.PI * 2, d = (2 + u * 9) * sc * rpHash(seed, 10 + j), bx = x + Math.cos(an) * d, by = y + Math.sin(an) * d - u * 4 * sc;
+      const r = (5 + u * 13) * sc * (.7 + rpHash(seed, 20 + j) * .5), g = c.createRadialGradient(bx, by, 0, bx, by, r);
+      const hot = 1 - u;
+      g.addColorStop(0, `rgba(255,${Math.round(220 + 35 * hot)},${Math.round(120 + 110 * hot)},${(1 - u) * .95})`);
+      g.addColorStop(.45, `rgba(255,${Math.round(110 + 60 * hot)},30,${(1 - u) * .8})`);
+      g.addColorStop(1, "rgba(150,30,10,0)");
+      c.fillStyle = g; c.beginPath(); c.arc(bx, by, r, 0, Math.PI * 2); c.fill();
+    }
+  }
+  if (!pip && age < 1.3) for (let j = 0; j < 10; j++) {  // 튀는 불티
+    const an = rpHash(seed, 60 + j) * Math.PI * 2, v = (35 + rpHash(seed, 70 + j) * 45) * sc, px = x + Math.cos(an) * v * age, py = y + Math.sin(an) * v * age * .8 + 30 * sc * age * age;
+    const a = 1 - age / 1.3; c.strokeStyle = `rgba(255,${200 - j * 6},120,${a})`; c.lineWidth = 1.5;
+    c.beginPath(); c.moveTo(px, py); c.lineTo(px - Math.cos(an) * 4 * sc, py - Math.sin(an) * 3 * sc); c.stroke();
+  }
+  if (!pip && age > .25 && age < 5) for (let j = 0; j < 4; j++) {  // 연기: 위로 피어오르며 커지고 옅어짐
+    const u = (age - .25) / 4.75, sx = x + (rpHash(seed, 80 + j) - .5) * 16 * sc + Math.sin(age * .8 + j) * 3 * sc, sy = y - u * (18 + j * 6) * sc;
+    rpPuff(c, sx, sy, (7 + u * 16 + j * 2) * sc, 62 + j * 6, .5 * (1 - u) * Math.min(1, (age - .25) / .4));
+  }
+}
+function rpRedZone(ctx, cx, cy, rr, now, pip, h) {  // 레드존 (RZ-02 + 격자): 옅은 붉은 바탕 + 격자 + 두 줄 테두리, 떨어질 자리에 X 표시 → 폭발
+  const sc = Math.max(.6, Math.min(2.2, rr / 120)), black = h && h.kind === "black", rgb = black ? "60,60,60" : "200,30,20", line = black ? "200,200,200" : "255,90,70";
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.clip();
+  ctx.fillStyle = `rgba(${rgb},${.2 + Math.sin(now / 300) * .04})`; ctx.fillRect(cx - rr, cy - rr, rr * 2, rr * 2);
+  const step = Math.max(10, 16 * sc); ctx.strokeStyle = `rgba(${line},.38)`; ctx.lineWidth = 1; ctx.beginPath();
+  for (let gx = cx - rr - ((cx - rr) % step); gx <= cx + rr; gx += step) { ctx.moveTo(gx, cy - rr); ctx.lineTo(gx, cy + rr); }
+  for (let gy = cy - rr - ((cy - rr) % step); gy <= cy + rr; gy += step) { ctx.moveTo(cx - rr, gy); ctx.lineTo(cx + rr, gy); }
+  ctx.stroke(); ctx.restore();
+  rpRing(ctx, cx, cy, rr, `rgb(${line})`, 3, 1); rpRing(ctx, cx, cy, rr + 5, `rgba(${line},.4)`, 1.5, 1);
+  const rate = 2.5, slot = Math.floor(rp.t * rate);
+  const spot = k => { const an = rpHash(k, 1) * Math.PI * 2, d = Math.sqrt(rpHash(k, 2)) * rr * .94; return [cx + Math.cos(an) * d, cy + Math.sin(an) * d]; };
+  for (let k = slot - Math.ceil(8 * rate); k <= slot + 3; k++) {
+    if (rpHash(k, 3) < .22) continue;  // 가끔 빈 박자
     const age = rp.t - k / rate, [bx, by] = spot(k);
-    if (age < 0) {  // 떨어지는 중: 땅에 그림자(점점 진하게) + 위에서 내려오는 불빛 줄기
-      const u = Math.max(0, 1 + age / .65); if (u <= 0) continue;
-      ctx.beginPath(); ctx.ellipse(bx, by, 6 * sc * (1.4 - u * .6), 3 * sc * (1.4 - u * .6), 0, 0, Math.PI * 2); ctx.fillStyle = `rgba(0,0,0,${.15 + u * .35})`; ctx.fill();
-      const hx = bx + 26 * sc * (1 - u), hy = by - 70 * sc * (1 - u);
-      ctx.save(); ctx.strokeStyle = `rgba(255,220,160,${.35 + u * .5})`; ctx.lineWidth = 2; ctx.shadowColor = "#FFB060"; ctx.shadowBlur = 6;
-      ctx.beginPath(); ctx.moveTo(hx + 10 * sc, hy - 26 * sc); ctx.lineTo(hx, hy); ctx.stroke(); ctx.restore();
+    if (age < 0) {  // 곧 떨어질 자리: X 표시가 점점 또렷하게 + 하늘에서 내려오는 포탄 줄기
+      const u = Math.max(0, 1 + age / 1); if (u <= 0) continue;
+      ctx.save(); ctx.translate(bx, by); ctx.strokeStyle = `rgba(255,225,120,${.35 + u * .65})`; ctx.lineWidth = 2.5; const s = 7 * sc * (1.3 - u * .3);
+      ctx.beginPath(); ctx.moveTo(-s, -s); ctx.lineTo(s, s); ctx.moveTo(s, -s); ctx.lineTo(-s, s); ctx.stroke(); ctx.restore();
+      if (u > .6) { const v = (u - .6) / .4, hx = bx + 20 * sc * (1 - v), hy = by - 60 * sc * (1 - v); ctx.strokeStyle = `rgba(255,220,170,${v})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(hx + 7 * sc, hy - 20 * sc); ctx.lineTo(hx, hy); ctx.stroke(); }
       continue;
     }
-    if (age > 6) continue;
-    if (age < 6) {  // 그을린 자국 (6초 동안 서서히)
-      ctx.save(); ctx.globalAlpha = Math.min(1, age / .3) * (1 - age / 6) * .7; const gg = ctx.createRadialGradient(bx, by, 0, bx, by, 13 * sc);
-      gg.addColorStop(0, "rgba(20,10,6,.9)"); gg.addColorStop(1, "rgba(40,20,10,0)"); ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(bx, by, 13 * sc, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-    }
-    if (age < .12) rpGlowC(ctx, bx, by, 34 * sc, "255,245,210", 1 - age / .12);  // 섬광
-    if (age < 1.1) {  // 불덩이 + 충격파
-      const a = 1 - age / 1.1, br = (5 + age * 24) * sc;
-      ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,150,50,${a * .6})`; ctx.fill();
-      ctx.beginPath(); ctx.arc(bx, by, br * .45, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,240,190,${a * .85})`; ctx.fill();
-      rpRing(ctx, bx, by, (8 + age * 46) * sc, "rgba(255,220,180,1)", 1.5, a * .7);
-    }
-    if (age < 4 && !pip) for (let j = 0; j < 3; j++) rpPuff(ctx, bx + (rpHash(k, 5 + j) - .5) * 14 * sc, by - age * 7 * sc - j * 4 * sc, (6 + age * 5 + j * 2) * sc, 70, .4 * (1 - age / 4));  // 연기
+    rpBlast(ctx, bx, by, age, sc, k, pip);
   }
   if (h) rpHazardTag(ctx, h, cx, cy, rr);
 }
+
 const HZ_STYLE = {
   red: {name: "레드존", col: "#FFB4A2", rgb: "220,40,20"},
   sand: {name: "모래폭풍", col: "#FFC48A", rgb: "196,140,70"},
@@ -4650,8 +4727,8 @@ function openScore(r) {
         return `<td class="v"><b>${p.parts[k] ?? 0}점</b><small>${raw(p.metrics)}${a ? " → " + adj(a) : ""}</small><small>PUBG 기록 ${(p.tel.stat_surv / 60 / g).toFixed(1)}분 → 실제 ${(p.tel.alive_s / 60 / g).toFixed(1)}분</small></td>`;
       }
       return `<td class="v"><b>${p.parts[k] ?? 0}점</b><small>${raw(p.metrics)}${a ? " → " + adj(a) : ""}</small></td>`; }).join("")}</tr>`).join("");
-  const pen = ps.some(p => p.penalty) ? `<tr><td class="k">감점<small>팀킬 ${w.teamkill_penalty}, 팀원 기절 ${w.teamknock_penalty ?? 5}, 자살 ${w.suicide_penalty ?? 5}, 기절당함 ${w.downed_penalty ?? .5}점씩</small></td>${ps.map(p => { const t = p.totals || {};
-    const why = [t.teamkills ? `팀킬 ${t.teamkills}` : "", t.suicides ? `자살 ${t.suicides}` : "", t.downed ? `기절 ${t.downed}` : ""].filter(Boolean).join(", ");
+  const pen = ps.some(p => p.penalty) ? `<tr><td class="k">감점<small>팀킬·팀원 기절 ${w.teamkill_penalty}, 자살 ${w.suicide_penalty ?? 5}, 기절당함 ${w.downed_penalty ?? .5}점씩</small></td>${ps.map(p => { const t = p.totals || {};
+    const why = [(t.teamkills || t.teamknocks) ? `팀킬·팀원 기절 ${(t.teamkills || 0) + (t.teamknocks || 0)}` : "", t.suicides ? `자살 ${t.suicides}` : "", t.downed ? `기절 ${t.downed}` : ""].filter(Boolean).join(", ");
     return `<td class="v"><b>${p.penalty ? "−" + p.penalty : "0"}</b>${why ? `<small>${why}</small>` : ""}</td>`; }).join("")}</tr>` : "";
   $("#scoreBody").innerHTML = `
     <ol>
@@ -4662,7 +4739,7 @@ function openScore(r) {
       <li><b>블루칩</b>은 100점 위에 더해지는 <b>보너스</b>예요. 블루칩으로 살린 팀원 1명당 ${w.bluechip_per_person ?? 5}점, 최대 ${w.bluechip}점.</li>
       <li><b>평균 생존</b>은 실제로 살아 있던 시간만 세요. 죽어 있던 시간은 빼고, 블루칩 비행기에 탄 순간부터 다시 셉니다. 아래 표에 PUBG 공식 기록과 같이 보여드려요. 블루칩으로 복귀한 판이 없으면 두 값이 거의 같아요.</li>
       <li>헤드샷 비율과 평균 순위는 기록으로만 보여주고 점수에는 넣지 않아요. 4인 스쿼드는 팀 순위가 넷 다 같아서 차이가 나지 않거든요.</li>
-      <li>모두 더한 뒤 <b>감점</b>을 빼요 (모두 횟수만큼): 팀킬 1회당 ${w.teamkill_penalty}점, 팀원을 기절시킨 1회당 ${w.teamknock_penalty ?? 5}점, 자살 1회당 ${w.suicide_penalty ?? 5}점, 기절당함 1회당 ${w.downed_penalty ?? .5}점. 합계가 높은 순서로 1~4등이에요.</li>
+      <li>모두 더한 뒤 <b>감점</b>을 빼요 (모두 횟수만큼): 팀킬이나 팀원을 기절시킨 1회당 ${w.teamkill_penalty}점, 자살 1회당 ${w.suicide_penalty ?? 5}점, 기절당함 1회당 ${w.downed_penalty ?? .5}점. 합계가 높은 순서로 1~4등이에요.</li>
     </ol>
     <div class="tbl"><table class="score-tbl"><thead><tr><th>항목</th>${ps.map(p => `<th class="p">${p.rank}위 ${esc(p.name)}</th>`).join("")}</tr></thead>
     <tbody>${rows}${pen}<tr class="total"><td>합계</td>${ps.map(p => `<td class="v">${sc(p.total)}점</td>`).join("")}</tr></tbody></table></div>
@@ -4766,7 +4843,7 @@ function openSettings() {
   $("#imgStatus").textContent = have.length ? `사용 중: ${have.join(", ")}` : "기본 그림 사용 중";
   const WK = [["damage", "딜량"], ["kills", "킬"], ["dbnos", "기절"], ["assists", "어시"], ["revives", "소생"], ["survival", "생존"],
     ["bluechip_per_person", "블루칩 1명당 보너스"], ["bluechip", "블루칩 보너스 최대"],
-    ["teamkill_penalty", "팀킬 1회당 감점"], ["teamknock_penalty", "팀원 기절시킴 1회당 감점"], ["suicide_penalty", "자살 1회당 감점"], ["downed_penalty", "기절당함 1회당 감점"]];
+    ["teamkill_penalty", "팀킬·팀원 기절 1회당 감점"], ["suicide_penalty", "자살 1회당 감점"], ["downed_penalty", "기절당함 1회당 감점"]];
   const AK = [["damage", "판당 딜량"], ["kills", "판당 킬"], ["dbnos", "판당 기절"], ["assists", "판당 어시"], ["revives", "판당 소생"], ["survival_min", "판당 생존(분)"], ["curve", "점수 곡선 (1 직선, 0.5 너그럽게)"]];
   $("#wgrid").innerHTML = WK.map(([k, l]) => `<label>${l}<input type="number" min="0" max="200" step="0.5" data-w="${k}" value="${state.weights[k] ?? 0}"></label>`).join("")
 
@@ -4895,6 +4972,9 @@ $("#settingsForm").addEventListener("submit", async e => {
   } else if (current?.result) await openDay(current.result.date);
 });
 
+/* '4인 판만'은 켜 둔 상태를 기억해 둠 */
+try { $("#optFour").checked = localStorage.getItem("ddc_four") === "1"; } catch {}
+$("#optFour").onchange = () => { try { localStorage.setItem("ddc_four", $("#optFour").checked ? "1" : "0"); } catch {} };
 $("#btnQuit").onclick = async () => {
   if (!confirm("프로그램을 종료할까요?")) return;
   try { await api("api/shutdown", {}); } catch {}
