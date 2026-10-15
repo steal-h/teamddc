@@ -655,14 +655,7 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 .rp-feed small{color:var(--dust)}
 .rp-feed .bad{color:#FFB4A2}
 .rp-feed .good{color:#B9D99B}
-.rp-feed .kf{display:flex;align-items:center;gap:4px;flex-wrap:nowrap;color:var(--bone);white-space:nowrap}
-.rp-feed .kf time{margin-right:2px;font-size:12px}
-.rp-feed .kf .kc-btn{margin-left:auto}
-.rp-feed .kf.bad{background:rgba(224,83,47,.08)}
-.rp-feed .kf b{font-weight:700;min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.kf-tn{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:3px;background:var(--tc);color:#15180F;font:600 11.5px/1 var(--num)}
-.kf-w{width:34px;height:12px;fill:#EEE8D5;flex:none;margin:0 2px}
-.kf-k{width:12px;height:12px;color:#EEE8D5;flex:none}
+.kf-tn{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:17px;padding:0 4px;margin-right:4px;border-radius:3px;background:var(--tc);color:#15180F;font:600 11px/1 var(--num);vertical-align:1px}
 .rp-ctl{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid #2A2F21;flex-wrap:wrap}
 .rp-ctl .btn{min-height:40px}
 .rp-time{flex:1 1 260px;position:relative;height:40px;display:flex;align-items:center}
@@ -1228,6 +1221,7 @@ body.viewer .viewer-badge{display:inline-flex;align-items:center;gap:6px;padding
       <button class="btn viewer-only" id="btnViewDay" type="button">이 날 보기</button>
       <label class="check"><input type="checkbox" id="optRefresh" checked> dak.gg 전적 갱신</label>
       <label class="check" title="네 명이 다 같이 한 판만 점수에 넣어요"><input type="checkbox" id="optFour"> 4인 판만</label>
+      <label class="check" title="일반 게임은 빼고 랭크(경쟁전) 판만 점수에 넣어요"><input type="checkbox" id="optRanked"> 랭크 게임만</label>
       <label class="check"><input type="checkbox" id="optSave" checked> 누적에 저장</label>
       <label class="check"><input type="checkbox" id="optShow" checked> 시상식 연출</label>
       <label class="check"><input type="checkbox" id="optSound" checked> 효과음</label>
@@ -1584,7 +1578,7 @@ function wstatsHtml(list, n = 3, col) {  // 무기별 성적: [이름, 킬, 기�
   const max = Math.max(1, ...L.map(q => q[3]));
   return `<div class="wst"${col ? ` style="--wc:${col}"` : ""}>${L.map(([w, k, kn, d, h, hd, sh, ah]) => `<div><b>${esc(w)}</b><span>${fmt(d)} 피해</span>
     <i><em style="width:${Math.max(3, d / max * 100)}%"></em></i>
-    <small><span>${k}킬</span><span>${kn}기절</span>${sh ? `<span title="${ah}/${sh}발">명중률 ${Math.min(100, Math.round(ah / sh * 100))}%</span>` : ""}${h ? `<span class="hs">헤드 ${Math.round(hd / h * 100)}%</span>` : ""}</small></div>`).join("")}</div>`;
+    <small><span>${k}킬</span><span>${kn}기절</span>${h ? `<span class="hs">헤드 ${Math.round(hd / h * 100)}%</span>` : ""}</small></div>`).join("")}</div>`;
 }
 async function loadCards() {
   $("#cards").innerHTML = `<div class="notice">카드를 만드는 중...</div>`;
@@ -1704,10 +1698,10 @@ $("#tierClose").onclick = () => { tierObs?.disconnect(); $("#tierDlg").close(); 
 
 /* ───── 분석 ───── */
 $("#btnAnalyze").onclick = () => (ensureAudio(), runJob("api/analyze", {
-  date: $("#date").value, refresh: $("#optRefresh").checked, only_full: $("#optFour").checked, save: $("#optSave").checked }));
+  date: $("#date").value, refresh: $("#optRefresh").checked, only_full: $("#optFour").checked, only_ranked: $("#optRanked").checked, save: $("#optSave").checked }));
 $("#btnBackfill").onclick = () => {
   if (!confirm("최근 14일 기록을 모두 분석해서 누적에 저장할까요?\n이미 저장된 날짜도 다시 계산돼요.")) return;
-  runJob("api/backfill", { only_full: $("#optFour").checked, refresh: $("#optRefresh").checked });
+  runJob("api/backfill", { only_full: $("#optFour").checked, only_ranked: $("#optRanked").checked, refresh: $("#optRefresh").checked });
 };
 async function runJob(path, body) {
   if (!state?.has_key) return openSettings();
@@ -1921,7 +1915,7 @@ function renderDay(r, report, reveal) {
   const bg = mapUrl(r);
   $("#awards").innerHTML = `
     <div class="hero">${bg ? `<img class="hero-bg" src="${bg}" alt="" onerror="this.remove()">` : ""}
-    <div class="ceremony-head"><p>${dateLabel}, 같이 한 판 ${r.games_count}게임${r.solo_included ? " (솔로 판 포함)" : r.four_only ? " (4인 판만)" : ""}</p>
+    <div class="ceremony-head"><p>${dateLabel}, 같이 한 판 ${r.games_count}게임${r.solo_included ? " (솔로 판 포함)" : [r.four_only ? "4인 판만" : "", r.ranked_only ? "랭크만" : ""].filter(Boolean).map(x => ` (${x})`).join("")}</p>
       <h2>${esc(dayHeadline(r))}</h2></div>
     <div class="${reveal ? "reveal" : ""}">
       <div class="plaque"><div>
@@ -2806,51 +2800,12 @@ function aliveAt(t) {
   for (const a of A) { if (a[0] > t) break; v = a; }
   return v;
 }
-/* 킬 로그 (배그 화면처럼): [팀 번호] 쏜 사람 [무기 그림] (기절 표시) 맞은 사람 [팀 번호] */
-const WEAP_ICON = {
-  ar: "M1 6 6 4h6V3h18v1h9v1.5h-9V7h-8l-2 4h-3l1-4h-5l-2 2H6L4 8H1z",
-  sr: "M0 7l6-2h8v1l25-.4v1L16 7.4 12 8.5 5 9.5 0 9zM14 2.5h10v2H14z",
-  smg: "M6 5l4-1h16v1h6v1.5h-6v1h-6l-2 4.5h-3l1-4.5h-4l-2 2H7z",
-  sg: "M0 7l7-2h6v-.5h26V6H24v1.5h-8L14 8 7 9.5H0z",
-  pistol: "M12 3h16v3h-8l-1 1-1 5h-5l1-5-2-1z",
-  lmg: "M1 6 6 4h6V3h18v1h9v1.5h-9V7h-6l-2 4h-3l1-4h-7l-2 2H6L4 8H1zM33 6l-2 6h1.4l1.6-5zM35 6l2 6h-1.4l-1.6-5z",
-  throw: "M16 4h6l1 2h-2a5 5 0 1 1-6 0zM22 3h5v1.4h-5z",
-  melee: "M14 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zM18 6.2h20v1.6H18z",
-  boom: "M2 5h28v4H2zM30 4l8 3-8 3zM8 9h3l1 3H7z",
-  car: "M4 8l3-4h14l5 4h8v4H4zM9 12a2 2 0 1 0 0 .1zM28 12a2 2 0 1 0 0 .1z",
-  other: "M20 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM19 0h2v14h-2zM13 6h14v2H13z",
-};
-function weapCat(w) {
-  const n = String(w || "").toLowerCase();
-  if (!n) return "other";
-  if (/수류탄|grenade|몰로|molotov|c4|점착|sticky|연막|smoke|섬광|flash|throw/.test(n)) return "throw";
-  if (/판처|panzer|박격포|mortar|로켓|rocket|폭발|explo|레드존|red ?zone/.test(n)) return "boom";
-  if (/팬|pan|마체테|machete|낫|sickle|크로우|crowbar|주먹|punch|근접|melee/.test(n)) return "melee";
-  if (/차량|vehicle|uaz|dacia|buggy|brdm|오토바이|motor|트럭|truck|보트|boat|로드킬|roadkill|car/.test(n)) return "car";
-  if (/m249|dp-?28|mg3|lmg/.test(n)) return "lmg";
-  if (/kar98|awm|m24|mosin|win94|lynx|crossbow|석궁|vss|mini|sks|slr|mk14|mk12|qbu|dragunov|dmr|m110/.test(n)) return "sr";
-  if (/s1897|s686|s12k|dbs|o12|sawed|소드|샷건|shotgun/.test(n)) return "sg";
-  if (/p92|p1911|r1895|p18c|r45|deagle|데저트|skorpion|스콜피온|권총|pistol|flare|플레어/.test(n)) return "pistol";
-  if (/ump|vector|벡터|mp5|tommy|토미|uzi|우지|pp-?19|bizon|mp9|p90|js9/.test(n)) return "smg";
-  return "ar";
-}
-const weapIcon = w => `<svg class="kf-w" viewBox="0 0 40 14" aria-label="${esc(w || "")}"><title>${esc(w || "")}</title><path d="${WEAP_ICON[weapCat(w)]}"/></svg>`;
-const KNOCK_ICON = `<svg class="kf-k" viewBox="0 0 14 14" aria-label="기절"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="7" cy="7" r="1.8" fill="currentColor"/></svg>`;
-function rpTeamOf(name) {
+function rpTeamOf(name) {  // 적 이름 → 팀 번호
   const R = rp.data; if (!R) return null;
-  if (!R._teamOf) { R._teamOf = new Map((R.enemies || []).map(en => [en.n, en.tm])); }
+  if (!R._teamOf) R._teamOf = new Map((R.enemies || []).map(en => [en.n, en.tm]));
   return R._teamOf.get(name) ?? null;
 }
-function kfBox(tm, ours) { if (tm == null) return ""; return `<span class="kf-tn" style="--tc:${ours ? "#F2A900" : teamColor(tm)}">${tm}</span>`; }
-function killLine(e, k) {  // k: kill(우리가 처치) · knock(우리가 기절시킴) · died(우리가 죽음) · downed(우리가 기절당함)
-  const ourT = rp.data.our_team, mine = k === "kill" || k === "knock";
-  const atk = mine ? rpName(e.by) : (e.by || "?"), vic = mine ? (e.who || "?") : rpName(e.who);
-  const atkT = mine ? ourT : rpTeamOf(e.by), vicT = mine ? rpTeamOf(e.who) : ourT;
-  const atkC = mine ? rpCol(e.by) : "#FF8A7A", vicC = mine ? "#FF8A7A" : rpCol(e.who);
-  const kcb = (k === "died" || k === "downed") && e.x != null ? `<button class="kc-btn" type="button" data-kc="${rp.data.events.indexOf(e)}" title="죽기 직전 8초를 그 자리에서 다시 보기">킬캠</button>` : "";
-  return `<div class="kf ${mine ? "" : "bad"}" title="${esc([e.w, e.d ? e.d + "m" : ""].filter(Boolean).join(", "))}"><time>${mmss(e.t)}</time>
-    ${kfBox(atkT, mine)}<b style="color:${atkC}">${esc(atk)}</b>${e.w ? weapIcon(e.w) : ""}${k === "knock" || k === "downed" ? KNOCK_ICON : ""}<b style="color:${vicC}">${esc(vic)}</b>${kfBox(vicT, !mine)}${kcb}</div>`;
-}
+const foeTn = name => { const tm = rpTeamOf(name); return tm == null ? "" : `<span class="kf-tn" style="--tc:${teamColor(tm)}">${tm}</span>`; };
 function feedLine(e) {
   const c = rpCol(e.by), wd = [e.w, e.d ? e.d + "m" : ""].filter(Boolean).join(", ");
   if (e.k === "empick") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 비상호출</div>`;
@@ -2858,7 +2813,11 @@ function feedLine(e) {
   if (e.k === "hazard") return `<div class="${e.end ? "" : "bad"}"><time>${mmss(e.t)}</time><b style="color:${e.col}">${esc(e.name)}</b> ${e.end ? "사라짐" : "발생"}</div>`;
   if (e.k === "emlift") return `<div><time>${mmss(e.t)}</time><b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b> 비상호출 비행기 탑승</div>`;
   if (e.k === "transmit") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 블루칩 송신${e.est ? " (추정)" : ""} → <b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b></div>`;
-  if (e.k === "kill" || e.k === "knock" || e.k === "died" || e.k === "downed") return killLine(e, e.k);
+  const kcb = e.x != null ? `<button class="kc-btn" type="button" data-kc="${rp.data.events.indexOf(e)}" title="죽기 직전 8초를 그 자리에서 다시 보기">킬캠</button>` : "";
+  if (e.k === "kill") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 처치 ${foeTn(e.who)}${esc(e.who)} <small>${esc(wd)}</small></div>`;
+  if (e.k === "knock") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 기절시킴 ${foeTn(e.who)}${esc(e.who)} <small>${esc(wd)}</small></div>`;
+  if (e.k === "died") return `<div class="bad"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 사망, ${foeTn(e.by)}${esc(e.by)} <small>${esc(wd)}</small>${kcb}</div>`;
+  if (e.k === "downed") return `<div class="bad"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 기절당함, ${foeTn(e.by)}${esc(e.by)}${kcb}</div>`;
   if (e.k === "revive") return `<div class="good"><time>${mmss(e.t)}</time><b>${esc(rpName(e.by))}</b> → ${esc(rpName(e.who))} 소생</div>`;
   if (e.k === "recall") return `<div class="good"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 블루칩 복귀 착지</div>`;
   if (e.k === "board") return `<div class="good"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 블루칩 헬기 탑승</div>`;
@@ -4975,6 +4934,8 @@ $("#settingsForm").addEventListener("submit", async e => {
 /* '4인 판만'은 켜 둔 상태를 기억해 둠 */
 try { $("#optFour").checked = localStorage.getItem("ddc_four") === "1"; } catch {}
 $("#optFour").onchange = () => { try { localStorage.setItem("ddc_four", $("#optFour").checked ? "1" : "0"); } catch {} };
+try { $("#optRanked").checked = localStorage.getItem("ddc_ranked") === "1"; } catch {}
+$("#optRanked").onchange = () => { try { localStorage.setItem("ddc_ranked", $("#optRanked").checked ? "1" : "0"); } catch {} };
 $("#btnQuit").onclick = async () => {
   if (!confirm("프로그램을 종료할까요?")) return;
   try { await api("api/shutdown", {}); } catch {}
