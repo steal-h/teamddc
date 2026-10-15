@@ -277,6 +277,7 @@ dialog h3{margin:0 0 4px;font:400 24px/1.2 var(--display)}
 @media (max-width:640px){.three{grid-template-columns:1fr 1fr}.set-dlg .two{grid-template-columns:1fr}.set-body{height:min(560px,66vh);padding:14px 16px 6px}.set-head{padding:14px 16px 0}.set-dlg .dlg-actions{padding:10px 16px}}
 
 
+
 /* 공유 이미지 (캡처 전용) */
 #shareCard{width:1000px;background:var(--field);color:var(--bone);padding:40px 44px 30px;display:none}
 html.share-mode,html.share-mode body{background:var(--field)}
@@ -516,21 +517,32 @@ html.share-mode,html.share-mode body{background:var(--field)}
 /* ───── 화면 전환 ───── */
 .btn{transition:background .15s,border-color .15s,color .15s,transform .08s}
 .btn:active:not(:disabled){transform:scale(.97)}
-#tab-awards:not(.hidden),#tab-cum:not(.hidden){animation:fadein .28s ease-out}
-#awards.page-in>*{animation:fadeup .5s cubic-bezier(.2,.8,.2,1) both}
+/* 전환은 한 가지 말투로: 짧게(0.38초) 같은 곡선으로 미끄러지며 나타남. 탭은 누른 방향(왼쪽/오른쪽)에서 들어옴 */
+:root{--ease-in:cubic-bezier(.2,.8,.2,1);--t-in:.38s}
+#tab-awards:not(.hidden),#tab-cards:not(.hidden),#tab-cum:not(.hidden){animation:tabin var(--t-in) var(--ease-in) both}
+#cum.page-in>*{animation:fadeup .45s var(--ease-in) both}#cum.page-in>*:nth-child(2){animation-delay:.05s}#cum.page-in>*:nth-child(3){animation-delay:.1s}#cum.page-in>*:nth-child(n+4){animation-delay:.15s}
+@keyframes tabin{from{opacity:0;transform:translateX(var(--dx,0px))}to{opacity:1;transform:none}}
+.nav .btn[data-tab]{position:relative}
+.nav .btn[data-tab]::after{content:"";position:absolute;left:18%;right:18%;bottom:3px;height:2px;border-radius:2px;background:var(--accent);transform:scaleX(0);transition:transform .3s var(--ease-in)}
+.nav .btn[data-tab][aria-selected=true]::after{transform:scaleX(1)}
+#awards.page-in>*{animation:fadeup .45s var(--ease-in) both}
 #awards.page-in>*:nth-child(2){animation-delay:.05s}#awards.page-in>*:nth-child(3){animation-delay:.1s}
 #awards.page-in>*:nth-child(4){animation-delay:.15s}#awards.page-in>*:nth-child(5){animation-delay:.2s}
 #awards.page-in>*:nth-child(6){animation-delay:.25s}#awards.page-in>*:nth-child(7){animation-delay:.3s}
 #awards.page-in>*:nth-child(n+8){animation-delay:.35s}
-dialog[open]{animation:dlgin .22s cubic-bezier(.2,.8,.2,1)}
-dialog[open]::backdrop{animation:fadein .22s ease-out}
-.ceremony:not(.hidden),.replay:not(.hidden){animation:fadein .3s ease-out}
+dialog[open]{animation:dlgin var(--t-in) var(--ease-in)}
+dialog[open]::backdrop{animation:fadein var(--t-in) ease-out}
+dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{animation:fadeout .2s ease-in forwards}
+.ceremony:not(.hidden),.replay:not(.hidden){animation:ovin var(--t-in) var(--ease-in)}
+@keyframes ovin{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+@keyframes dlgout{to{opacity:0;transform:translateY(8px) scale(.98)}}
+@keyframes fadeout{to{opacity:0}}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 @keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@keyframes dlgin{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes dlgin{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){
   .stamp,.stamp::after{animation:none}
-  #awards.page-in>*,#tab-awards:not(.hidden),#tab-cum:not(.hidden),dialog[open],.ceremony:not(.hidden),.replay:not(.hidden){animation:none}
+  #awards.page-in>*,#cum.page-in>*,#tab-awards:not(.hidden),#tab-cards:not(.hidden),#tab-cum:not(.hidden),dialog[open],dialog.closing,.ceremony:not(.hidden),.replay:not(.hidden){animation:none}
   .step.active i{animation:none;border-top-color:var(--accent)}
 }
 
@@ -717,6 +729,33 @@ dialog[open]::backdrop{animation:fadein .22s ease-out}
   100%{opacity:1;transform:rotate(-5deg) scale(1)}}
 @keyframes shine{to{left:130%}}
 
+/* 그래프 점에 마우스를 대면 그날 점수 */
+.chart{position:relative}
+.lc-hit{cursor:pointer;outline:none}
+.lc-tip{position:absolute;transform:translate(-50%,calc(-100% - 10px));background:#15180F;border:1px solid var(--accent);color:var(--bone);font-size:12.5px;font-weight:700;padding:4px 9px;border-radius:6px;white-space:nowrap;pointer-events:none;z-index:5;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.lc-tip.below{transform:translate(-50%,12px)}.lc-tip.below::after{bottom:auto;top:-5px;transform:translateX(-50%) rotate(225deg)}
+.lc-tip::after{content:"";position:absolute;left:50%;bottom:-5px;width:8px;height:8px;background:#15180F;border-right:1px solid var(--accent);border-bottom:1px solid var(--accent);transform:translateX(-50%) rotate(45deg)}
+/* 무기별 성적 */
+.wst{display:flex;flex-direction:column;gap:7px}
+.wst>div{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:baseline}
+.wst b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.wst span{font:400 12px var(--num);color:var(--bone);white-space:nowrap}
+.wst small{grid-column:1/-1;display:flex;gap:8px;font-size:11px;color:var(--dust)}
+.wst i{grid-column:1/-1;display:block;height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+.wst i em{display:block;height:100%;background:linear-gradient(90deg,var(--wc,#F2A900),color-mix(in srgb,var(--wc,#F2A900) 60%,#fff));border-radius:3px}
+.wst .hs{color:#FFB4A2}
+.pc-wst{margin-top:10px}.pc-wst h5{margin:0 0 6px;font-size:12px;color:var(--dust);font-weight:700}
+/* 리플레이 킬캠: 위아래 검은 띠 + 붉은 가장자리 + 상단 설명 */
+.rp-stage::before,.rp-stage::after{content:"";position:absolute;left:0;right:0;height:0;background:#000;z-index:6;pointer-events:none;transition:height .45s cubic-bezier(.3,1,.4,1)}
+.rp-stage::before{top:0}.rp-stage::after{bottom:0}
+.rp-stage.kc::before,.rp-stage.kc::after{height:7%}
+.rp-stage.kc #rpCanvas{filter:saturate(.75) contrast(1.08)}
+.rp-kc{position:absolute;top:calc(7% + 10px);left:50%;transform:translateX(-50%);z-index:7;display:flex;align-items:center;gap:10px;padding:7px 10px 7px 14px;border-radius:10px;background:rgba(14,10,10,.82);border:1px solid rgba(224,83,47,.7);box-shadow:0 6px 20px rgba(0,0,0,.45);white-space:nowrap;max-width:calc(100% - 24px)}
+.rp-kc .kc-tag{color:#FF6A55;font-weight:900;letter-spacing:.06em;font-size:12px;animation:kcblink 1s steps(2) infinite}
+.rp-kc b{font-size:14px;overflow:hidden;text-overflow:ellipsis}
+@keyframes kcblink{50%{opacity:.35}}
+#rpFeed .kc-btn{margin-left:6px;padding:1px 7px;font-size:11px;border-radius:6px;border:1px solid rgba(224,83,47,.6);background:rgba(224,83,47,.15);color:#FFB4A2;cursor:pointer;font-weight:700}
+#rpFeed .kc-btn:hover{background:rgba(224,83,47,.35)}
 /* ───── 선수 카드 ───── */
 .cards-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin:6px 0 16px}
 .cards-head p{margin:0;color:var(--dust);flex:1}
@@ -1033,6 +1072,17 @@ html.share-mode .pc .beam,html.share-mode .pc .meteor,html.share-mode .pc .ldot{
   .medals,.cards{grid-template-columns:1fr}
 }
 #awards.veil{visibility:hidden}
+/* 휴대폰: 수상자 카드·상세 기록·선수 카드를 옆으로 넘기는 한 장씩 보기 (점 표시로 몇 번째인지) */
+.swipe-dots{display:none}
+@media (max-width:620px){
+  .medals.swipe,.cards.swipe,.pcgrid.swipe{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 -12px;padding:4px 12px 8px;scrollbar-width:none;overscroll-behavior-x:contain}
+  .medals.swipe::-webkit-scrollbar,.cards.swipe::-webkit-scrollbar,.pcgrid.swipe::-webkit-scrollbar{display:none}
+  .medals.swipe>*,.cards.swipe>*,.pcgrid.swipe>*{flex:0 0 86%;scroll-snap-align:center;scroll-snap-stop:always}
+  .cards.swipe .pcard{display:flex!important;flex-direction:column;grid-row:auto!important}
+  .swipe-dots{display:flex;justify-content:center;gap:6px;margin:4px 0 6px}
+  .swipe-dots i{width:7px;height:7px;border-radius:50%;background:var(--line);transition:width .25s,background .25s}
+  .swipe-dots i.on{width:20px;border-radius:4px;background:var(--accent)}
+}
 /* ───── 휴대폰 화면 (조회 사이트를 폰으로 볼 때) ───── */
 .hint-touch{display:none}
 @media (hover:none) and (pointer:coarse){.hint-pc{display:none}.hint-touch{display:inline}}
@@ -1226,6 +1276,7 @@ body.viewer .viewer-badge{display:inline-flex;align-items:center;gap:6px;padding
       <div class="rp-teams" id="rpTeams" aria-label="남은 팀 현황"></div>
       <div class="rp-phud-row"><div class="rp-phud" id="rpPhud" aria-label="팀원 상태"></div></div>
       <div class="rp-wipe" id="rpWipe"></div>
+      <div class="rp-kc" id="rpKc" hidden><span class="kc-tag">● 킬캠</span><b id="rpKcText"></b><button class="btn sm" id="rpKcExit" type="button">나가기</button></div>
       <div class="rp-sum" id="rpSum" hidden></div>
       <div class="rp-hud rp-hud-br"><span id="rpHazard"></span><span id="rpPhase"></span><span id="rpClock">00:00</span></div>
       <div class="rp-grp" id="rpGrpMain" aria-live="off"></div>
@@ -1428,9 +1479,14 @@ async function loadState() {
 }
 
 document.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => showTab(b.dataset.tab));
+let curTab = "awards";
 function showTab(name) {
-  document.querySelectorAll("[data-tab]").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === name));
+  const order = ["awards", "cards", "cum"], dir = Math.sign(order.indexOf(name) - order.indexOf(curTab));
+  if (name !== curTab) $("#tab-" + name).style.setProperty("--dx", `${dir * 28}px`);
+  curTab = name;
+  document.querySelectorAll(".nav [data-tab]").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === name));
   ["awards", "cards", "cum"].forEach(t => $("#tab-" + t).classList.toggle("hidden", name !== t));
+  if (name === "cum") { const c = $("#cum"); c.classList.remove("page-in"); void c.offsetWidth; c.classList.add("page-in"); }
   if (name === "cards") loadCards();
 }
 
@@ -1514,6 +1570,13 @@ function cardHtml(p, tag = "button") {
     <div class="pc-stats">${STATS.map(([k, l]) => `<div><span>${l}</span><b>${c.stats[k]}</b></div>`).join("")}</div>
     <div class="pc-foot">최근 14일, ${c.days}일 ${c.games}게임</div></${tag}>`;
 }
+function wstatsHtml(list, n = 3, col) {  // 무기별 성적: [이름, 킬, 기절, 피해, 맞힘, 머리] — 피해 막대 + 킬·기절·헤드샷 비율
+  const L = (list || []).slice(0, n); if (!L.length) return "";
+  const max = Math.max(1, ...L.map(q => q[3]));
+  return `<div class="wst"${col ? ` style="--wc:${col}"` : ""}>${L.map(([w, k, kn, d, h, hd]) => `<div><b>${esc(w)}</b><span>${fmt(d)} 피해</span>
+    <i><em style="width:${Math.max(3, d / max * 100)}%"></em></i>
+    <small><span>${k}킬</span><span>${kn}기절</span><span>${h}발 명중</span>${h ? `<span class="hs">헤드 ${Math.round(hd / h * 100)}%</span>` : ""}</small></div>`).join("")}</div>`;
+}
 async function loadCards() {
   $("#cards").innerHTML = `<div class="notice">카드를 만드는 중...</div>`;
   try { playersData = (await api("api/players")).players; } catch (e) { $("#cards").innerHTML = `<div class="notice error">${esc(e.message)}</div>`; return; }
@@ -1533,14 +1596,15 @@ async function loadCards() {
     card.addEventListener("pointerleave", () => { card.style.setProperty("--rx", "0deg"); card.style.setProperty("--ry", "0deg"); });
   });
 }
-function lineChart(points, {invert = false, min, max, h = 130, color = "#F2A900", labels = []} = {}) {
+function lineChart(points, {invert = false, min, max, h = 130, color = "#F2A900", labels = [], tips = []} = {}) {
   if (points.length < 2) return `<p class="who" style="margin:6px">기록이 2일 이상 쌓이면 그래프가 나와요.</p>`;
   const W = 560, pad = 22, lo = min ?? Math.min(...points), hi = max ?? Math.max(...points);
   const X = i => pad + i * (W - pad * 2) / (points.length - 1);
   const Y = v => { const k = hi === lo ? .5 : (v - lo) / (hi - lo); return invert ? 14 + k * (h - 32) : h - 18 - k * (h - 32); };
   const grid = labels.map(([v, t]) => `<line x1="${pad}" x2="${W - pad}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(183,179,156,.15)"/><text x="4" y="${Y(v) + 4}" font-size="10" fill="#B7B39C">${t}</text>`).join("");
   const poly = points.map((v, i) => `${X(i)},${Y(v)}`).join(" ");
-  const dots = points.map((v, i) => `<circle cx="${X(i)}" cy="${Y(v)}" r="3.5" fill="${color}"/>`).join("");
+  const dots = points.map((v, i) => `<circle cx="${X(i)}" cy="${Y(v)}" r="3.5" fill="${color}"/>`
+    + (tips[i] ? `<circle class="lc-hit" cx="${X(i)}" cy="${Y(v)}" r="11" fill="transparent" data-tip="${esc(tips[i])}" tabindex="0"/>` : "")).join("");
   return `<svg viewBox="0 0 ${W} ${h}" role="img">${grid}<polyline points="${poly}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"/>${dots}</svg>`;
 }
 const TIER_NAMES = ["동", "은", "금", "플래티넘", "다이아", "마스터", "서바이버"];
@@ -1576,9 +1640,10 @@ function openProfile(nick) {
         <div><small>누적 딜량</small><b>${fmt(Math.round(t.damage))}</b></div><div><small>치킨</small><b>${t.chickens}회</b></div>
       </div></div>
       <div class="prof-sec"><h4>점수 변화</h4><div class="chart">${(() => { const v = H.map(h => h.total), lo = Math.floor(Math.min(...v)), hi = Math.ceil(Math.max(...v));
-        return lineChart(v, {color: "#7FB2E5", min: lo, max: hi, labels: [[hi, hi + "점"], [lo, lo + "점"]]}); })()}</div></div>
+        return lineChart(v, {color: "#7FB2E5", min: lo, max: hi, labels: [[hi, hi + "점"], [lo, lo + "점"]],
+          tips: H.map(h => `${h.date.slice(5).replace("-", "/")} · ${sc(h.total)}점 · ${h.rank}위`)}); })()}</div></div>
       ${p.best_day ? `<div class="prof-sec"><h4>개인 최고의 날</h4><p style="margin:0">${esc(p.best_day.date)}, ${p.best_day.total}점, 판당 딜량 ${fmt(p.best_day.damage)}, ${p.best_day.kills}킬</p></div>` : ""}
-      ${p.weapons.length ? `<div class="prof-sec"><h4>주무기 순위</h4><div class="wlist">${p.weapons.map(([w, k, n]) => `<div><div><b>${esc(w)}</b> <span class="who">${k}킬 ${n}기절</span><i><em style="width:${(k + n) / maxW * 100}%"></em></i></div></div>`).join("")}</div></div>` : ""}
+      ${p.wstats?.length ? `<div class="prof-sec"><h4>무기별 성적 <span class="who">누적, 적에게 준 피해 순</span></h4>${wstatsHtml(p.wstats, 6)}</div>` : p.weapons.length ? `<div class="prof-sec"><h4>주무기 순위</h4><div class="wlist">${p.weapons.map(([w, k, n]) => `<div><div><b>${esc(w)}</b> <span class="who">${k}킬 ${n}기절</span><i><em style="width:${(k + n) / maxW * 100}%"></em></i></div></div>`).join("")}</div></div>` : ""}
       <div class="prof-sec"><h4>업적 <span class="who">${p.achievements.filter(a => a.date).length} / ${p.achievements.length}</span></h4>
         <div class="tier-sum">${[6, 5, 4, 3, 2, 1, 0].map(tr => { const all = p.achievements.filter(a => !a.tease && tierOf(a) === tr);
           return `<span class="ts t${tr}"><b>${all.filter(a => a.date).length}</b>/${all.length} ${TIER_NAMES[tr]}</span>`; }).join("")}</div>
@@ -1794,12 +1859,13 @@ function renderDay(r, report, reveal) {
     const m = p.metrics, t = p.totals, tl = p.tel;
     const row = (l, v) => `<dt>${l}</dt><dd>${v}</dd>`;
     const group = (title, rows) => `<section class="pc-grp"><h4>${title}</h4><dl class="stats">${rows.join("")}</dl></section>`;
+    const wsec = tl && tl.wstats?.length ? `<div class="pc-wst"><h5>무기별 성적</h5>${wstatsHtml(tl.wstats, 3)}</div>` : "";
     const telRows = tl ? group("세부 기록", [
         row("주무기", tl.main_weapon ? `${esc(tl.main_weapon)} <small>${tl.main_weapon_kills}킬</small>` : "-"),
         row("기절→킬 마무리", tl.convert_pct == null ? "-" : tl.convert_pct + "%"),
         row("최장거리 기절", tl.longest_knock + "m"),
         row("첫 교전 선공", tl.first_blood + "회"),
-        row("블루칩 살림 · 복귀", `${tl.bluechip ?? 0}명 · ${tl.recalled ?? 0}회`)]) : "";
+        row("블루칩 살림 · 복귀", `${tl.bluechip ?? 0}명 · ${tl.recalled ?? 0}회`)]).replace(/<\/section>$/, wsec + "</section>") : "";
     const bars = LABELS.map(([k, l]) => {
       const w = state.weights[k] || 1, v = p.parts[k] ?? 0, pct = Math.max(0, Math.min(100, v / w * 100));
       return `<div class="bar"><span>${l}</span><i><em style="width:${pct}%"></em></i><span>${v}</span></div>`;
@@ -1969,20 +2035,46 @@ function playBuf(k, vol = 1) {
   return true;
 }
 function setVolume(v) {
-  volume = v; if (master) master.gain.value = v; if (bgmEl) bgmEl.volume = Math.min(1, v * 0.5);
+  volume = v; if (master) master.gain.value = v; if (bgmEl && !bgmNode) bgmEl.volume = Math.min(1, v * 0.5); if (bgmNode) bgmNode.g.gain.value = v * .5;
   try { localStorage.setItem("ddc_vol", String(v)); } catch {}
 }
+let bgmNode = null;  // 배경음악을 WebAudio로 연결: 크기·먹먹함(저역 통과)·빠르기를 장면마다 조절
 function startBgm() {
   stopBgm(true);
   const url = state?.sounds?.bgm;
   if (!url || !$("#optSound").checked) return;
-  bgmEl = new Audio(url); bgmEl.loop = true; bgmEl.volume = Math.min(1, volume * 0.5);
+  bgmEl = new Audio(url); bgmEl.loop = true; bgmEl.preservesPitch = false;
+  bgmNode = null;
+  try {
+    ensureAudio();
+    if (audio) {
+      const src = audio.createMediaElementSource(bgmEl), lp = audio.createBiquadFilter(), g = audio.createGain();
+      lp.type = "lowpass"; lp.frequency.value = 18000; g.gain.value = volume * .5;
+      src.connect(lp).connect(g).connect(audio.destination); bgmNode = {lp, g};
+    }
+  } catch { bgmNode = null; }
+  if (!bgmNode) bgmEl.volume = Math.min(1, volume * 0.5);
   bgmEl.play().catch(() => {});
 }
+const BGM_SCENE = {  // [크기, 저역 통과 Hz(낮을수록 먹먹), 빠르기]
+  intro: [.5, 18000, 1], worst: [.3, 650, .94], third: [.4, 2400, 1], second: [.5, 6000, 1.02],
+  slot: [.58, 18000, 1.06], hit: [.12, 18000, 1.06], champ: [.7, 18000, 1], end: [.42, 9000, 1],
+};
+function bgmScene(name, sec = .8) {
+  const sc0 = BGM_SCENE[name]; if (!sc0 || !bgmEl) return;
+  const [v, fq, rate] = sc0;
+  try { bgmEl.playbackRate = rate; } catch {}
+  if (bgmNode && audio) {
+    const t = audio.currentTime, g = bgmNode.g.gain, f = bgmNode.lp.frequency;
+    g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(v * volume, t + sec);
+    f.cancelScheduledValues(t); f.setValueAtTime(f.value, t); f.exponentialRampToValueAtTime(fq, t + sec);
+  } else bgmEl.volume = Math.min(1, v * volume);
+}
 function stopBgm(now = false) {
-  const el = bgmEl; bgmEl = null;
+  const el = bgmEl, node = bgmNode; bgmEl = null; bgmNode = null;
   if (!el) return;
   if (now) { el.pause(); return; }
+  if (node && audio) { const t = audio.currentTime; node.g.gain.cancelScheduledValues(t); node.g.gain.setValueAtTime(node.g.gain.value, t); node.g.gain.linearRampToValueAtTime(0, t + 1.2); setTimeout(() => el.pause(), 1300); return; }
   const v0 = el.volume, t0 = performance.now();
   const f = t => { const k = Math.min(1, (t - t0) / 1200); el.volume = v0 * (1 - k); if (k < 1) requestAnimationFrame(f); else el.pause(); };
   requestAnimationFrame(f);
@@ -2026,6 +2118,26 @@ const sfx = {
   },
   ding(freq) { if (!soundOn() || playBuf("reveal")) return; const t = audio.currentTime; this.tone(freq, t, 0.7, 0.22); this.tone(freq * 2, t, 0.4, 0.06, "sine"); },
   boo() { if (!soundOn()) return; const t = audio.currentTime; [392, 370, 349, 262].forEach((f, i) => this.tone(f, t + i * 0.22, i === 3 ? 0.8 : 0.24, 0.16, "sawtooth")); },
+  heartbeat() {  // 워스트: 낮은 심장 소리 두 번
+    if (!soundOn() || !audio) return; const t = audio.currentTime;
+    for (const d of [0, .28, 1.1, 1.38]) this.tone(d % 1 ? 52 : 58, t + d, .22, .5, "sine");
+  },
+  riser(dur) {  // 1·2위 슬롯: 점점 올라가는 쉬익 소리
+    if (!soundOn() || !audio || !noiseBuf) return; const t = audio.currentTime;
+    const s = audio.createBufferSource(), f = audio.createBiquadFilter(), g = audio.createGain();
+    s.buffer = noiseBuf; s.loop = true; f.type = "bandpass"; f.Q.value = 6;
+    f.frequency.setValueAtTime(300, t); f.frequency.exponentialRampToValueAtTime(5000, t + dur);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.22, t + dur * .9); g.gain.exponentialRampToValueAtTime(.0001, t + dur + .05);
+    s.connect(f).connect(g).connect(master || audio.destination); s.start(t); s.stop(t + dur + .1);
+  },
+  boom() {  // 1위 등장: 낮게 울리는 쿵
+    if (!soundOn() || !audio) return; const t = audio.currentTime;
+    const o = audio.createOscillator(), g = audio.createGain(); o.type = "sine";
+    o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(38, t + .9);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.8, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + 1.2);
+    o.connect(g).connect(master || audio.destination); o.start(t); o.stop(t + 1.3);
+    this.noise(t, .4, .3, 600);
+  },
   tick(p = 1) { if (!soundOn() || playBuf("tick", .8)) return; this.tone(1800 * p, audio.currentTime, 0.04, 0.12, "square"); },
   slam() { if (!soundOn() || playBuf("stop")) return; const t = audio.currentTime; this.tone(90, t, 0.5, 0.6, "sine"); this.noise(t, 0.25, 0.5, 1200); },
   drumroll(sec) {
@@ -2105,6 +2217,7 @@ async function slotDecide(t, stage, top2) {
   await wait(500, t);
   const reel = $("#reel"), h = reel.firstElementChild.getBoundingClientRect().height, total = (seq.length - 1) * h;
   const D = reduceMotion ? 10 : 3500 + Math.random() * 700, s0 = performance.now(); let lastIdx = 0;
+  sfx.riser?.(D / 1000);
   await new Promise(res => {
     const f = now => {
       if (t !== showToken) return res();
@@ -2116,7 +2229,7 @@ async function slotDecide(t, stage, top2) {
     requestAnimationFrame(f);
   });
   if (t !== showToken) throw "skip";
-  $("#slot").classList.add("hit"); sfx.slam();
+  $("#slot").classList.add("hit"); sfx.slam(); bgmScene("hit", .08); setTimeout(() => bgmScene("slot", .6), 500);
   await wait(700, t);
 }
 
@@ -2268,6 +2381,26 @@ async function tierChange(scope, fx, cd, t) {  // 점수 발표 뒤: 효과 전�
   await wait(450, t);
   el?.classList.add("show");
 }
+async function placeCard(p, r, t, stage, row) {  // 4·3·2위 한 명씩: 사진 + 순위 + 상 + 이름 + 점수 (+ 등급 바뀜)
+  const worst = p.rank === 4, cd = (r.cards || {})[p.nick];
+  bgmScene(worst ? "worst" : p.rank === 2 ? "second" : "third");
+  if (worst) sfx.heartbeat?.();
+  const badges = { ...p, badges: (p.badges || []).filter(b => b.tone !== "bad") };  // 워스트 도장은 띄우지 않음
+  stage.innerHTML = `<div class="show-card enter ${worst ? "worst" : ""}">${avatar(p, "show") || medal(p.rank, "show-medal")}
+    <div class="show-rank">${p.rank}위</div><div class="show-award">${esc(p.award)}</div>
+    <div class="show-name">${esc(p.name)}</div><div class="show-score"><b>${sc(p.total)}</b> 점</div>${TierFX.slotHtml(cd)}
+    ${badgesHtml(badges)}</div>`;
+  const fx = cd ? TierFX.attach(stage.querySelector(".av"), cd.move ? (cd.prev_tier || cd.tier) : cd.tier) : null;  // 사진 둘레 등급 효과 (바뀌면 예전 등급부터)
+  sfx.ding(p.rank === 2 ? 659.25 : 523.25);
+  if (cd && cd.move) {  // 점수 발표 1초 뒤 등급 바뀜
+    await wait(1000, t);
+    await tierChange(stage, fx, cd, t);
+    await wait(p.rank === 2 ? 1900 : 2300, t);
+  } else await wait(worst ? 2300 : 1800, t);
+  row.insertAdjacentHTML("afterbegin", `<div class="show-mini enter">${avatar(p, "xs", false)}${medal(p.rank, "mini-medal")}<div><small>${p.rank}위</small><b>${esc(p.name)}</b></div></div>`);
+  stage.innerHTML = "";
+  await wait(300, t);
+}
 async function ceremony(r) {
   const t = ++showToken;
   const stage = $("#showStage"), row = $("#showRow");
@@ -2280,32 +2413,17 @@ async function ceremony(r) {
   $("#showReplay").classList.toggle("hidden", !bg);
   $("#showReplay").onclick = () => { closeShow(); if (bg) openReel(r.date); };
   try {
+    bgmScene("intro", .1);
     await ceremonyIntro(r, t, stage);
-    for (const p of r.ranking.slice(2).reverse()) {
-      const worst = p.rank === 4;
-      const cd = (r.cards || {})[p.nick];
-      stage.innerHTML = `<div class="show-card enter ${worst ? "worst" : ""}">${avatar(p, "show") || medal(p.rank, "show-medal")}
-        <div class="show-rank">${p.rank}위</div><div class="show-award">${esc(p.award)}</div>
-        <div class="show-name">${esc(p.name)}</div><div class="show-score"><b>${sc(p.total)}</b> 점</div>${TierFX.slotHtml(cd)}
-        ${(() => { const bad = worst && (p.badges || []).find(b => b.tone === "bad");
-          return bad ? `<div><span class="stamp bad">${esc(bad.text)}</span></div>` : badgesHtml(p); })()}</div>`;
-      const fx = cd ? TierFX.attach(stage.querySelector(".av"), cd.move ? (cd.prev_tier || cd.tier) : cd.tier) : null;  // 사진 둘레 등급 효과 (바뀌면 예전 등급부터)
-      sfx.ding(523.25);  // 3등과 4등 같은 효과음
-      if (cd && cd.move) {  // 점수 발표 1초 뒤 등급 바뀜
-        await wait(1000, t);
-        await tierChange(stage, fx, cd, t);
-        await wait(2300, t);
-      } else await wait(worst ? 2300 : 1800, t);
-      row.insertAdjacentHTML("afterbegin", `<div class="show-mini enter">${avatar(p, "xs", false)}${medal(p.rank, "mini-medal")}<div><small>${p.rank}위</small><b>${esc(p.name)}</b></div></div>`);
-      stage.innerHTML = "";
-      await wait(300, t);
-    }
+    for (const p of r.ranking.slice(2).reverse()) await placeCard(p, r, t, stage, row);
     const f = r.ranking[0];
     if (r.ranking.length > 1) {
+      bgmScene("slot");
       await slotDecide(t, stage, r.ranking.slice(0, 2));
       const s2 = r.ranking[1];
       row.insertAdjacentHTML("afterbegin", `<div class="show-mini enter">${avatar(s2, "xs", false)}${medal(2, "mini-medal")}<div><small>2위</small><b>${esc(s2.name)}</b></div></div>`);
     }
+    bgmScene("champ", .25); sfx.boom?.();
     sfx.fanfare();
     $("#showDone").classList.add("reserve");
     const big = (f.badges || []).find(b => b.tone === "fire" || b.tone === "record");
@@ -2329,6 +2447,7 @@ async function ceremony(r) {
       sfx.slam();
       await wait(900, t);
     } else await wait(2600, t);
+    bgmScene("end", 2);
     $("#showDone").classList.remove("hidden", "reserve");
     $("#showClose").focus();
   } catch { /* 건너뛰기 */ }
@@ -2599,6 +2718,7 @@ async function reelVideo(date, send, msgEl) {
 
 function closeReplay() {
   reelToken++;
+  if (rp.kc) rpKillcamEnd(false);
   cancelAnimationFrame(rp.raf); rp.data = null; rp.playing = false; rp.reel = null;
   $("#rpReel").classList.remove("on");
   $("#replay").classList.add("hidden");
@@ -2687,8 +2807,9 @@ function feedLine(e) {
   if (e.k === "transmit") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 블루칩 송신${e.est ? " (추정)" : ""} → <b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b></div>`;
   if (e.k === "kill") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 처치 ${esc(e.who)} <small>${esc(wd)}</small></div>`;
   if (e.k === "knock") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 기절시킴 ${esc(e.who)} <small>${esc(wd)}</small></div>`;
-  if (e.k === "died") return `<div class="bad"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 사망, ${esc(e.by)} <small>${esc(wd)}</small></div>`;
-  if (e.k === "downed") return `<div class="bad"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 기절당함, ${esc(e.by)}</div>`;
+  const kcb = e.x != null ? `<button class="kc-btn" type="button" data-kc="${rp.data.events.indexOf(e)}" title="죽기 직전 8초를 그 자리에서 다시 보기">킬캠</button>` : "";
+  if (e.k === "died") return `<div class="bad"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 사망, ${esc(e.by)} <small>${esc(wd)}</small>${kcb}</div>`;
+  if (e.k === "downed") return `<div class="bad"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 기절당함, ${esc(e.by)}${kcb}</div>`;
   if (e.k === "revive") return `<div class="good"><time>${mmss(e.t)}</time><b>${esc(rpName(e.by))}</b> → ${esc(rpName(e.who))} 소생</div>`;
   if (e.k === "recall") return `<div class="good"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 블루칩 복귀 착지</div>`;
   if (e.k === "board") return `<div class="good"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 블루칩 헬기 탑승</div>`;
@@ -3024,6 +3145,13 @@ function rpClampCam() {
 }
 function rpCamera(dt) {
   const R = rp.data;
+  if (rp.kc) {  // 킬캠: 쓰러진 팀원과 쏜 적을 함께 크게
+    const {v, a} = rpKillcamFocus(), pts = a ? [v, a] : [v];
+    const xs = pts.map(q => q[0]), ys = pts.map(q => q[1]);
+    const ts = Math.min(.3, Math.max(160 / R.size_m, Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) * 2));
+    const tx = (Math.min(...xs) + Math.max(...xs)) / 2, ty = (Math.min(...ys) + Math.max(...ys)) / 2, k = Math.min(1, dt * 3);
+    rp.cam.s += (ts - rp.cam.s) * k; rp.cam.x += (tx - rp.cam.x) * k; rp.cam.y += (ty - rp.cam.y) * k; rpClampCam(); return;
+  }
   if (rp.manual) { rpClampCam(); return; }  // 마우스로 직접 움직이는 중
   let tx = rp.cam.x, ty = rp.cam.y, ts = rp.cam.s;  // 따라갈 사람이 없을 땐 지금 화면 그대로 (갑자기 전체 지도로 줌아웃하지 않게)
   const split = rp.pip && rp.pip.on, inMain = p => !split || rp.pip.main.includes(p.nick);  // 분할 화면: 메인 화면은 메인 무리만
@@ -3159,7 +3287,30 @@ function rpDraw(dt, now, view) {
     const cx = X(h.x), cy = Y(h.y), rr = h.r * S;
     if (h.kind === "sand") rpSandZone(ctx, cx, cy, rr, now, h, pip);
     else if (h.kind === "emp") rpEmpZone(ctx, cx, cy, rr, now, h);
+    else if (h.kind === "snow") rpSnowZone(ctx, cx, cy, rr, now, h, pip);
     else rpRedZone(ctx, cx, cy, rr, now, pip, h);
+  }
+  if (rp.kc && !pip) {  // 킬캠 표시: 쓰러진 팀원 둘레 붉은 조준 고리 + 쏜 적 표시 + 둘을 잇는 선
+    const {v, a} = rpKillcamFocus(), e = rp.kc.e, vx = X(v[0]), vy = Y(v[1]), near = Math.max(0, 1 - Math.abs(rp.t - e.t) / 1.2);
+    ctx.save(); ctx.translate(vx, vy); ctx.rotate(now / 900);
+    for (let i = 0; i < 4; i++) { ctx.rotate(Math.PI / 2); ctx.beginPath(); ctx.arc(0, 0, 26 + near * 6, -.5, .5); ctx.strokeStyle = `rgba(255,90,70,${.7 + near * .3})`; ctx.lineWidth = 2.5; ctx.stroke(); }
+    ctx.restore();
+    if (a) {
+      const ax = X(a[0]), ay = Y(a[1]);
+      ctx.save(); ctx.setLineDash([6, 6]); ctx.lineDashOffset = -now / 40; ctx.strokeStyle = `rgba(255,120,90,${.35 + near * .5})`; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(vx, vy); ctx.stroke(); ctx.restore();
+      rpRing(ctx, ax, ay, 18, "rgba(255,200,120,1)", 2, .8);
+      ctx.font = "700 12px Pretendard, 'Malgun Gothic', sans-serif"; ctx.textAlign = "center"; rpLabel(ctx, e.by || "적", ax, ay - 28, "#FFC48A", .95);
+    }
+  }
+  for (const q of R.hz_hits || []) {  // 실제로 폭격·폭풍 피해를 받은 자리 (모든 선수): 레드존·블랙존은 폭발, 나머지는 작은 표시
+    const age = rp.t - q[0]; if (age < 0) break; if (age > 1.4) continue;
+    const bx = X(q[1]), by = Y(q[2]);
+    if (q[3] === "red" || q[3] === "black") {
+      if (age < .15) rpGlowC(ctx, bx, by, 30, "255,240,200", 1 - age / .15);
+      const a = 1 - age / 1.4; ctx.beginPath(); ctx.arc(bx, by, 4 + age * 18, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,140,50,${a * .55})`; ctx.fill();
+      rpRing(ctx, bx, by, 6 + age * 34, "rgba(255,220,180,1)", 1.5, a * .7);
+    } else rpRing(ctx, bx, by, 4 + age * 10, q[3] === "snow" || q[3] === "blizzard" ? "rgba(220,240,255,1)" : "rgba(255,200,120,1)", 1.5, 1 - age / 1.4);
   }
   // 첫 비행기 동선 (지도 끝에서 끝까지 점선 + 날아가는 비행기)
   const planesDrawn = [];  // 그린 비행기 (같은 비행기를 팀원 수만큼 겹쳐 그리지 않게)
@@ -3710,6 +3861,7 @@ function rpFightHide() {  // 자동 연출로 교전을 확대해 보는 동안:
 }
 function rpAuto() { return !!(rp.cine && rp.follow && !rp.manual); }  // 자동 카메라: 자동 연출 켜짐 + 카메라를 직접 움직이지 않음
 function rpTargetSpeed() {
+  if (rp.kc) { rp.focus = null; rp.focusHot = false; const d = rp.t - rp.kc.e.t; return d > -1.5 && d < .8 ? .3 : 1; }  // 킬캠: 실제 속도, 쓰러지는 순간만 느리게
   const C = rpCfg(), fs = C.fight_speed;
   let sp = rp.reel ? C.reel_speed : rp.speed;
   if (!rpAuto()) { rp.focus = null; return sp; }  // 직접 볼 때는 고른 배속 그대로 (교전 배속·빨리감기 없음)
@@ -4095,13 +4247,15 @@ const HZ_STYLE = {
   sand: {name: "모래폭풍", col: "#FFC48A", rgb: "196,140,70"},
   emp: {name: "EMP 존", col: "#E2D2FF", rgb: "150,90,255"},
   black: {name: "블랙존", col: "#C8C8C8", rgb: "40,40,40"},
+  snow: {name: "눈보라", col: "#DDEFFF", rgb: "200,225,255"},
 };
 function rpBuildHazards(R) {  // 기록된 방해 요소 → 구간들 [{kind, name, t0, t1, ser: [[t, x, y, r]]}] + 발생·사라짐 기록을 교전 기록에 넣음
   const series = [];
   const redKind = R.map === "Desert_Main" ? "sand" : "red";  // 미라마는 레드존 대신 모래폭풍 (25.1 패치)
   series.push([redKind, (R.zones || []).map(z => [z[0], z[7], z[8], z[9]])]);
   for (const [key, ser] of Object.entries(R.hz || {})) {
-    const k = key.toLowerCase(), kind = /sand|storm/.test(k) || R.map === "Desert_Main" ? "sand" : /emp|electro|magnet/.test(k) || R.map === "Neon_Main" ? "emp" : /black/.test(k) ? "black" : "red";
+    const k = key.toLowerCase(), kind = /blizzard|snow/.test(k) ? "snow" : /sand/.test(k) ? "sand" : /black/.test(k) ? "black" : /red/.test(k) ? "red"
+      : /emp|electro|magnet/.test(k) ? "emp" : /storm/.test(k) ? (R.map === "DihorOtok_Main" ? "snow" : "sand") : R.map === "Desert_Main" ? "sand" : R.map === "Neon_Main" ? "emp" : "red";
     series.push([kind, ser]);
   }
   const out = [];
@@ -4167,6 +4321,16 @@ function rpSandZone(ctx, cx, cy, rr, now, h, pip) {  // 미라마 모래폭풍: 
     ctx.beginPath(); ctx.moveTo(sx + ax * (L + 9), sy + ay * (L + 9)); ctx.lineTo(sx + ax * L - ay * 7, sy + ay * L + ax * 7); ctx.lineTo(sx + ax * L + ay * 7, sy + ay * L - ax * 7); ctx.fill(); ctx.restore();
   }
   rpHazardTag(ctx, h, cx, cy, rr);
+}
+function rpSnowZone(ctx, cx, cy, rr, now, h, pip) {  // 눈보라: 하얀 안개 + 흩날리는 눈 + 점선 테두리
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.clip();
+  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rr); g.addColorStop(0, "rgba(230,240,255,.42)"); g.addColorStop(1, "rgba(200,225,255,.22)"); ctx.fillStyle = g; ctx.fillRect(cx - rr, cy - rr, rr * 2, rr * 2);
+  const n = pip ? 30 : 90;
+  for (let i = 0; i < n; i++) { const u = (rpHash(i, 1) + now / 2600 * (.6 + rpHash(i, 2))) % 1, x = cx - rr + rpHash(i, 3) * rr * 2 + u * rr * .6, y = cy - rr + u * rr * 2;
+    ctx.fillStyle = `rgba(255,255,255,${.5 + rpHash(i, 4) * .5})`; ctx.fillRect(x, y, 2, 2); }
+  ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.setLineDash([8, 6]); ctx.lineDashOffset = -now / 50; ctx.strokeStyle = "rgba(225,240,255,.95)"; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore();
+  if (h) rpHazardTag(ctx, h, cx, cy, rr);
 }
 function rpEmpZone(ctx, cx, cy, rr, now, h) {  // 론도 EMP 존: 보랏빛 전자기장 + 안쪽에서 퍼지는 물결 + 튀는 번개
   ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2);
@@ -4328,7 +4492,7 @@ function rpFrame(now) {
   $("#rpSpd").textContent = (rpAuto() && rp.playing ? (rp.focusHot ? `교전 ${+rpCfg().fight_speed.toFixed(2)}배속` : `${Math.round(rp.curSpeed)}배속`) : "") + (rpFightHide() ? " · 동선 숨김" : "");
   if (rp.playing && !rp.dragging) {
     let nt = Math.min(R.duration, rp.t + dt * rp.curSpeed);
-    if (rpAuto() && !rp.reel && !rp.focusHot) {  // 빨리 가다가 교전(또는 교전 중 다음 총격) 시작을 건너뛰지 않게
+    if (rpAuto() && !rp.reel && !rp.focusHot && !rp.kc) {  // 빨리 가다가 교전(또는 교전 중 다음 총격) 시작을 건너뛰지 않게
       const f = rpFightAt(rp.t), nseg = f && f.segs.find(sg => sg[0] > rp.t), nf = rpUpcomingFight(rp.t), next = nseg ? nseg[0] : nf ? nf.t0 : null;
       if (next != null && nt >= next) { nt = next; rp.curSpeed = rpCfg().fight_speed; }
     }
@@ -4336,11 +4500,38 @@ function rpFrame(now) {
     if (rp.reel && rp.t >= rp.reel.end) { rp.t = rp.reel.end; rp.playing = false; }
     if (rp.t >= R.duration) { rp.playing = false; paintRpButtons(); if (!rp.reel) rpShowSummary(); }
   }
+  if (rp.kc && rp.t >= rp.kc.e.t + 2.5) rpKillcamEnd();  // 킬캠 끝 → 보던 자리로
   rpUpdatePip(now, dt);
   rpEvents(now); rpLegend(now); rpDraw(dt, now);
   if (rp.pip && rp.pip.on && rp.pip.cam) rpDraw(dt, now, {c: $("#rpPipCanvas"), cam: rp.pip.cam});  // 오른쪽 아래 보조 화면
   rp.raf = requestAnimationFrame(rpFrame);
 }
+/* 킬캠: 우리 팀원이 쓰러지거나 죽은 순간, 직전 8초를 그 사람 자리에서 다시 보기 (마지막 1.5초는 느리게) */
+function rpKillcam(e) {
+  const R = rp.data; if (!R || !e || e.x == null) return;
+  if (rp.kc) rpKillcamEnd(false);
+  rp.kc = {e, saved: {t: rp.t, playing: rp.playing, manual: rp.manual, follow: rp.follow, cam: {...rp.cam}}};
+  rp.manual = false; rp.follow = true; rp.t = Math.max(0, e.t - 8); rp.flashes = []; rp.playing = true;
+  const wd = [e.w, e.d ? e.d + "m" : ""].filter(Boolean).join(" · ");
+  $("#rpKcText").textContent = `${rpName(e.who)} ${e.k === "died" ? "사망" : "기절"} ← ${e.by || "?"}${wd ? " (" + wd + ")" : ""}`;
+  $("#rpKc").hidden = false; $(".rp-stage").classList.add("kc"); rpWipe(); ensureAudio(); paintRpButtons();
+}
+function rpKillcamEnd(restore = true) {
+  const k = rp.kc; if (!k) return; rp.kc = null;
+  $("#rpKc").hidden = true; $(".rp-stage").classList.remove("kc");
+  if (restore) { rp.t = k.saved.t; rp.playing = k.saved.playing; rp.manual = k.saved.manual; rp.follow = k.saved.follow; rp.cam = {...k.saved.cam}; rpWipe(); }
+  rp.flashes = []; paintRpButtons();
+}
+function rpKillcamFocus() {  // 킬캠 카메라 대상: 쓰러진 팀원 + 쏜 적
+  const R = rp.data, e = rp.kc.e, p = R.players.find(x => x.nick === e.who);
+  const v = (p && statusAt(p, rp.t) !== "dead" && curPos(p, rp.t)) || [e.x, e.y];
+  let a = e.ax != null ? [e.ax, e.ay] : null;
+  const en = (R.enemies || []).find(x => x.n === e.by);
+  if (en && en.tr.length && rp.t >= en.tr[0][0]) { const q = interp(en.tr, Math.min(rp.t, en.d ?? 1e9)); if (q) a = q; }
+  return {v, a};
+}
+$("#rpKcExit").onclick = () => rpKillcamEnd();
+$("#rpFeed").addEventListener("click", ev => { const b = ev.target.closest("[data-kc]"); if (b && rp.data) rpKillcam(rp.data.events[+b.dataset.kc]); });
 function rpNextFight() {  // '다음 교전' 버튼: 다음 교전이 시작되는 곳(첫 총격 fight_pre초 전)으로
   const f = (rp.fights || []).find(x => x.t0 > rp.t + 1);
   if (!f) return;
@@ -4707,8 +4898,47 @@ $("#settingsForm").addEventListener("submit", async e => {
 $("#btnQuit").onclick = async () => {
   if (!confirm("프로그램을 종료할까요?")) return;
   try { await api("api/shutdown", {}); } catch {}
-  document.body.innerHTML = `<div class="wrap"><div class="notice"><strong>프로그램을 종료했어요</strong>이 탭은 닫아도 돼요. 다시 쓰려면 2_실행.bat 을 실행하세요.</div></div>`;
+  window.close();  // 프로그램이 연 창이면 바로 닫힘
+  setTimeout(() => {  // 브라우저가 닫기를 막은 경우에만 안내
+    document.body.innerHTML = `<div class="wrap"><div class="notice"><strong>프로그램을 종료했어요</strong>브라우저가 창 닫기를 막았어요. 이 탭은 직접 닫아 주세요.</div></div>`;
+  }, 400);
 };
+
+/* 그래프 점 말풍선 */
+function lcTip(dot) {
+  const box = dot.closest(".chart"); if (!box) return;
+  let tip = box.querySelector(".lc-tip"); if (!tip) { tip = document.createElement("div"); tip.className = "lc-tip"; box.appendChild(tip); }
+  const r = dot.getBoundingClientRect(), b = box.getBoundingClientRect();
+  tip.textContent = dot.dataset.tip; tip.style.left = (r.left + r.width / 2 - b.left) + "px"; tip.style.top = (r.top + r.height / 2 - b.top) + "px"; tip.classList.toggle("below", r.top - b.top < 36); tip.hidden = false;
+}
+const lcHide = el => { const t = el.closest(".chart")?.querySelector(".lc-tip"); if (t) t.hidden = true; };
+document.addEventListener("mouseover", e => { const d = e.target.closest?.(".lc-hit"); if (d) lcTip(d); });
+document.addEventListener("mouseout", e => { const d = e.target.closest?.(".lc-hit"); if (d) lcHide(d); });
+document.addEventListener("focusin", e => { if (e.target.classList?.contains("lc-hit")) lcTip(e.target); });
+document.addEventListener("focusout", e => { if (e.target.classList?.contains("lc-hit")) lcHide(e.target); });
+/* 창 닫기도 같은 말투로: 0.2초 동안 살짝 내려가며 사라진 뒤 닫힘 */
+if (window.HTMLDialogElement && !reduceMotion) {
+  const nativeClose = HTMLDialogElement.prototype.close;
+  HTMLDialogElement.prototype.close = function (v) {
+    if (!this.open || this.classList.contains("closing")) return nativeClose.call(this, v);
+    this.classList.add("closing");
+    setTimeout(() => { this.classList.remove("closing"); nativeClose.call(this, v); }, 190);
+  };
+}
+/* 휴대폰 넘기기 보기: 카드 묶음이 화면에 그려질 때마다 자동으로 붙임 */
+function swipeify(el) {
+  if (el.dataset.swipe) return; el.dataset.swipe = 1; el.classList.add("swipe");
+  const n = el.children.length; if (n < 2) return;
+  const dots = document.createElement("div"); dots.className = "swipe-dots"; dots.setAttribute("aria-hidden", "true");
+  dots.innerHTML = Array.from({length: n}, (_, i) => `<i class="${i ? "" : "on"}"></i>`).join("");
+  el.after(dots);
+  let raf = 0;
+  el.addEventListener("scroll", () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => {
+    const w = el.firstElementChild?.getBoundingClientRect().width || 1, i = Math.round(el.scrollLeft / (w + 12));
+    [...dots.children].forEach((d, k) => d.classList.toggle("on", k === i)); }); }, {passive: true});
+}
+new MutationObserver(() => document.querySelectorAll(".medals:not([data-swipe]),.cards:not([data-swipe]),.pcgrid:not([data-swipe])").forEach(swipeify))
+  .observe(document.body, {childList: true, subtree: true});
 
 /* ───── 시작 ───── */
 const Q = new URLSearchParams(location.search);
