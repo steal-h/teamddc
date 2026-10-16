@@ -1357,6 +1357,9 @@ body.viewer .share-row .seg,body.viewer #btnCopyImg,body.viewer #btnSaveImg,body
   /* 수상자 상세 기록: 정확히 한 장씩 (옆 카드가 삐져나오지 않게) */
   .cards.swipe{margin:0!important;padding:4px 0 8px!important;gap:16px!important;scroll-padding:0}
   .cards.swipe>*{flex:0 0 100%!important;scroll-snap-align:start!important}
+  /* 선수 카드도 정확히 한 장씩 (카드는 가운데) */
+  .pcgrid.swipe{margin:0!important;padding:6px 0 10px!important;gap:16px!important;scroll-padding:0}
+  .pcgrid.swipe>*{flex:0 0 100%!important;scroll-snap-align:start!important;display:flex;justify-content:center}
   /* 하이라이트: 2열 카드 */
   .split .hl,.hl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);overflow:hidden}
   .hl li{grid-template-columns:1fr;gap:2px;padding:9px 10px;border-top:0!important;background:var(--panel);align-content:start}
@@ -3231,6 +3234,11 @@ const TEAM_ICONS = [
   ["46", "HUD 조준 틀", `<rect x="3" y="3" width="58" height="58" rx="6" fill="#0d1018"/><path d="M7 20 V7 H20 M44 7 H57 V20 M57 44 V57 H44 M20 57 H7 V44" fill="none" stroke="#3ff0ff" stroke-width="3"/><circle cx="13" cy="13" r="2" fill="#ff3b3b"/><path d="M24 48 H40" stroke="#3ff0ff" stroke-opacity=".5" stroke-width="1.4"/><text x="32" y="40" text-anchor="middle" ${TI_F} font-size="19" fill="#eee8d5">DDC</text>`],
   ["64", "한글 디디씨", `<rect x="3" y="3" width="58" height="58" rx="10" fill="#14170f" stroke="#3a402f" stroke-width="1.5"/><text x="32" y="22" text-anchor="middle" ${TI_F} font-size="7" letter-spacing="2.5" fill="#a9a68f">TEAM</text><text x="32" y="45" text-anchor="middle" font-family="'Black Han Sans','Malgun Gothic',sans-serif" font-weight="900" font-size="20" fill="#f2a900">디디씨</text>`],
 ];
+function foeDead(en, t, incl) {  // 적이 지금 죽어 있나: 마지막 죽음 뒤 + 블루칩으로 돌아오기 전까지 죽어 있던 구간
+  if (en.d != null && (incl ? t >= en.d : t > en.d)) return true;
+  for (const [a, b] of en.dz || []) if (t >= a && t < b) return true;
+  return false;
+}
 const teamIconSvg = id => { const t = TEAM_ICONS.find(x => x[0] === id); return t ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">${t[2]}</svg>` : ""; };
 function teamIconId() {  // 설정값: "" = 예전 아이콘, "daily" = 날마다 자동으로 바뀜, 그 밖 = 고른 번호
   const v = state?.team_icon || "";
@@ -3262,7 +3270,7 @@ function rpTeamBoard() {  // 남은 팀이 4팀 이하가 되면 화면 위에 �
   for (const p of R.players) add(R.our_team ?? -1, statusAt(p, rp.t));
   for (const en of R.enemies || []) {
     if (en.tm == null || en.tm === R.our_team) continue;
-    const dead = en.d != null && rp.t >= en.d, down = (en.kn || []).some(([x, y]) => rp.t >= x && rp.t < y);
+    const dead = foeDead(en, rp.t, true), down = (en.kn || []).some(([x, y]) => rp.t >= x && rp.t < y);
     add(en.tm, dead ? "dead" : down ? "down" : "ok");
   }
   let live = [...teams.values()].filter(o => o.m.some(s => s !== "dead"));
@@ -3426,7 +3434,7 @@ function rpMini(now) {  // 미니맵: 맵 전체 + 자기장 + 방해 요소 + �
   if (z && z.wr > 0) { x.beginPath(); x.arc(P(z.wx), P(z.wy), P(z.wr), 0, Math.PI * 2); x.strokeStyle = "#fff"; x.lineWidth = 1.4; x.stroke(); }
   for (const h of rpHazardsAt(rp.t)) { x.beginPath(); x.arc(P(h.x), P(h.y), Math.max(3, P(h.r)), 0, Math.PI * 2); x.fillStyle = `rgba(${h.rgb},.28)`; x.fill(); x.strokeStyle = h.col; x.lineWidth = 1.2; x.stroke(); }
   if (rp.foes) for (const en of R.enemies || []) {
-    if (!en.tr.length || rp.t < en.tr[0][0] || (en.d != null && rp.t > en.d)) continue;
+    if (!en.tr.length || rp.t < en.tr[0][0] || foeDead(en, rp.t)) continue;
     const q = interp(en.tr, rp.t); if (!q) continue;
     x.beginPath(); x.arc(P(q[0]), P(q[1]), 2, 0, Math.PI * 2); x.fillStyle = teamColor(en.tm || 0); x.fill();
   }
@@ -3637,7 +3645,7 @@ function rpCamera(dt) {
     if (rp.t - f.t0 < 3) {  // 교전 시작 3초: 상대 팀까지 담는 '설정 샷' (누구와 어디서 붙는지 먼저 보여 줌)
       const lim = 300 / R.size_m, ours = pts.slice();
       for (const en of R.enemies || []) {
-        if (!en.tr.length || rp.t < en.tr[0][0] || (en.d != null && rp.t > en.d)) continue;
+        if (!en.tr.length || rp.t < en.tr[0][0] || foeDead(en, rp.t)) continue;
         const q = interp(en.tr, rp.t); if (q && ours.some(o => Math.hypot(o[0] - q[0], o[1] - q[1]) < lim)) pts.push(q);
       }
     }
@@ -3679,7 +3687,7 @@ function rpCamera(dt) {
       rp.heatK = (rp.heatK ?? 0) + ((heat ? 1 : 0) - (rp.heatK ?? 0)) * Math.min(1, dt * (heat ? 1.5 : .6));
       let dmin = far, foe = null;
       for (const en of R.enemies || []) {
-        if (!en.tr.length || rp.t < en.tr[0][0] || (en.d != null && rp.t > en.d)) continue;
+        if (!en.tr.length || rp.t < en.tr[0][0] || foeDead(en, rp.t)) continue;
         const q = interp(en.tr, rp.t); if (!q) continue;
         for (const pp of pts) { const d = Math.hypot(q[0] - pp[0], q[1] - pp[1]); if (d < dmin) { dmin = d; foe = q; } }
       }
@@ -4116,7 +4124,7 @@ function rpDraw(dt, now, view) {
     ctx.font = "700 10px Pretendard, 'Malgun Gothic', sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     const foeCars = [], foePlanes = [];
     for (const en of R.enemies) {
-      if (!en.tr.length || rp.t < en.tr[0][0] || (en.d != null && rp.t > en.d)) continue;
+      if (!en.tr.length || rp.t < en.tr[0][0] || foeDead(en, rp.t)) continue;
       const q = interp(en.tr, rp.t); if (!q) continue;
       const x = X(q[0]), y = Y(q[1]); if (x < -20 || y < -20 || x > W + 20 || y > H + 20) continue;
       const r = big ? 8 : 4;
@@ -4779,7 +4787,7 @@ function rpBlinded(R, tb, ix, iy, foe) {  // 실명 표시는 확실한 경우�
   const hit = hp => { let before = 100; for (const h of hp || []) { if (h[0] <= tb) { before = h[1]; continue; } if (h[0] > tb + 4) break; if (h[1] < before - .5) return true; before = h[1]; } return false; };
   const push = (q, hp, o) => { if (!q) return; const d = Math.hypot(q[0] - ix, q[1] - iy) * R.size_m; if (d < Rb && hit(hp)) out.push({...o, d, dur: 2.6 + 2.4 * (1 - d / Rb)}); };
   if (foe) { for (const p of R.players) if (statusAt(p, tb) === "ok") push(posAt(p, tb), p.hp, {p}); }  // 적이 던진 섬광 → 우리 팀원
-  else for (const en of R.enemies || []) if (en.tr.length && tb >= en.tr[0][0] && (en.d == null || tb <= en.d)) push(interp(en.tr, tb), en.hp, {en});  // 우리가 던진 섬광 → 적
+  else for (const en of R.enemies || []) if (en.tr.length && tb >= en.tr[0][0] && !foeDead(en, tb)) push(interp(en.tr, tb), en.hp, {en});  // 우리가 던진 섬광 → 적
   R._blind.set(key, out); return out;
 }
 function rpBooms(R) {  // 흔들림을 줄 폭발들: [시각, x, y, 종류]
