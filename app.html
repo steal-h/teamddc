@@ -589,7 +589,7 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 .rp-phud-row{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;pointer-events:none;z-index:2;transition:right .35s}
 .rp-phud{position:static;display:flex;gap:8px;pointer-events:none;zoom:var(--hud,1);max-width:100%}
 .rp-teams{zoom:var(--teamz,1)}
-.rp-phud .ph{width:156px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:5px 9px;align-items:center;background:rgba(30,34,26,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px;transition:opacity .3s,filter .3s}
+.rp-phud .ph{width:196px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:5px 9px;align-items:center;background:rgba(30,34,26,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px;transition:opacity .3s,filter .3s}
 .rp-phud .ph .pic{width:44px;height:44px;border-radius:8px;grid-row:span 2;outline:2px solid var(--pc);outline-offset:0;object-fit:cover;background:var(--pc);display:grid;place-items:center;font:900 18px/1 Arial;color:#14170F}
 .rp-phud .ph .nm{font-size:13px;font-weight:800;display:flex;justify-content:space-between;gap:6px;white-space:nowrap;min-width:0}
 .rp-phud .ph .nm span{overflow:hidden;text-overflow:ellipsis}.rp-phud .ph .nm em{font-style:normal;color:#F2A900;flex:none}
@@ -3773,7 +3773,7 @@ function rpDraw(dt, now, view) {
   for (const q of R.hz_hits || []) {  // 실제로 폭격·폭풍 피해를 받은 자리 (모든 선수): 레드존·블랙존은 폭발, 나머지는 작은 표시
     const age = rp.t - q[0]; if (age < 0) break; if (age > (q[3] === "red" || q[3] === "black" ? 8 : 1.4)) continue;
     const bx = X(q[1]), by = Y(q[2]);
-    if (q[3] === "red" || q[3] === "black") rpBlast(ctx, bx, by, age, Math.max(.6, Math.min(1.6, S / 2000)), Math.round(q[0] * 10), pip);
+    if (q[3] === "red" || q[3] === "black") rpBlast(ctx, bx, by, age * .5, Math.max(.6, Math.min(1.6, S / 2000)), Math.round(q[0] * 10), pip);  // 실제 폭격 자리도 같은 속도로
     else rpRing(ctx, bx, by, 4 + age * 10, q[3] === "snow" || q[3] === "blizzard" ? "rgba(220,240,255,1)" : "rgba(255,200,120,1)", 1.5, 1 - age / 1.4);
   }
   // 첫 비행기 동선 (지도 끝에서 끝까지 점선 + 날아가는 비행기)
@@ -4599,8 +4599,9 @@ function fxFlash(c, x, y, a, s, W, H, onScreen) {  // FB-01 화이트아웃 + FB
   if (a < .1) F.hot(x, y, 50 * S, 1 - a / .1);
   F.ring(x, y, 70 * S * F.eo(F.clamp(a / .25)), "rgba(255,248,200,1)", 2 * Math.max(1, S), 1 - F.sst(.3, 1, a));
   F.hot(x, y, 90 * S, Math.max(0, 1 - a / 2.2));
-  const wa = Math.pow(Math.max(0, 1 - a / 1.1), 1.5) * onScreen;  // 화면 전체가 하얗게 (화면 밖이면 약하게)
-  if (wa > 0) { c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = `rgba(255,255,250,${wa * .92})`; c.fillRect(0, 0, c.canvas.width, c.canvas.height); c.restore(); }
+  const wa = Math.pow(Math.max(0, 1 - a / 1.1), 1.5);  // 터진 자리 둘레만 하얗게 (화면 전체는 그대로)
+  if (wa > 0) { const Rw = 120 * S, g = c.createRadialGradient(x, y, 0, x, y, Rw); g.addColorStop(0, `rgba(255,255,250,${wa * .95})`); g.addColorStop(.45, `rgba(255,255,245,${wa * .7})`); g.addColorStop(1, "rgba(255,255,240,0)");
+    c.save(); c.fillStyle = g; c.beginPath(); c.arc(x, y, Rw, 0, Math.PI * 2); c.fill(); c.restore(); }
 }
 function fxBlind(c, px, py, a, dur, r0) {  // FB-03 눈먼 사람: 하얀 후광 + 눈 가림 표시 + 시야가 돌아오기까지 막대
   const k = Math.max(0, Math.min(1, 1 - a / dur)); if (k <= 0) return;
@@ -4974,10 +4975,10 @@ function rpRedZone(ctx, cx, cy, rr, now, pip, h) {  // 레드존 (RZ-07, 바깥 
   const sc = Math.max(.55, Math.min(2.4, rr / 111)), black = h && h.kind === "black";
   ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.fillStyle = black ? "rgba(40,40,40,.22)" : "rgba(255,50,30,.1)"; ctx.fill(); ctx.restore();
   rpRing(ctx, cx, cy, rr, black ? "#CFCFCF" : "#FF5A46", 3, 1);
-  const rate = 2.2, slot = Math.floor(rp.t * rate);
-  for (let k = slot - Math.ceil(4.6 * rate); k <= slot; k++) {
+  const rate = 1.1, slow = .5, slot = Math.floor(rp.t * rate);  // 폭격 속도 절반: 떨어지는 간격 2배, 터지는 연출도 절반 속도
+  for (let k = slot - Math.ceil(4.6 / slow * rate); k <= slot; k++) {
     if (rpHash(k, 3) < .18) continue;  // 가끔 빈 박자
-    const age = rp.t - k / rate, an = rpHash(k, 1) * Math.PI * 2, d = Math.sqrt(rpHash(k, 2)) * rr * .9;
+    const age = (rp.t - k / rate) * slow, an = rpHash(k, 1) * Math.PI * 2, d = Math.sqrt(rpHash(k, 2)) * rr * .9;
     fxRzBlast(ctx, cx + Math.cos(an) * d, cy + Math.sin(an) * d, age, sc, k);
   }
   if (h) rpHazardTag(ctx, h, cx, cy, rr);
