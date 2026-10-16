@@ -2204,9 +2204,9 @@ function renderDay(r, report, reveal) {
       ${telRows || "<div></div>"}
       <section class="pc-grp"><h4>점수 구성</h4><div class="bars">${bars}</div></section>
       <div class="pc-notes">${p.penalty ? `<div class="penalty">감점 −${p.penalty}점: ${[
-        (t.teamkills || t.teamknocks) ? `팀킬·팀원 기절 ${(t.teamkills || 0) + (t.teamknocks || 0)}회 −${+((state.weights.teamkill_penalty ?? 10) * ((t.teamkills || 0) + (t.teamknocks || 0))).toFixed(1)}` : "",
-        t.suicides ? `자살 ${t.suicides}회 −${+((state.weights.suicide_penalty ?? 5) * t.suicides).toFixed(1)}` : "",
-        t.downed ? `기절당함 ${t.downed}회 −${+((state.weights.downed_penalty ?? .5) * t.downed).toFixed(1)}` : ""].filter(Boolean).join(", ")}</div>` : ""}
+        (t.teamkills || t.teamknocks) ? `팀킬·팀원 기절 ${(t.teamkills || 0) + (t.teamknocks || 0)}회` : "",
+        t.suicides ? `자살 ${t.suicides}회` : "",
+        t.downed ? `기절당함 ${t.downed}회` : ""].filter(Boolean).join(", ")}</div>` : ""}
       ${p.best ? `<div class="best">최고의 판: ${esc(p.best.map)}에서 딜 ${fmt(p.best.damage)}, ${p.best.kills}킬, ${p.best.rank}등</div>` : ""}</div>
       <section class="pc-grp pc-earn"><h4>칭호</h4>${badgesHtml(p, "left") || `<p class="pc-none">없음</p>`}</section>
       <section class="pc-grp pc-earn"><h4 class="newh">새 업적</h4>${(r.new_achievements?.[p.nick] || []).length ? `<div class="badges left">${r.new_achievements[p.nick].map(a => { const t = typeof a === "string" ? a : a.t, lv = typeof a === "string" ? 0 : (a.lv ?? 0);
@@ -3173,6 +3173,7 @@ function feedLine(e) {
   if (e.k === "emfail") return `<div class="bad"><time>${mmss(e.t)}</time><b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b> 비상호출 탑승 실패</div>`;
   if (e.k === "hazard") return `<div class="${e.end ? "" : "bad"}"><time>${mmss(e.t)}</time><b style="color:${e.col}">${esc(e.name)}</b> ${e.end ? "사라짐" : "발생"}</div>`;
   if (e.k === "emlift") return `<div><time>${mmss(e.t)}</time><b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b> 비상호출 비행기 탑승</div>`;
+  if (e.k === "ftransmit") return `<div><time>${mmss(e.t)}</time>${foeTn(e.by)}${esc(e.by)} 블루칩 송신 → ${esc(e.who)} 복귀</div>`;
   if (e.k === "transmit") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 블루칩 송신${e.est ? " (추정)" : ""} → <b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b></div>`;
   const kcb = e.x != null ? `<button class="kc-btn" type="button" data-kc="${rp.data.events.indexOf(e)}" title="죽기 직전 8초를 그 자리에서 다시 보기">킬캠</button>` : "";
   const kcw = e.x != null ? `<button class="kc-btn win" type="button" data-kc="${rp.data.events.indexOf(e)}" title="처치 직전 8초를 그 자리에서 다시 보기">킬캠</button>` : "";  // 우리가 잡은 장면
@@ -3984,9 +3985,10 @@ function rpDraw(dt, now, view) {
   }
   // 빛기둥: 블루칩 송신(파랑), 플레어건(빨강), 비상호출(노랑)
   for (const e of R.events) {
-    if (e.k !== "transmit") continue;
+    if (e.k !== "transmit" && e.k !== "ftransmit") continue;
     const age = rp.t - e.t; if (age < 0 || age > 8) continue;
-    rpBeam(ctx, X(e.x), Y(e.y), age, 8, "60,140,255", "110,190,255", `${rpName(e.by)} 블루칩 송신${e.est ? " (추정)" : ""}`, "#9FD4FF", now);
+    if (e.k === "ftransmit") rpBeam(ctx, X(e.x), Y(e.y), age, 8, "60,140,255", "110,190,255", `${e.tm ?? ""}팀 블루칩 송신`, teamColor(e.tm || 0), now, .8);  // 적 팀의 블루칩 송신
+    else rpBeam(ctx, X(e.x), Y(e.y), age, 8, "60,140,255", "110,190,255", `${rpName(e.by)} 블루칩 송신${e.est ? " (추정)" : ""}`, "#9FD4FF", now);
   }
   for (const [ft, fx, fy] of R.flares || []) {  // 플레어건: 쏜 자리에 빨간 기둥 (보급이 떨어질 곳)
     const age = rp.t - ft; if (age < 0 || age > 14) continue;
@@ -4128,8 +4130,8 @@ function rpDraw(dt, now, view) {
       const q = interp(en.tr, rp.t); if (!q) continue;
       const x = X(q[0]), y = Y(q[1]); if (x < -20 || y < -20 || x > W + 20 || y > H + 20) continue;
       const r = big ? 8 : 4;
-      const em = (en.em || []).find(a => rp.t >= a[0] && rp.t < a[2]), guessAir = !en.em && !en.vh && rpFoeInCar(en, rp.t) === "air";
-      if (em || guessAir) {  // 비상호출 비행기에 탄 적
+      const em = (en.em || []).find(a => rp.t >= a[0] && rp.t < a[2]) || (en.rc || []).find(a => rp.t >= a[0] && rp.t < a[2]), guessAir = !en.em && !en.vh && rpFoeInCar(en, rp.t) === "air";
+      if (em || guessAir) {  // 비상호출·블루칩 헬기에 탄 적 (내리면 낙하산)
         const col = teamColor(en.tm || 0);
         if (guessAir || rp.t < em[1]) {
           if (!foePlanes.some(o => o.tm === en.tm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 300)) {
