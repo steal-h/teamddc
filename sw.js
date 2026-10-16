@@ -1,7 +1,7 @@
 'use strict';
 // TEAM DDC 조회 전용 — 암호화된 파일을 받아서 브라우저 안에서만 풀어 주는 서비스 워커
 const SCOPE = new URL(self.registration.scope);
-const QP = {'api/day': 'date', 'api/moments': 'date', 'api/replay': 'id', 'api/map': 'code'};
+const QP = {'api/day': 'date', 'api/moments': 'date', 'api/replay': 'id', 'api/map': 'code', 'api/maprow': 'k'};
 let KEY = null, MAN = null, MAN_T = 0;
 function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('ddc-view',1);r.onupgradeneeded=()=>r.result.createObjectStore('k');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
 async function getKey(){
