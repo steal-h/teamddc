@@ -3367,6 +3367,7 @@ function rpDraw(dt, now, view) {
     else if (e.k === "died") cross(x, y, 8, "#E0532F", 3.5);
   }
   const M = S / R.size_m;  // 1m가 화면에서 몇 픽셀
+  rp._M = M;  // 효과 크기용 (판처파우스트·박격포 그림에서 씀)
   // 보급: 낙하산으로 내려오는 상자 → 착지 후 붉은 연기, 우리가 열면 '획득'
   for (let [st, lt, px, py, by0, bt, ot0, pk = ""] of R.packages || []) {
     if (lt - st < 3) st = lt - (pk === "b" ? 22 : 15);  // 떨어지기 시작한 기록이 없으면(착지 기록만 있음) 착지 전 몇 초를 낙하산으로
@@ -3418,17 +3419,12 @@ function rpDraw(dt, now, view) {
     }
   }
   // 연료통이 터진 곳: 불 웅덩이 + 불티 튀김 (12초)
-  for (const [jt, jx, jy] of R.jerries || []) {
-    const e = rp.t - jt; if (e < 0 || e > 12) continue;
-    const x2 = X(jx), y2 = Y(jy), fade = 1 - Math.max(0, (e - 10.8) / 1.2), R0 = Math.max(6 * M, 12) * Math.min(1, .3 + e / 1);
-    ctx.save(); ctx.translate(x2, y2 + 3); ctx.scale(1, .5); rpGlowC(ctx, 0, 0, R0 * 1.4, "255,100,20", .9 * fade); ctx.restore();
-    for (let k = 0; k < 9; k++) { const an = ((Math.sin((k + 1) * 3.7) * 43758.5) % 1 + 1) % 1 * Math.PI * 2, d = (((Math.sin((k + 1) * 9.1) * 43758.5) % 1 + 1) % 1) * R0;
-      rpTongue(ctx, x2 + Math.cos(an) * d, y2 + Math.sin(an) * d * .45 + 3, 9 * Math.max(.8, M), 6 * Math.max(.8, M), now / 85 + k, fade); }
-    for (let k = 0; k < 14; k++) { const q = (e * .8 + ((Math.sin((k + 1) * 5.3) * 43758.5) % 1 + 1) % 1) % 1;
-      ctx.beginPath(); ctx.arc(x2 - R0 + ((Math.sin((k + 1) * 7.7) * 43758.5) % 1 + 1) % 1 * R0 * 2 + Math.sin(q * 7 + k) * 4, y2 - q * R0 * 2.4, 1.6, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,192,96,${(1 - q) * fade})`; ctx.fill(); }
-    if (e < 3) drawBadge(ctx, "jerrycan", x2, y2 - R0 - 18, 24);
-    if (e < .35) for (let k = 0; k < 14; k++) { const an = k / 14 * Math.PI * 2, d = e / .35 * R0 * 1.5; ctx.beginPath(); ctx.arc(x2 + Math.cos(an) * d, y2 + Math.sin(an) * d, 1.7, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,210,122,${1 - e / .35})`; ctx.fill(); }
+  for (const [jt, jx, jy] of R.jerries || []) {  // 연료통 (FC-06): 총에 맞아 흔들리던 통이 터지며 크고 넓은 불길 + 바람 따라 길게 흐르는 검은 연기
+    const e = rp.t - jt; if (e < -1 || e > 12) continue;
+    const x2 = X(jx), y2 = Y(jy);
+    if (e < 0) { const j = (rpHash(Math.floor(rp.t * 40), 1) - .5) * 4 * Math.min(1, (e + 1) * 2); drawBadge(ctx, "jerrycan", x2 + j, y2, 26); continue; }  // 터지기 직전: 배그 연료통 그림이 덜덜
+    fxFuel(ctx, x2, y2, e, fxS(M, .26, .85), Math.round(jt * 10) % 997);
+    if (e < 2.5) drawBadge(ctx, "jerrycan", x2, y2 - 34 * fxS(M, .26, .85) - 16, 22);
   }
 
   // BRDM: 모두 내려도 세워 둔 자리에 계속 표시 (마지막으로 탄 팀 번호와 함께), 터지면 사라짐
@@ -3444,7 +3440,7 @@ function rpDraw(dt, now, view) {
   const allThrows = [...(R.throws || []).map(q => [q, 0]), ...(rp.foes ? (R.foe_throws || []).map(q => [q, 1]) : [])];  // 적이 우리 쪽으로 던진 것도
   allThrows.forEach(([[tt, tx, ty, who, kind, ix, iy, est, boomAt], foe], idx) => {
     const {FLY, fuse} = throwTiming(kind, boomAt);  // 실제로 터진 시각에 맞춰 날아감 (요리한 수류탄은 빨리), C4 타이머
-    const life = {grenade: 6, sticky: 6, c4: fuse + 6, molotov: 10, smoke: 28, flash: 2.5, bluezone: 7}[kind] || 6;
+    const life = {grenade: 6.5, sticky: 6.5, c4: fuse + 6.5, molotov: 10, smoke: 28, flash: 7, bluezone: 7}[kind] || 6;
     const age = rp.t - tt; if (age < 0 || age > FLY + life) return;
     const x1 = X(tx), y1 = Y(ty), x2 = X(ix), y2 = Y(iy), dist = Math.hypot(x2 - x1, y2 - y1), arc = Math.min(60, dist * .35 + 8);
     const rnd = k => ((Math.sin((idx + 1) * 12.9898 + k * 78.233) * 43758.5453) % 1 + 1) % 1;
@@ -3459,91 +3455,48 @@ function rpDraw(dt, now, view) {
       return;
     }
     const te = age - FLY, A = (a0, a1) => Math.max(0, Math.min(1, (te - a0) / (a1 - a0)));
-    if (kind === "c4") {  // C4: 삐-삐 타이머(점점 빨라짐) → 대폭발 + 흙먼지 고리 + 거대한 버섯구름 (이중 충격파 없음)
-      const R0 = Math.max(10 * M, 18);
+    const seed = Math.round(tt * 10) % 997 + idx;
+    if (kind === "c4") {  // C4 (C4-01): 붉은 불빛이 점점 빨리 깜빡이며 삐- 고리 → 하얀 섬광 뒤 큰 불덩이·흙먼지·파편·검은 연기
       if (te < fuse) {
-        const k = te / fuse, rate = 2 + k * 14, on = Math.floor(te * rate) % 2 === 0;
-        rpRing(ctx, x2, y2, R0 * (1.25 - k * .55), "rgba(255,59,59,1)", 2, .45 + (on ? .45 : 0), [4, 3]);
         drawBadge(ctx, "c4", x2, y2, 28);
-        if (on) { rpGlowC(ctx, x2 + 9, y2 - 11, 9, "255,40,40", 1); ctx.beginPath(); ctx.arc(x2 + 9, y2 - 11, 2.2, 0, Math.PI * 2); ctx.fillStyle = "#FF3B3B"; ctx.fill(); }
-        if (on) rpLabel(ctx, "삐-", x2 + 26, y2 - 20, "#FF8A7A", 1);
+        if (fxC4Timer(ctx, x2, y2, te, fuse)) rpLabel(ctx, "삐-", x2 + 26, y2 - 20, "#FF8A7A", 1);
         return;
       }
-      const e = te - fuse;
-      if (e < 3) {  // 그을린 자국
-        ctx.save(); ctx.globalAlpha = Math.min(1, e / .3) * (1 - Math.max(0, (e - 2.4) / .6)); ctx.translate(x2, y2 + 3); ctx.scale(1, .6);
-        const g = ctx.createRadialGradient(0, 0, 0, 0, 0, R0 * 1.1); g.addColorStop(0, "rgba(15,10,8,.85)"); g.addColorStop(1, "rgba(40,28,18,0)"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, R0 * 1.1, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-      }
-      if (e < .15) rpGlowC(ctx, x2, y2, R0 * 4, "255,250,230", 1 - e / .15);  // 강한 섬광
-      for (let k = 0; k < 14; k++) { const an = k / 14 * Math.PI * 2, d = R0 * (.6 + e * 1.9);  // 흙먼지 고리
-        if (e < 2.4) rpPuff(ctx, x2 + Math.cos(an) * d, y2 + Math.sin(an) * d * .7, R0 * (.35 + e * .2), 115, .5 * (1 - e / 2.4)); }
-      const up = Math.min(1, e / 1.8) * R0 * 2.3;  // 거대한 버섯구름
-      if (e < 3.4) {
-        for (let k = 0; k < 8; k++) rpPuff(ctx, x2 + Math.sin(k) * R0 * .1, y2 - up * k / 7, R0 * (.28 + e * .2), 45, .65 * (1 - e / 3.4));
-        rpPuff(ctx, x2, y2 - up - R0 * .4, R0 * (.75 + e * .45), 60, .75 * (1 - e / 3.4));
-        rpPuff(ctx, x2 - R0 * .55, y2 - up - R0 * .15, R0 * (.5 + e * .3), 55, .6 * (1 - e / 3.4));
-        rpPuff(ctx, x2 + R0 * .55, y2 - up - R0 * .15, R0 * (.5 + e * .3), 55, .6 * (1 - e / 3.4));
-      }
-      if (e < .8) { rpGlowC(ctx, x2, y2, R0 * 2, "255,120,30", .85 * (1 - e / .8)); rpGlowC(ctx, x2, y2, R0 * 1.2, "255,200,90", 1 - e / .8); rpGlowC(ctx, x2, y2, R0 * .5, "255,250,220", 1 - e / .6 > 0 ? 1 - e / .6 : 0); }
-      for (let k = 0; k < 20; k++) { const an = rnd(k) * Math.PI * 2, tt2 = Math.min(1, e / 1.1), d = R0 * 2.6 * (.5 + rnd(k + 9) * .7) * tt2;  // 파편
-        if (tt2 < 1) { ctx.save(); ctx.translate(x2 + Math.cos(an) * d, y2 + Math.sin(an) * d - Math.sin(Math.PI * tt2) * 12); ctx.rotate(e * 9 + k); ctx.globalAlpha = 1 - tt2; ctx.fillStyle = k % 3 ? "#3A2A1A" : "#FFB04D"; ctx.fillRect(-2, -1.2, 4, 2.4); ctx.restore(); } }
+      fxC4(ctx, x2, y2, te - fuse, fxS(M, .42, 1.05), seed);
       return;
     }
-    if (kind === "grenade" || kind === "sticky") {  // 이중 충격파 + 흙먼지 + 버섯구름
-      const boom = 1, t0 = kind === "grenade" ? .5 : .3;
+    if (kind === "grenade" || kind === "sticky") {  // 수류탄 (GR-01): 하얀 섬광 → 불덩이 → 흙먼지 고리 → 파편 → 충격파 → 연기 → 그을음·불씨
+      const t0 = kind === "grenade" ? .5 : .3;
       if (te < t0) { drawBadge(ctx, kind, x2, y2, 30); return; }
-      const e = te - t0, R0 = Math.max(7 * M, 12) * boom;
-      if (e < .12) rpGlowC(ctx, x2, y2, R0 * 1.6, "255,250,225", 1 - e / .12);
-      if (e < .9) { rpRing(ctx, x2, y2, R0 * (.4 + e * 2.6), "rgba(242,226,192,1)", 3, 1 - e / .9); rpRing(ctx, x2, y2, R0 * (.3 + e * 1.7), "rgba(255,176,77,1)", 2, 1 - e / .9); }
-      for (let k = 0; k < 9; k++) { const an = rnd(k) * Math.PI * 2, dd = R0 * (.5 + e * 1.4 * (.6 + rnd(k + 4) * .5));  // 흙먼지
-        if (e < 2.2) rpPuff(ctx, x2 + Math.cos(an) * dd, y2 + Math.sin(an) * dd * .7, R0 * (.3 + e * .25), 110, .45 * (1 - e / 2.2)); }
-      const up = Math.min(1, e / 1.5) * R0 * 1.6;  // 버섯구름: 기둥 + 머리
-      if (e < 3) { for (let k = 0; k < 6; k++) rpPuff(ctx, x2 + (k - 2.5) * R0 * .1, y2 - up * k / 5, R0 * (.25 + e * .2), 45, .6 * (1 - e / 3));
-        rpPuff(ctx, x2, y2 - up - R0 * .2, R0 * (.5 + e * .4), 60, .7 * (1 - e / 3)); }
-      if (e < .8) rpGlowC(ctx, x2, y2 - up * .6, R0 * .9, "255,130,40", .9 * (1 - e / .8));
-    } else if (kind === "molotov") {  // 번지는 불 + 불티 상승 + 위험 구역 표시
-      const grow = A(0, .6), fade = 1 - A(life - 1.2, life), R0 = Math.max(5.5 * M, 11) * grow;
-      rpRing(ctx, x2, y2, Math.max(5.5 * M, 11), "rgba(255,138,61,1)", 1.6, .9 * fade, [5, 4]);
-      ctx.beginPath(); ctx.arc(x2, y2, R0, 0, Math.PI * 2); ctx.fillStyle = `rgba(200,60,20,${.3 * fade})`; ctx.fill();
-      for (let k = 0; k < 12; k++) {
-        const an = rnd(k) * Math.PI * 2, rr = Math.sqrt(rnd(k + 9)) * R0, fl = .6 + .4 * Math.sin(now / (70 + k * 9) + k);
-        rpTongue(ctx, x2 + Math.cos(an) * rr, y2 + Math.sin(an) * rr * .6 + 3, (6 + fl * 6) * Math.max(.8, M * 1.1), 5 * Math.max(.8, M), now / 90 + k, fade);
-      }
-      for (let k = 0; k < 12; k++) { const q = (te * .6 + rnd(k + 30)) % 1;  // 불티
-        ctx.beginPath(); ctx.arc(x2 + (rnd(k + 40) - .5) * R0 * 1.6 + Math.sin(q * 8 + k) * 3, y2 - q * R0 * 2.2, 1.5, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,192,96,${(1 - q) * fade})`; ctx.fill(); }
-      if (te < 4) rpLabel(ctx, "화염", x2, y2 - Math.max(5.5 * M, 11) - 9, "#FFB070", fade * Math.min(1, (4 - te)));
-    } else if (kind === "smoke") {  // 뭉게구름 + 가려지는 범위 표시
-      const grow = A(.15, 1.8), fade = 1 - A(life - 3, life), R0 = Math.max(9 * M, 28);
-      [[-.5, .15, .55], [.45, .2, .5], [0, -.35, .62], [-.15, .4, .48], [.55, -.2, .42], [-.45, -.25, .44], [.15, .05, .58]].forEach(([dx, dy, r], k) => {
-        rpPuff(ctx, x2 + dx * R0 * grow, y2 + dy * R0 * grow, R0 * r * (.35 + .65 * grow), 225, .75 * fade); });  // 떨어진 자리에 그대로 (흘러가지 않음)
-      rpRing(ctx, x2, y2, R0 * 1.15, "rgba(218,218,212,1)", 1.4, .85 * fade, [5, 4]);
-      if (te < 6) rpLabel(ctx, "연막", x2, y2 - R0 * 1.15 - 9, "#E6E6E0", fade * Math.min(1, (6 - te) / 2));
+      fxGrenade(ctx, x2, y2, te - t0, fxS(M, .36, .95), seed);
+    } else if (kind === "molotov") {  // 화염병 (MO-01): 울퉁불퉁 번지는 불길 + 날름거리는 불꽃 혀 + 불씨 + 연기
+      const s2 = fxS(M, .2, .75), fade = 1 - A(life - 1.2, life);
+      fxMolotov(ctx, x2, y2, te, life, s2, seed);
+      if (te < 4) rpLabel(ctx, "화염", x2, y2 - 40 * s2 - 12, "#FFB070", fade * Math.min(1, (4 - te)));
+    } else if (kind === "smoke") {  // 연막 (SM-01 뭉게구름 / SM-07 입체 볼륨 중 하나, 모양은 매번 다르게)
+      const fade = 1 - A(life - 3, life), rr = fxSmoke(ctx, x2, y2, te, life, fxS(M, .2, .7), seed) || 0;
+      if (te < 6) rpLabel(ctx, "연막", x2, y2 - rr - 10, "#E6E6E0", fade * Math.min(1, (6 - te) / 2));
       if (te < .4) drawBadge(ctx, kind, x2, y2, 30);
-    } else if (kind === "flash") {  // 영향 범위 + 번쩍 + 노란 섬광·잔광
+    } else if (kind === "flash") {  // 섬광 (FB-01 화이트아웃 + FB-03 눈먼 사람 표시)
       if (te < .6) { drawBadge(ctx, kind, x2, y2, 30); return; }
-      const e = te - .6, Rr = Math.max(12 * M, 22);
-      if (e < 1.2) rpRing(ctx, x2, y2, Rr, "rgba(255,255,255,1)", 1.4, 1 - e / 1.2, [4, 4]);
-      if (e < .5) { ctx.beginPath(); ctx.arc(x2, y2, Rr, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,255,255,${.55 * (1 - e / .5)})`; ctx.fill(); }
-      if (e < 1.6) rpGlowC(ctx, x2, y2, Rr * 1.1 * Math.min(1, e / .2 + .3), "255,245,190", 1 - e / 1.6);
-      if (e < .25) rpGlowC(ctx, x2, y2, Rr * .5, "255,251,224", 1 - e / .25);
-    } else if (kind === "bluezone") {  // 블루존 수류탄: 지직거리는 육각 격자 (시안 08)
-      const fade = 1 - A(life - 1, life), R0 = Math.max(7 * M, 14) * A(.2, .6), hs = Math.max(5, R0 / 4.5), tick = Math.floor(now / 100);
-      if (R0 > 0) {
-        ctx.save(); ctx.beginPath(); ctx.arc(x2, y2, R0, 0, Math.PI * 2); ctx.clip();
-        ctx.fillStyle = `rgba(60,120,255,${.22 * fade})`; ctx.fillRect(x2 - R0, y2 - R0, R0 * 2, R0 * 2);
-        ctx.strokeStyle = `rgba(170,210,255,${.75 * fade})`; ctx.lineWidth = 1;
-        const n = Math.ceil(R0 / hs) + 1;
-        for (let r = -n; r <= n; r++) for (let q = -n; q <= n; q++) {
-          if (rnd(q * 31 + r * 7 + tick) < .5) continue;  // 칸마다 켜졌다 꺼졌다 (지직)
-          const cx = x2 + q * hs * 1.5, cy = y2 + r * hs * 1.73 + (Math.abs(q) % 2) * hs * .86;
-          ctx.beginPath(); for (let i = 0; i < 6; i++) { const an = i / 6 * Math.PI * 2; ctx.lineTo(cx + Math.cos(an) * hs, cy + Math.sin(an) * hs); } ctx.closePath(); ctx.stroke();
-        }
-        ctx.restore();
-        rpRing(ctx, x2, y2, R0, "rgba(156,200,255,1)", 1.5, fade);
+      const e = te - .6, sF = fxS(M, .21, .6), on = Math.max(0, 1 - Math.hypot(x2 - W / 2, y2 - H / 2) / Math.max(W, H)) * (foe ? .55 : 1);
+      if (e < 3.2) fxFlash(ctx, x2, y2, e, sF, W, H, pip ? on * .6 : on);
+      for (const b of rpBlinded(R, tt + FLY + .6, ix, iy)) {  // 터진 순간 가까이 있던 사람 (거리로 짐작한 실명 시간)
+        if (e > b.dur) continue;
+        const q = b.p ? curPos(b.p, rp.t) : interp(b.en.tr, rp.t); if (!q) continue;
+        if (b.en && !rp.foes) continue;
+        fxBlind(ctx, X(q[0]), Y(q[1]), e, b.dur, b.p ? 16 : (cam.s < .3 ? 10 : 6));
       }
+      if (e > .3 && e < 3) rpLabel(ctx, "실명 시간은 거리로 짐작", x2, y2 + 70 * sF + 12, "rgba(255,248,210,.8)", Math.min(1, (3 - e) / .5) * .85);
+    } else if (kind === "bluezone") {  // 블루존 수류탄 (BZ-08): 파란 전기장 + 1초마다 맥박 (맞은 사람과 피해량은 아래에서 기록 그대로)
+      fxBlueZone(ctx, x2, y2, te, life, fxS(M, .14, .55));
     }
     if (est && te < 2) { ctx.font = "600 10px Pretendard, sans-serif"; ctx.fillStyle = "rgba(238,232,213,.55)"; ctx.textAlign = "center"; ctx.fillText("추정 위치", x2, y2 + 18); }
   });
+  for (const q of R.bz_hits || []) {  // 블루존 수류탄에 실제로 맞은 사람: 맞은 자리·피해량 그대로 (BZ-08)
+    const a = rp.t - q[0]; if (a < 0) break; if (a > .85 || (q[4] && !rp.foes)) continue;
+    fxBzHit(ctx, X(q[1]), Y(q[2]), a, q[3], q[4]);
+  }
   // 기절·처치 순간: 맞은 자리에 퍼지는 고리만 (탄도선은 위에서 그리므로 선은 안 그림)
   rp.flashes = rp.flashes.filter(f => f.until > now);
   for (const f of rp.flashes) {
@@ -3556,19 +3509,13 @@ function rpDraw(dt, now, view) {
   // 박격포 궤적: 쏜 자리 → 높이 솟았다가 떨어진 자리 (실제 떨어진 시각에 맞춤), 떨어지면 폭발
   for (const [tf, fx, fy, ix, iy, ti, est, who, side] of R.mortars || []) {
     if (side && !rp.foes) continue;
-    const age = rp.t - tf; if (age < 0 || rp.t > ti + 3.7) continue;
-    const x1 = X(fx), y1 = Y(fy), x2 = X(ix), y2 = Y(iy), fly = Math.max(.5, ti - tf), arc = Math.min(160, Math.hypot(x2 - x1, y2 - y1) * .45 + 30);
-    if (rp.t < ti) {
-      const k = age / fly, col = side ? "255,110,90" : "200,180,255";
-      ctx.save(); ctx.setLineDash([4, 5]); ctx.lineWidth = 1.5; ctx.strokeStyle = `rgba(${col},${est ? .45 : .75})`; ctx.beginPath();  // 날아갈 길 (흐리게)
-      for (let i = 0; i <= 30; i++) { const u = i / 30, px = x1 + (x2 - x1) * u, py = y1 + (y2 - y1) * u - Math.sin(Math.PI * u) * arc; i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
-      ctx.stroke(); ctx.restore();
-      const px = x1 + (x2 - x1) * k, py = y1 + (y2 - y1) * k - Math.sin(Math.PI * k) * arc;
-      for (let j = 1; j <= 9; j++) { const kk = Math.max(0, k - j * .015); rpPuff(ctx, x1 + (x2 - x1) * kk, y1 + (y2 - y1) * kk - Math.sin(Math.PI * kk) * arc, 3.5 + j * .7, 175, .38 * (1 - j / 10)); }  // 연기 꼬리
-      rpGlowC(ctx, px, py, 14, "230,215,255", 1); ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2); ctx.fillStyle = "#fff"; ctx.fill();  // 흰 포탄 (굵게)
-      ctx.lineWidth = 1.2; ctx.strokeStyle = "rgba(60,50,90,.7)"; ctx.stroke();
-      ctx.beginPath(); ctx.arc(x2, y2, 9 + Math.sin(now / 120) * 2, 0, Math.PI * 2); ctx.strokeStyle = `rgba(${col},.6)`; ctx.lineWidth = 1.5; ctx.stroke();  // 떨어질 곳
-    } else rpMortarBoom(ctx, x2, y2, rp.t - ti, Math.round(tf));  // 폭발: 흙먼지 + 버섯구름
+    const age = rp.t - tf; if (age < 0 || rp.t > ti + 6) continue;
+    const x1 = X(fx), y1 = Y(fy), x2 = X(ix), y2 = Y(iy), fly = Math.max(.5, ti - tf), arc = Math.min(160, Math.hypot(x2 - x1, y2 - y1) * .45 + 30), col = side ? "255,110,90" : "200,180,255";
+    if (rp.t < ti) fxMortarFlight(ctx, x1, y1, x2, y2, age / fly, arc, col, est, 1);  // MT-05: 포물선 전체 + 큰 포탄
+    else {
+      const e = rp.t - ti; if (e < 1) fxMortarFlight(ctx, x1, y1, x2, y2, null, arc, col, est, 1 - e);
+      fxMortar(ctx, x2, y2, e, fxS(M, .36, .95), Math.round(tf) % 997);  // 폭발 (흔들림은 MT-01처럼 크게)
+    }
   }
   // 빛기둥: 블루칩 송신(파랑), 플레어건(빨강), 비상호출(노랑)
   for (const e of R.events) {
@@ -3628,6 +3575,7 @@ function rpDraw(dt, now, view) {
     const near = Math.min(Infinity, ...ground.filter(o => o !== g).map(o => Math.hypot(o.x - g.x, o.y - g.y)));
     const full = g.hasAv || g.inCar ? C.avatar_r : 7, small = Math.max(5, full * C.crowd_scale);
     g.r = near >= C.crowd_dist ? full : small + (full - small) * Math.max(0, (near - C.crowd_dist * .5) / (C.crowd_dist * .5));  // 가까울수록 작게 (부드럽게)
+    if (!isFinite(g.r)) g.r = full;
     rp.dispPos[g.p.nick] = [g.x, g.y]; rp.dispR[g.p.nick] = g.r;
   }
   const cars = [];  // 같은 차에 탄 팀원: 핸들 하나만 (운전자 색으로)
@@ -3821,7 +3769,7 @@ function rpDraw(dt, now, view) {
   // 맞힌 총알: 가는 탄도선 + 탄착 스파크 + 데미지 숫자 (폭발·화염은 투척 효과가 따로 그림)
   const HT = R.hits || [];
   let lo2 = 0, hi2 = HT.length;
-  while (lo2 < hi2) { const m = (lo2 + hi2) >> 1; if (HT[m][0] < rp.t - 3.6) lo2 = m + 1; else hi2 = m; }  // 박격포·로켓은 2초 남짓 그려서
+  while (lo2 < hi2) { const m = (lo2 + hi2) >> 1; if (HT[m][0] < rp.t - 6) lo2 = m + 1; else hi2 = m; }  // 박격포·로켓은 2초 남짓 그려서
   for (let hi = lo2; hi < HT.length && HT[hi][0] <= rp.t; hi++) {
     const [ht, ax, ay, vx, vy, kind, side, dmg] = HT[hi], age = rp.t - ht;
     if (ax == null || vx == null) continue;
@@ -3933,6 +3881,313 @@ function drawIcon(ctx, kind, x, y, sz, opened = false, spin = 0) {
   }
   ctx.restore();
 }
+/* ───── 효과 그림 도구 (이펙트 시안에서 고른 효과를 리플레이에 그대로 쓰려고 옮겨 옴) ─────
+   FX.go(ctx, s, t): 그릴 화면, 배율(시안 1칸 = s픽셀), 지금 시각(초, 깜빡임용). 그 뒤 FX.fireball(...) 처럼 씀 */
+const FX = (() => {
+/* ───── 공용 도구 (모든 시안이 같이 씀) ───── */
+const TAU = Math.PI * 2;
+let X, W = 4000, S = 1, T = 0, BG = null;                       // 캔버스, 칸 크기(px), 배율(W/320), 루프 안 시간(초), 지금 칸의 지도 그림
+const hh = (a, b = 0) => { const x = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return x - Math.floor(x); };
+const clamp = (v, a = 0, b = 1) => v < a ? a : v > b ? b : v;
+const lerp = (a, b, u) => a + (b - a) * u;
+const eo = u => 1 - Math.pow(1 - clamp(u), 3);
+const eo2 = u => 1 - Math.pow(1 - clamp(u), 2);
+const ei = u => Math.pow(clamp(u), 2);
+const sst = (a, b, v) => { const u = clamp((v - a) / (b - a)); return u * u * (3 - 2 * u); };
+const P = (t0, d) => clamp((T - t0) / d);                  // t0부터 d초 동안 0→1
+const bell = u => Math.sin(clamp(u) * Math.PI);            // 0→1→0
+function vn(x, y) {  // 부드러운 잡음
+  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  const r = (i, j) => hh(i * 1.731 + j * 57.13, 3.1);
+  return lerp(lerp(r(xi, yi), r(xi + 1, yi), u), lerp(r(xi, yi + 1), r(xi + 1, yi + 1), u), v);
+}
+const fbm = (x, y) => vn(x, y) * .55 + vn(x * 2.07 + 7.3, y * 2.07 + 3.1) * .3 + vn(x * 4.31 + 1.7, y * 4.31 + 9.2) * .15;
+
+/* 미리 그린 빛·연기 알갱이 */
+const SPR = {};
+function sprite(key, stops, fx = 64, fy = 64, r0 = 0) {
+  if (SPR[key]) return SPR[key];
+  const c = document.createElement("canvas"); c.width = c.height = 128;
+  const x = c.getContext("2d"), g = x.createRadialGradient(fx, fy, r0, 64, 64, 64);
+  stops.forEach(([o, col]) => g.addColorStop(o, col)); x.fillStyle = g; x.fillRect(0, 0, 128, 128);
+  return SPR[key] = c;
+}
+const sGlow = rgb => sprite("g" + rgb, [[0, `rgba(${rgb},1)`], [.35, `rgba(${rgb},.45)`], [1, `rgba(${rgb},0)`]]);
+const sFire = () => sprite("fire", [[0, "rgba(255,255,235,1)"], [.16, "rgba(255,226,130,.95)"], [.38, "rgba(255,140,40,.72)"], [.68, "rgba(205,55,12,.28)"], [1, "rgba(120,20,0,0)"]]);
+const sHot = () => sprite("hot", [[0, "rgba(255,255,255,1)"], [.25, "rgba(255,252,228,.85)"], [1, "rgba(255,230,170,0)"]]);
+function sSmoke(r, g, b) {  // 왼쪽 위가 밝은 둥근 연기 (입체감)
+  return sprite(`s${r},${g},${b}`, [[0, `rgba(${Math.min(255, r + 42)},${Math.min(255, g + 40)},${Math.min(255, b + 36)},1)`], [.45, `rgba(${r},${g},${b},.9)`],
+    [.78, `rgba(${Math.max(0, r - 14)},${Math.max(0, g - 14)},${Math.max(0, b - 14)},.42)`], [1, `rgba(${r},${g},${b},0)`]], 50, 46, 4);
+}
+function blit(sp, x, y, r, a = 1, op) {
+  if (a <= 0.003 || r <= .2) return;
+  X.globalAlpha = Math.min(1, a); if (op) X.globalCompositeOperation = op;
+  X.drawImage(sp, x - r, y - r, r * 2, r * 2);
+  X.globalAlpha = 1; if (op) X.globalCompositeOperation = "source-over";
+}
+const glow = (x, y, r, rgb, a = 1) => blit(sGlow(rgb), x, y, r, a);
+const addGlow = (x, y, r, rgb, a = 1) => blit(sGlow(rgb), x, y, r, a, "lighter");
+const fire = (x, y, r, a = 1) => blit(sFire(), x, y, r, a, "lighter");
+const hot = (x, y, r, a = 1) => blit(sHot(), x, y, r, a, "lighter");
+const puff = (x, y, r, rgb, a = 1) => { const [rr, gg, bb] = rgb; blit(sSmoke(rr, gg, bb), x, y, r, a); };
+function ring(x, y, r, col, lw, a = 1, dash, off = 0) {
+  if (a <= 0 || r <= 0) return;
+  X.save(); X.globalAlpha = Math.min(1, a); if (dash) { X.setLineDash(dash); X.lineDashOffset = off; }
+  X.beginPath(); X.arc(x, y, r, 0, TAU); X.strokeStyle = col; X.lineWidth = lw; X.stroke(); X.restore();
+}
+function disc(x, y, r, col, a = 1) { if (a <= 0 || r <= 0) return; X.globalAlpha = Math.min(1, a); X.beginPath(); X.arc(x, y, r, 0, TAU); X.fillStyle = col; X.fill(); X.globalAlpha = 1; }
+function shadow(x, y, rx, ry, a) { if (a <= 0) return; X.save(); X.globalAlpha = a; X.fillStyle = "#000"; X.beginPath(); X.ellipse(x, y, Math.max(.1, rx), Math.max(.1, ry), 0, 0, TAU); X.fill(); X.restore(); }
+function line(x0, y0, x1, y1, col, lw, a = 1, cap = "round") { if (a <= 0) return; X.globalAlpha = Math.min(1, a); X.strokeStyle = col; X.lineWidth = lw; X.lineCap = cap; X.beginPath(); X.moveTo(x0, y0); X.lineTo(x1, y1); X.stroke(); X.globalAlpha = 1; }
+function streak(x, y, ang, len, w, rgb, a = 1, op = "lighter") {  // 앞이 밝고 뒤로 사라지는 줄
+  if (a <= 0) return;
+  const x1 = x - Math.cos(ang) * len, y1 = y - Math.sin(ang) * len, g = X.createLinearGradient(x, y, x1, y1);
+  g.addColorStop(0, `rgba(${rgb},${Math.min(1, a)})`); g.addColorStop(1, `rgba(${rgb},0)`);
+  X.globalCompositeOperation = op; X.strokeStyle = g; X.lineWidth = w; X.lineCap = "round"; X.beginPath(); X.moveTo(x, y); X.lineTo(x1, y1); X.stroke(); X.globalCompositeOperation = "source-over";
+}
+function poly(pts, close = true) { X.beginPath(); pts.forEach((p, i) => i ? X.lineTo(p[0], p[1]) : X.moveTo(p[0], p[1])); if (close) X.closePath(); }
+function blobPath(x, y, r, seed, amp = .25, n = 36, t = 0, sx = 1, sy = 1) {  // 울퉁불퉁한 덩어리 모양
+  X.beginPath();
+  for (let k = 0; k <= n; k++) {
+    const a = k / n * TAU, rr = r * (1 + amp * (fbm(Math.cos(a) * 1.4 + seed, Math.sin(a) * 1.4 + t + seed * .3) - .5) * 2);
+    const px = x + Math.cos(a) * rr * sx, py = y + Math.sin(a) * rr * sy; k ? X.lineTo(px, py) : X.moveTo(px, py);
+  }
+  X.closePath();
+}
+function bolt(x0, y0, x1, y1, seed, disp = .35, it = 5) {  // 번개 모양 꺾은선
+  let pts = [[x0, y0], [x1, y1]];
+  for (let k = 0; k < it; k++) {
+    const n = [];
+    for (let i = 0; i < pts.length - 1; i++) {
+      const a = pts[i], b = pts[i + 1], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, o = (hh(seed * 31 + k * 7 + i, 5) - .5) * L * disp;
+      n.push(a, [(a[0] + b[0]) / 2 - dy / L * o, (a[1] + b[1]) / 2 + dx / L * o]);
+    }
+    n.push(pts[pts.length - 1]); pts = n;
+  }
+  return pts;
+}
+function glowPath(pts, w, rgb, a = 1, core = "255,255,255") {
+  if (a <= 0) return;
+  X.save(); X.globalCompositeOperation = "lighter"; X.lineCap = X.lineJoin = "round";
+  poly(pts, false); X.strokeStyle = `rgba(${rgb},${a * .22})`; X.lineWidth = w * 5; X.stroke();
+  X.strokeStyle = `rgba(${rgb},${a * .7})`; X.lineWidth = w * 2; X.stroke();
+  X.strokeStyle = `rgba(${core},${a})`; X.lineWidth = w * .7; X.stroke(); X.restore();
+}
+function bgPatch(cx, cy, r, k, a = 1) {  // 굴절: 원 안의 지도를 살짝 확대해 다시 그림 (열기·충격파 일그러짐)
+  if (!BG || !BG.complete || a <= 0) return;
+  X.save(); X.globalAlpha = a; X.beginPath(); X.arc(cx, cy, r, 0, TAU); X.clip();
+  X.translate(cx, cy); X.scale(k, k); X.translate(-cx, -cy); X.drawImage(BG, 0, 0, W, W); X.restore();
+}
+function bgRing(cx, cy, r0, r1, k, a = 1) {  // 고리 모양 굴절 (충격파 테두리만 일그러짐)
+  if (!BG || !BG.complete || a <= 0) return;
+  X.save(); X.globalAlpha = a; X.beginPath(); X.arc(cx, cy, r1, 0, TAU); X.arc(cx, cy, Math.max(0, r0), 0, TAU, true); X.clip("evenodd");
+  X.translate(cx, cy); X.scale(k, k); X.translate(-cx, -cy); X.drawImage(BG, 0, 0, W, W); X.restore();
+}
+function dim(a, col = "6,8,12") { X.fillStyle = `rgba(${col},${a})`; X.fillRect(-20, -20, W + 40, W + 40); }
+
+let _LC = null;
+function layer(a, fn) {  // 따로 그린 뒤 한 번에 투명도 적용 (겹친 테두리가 비치지 않게)
+  if (a <= 0) return; const c = X.canvas; if (!_LC) _LC = document.createElement("canvas");
+  if (_LC.width !== c.width || _LC.height !== c.height) { _LC.width = c.width; _LC.height = c.height; }
+  const L = _LC.getContext("2d"), X0 = X; L.setTransform(1, 0, 0, 1, 0, 0); L.clearRect(0, 0, c.width, c.height); L.setTransform(X0.getTransform());
+  X = L; try { fn(); } finally { X = X0; }
+  X0.save(); X0.setTransform(1, 0, 0, 1, 0, 0); X0.globalAlpha = Math.min(1, a); X0.drawImage(_LC, 0, 0); X0.restore();
+}
+function flame(x, y, h, a = 1, seed = 0) {  // 날름거리는 불꽃 혀: 아래는 넓고 위로 갈수록 가늘게 흔들림
+  if (a <= 0 || h <= .5) return;
+  const t = T * 8.5 + seed * 7.31, sw = Math.sin(t) * .2 + Math.sin(t * 1.83 + seed) * .12, k = h * (.8 + .2 * Math.sin(T * 12.7 + seed * 3.1));
+  fire(x, y - k * .1, k * .46, a * .95);
+  fire(x + sw * k * .22, y - k * .4, k * .33, a * .85);
+  fire(x + sw * k * .5, y - k * .68, k * .22, a * .7);
+  addGlow(x + sw * k * .78, y - k * .92, k * .13, "255,170,70", a * .55);
+}
+
+/* 아이템 그림 (실제 배그 아이템 그림) */
+const ICONS = {};
+function icon(name, x, y, size, rot = 0, a = 1) {
+  const im = ICONS[name]; if (!im || !im.complete || a <= 0) return;
+  X.save(); X.globalAlpha = a; X.translate(x, y); X.rotate(rot); X.drawImage(im, -size / 2, -size / 2, size, size); X.restore();
+}
+function man(x, y, col = "#F2A900", a = 1, r = 5.5) {  // 선수 표시
+  if (a <= 0) return;
+  X.globalAlpha = a; X.beginPath(); X.arc(x, y, r * S, 0, TAU); X.fillStyle = col; X.fill();
+  X.lineWidth = 1.6 * S; X.strokeStyle = "rgba(10,12,8,.85)"; X.stroke(); X.globalAlpha = 1;
+}
+function arcAt(x0, y0, x1, y1, u, h) { return [lerp(x0, x1, u), lerp(y0, y1, u), 4 * u * (1 - u) * h]; }  // 땅 위치 + 높이
+function txt(s, x, y, size, col, a = 1, weight = 800, align = "center") {
+  if (a <= 0) return;
+  X.save(); X.globalAlpha = a; X.font = `${weight} ${size}px 'Noto Sans KR', sans-serif`; X.textAlign = align; X.textBaseline = "middle";
+  X.lineWidth = Math.max(2, size * .22); X.strokeStyle = "rgba(10,10,8,.85)"; X.strokeText(s, x, y); X.fillStyle = col; X.fillText(s, x, y); X.restore();
+}
+
+/* 폭발 부품 */
+function fireball(x, y, age, size, seed, life = 1, n = 7) {  // 섬광 핵 → 여러 불덩이가 부풀며 붉게 식음 → 그 자리에서 회색 연기로 (연기는 불 아래에 깔림)
+  const u = age / life; if (u < 0 || u > 2.6) return;
+  const pos = j => { const an = hh(seed, j) * TAU, d = size * (.12 + .6 * eo(Math.min(1, u * 1.5))) * (.35 + hh(seed, j + 20) * .65); return [x + Math.cos(an) * d, y + Math.sin(an) * d, .7 + hh(seed, j + 40) * .5]; };
+  for (let j = 0; j < n; j++) {  // 연기 (불 뒤에서 피어남)
+    if (u < .45) break; const [bx, by, k] = pos(j), v = (u - .45) / 2.15, an = hh(seed, j) * TAU, r = size * (.6 + .8 * eo(Math.min(1, v * 1.8))) * k;
+    puff(bx + Math.cos(an) * size * .3 * v + size * .3 * v, by + Math.sin(an) * size * .3 * v - size * .4 * v, r, [104, 98, 92], .7 * clamp((u - .45) / .45) * (1 - sst(.45, 1, v)));
+  }
+  if (u < .28) hot(x, y, size * (.7 + u * 2.4), (1 - u / .28) * .95);
+  for (let j = 0; j < n; j++) {
+    if (u >= 1.15) break; const [bx, by, k] = pos(j), r = size * (.42 + .62 * eo(Math.min(1, u * 1.4))) * k;
+    if (u < 1) fire(bx, by, r, Math.pow(1 - u, .7) * 1.05);
+    if (u > .25) addGlow(bx, by, r * .85, "255,70,20", (1.15 - u) * .3);
+  }
+}
+function shock(x, y, age, dur, rmax, lw, rgb = "255,245,225", a = .85) { const u = age / dur; if (u < 0 || u > 1) return; ring(x, y, rmax * eo(u), `rgb(${rgb})`, lw * (1 - u * .7), a * (1 - u)); }
+function dustRing(x, y, age, dur, rmax, rgb = "150,126,96", w = 10) {  // 땅을 쓸고 퍼지는 흙먼지 고리
+  const u = age / dur; if (u < 0 || u > 1) return; const c = rgb.split(",").map(Number);
+  for (let j = 0; j < 20; j++) { const an = j / 20 * TAU + hh(j, 3) * .3, r = rmax * eo(u) * (.82 + hh(j, 4) * .3); puff(x + Math.cos(an) * r, y + Math.sin(an) * r, w * S * (.8 + u * 1.4), c, (1 - u) * .72); }
+}
+function shrapnel(x, y, age, n, seed, v, len, rgb = "255,210,140", life = .7) {
+  const u = age / life; if (u < 0 || u > 1) return;
+  for (let j = 0; j < n; j++) { const an = hh(seed, j + 60) * TAU, d = v * (.6 + hh(seed, j + 70) * .6) * eo2(u); streak(x + Math.cos(an) * d, y + Math.sin(an) * d, an, len * (1 - u * .5), 1.4 * S, rgb, 1 - u); }
+}
+function scorch(x, y, r, a, seed = 1) {
+  if (a <= 0) return;
+  X.save(); X.globalAlpha = a; blobPath(x, y, r, seed, .3, 30); const g = X.createRadialGradient(x, y, 0, x, y, r * 1.3);
+  g.addColorStop(0, "rgba(14,8,4,.95)"); g.addColorStop(.6, "rgba(28,16,8,.6)"); g.addColorStop(1, "rgba(40,22,10,0)"); X.fillStyle = g; X.fill(); X.restore();
+}
+function plume(x, y, age, seed, n, size, drift, shade = [112, 106, 100], life = 4, a0 = .62) {  // 피어오르는 연기 (바람에 흐름)
+  if (age < 0) return;
+  for (let j = 0; j < n; j++) {
+    const st = j * .18, u = (age - st) / life; if (u < 0 || u > 1) continue;
+    const px = x + drift * u * size + Math.sin(age * .7 + j) * size * .12 + (hh(seed, j) - .5) * size * .5, py = y - u * size * 1.4;
+    puff(px, py, size * (.35 + u * .9) * (.8 + hh(seed, j + 9) * .4), shade, a0 * bell(Math.min(1, u * 1.6)) * (1 - u * .4));
+  }
+}
+function embers(x, y, age, n, seed, spread, life = 2, rise = 1) {
+  for (let j = 0; j < n; j++) {
+    const st = hh(seed, j) * life * .6, u = (age - st) / life; if (u < 0 || u > 1) continue;
+    const an = hh(seed, j + 5) * TAU, d = spread * (.2 + hh(seed, j + 6) * .8) * (.3 + u * .7);
+    const ex = x + Math.cos(an) * d + Math.sin(age * 3 + j) * 3 * S, ey = y + Math.sin(an) * d * .7 - u * 26 * S * rise;
+    addGlow(ex, ey, 3.2 * S, "255,170,70", (1 - u) * (.6 + .4 * Math.sin(age * 20 + j)));
+  }
+}
+
+  return {go(c, s, t) { X = c; S = s; T = t; return S; }, TAU, hh, clamp, lerp, eo, eo2, ei, sst, bell, vn, fbm, sprite, blit, glow, addGlow, fire, hot, puff, ring, disc, shadow, line, streak, poly, blobPath, bolt, glowPath, flame, fireball, shock, dustRing, shrapnel, scorch, plume, embers, txt};
+})();
+/* ───── 리플레이 효과 (이펙트 시안에서 고른 것) ───── */
+const fxNow = () => performance.now() / 1000;
+function fxS(M, mpu, smin, smax = 4) { return Math.max(smin, Math.min(smax, (M || 0) * mpu)); }  // 시안 1칸 = 몇 픽셀 (실제 크기, 너무 작으면 최소 크기)
+function fxText(c, t, x, y, size, col, a) { if (a <= 0) return; c.save(); c.globalAlpha = Math.min(1, a); c.font = `900 ${size}px Pretendard, 'Malgun Gothic', sans-serif`; c.textAlign = "center"; c.textBaseline = "middle";
+  c.lineJoin = "round"; c.lineWidth = Math.max(3, size * .26); c.strokeStyle = "rgba(10,10,8,.9)"; c.strokeText(t, x, y); c.fillStyle = col; c.fillText(t, x, y); c.restore(); }
+function fxGrenade(c, x, y, a, s, seed) {  // GR-01 다단 폭발
+  const F = FX, S = F.go(c, s, fxNow()); if (a < 0 || a > 6) return;
+  if (a < 5) F.scorch(x, y, 14 * S, Math.min(1, a / .25) * (1 - a / 5) * .85, seed);
+  if (a < .08) F.hot(x, y, 44 * S, 1 - a / .08); F.dustRing(x, y, a, 1, 40 * S, "128,104,78", 7); F.fireball(x, y, a, 15 * S, seed, .8, 7);
+  F.shrapnel(x, y, a, 12, seed + 2, 54 * S, 10 * S, "255,210,140", .55); F.shock(x, y, a, .4, 46 * S, 2.4 * S);
+  F.plume(x, y, a - .3, seed, 5, 13 * S, .6, [112, 106, 100], 3.4, .5); F.embers(x, y, a - .1, 5, seed + 5, 12 * S, 2.2, .8);
+}
+function fxC4Timer(c, x, y, te, fuse) {  // C4-01 타이머: 붉은 불빛이 점점 빨리 깜빡 + 삐- 고리
+  const F = FX; F.go(c, 1, fxNow()); const k = Math.min(1, te / fuse), rate = 2 + k * 14, on = Math.floor(te * rate) % 2 === 0, bp = (te * rate) % 1;
+  F.ring(x, y, 8 + bp * 24, "rgba(255,80,60,1)", 1.6, (1 - bp) * .65);
+  if (on) { F.addGlow(x + 9, y - 11, 13, "255,40,30", 1); F.disc(x + 9, y - 11, 2.4, "#FF5040"); }
+  return on;
+}
+function fxC4(c, x, y, a, s, seed) {  // C4-01 대폭발: 섬광 → 큰 불덩이 → 흙먼지 → 파편 → 검은 연기
+  const F = FX, S = F.go(c, s, fxNow()); if (a < 0 || a > 6.5) return;
+  if (a < 6) F.scorch(x, y, 26 * S, Math.min(1, a / .3) * .9 * (1 - F.sst(4.2, 6, a)), seed);
+  if (a < .12) F.hot(x, y, 90 * S, 1 - a / .12);
+  F.dustRing(x, y, a, 1.3, 70 * S, "128,104,78", 11); F.fireball(x, y, a, 30 * S, seed + 5, 1.1, 9); F.shrapnel(x, y, a, 16, seed + 7, 90 * S, 14 * S, "255,210,140", .7);
+  F.shock(x, y, a, .5, 80 * S, 3 * S); F.plume(x, y, a - .4, seed + 9, 8, 26 * S, .5, [62, 58, 55], 3.2, .6); F.embers(x, y, a - .2, 10, seed + 3, 26 * S, 2.6, 1);
+}
+function fxMolotov(c, x, y, te, life, s, seed) {  // MO-01 번지는 불길: 울퉁불퉁 번지며 불꽃 혀가 날름 + 불씨 + 연기
+  const F = FX, S = F.go(c, s, fxNow()), g = F.eo(te / .6), f = 1 - F.sst(life - 1.2, life, te), R = 40 * S * g; if (f <= 0 || R < 1) return;
+  const area = k => F.blobPath(x, y + 2 * S, R * k, seed % 7 + 2, .28, 40, 0, 1.25, .85);
+  c.save(); area(1); c.fillStyle = `rgba(30,16,8,${.6 * f})`; c.fill(); c.restore();
+  c.save(); area(.9); const hg = c.createRadialGradient(x, y, 0, x, y, R * 1.2); hg.addColorStop(0, `rgba(255,110,30,${.42 * f})`); hg.addColorStop(1, `rgba(160,36,8,${.1 * f})`); c.fillStyle = hg; c.globalCompositeOperation = "lighter"; c.fill(); c.restore();
+  c.save(); c.globalCompositeOperation = "lighter"; const gl = c.createRadialGradient(x, y, 0, x, y, R * 1.8); gl.addColorStop(0, `rgba(255,120,40,${.35 * f})`); gl.addColorStop(1, "rgba(255,90,20,0)"); c.fillStyle = gl; c.fillRect(x - R * 1.8, y - R * 1.8, R * 3.6, R * 3.6); c.restore();
+  for (let i = 0; i < 26; i++) { const an = F.hh(i + seed * 31, 1) * F.TAU, d = Math.sqrt(F.hh(i + seed * 31, 2)) * R; F.flame(x + Math.cos(an) * d * 1.15, y + Math.sin(an) * d * .78, (11 + F.hh(i, 3) * 9) * S * (.45 + g * .55), .72 * f, i + seed); }
+  F.embers(x, y, te % 2.4, 8, seed, R, 2, 1.4); F.embers(x, y, (te + 1.2) % 2.4, 6, seed + 50, R, 2, 1.4);
+  for (let j = 0; j < 8; j++) { const u = (te * .26 + j / 8) % 1, sz = 14 * S;  // 계속 피어오르는 연기
+    F.puff(x + .6 * u * sz * 1.2 + Math.sin(te * .7 + j) * sz * .12 + (F.hh(seed, j) - .5) * sz * .5, y - 6 * S - u * sz * 1.6, sz * (.35 + u * .9), [70, 66, 62], .45 * f * F.bell(u) * Math.min(1, te / .8)); }
+}
+function fxSmoke(c, x, y, te, life, s, seed) {  // SM-01 뭉게구름 / SM-07 입체 볼륨 — 던질 때마다 둘 중 하나 + 모양(길쭉함·방향·덩어리 수·흘러감)이 매번 다름
+  const F = FX, S = F.go(c, s, fxNow()), g = F.eo(F.clamp((te - .15) / 2.2)), f = 1 - F.sst(life - 3, life, te); if (f <= 0 || g <= 0) return;
+  const h = k => F.hh(seed, k), kind = h(7) < .5 ? 0 : 1, sx = .82 + h(8) * .4, sy = .8 + h(9) * .32, rot = h(10) * F.TAU, cr = Math.cos(rot), sr = Math.sin(rot);
+  const dAn = h(13) * F.TAU, drift = Math.min(te, 14) * 1.1 * S, dx = Math.cos(dAn) * drift, dy = Math.sin(dAn) * drift, R = 62 * S * (.9 + h(14) * .25);
+  const P = (an, d) => { const ux = Math.cos(an) * d * sx, uy = Math.sin(an) * d * sy; return [x + ux * cr - uy * sr, y + ux * sr + uy * cr]; };
+  const t = fxNow();
+  if (kind === 0) {
+    const n = 26 + Math.floor(h(11) * 12), tone = 188 + Math.round(h(12) * 16);
+    for (let i = 0; i < n; i++) { const q = i + seed * 13, an = F.hh(q, 1) * F.TAU, d = Math.sqrt(F.hh(q, 2)) * R * g, [px, py] = P(an, d), k = F.hh(q, 3);
+      F.puff(px + Math.sin(t * .5 + i) * 4 * S + dx * k, py + Math.cos(t * .4 + i) * 3 * S + dy * k, (16 + F.hh(q, 4) * 14) * S * (.4 + g * .6) * (1 + (1 - f) * .4), [tone, tone - 2, tone - 8], .55 * f * Math.min(1, te * 1.2)); }
+  } else {
+    for (let layer = 0; layer < 4; layer++) { const sh = 140 + layer * 28, off = layer * 5 * S, k = (.45 + g * .55) * (1 - layer * .12);
+      for (let i = 0; i < 12; i++) { const q = i + layer * 20 + seed * 17, an = F.hh(q, 1) * F.TAU + t * .05 * (layer % 2 ? 1 : -1), d = Math.sqrt(F.hh(q, 2)) * R * g * (1 - layer * .15), [px, py] = P(an, d);
+        F.puff(px - off + dx * (layer / 3), py - off * 1.4 + dy * (layer / 3), (15 + F.hh(q, 4) * 10) * S * k, [sh, sh - 2, sh - 6], .6 * f * Math.min(1, te)); } }
+  }
+  return R * Math.max(sx, sy);
+}
+function fxFlash(c, x, y, a, s, W, H, onScreen) {  // FB-01 화이트아웃 + FB-03 번쩍 고리
+  const F = FX, S = F.go(c, s, fxNow()); if (a < 0 || a > 3.2) return;
+  F.ring(x, y, 70 * S, "rgba(255,250,220,1)", 1.4 * Math.max(1, S), (1 - F.sst(1.5, 3, a)) * .7, [4, 4]);
+  if (a < .1) F.hot(x, y, 50 * S, 1 - a / .1);
+  F.ring(x, y, 70 * S * F.eo(F.clamp(a / .25)), "rgba(255,248,200,1)", 2 * Math.max(1, S), 1 - F.sst(.3, 1, a));
+  F.hot(x, y, 90 * S, Math.max(0, 1 - a / 2.2));
+  const wa = Math.pow(Math.max(0, 1 - a / 1.1), 1.5) * onScreen;  // 화면 전체가 하얗게 (화면 밖이면 약하게)
+  if (wa > 0) { c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = `rgba(255,255,250,${wa * .92})`; c.fillRect(0, 0, c.canvas.width, c.canvas.height); c.restore(); }
+}
+function fxBlind(c, px, py, a, dur, r0) {  // FB-03 눈먼 사람: 하얀 후광 + 눈 가림 표시 + 시야가 돌아오기까지 막대
+  const k = Math.max(0, Math.min(1, 1 - a / dur)); if (k <= 0) return;
+  const F = FX; F.go(c, 1, fxNow());
+  F.addGlow(px, py, r0 + 12, "255,255,230", .55 * k + .2 * Math.sin(a * 12) * k);
+  c.save(); c.translate(px + r0 + 9, py - r0 + 2); c.fillStyle = "rgba(10,10,8,.7)"; c.beginPath(); c.arc(0, 0, 9, 0, Math.PI * 2); c.fill(); c.strokeStyle = "#FFFFFF"; c.lineWidth = 1.8; c.beginPath(); c.ellipse(0, 0, 7, 4, 0, 0, Math.PI * 2); c.stroke();
+  c.beginPath(); c.arc(0, 0, 1.9, 0, Math.PI * 2); c.fillStyle = "#FFFFFF"; c.fill(); c.strokeStyle = "#FF5A46"; c.lineWidth = 2.2; c.lineCap = "round"; c.beginPath(); c.moveTo(-7, -5); c.lineTo(7, 5); c.stroke(); c.restore();
+  c.fillStyle = "rgba(0,0,0,.65)"; c.fillRect(px - 12, py + r0 + 3, 24, 4); c.fillStyle = "#FFF1A8"; c.fillRect(px - 12, py + r0 + 3, 24 * k, 4);
+}
+function fxBlueZone(c, x, y, te, life, s) {  // BZ-08: 파란 전기장 + 1초마다 퍼지는 맥박
+  const F = FX, S = F.go(c, s, fxNow()), k = F.eo(F.clamp((te - .2) / .5)) * (1 - F.sst(life - 1, life, te)), R = 56 * S * k; if (k <= 0 || R < 1) return 0;
+  c.save(); c.beginPath(); c.arc(x, y, R, 0, Math.PI * 2); c.fillStyle = `rgba(40,110,255,${.16 * k})`; c.fill(); c.restore();
+  const tp = Math.max(0, te - .2) % 1; F.ring(x, y, R * F.eo(tp), "rgba(150,210,255,1)", 2 * Math.max(1, S * .8), (1 - tp) * k); F.ring(x, y, R, "rgba(140,200,255,1)", 1.8 * Math.max(1, S * .8), k);
+  return R;
+}
+function fxBzHit(c, x, y, a, dmg, side) {  // 블루존 수류탄에 실제로 맞은 순간: 파랗게 번쩍 + '-피해' 숫자 (기록 그대로)
+  if (a < 0 || a > .85) return; const F = FX; F.go(c, 1, fxNow());
+  if (a < .22) { F.addGlow(x, y, 18, "110,180,255", 1 - a / .22); F.ring(x, y, 7 + a * 40, "rgba(170,220,255,1)", 1.5, 1 - a / .22); }
+  fxText(c, "-" + dmg, x + 12, y - 12 - F.eo(a / .8) * 14, 14 * (a < .08 ? 1.3 - a / .08 * .3 : 1), side ? "#8EC2FF" : "#A6D6FF", 1 - F.sst(.5, .85, a));
+}
+function fxRocket(c, x, y, ang, s) {  // 날아가는 판처파우스트 로켓 (꼬리 불)
+  const F = FX; F.go(c, s, fxNow()); c.save(); c.translate(x, y); c.rotate(ang);
+  F.fire(-10 * s, 0, (6 + Math.random() * 2) * s, .95); F.addGlow(-9 * s, 0, 10 * s, "255,190,90", .7);
+  c.fillStyle = "#4D5A3A"; c.fillRect(-9 * s, -2 * s, 12 * s, 4 * s); c.fillStyle = "#6B7A4E"; c.beginPath(); c.ellipse(5 * s, 0, 6 * s, 4 * s, 0, 0, Math.PI * 2); c.fill();
+  c.fillStyle = "#2E3524"; c.beginPath(); c.moveTo(10 * s, 0); c.lineTo(6 * s, -3 * s); c.lineTo(6 * s, 3 * s); c.closePath(); c.fill(); c.restore();
+}
+function fxPanzer(c, tx, ty, an, a, s, seed) {  // PF-10 잔해 불길: 폭발 뒤 불붙은 파편이 날아온 방향 쪽으로 흩어져 각각 타며 연기, 그을음은 길쭉하게
+  const F = FX, S = F.go(c, s, fxNow()); if (a < 0 || a > 5.2) return;
+  if (a < 5) { c.save(); c.globalAlpha = (1 - a / 5) * .75; c.translate(tx, ty); c.rotate(an); const g = c.createRadialGradient(8 * S, 0, 0, 8 * S, 0, 30 * S); g.addColorStop(0, "rgba(14,8,4,.95)"); g.addColorStop(1, "rgba(30,16,8,0)"); c.fillStyle = g; c.beginPath(); c.ellipse(10 * S, 0, 30 * S, 14 * S, 0, 0, Math.PI * 2); c.fill(); c.restore(); }
+  if (a < .08) F.hot(tx, ty, 36 * S, 1 - a / .08); F.fireball(tx, ty, a, 13 * S, seed, .6, 6);
+  for (let j = 0; j < 9; j++) { const q = j + seed * 11, sp = (F.hh(q, 1) - .5) * 1.6, d = (16 + F.hh(q, 2) * 44) * S, gx = tx + Math.cos(an + sp) * d, gy = ty + Math.sin(an + sp) * d, u = F.clamp(a / .5);
+    const px = F.lerp(tx, gx, F.eo(u)), py = F.lerp(ty, gy, F.eo(u)) - 14 * S * F.bell(u), life = 2.5 + F.hh(q, 3) * 2, b = a - .5, k = b < 0 ? 1 : 1 - F.clamp(b / life);
+    c.save(); c.translate(px, py); c.rotate(a < .5 ? a * 10 + j : j); c.fillStyle = "#2C2A24"; c.fillRect(-3 * S, -2 * S, 6 * S, 4 * S); c.restore();
+    if (k > 0) { F.flame(px, py, 12 * S * (.35 + .65 * k), .88, q); if (b > 0) F.plume(px, py - 4 * S, b, q, 2, 5 * S, .6, [112, 106, 100], 2, .35 * k); } }
+}
+function fxMortar(c, x, y, a, s, seed) {  // 박격포 폭발 (MT-05/01): 섬광 → 흙먼지 고리 → 큰 불덩이 → 파편 → 충격파 → 연기
+  const F = FX, S = F.go(c, s, fxNow()); if (a < 0 || a > 6) return;
+  if (a < 6) F.scorch(x, y, 16 * S, Math.min(1, a / .25) * (1 - a / 6) * .85, seed);
+  if (a < .09) F.hot(x, y, 54 * S, 1 - a / .09); F.dustRing(x, y, a, 1.2, 52 * S, "128,104,78", 9); F.fireball(x, y, a, 19 * S, seed, .9, 8);
+  F.shrapnel(x, y, a, 12, seed, 60 * S, 11 * S, "255,205,140", .6); F.shock(x, y, a, .45, 56 * S, 2.6 * S); F.plume(x, y, a - .3, seed, 6, 16 * S, .5, [112, 106, 100], 3.4, .55);
+}
+function fxFuel(c, x, y, a, s, seed) {  // FC-06 검은 연기 기둥 (불길은 크고 넓게): 터진 뒤 넓게 타오르는 불 + 바람 따라 길게 흐르는 시커먼 연기 + 그을음 자국
+  const F = FX, S = F.go(c, s, fxNow()), fade = 1 - F.sst(10.6, 12, a), wind = [1, -.35]; if (a < 0 || fade <= 0) return;
+  for (let j = 0; j < 6; j++) F.scorch(x + wind[0] * j * 15 * S, y + wind[1] * j * 15 * S, (14 - j * 1.4) * S, .4 * F.clamp(a / (1 + j * .4)) * fade, seed + j);
+  if (a < .1) F.hot(x, y, 46 * S, 1 - a / .1); F.fireball(x, y, a, 16 * S, seed, .6, 7);
+  c.save(); c.globalCompositeOperation = "lighter"; const gl = c.createRadialGradient(x, y, 0, x, y, 46 * S); gl.addColorStop(0, `rgba(255,120,40,${.4 * fade * F.clamp(a / .3)})`); gl.addColorStop(1, "rgba(255,90,20,0)"); c.fillStyle = gl; c.fillRect(x - 46 * S, y - 46 * S, 92 * S, 92 * S); c.restore();
+  const grow = F.eo(F.clamp(a / .8));
+  for (let j = 0; j < 16; j++) { const q = j + seed * 7, an = F.hh(q, 1) * F.TAU, d = Math.sqrt(F.hh(q, 2)) * 26 * S * grow;  // 크고 넓은 불길
+    F.flame(x + Math.cos(an) * d * 1.25, y + Math.sin(an) * d * .75, (20 + F.hh(q, 3) * 14) * S * (.5 + .5 * grow), .82 * fade * F.clamp(a / .2), q); }
+  F.embers(x, y, a % 2.4, 8, seed, 22 * S, 2, 1.5);
+  for (let j = 0; j < 24; j++) { const u = (a * .29 + j / 24) % 1, born = a - u / .29; if (born < 0) continue;  // 바람 따라 길게 흐르는 검은 연기 (계속)
+    const px = x + wind[0] * u * 130 * S + Math.sin(a + j) * 6 * S, py = y - 6 * S + wind[1] * u * 130 * S - u * 12 * S;
+    F.puff(px, py, (10 + u * 26) * S, [40, 37, 35], .9 * Math.min(1, u * 9) * (1 - F.sst(.55, 1, u)) * fade); }
+}
+function fxRzBlast(c, x, y, age, s, k) {  // RZ-07 폭격: 섬광 → 불덩이 → 충격파 → 연기 → 그을음
+  const F = FX, S = F.go(c, s, fxNow()); if (age < 0 || age > 4.6) return;
+  if (age < 4) F.scorch(x, y, 8 * S, (1 - age / 4) * .7, k);
+  if (age < .1) F.hot(x, y, 38 * S, 1 - age / .1); F.fireball(x, y, age, 12 * S, k, .7, 6); F.shock(x, y, age, .4, 34 * S, 2 * S);
+  F.plume(x, y, age - .3, k, 4, 10 * S, .6, [112, 106, 100], 3, .45);
+}
 function rpGlowC(c, x, y, r, rgb, a) { if (a <= 0 || r <= 0) return; const g = c.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(${rgb},${a})`); g.addColorStop(1, `rgba(${rgb},0)`); c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill(); }
 function rpRing(c, x, y, r, col, lw, a, dash) { if (a <= 0 || r <= 0) return; c.save(); c.globalAlpha = a; if (dash) c.setLineDash(dash); c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.strokeStyle = col; c.lineWidth = lw; c.stroke(); c.restore(); }
 function rpPuff(c, x, y, r, shade, a) { if (a <= 0 || r <= 1) return; const g = c.createRadialGradient(x - r * .25, y - r * .3, r * .1, x, y, r);
@@ -3947,36 +4202,35 @@ function rpDmg(c, dmg, x, y, k, side) {
   c.lineWidth = 4; c.strokeStyle = "rgba(10,10,8,.92)"; c.strokeText("-" + dmg, 0, 0);
   c.fillStyle = side === 0 ? "#FFE27A" : "#FF6B5A"; c.fillText("-" + dmg, 0, 0); c.restore();
 }
-function rpHeavy(c, kind, x1, y1, x2, y2, age, side, dmg, seed) {  // 판처파우스트(곧게 날아가는 로켓)·박격포(높이 솟는 포탄) + 폭발
-  const fly = kind === "p" ? .45 : 1.3, e = age - fly;
+function fxMortarFlight(c, x1, y1, x2, y2, k, arc, col, est, al) {  // MT-05: 포탄이 갈 높은 포물선 전체(점선) + 높이선 + 떨어질 자리 조준 표시 + 그 길을 따라 내려오는 큰 포탄
+  if (!isFinite(x1 + y1 + x2 + y2 + arc) || (k != null && !isFinite(k))) return;
+  const pt = u => [x1 + (x2 - x1) * u, y1 + (y2 - y1) * u - Math.sin(Math.PI * u) * arc];
+  c.save(); c.setLineDash([4, 5]); c.lineWidth = 1.6; c.strokeStyle = `rgba(${col},${(est ? .5 : .8) * al})`; c.beginPath();
+  for (let i = 0; i <= 40; i++) { const [px, py] = pt(i / 40); i ? c.lineTo(px, py) : c.moveTo(px, py); } c.stroke();
+  c.strokeStyle = `rgba(${col},${.35 * al})`; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); c.restore();
+  const hx = (x1 + x2) / 2, hy = (y1 + y2) / 2;
+  if (arc > 24) { c.save(); c.globalAlpha = .45 * al; c.strokeStyle = `rgb(${col})`; c.lineWidth = 1; c.beginPath(); c.moveTo(hx, hy); c.lineTo(hx, hy - arc); c.stroke(); c.restore();
+    rpLabel(c, "높이", hx + 16, hy - arc / 2, "#CFC2FF", .8 * al); }
+  rpRing(c, x2, y2, 11, `rgba(${col},1)`, 1.6, al);
+  c.save(); c.globalAlpha = .8 * al; c.strokeStyle = `rgb(${col})`; c.lineWidth = 1.2; c.beginPath(); c.moveTo(x2 - 16, y2); c.lineTo(x2 + 16, y2); c.moveTo(x2, y2 - 16); c.lineTo(x2, y2 + 16); c.stroke(); c.restore();
+  if (k == null) return;
+  for (let j = 1; j <= 9; j++) { const [qx, qy] = pt(Math.max(0, k - j * .015)); rpPuff(c, qx, qy, 4 + j * .8, 175, .38 * (1 - j / 10)); }  // 연기 꼬리
+  const [px, py] = pt(k), up = Math.sin(Math.PI * k);  // 포탄: 높이 오를수록 조금 더 크게
+  c.beginPath(); c.ellipse(x1 + (x2 - x1) * k, y1 + (y2 - y1) * k, 5 + up * 2, 2.5 + up, 0, 0, Math.PI * 2); c.fillStyle = "rgba(0,0,0,.3)"; c.fill();  // 땅 그림자
+  const r = 7 + up * 3; rpGlowC(c, px, py, r * 3.2, "230,215,255", 1); c.beginPath(); c.arc(px, py, r, 0, Math.PI * 2); c.fillStyle = "#fff"; c.fill();
+  c.lineWidth = 1.6; c.strokeStyle = "rgba(60,50,90,.75)"; c.stroke();
+}
+function rpHeavy(c, kind, x1, y1, x2, y2, age, side, dmg, seed) {  // 판처파우스트 (PF-10: 곧게 날아가는 로켓 → 잔해 불길)·박격포 (MT-05, 쏜 기록이 없는 예전 리플레이)
+  const fly = kind === "p" ? .45 : 1.3, e = age - fly, M = rp._M || 1, an = Math.atan2(y2 - y1, x2 - x1);
   if (age < fly + .6) drawBadge(c, kind === "p" ? "panzerfaust" : "mortar", x1, y1, 26);
   if (age < fly) {
-    const k = age / fly, arc = kind === "m" ? Math.hypot(x2 - x1, y2 - y1) * .45 + 30 : 0;
-    const px = x1 + (x2 - x1) * k, py = y1 + (y2 - y1) * k - Math.sin(Math.PI * k) * arc;
-    for (let j = 1; j <= 8; j++) {  // 연기 꼬리
-      const kk = Math.max(0, k - j * .04), qx = x1 + (x2 - x1) * kk, qy = y1 + (y2 - y1) * kk - Math.sin(Math.PI * kk) * arc;
-      rpPuff(c, qx, qy, 3 + j * .6, 170, .35 * (1 - j / 9));
-    }
-    rpGlowC(c, px, py, kind === "p" ? 9 : 14, kind === "p" ? "255,150,60" : "230,215,255", 1); c.beginPath(); c.arc(px, py, kind === "p" ? 2.5 : 5, 0, Math.PI * 2); c.fillStyle = "#fff"; c.fill();
+    const k = age / fly;
+    if (kind === "p") { const s = fxS(M, .26, .85), px = x1 + (x2 - x1) * k, py = y1 + (y2 - y1) * k; FX.go(c, s, fxNow()); FX.streak(px, py, an, 30 * s + Math.hypot(x2 - x1, y2 - y1) * .25 * k, 2 * s, "215,210,200", .6, "source-over"); fxRocket(c, px, py, an, s); return; }
+    fxMortarFlight(c, x1, y1, x2, y2, k, Math.hypot(x2 - x1, y2 - y1) * .45 + 30, side ? "255,110,90" : "200,180,255", false, 1);
     return;
   }
-  if (kind === "p") {  // 판처파우스트: 큰 폭발 (시안 02, 후폭풍 없이) + 버섯구름
-    if (e > 3) return;
-    const R0 = 26;
-    c.save(); c.globalAlpha = Math.min(1, e / .2) * (1 - Math.max(0, (e - 2.4) / .6)); c.translate(x2, y2 + 3); c.scale(1, .6);  // 그을린 자국
-    const g = c.createRadialGradient(0, 0, 0, 0, 0, R0 * .9); g.addColorStop(0, "rgba(15,10,8,.85)"); g.addColorStop(1, "rgba(40,28,18,0)"); c.fillStyle = g; c.beginPath(); c.arc(0, 0, R0 * .9, 0, Math.PI * 2); c.fill(); c.restore();
-    if (e < .12) rpGlowC(c, x2, y2, R0 * 3.2, "255,250,230", 1 - e / .12);  // 강한 섬광
-    const up = Math.min(1, e / 1.4) * R0 * 1.6;  // 버섯구름
-    if (e < 2.8) { for (let k = 0; k < 6; k++) rpPuff(c, x2, y2 - up * k / 5, R0 * (.25 + e * .17), 45, .6 * (1 - e / 2.8));
-      rpPuff(c, x2, y2 - up - R0 * .25, R0 * (.55 + e * .35), 60, .7 * (1 - e / 2.8)); }
-    if (e < .7) { rpGlowC(c, x2, y2, R0 * 1.6, "255,120,30", .85 * (1 - e / .7)); rpGlowC(c, x2, y2, R0, "255,200,90", 1 - e / .7); }
-    if (e < .7) rpRing(c, x2, y2, 8 + e * 80, "rgba(255,226,190,1)", 3, 1 - e / .7);
-    for (let k = 0; k < 16; k++) { const an = ((Math.sin((seed + 1) * 3.1 + k * 7.7) * 43758.5) % 1 + 1) % 1 * Math.PI * 2, t2 = Math.min(1, e / 1.1), d = 55 * (.5 + (k % 5) / 7) * t2;  // 파편
-      if (t2 < 1) { c.save(); c.translate(x2 + Math.cos(an) * d, y2 + Math.sin(an) * d - Math.sin(Math.PI * t2) * 10); c.rotate(e * 9 + k); c.globalAlpha = 1 - t2; c.fillStyle = k % 3 ? "#3A2A1A" : "#FFB04D"; c.fillRect(-2, -1.2, 4, 2.4); c.restore(); } }
-    if (dmg && e < 1.8) rpDmg(c, dmg, x2, y2, e / 1.8, side);
-    return;
-  }
-  rpMortarBoom(c, x2, y2, e, seed);
+  if (kind === "p") fxPanzer(c, x2, y2, an, e, fxS(M, .26, .85), seed);
+  else { if (e < 1) fxMortarFlight(c, x1, y1, x2, y2, null, Math.hypot(x2 - x1, y2 - y1) * .45 + 30, side ? "255,110,90" : "200,180,255", false, 1 - e); fxMortar(c, x2, y2, e, fxS(M, .36, .95), seed); }
   if (dmg && e < 1.8) rpDmg(c, dmg, x2, y2, e / 1.8, side);
 }
 function rpMortarBoom(c, x, y, e, seed = 0) {  // 박격포 폭발: 섬광 → 흙먼지가 사방으로 퍼짐 + 버섯구름이 솟았다가 흩어짐 (약 3.5초)
@@ -4020,12 +4274,19 @@ function rpBeam(ctx, bx, by, age, dur, outer, inner, label, labelCol, now, scale
 }
 function rpLabel(c, t, x, y, col, a) { if (a <= 0) return; c.save(); c.globalAlpha = a; c.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; c.textAlign = "center"; c.textBaseline = "middle";
   c.lineWidth = 3; c.strokeStyle = "rgba(10,10,8,.85)"; c.strokeText(t, x, y); c.fillStyle = col; c.fillText(t, x, y); c.restore(); }
-const SHAKE = {c4: [18, 1.5], p: [11, .8], m: [9, .7], grenade: [4, .35], sticky: [4, .35], car: [8, .7], brdm: [14, 1.1]};  // 폭발 크기별 [세기(px), 지속(초)]
+const SHAKE = {c4: [18, 1.5], p: [11, .8], m: [15, .6], grenade: [4, .35], sticky: [4, .35], car: [8, .7], brdm: [14, 1.1]};  // 폭발 크기별 [세기(px), 지속(초)]
 function throwTiming(kind, boomAt) {  // 투척물 비행 시간 · C4 타이머 · 떨어져서 터지기까지 (그림과 흔들림이 같은 시각을 쓰게)
   const wait = {grenade: .5, sticky: .3}[kind] || 0;
   const FLY = boomAt == null || kind === "c4" ? 1.1 : kind === "molotov" ? Math.max(.5, Math.min(1.1, boomAt)) : Math.max(.5, Math.min(2.5, boomAt - wait));
   const fuse = boomAt != null ? Math.max(.5, boomAt - FLY) : 4;
   return {FLY, fuse, wait};
+}
+function rpBlinded(R, tb, ix, iy) {  // 섬광이 터진 순간 가까이 있던 사람 → 실명 시간 짐작 (배그 기록엔 실명 정보가 없어서 거리로: 가까울수록 길게, 15m 밖은 없음)
+  R._blind = R._blind || new Map(); const key = tb.toFixed(1) + "," + ix.toFixed(4); if (R._blind.has(key)) return R._blind.get(key);
+  const out = [], Rb = 15, push = (q, o) => { if (!q) return; const d = Math.hypot(q[0] - ix, q[1] - iy) * R.size_m; if (d < Rb) out.push({...o, d, dur: 1.2 + 4.3 * (1 - d / Rb)}); };
+  for (const p of R.players) if (statusAt(p, tb) !== "dead") push(posAt(p, tb), {p});
+  for (const en of R.enemies || []) if (en.tr.length && tb >= en.tr[0][0] && (en.d == null || tb <= en.d)) push(interp(en.tr, tb), {en});
+  R._blind.set(key, out); return out;
 }
 function rpBooms(R) {  // 흔들림을 줄 폭발들: [시각, x, y, 종류]
   if (R._booms) return R._booms;
@@ -4213,67 +4474,16 @@ function drawWheel(ctx, x, y, r, col) {  // 차량 핸들 아이콘 (플레이�
   ctx.restore();
 }
 const rpHash = (a, b = 0) => ((Math.sin(a * 12.9898 + b * 78.233) * 43758.5453) % 1 + 1) % 1;
-function rpBlast(c, x, y, age, sc, seed, pip) {  // 포탄 폭발: 섬광 → 겹겹이 부푸는 불덩이 → 흙먼지 충격파 → 튀는 불티 → 피어오르는 연기 → 그을음·남은 불씨
-  if (age < 0 || age > 8) return;
-  if (age < 8) {  // 그을린 자국 (8초 동안 서서히)
-    const a = Math.min(1, age / .25) * (1 - age / 8) * .75, g = c.createRadialGradient(x, y, 0, x, y, 15 * sc);
-    g.addColorStop(0, `rgba(18,9,5,${a})`); g.addColorStop(.6, `rgba(30,16,8,${a * .6})`); g.addColorStop(1, "rgba(40,20,10,0)");
-    c.fillStyle = g; c.beginPath(); c.arc(x, y, 15 * sc, 0, Math.PI * 2); c.fill();
-  }
-  if (age > .4 && age < 3.5) for (let j = 0; j < 3; j++) {  // 남은 불씨
-    const fl = .5 + .5 * Math.sin(age * 20 + j * 2 + seed), ex = x + (rpHash(seed, 40 + j) - .5) * 12 * sc, ey = y + (rpHash(seed, 50 + j) - .5) * 10 * sc;
-    rpGlowC(c, ex, ey, 4 * sc * fl, "255,150,50", (1 - age / 3.5) * .9);
-  }
-  if (age < .1) rpGlowC(c, x, y, 46 * sc, "255,250,225", 1 - age / .1);  // 섬광
-  if (age < .55) {  // 흙먼지 충격파 (두꺼운 갈색 고리 + 얇은 흰 고리)
-    const u = age / .55, r = (6 + (1 - Math.pow(1 - u, 3)) * 46) * sc;
-    c.save(); c.globalAlpha = (1 - u) * .55; c.strokeStyle = "rgb(120,96,70)"; c.lineWidth = 9 * sc * (1 - u * .6); c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.stroke(); c.restore();
-    rpRing(c, x, y, r * 1.05, "rgba(255,240,220,1)", 1.4, (1 - u) * .8);
-  }
-  if (age < .9) {  // 불덩이: 여러 덩어리가 부풀며 붉게 식음
-    const u = age / .9;
-    for (let j = 0; j < 6; j++) {
-      const an = rpHash(seed, j) * Math.PI * 2, d = (2 + u * 9) * sc * rpHash(seed, 10 + j), bx = x + Math.cos(an) * d, by = y + Math.sin(an) * d - u * 4 * sc;
-      const r = (5 + u * 13) * sc * (.7 + rpHash(seed, 20 + j) * .5), g = c.createRadialGradient(bx, by, 0, bx, by, r);
-      const hot = 1 - u;
-      g.addColorStop(0, `rgba(255,${Math.round(220 + 35 * hot)},${Math.round(120 + 110 * hot)},${(1 - u) * .95})`);
-      g.addColorStop(.45, `rgba(255,${Math.round(110 + 60 * hot)},30,${(1 - u) * .8})`);
-      g.addColorStop(1, "rgba(150,30,10,0)");
-      c.fillStyle = g; c.beginPath(); c.arc(bx, by, r, 0, Math.PI * 2); c.fill();
-    }
-  }
-  if (!pip && age < 1.3) for (let j = 0; j < 10; j++) {  // 튀는 불티
-    const an = rpHash(seed, 60 + j) * Math.PI * 2, v = (35 + rpHash(seed, 70 + j) * 45) * sc, px = x + Math.cos(an) * v * age, py = y + Math.sin(an) * v * age * .8 + 30 * sc * age * age;
-    const a = 1 - age / 1.3; c.strokeStyle = `rgba(255,${200 - j * 6},120,${a})`; c.lineWidth = 1.5;
-    c.beginPath(); c.moveTo(px, py); c.lineTo(px - Math.cos(an) * 4 * sc, py - Math.sin(an) * 3 * sc); c.stroke();
-  }
-  if (!pip && age > .25 && age < 5) for (let j = 0; j < 4; j++) {  // 연기: 위로 피어오르며 커지고 옅어짐
-    const u = (age - .25) / 4.75, sx = x + (rpHash(seed, 80 + j) - .5) * 16 * sc + Math.sin(age * .8 + j) * 3 * sc, sy = y - u * (18 + j * 6) * sc;
-    rpPuff(c, sx, sy, (7 + u * 16 + j * 2) * sc, 62 + j * 6, .5 * (1 - u) * Math.min(1, (age - .25) / .4));
-  }
-}
-function rpRedZone(ctx, cx, cy, rr, now, pip, h) {  // 레드존 (RZ-02 + 격자): 옅은 붉은 바탕 + 격자 + 두 줄 테두리, 떨어질 자리에 X 표시 → 폭발
-  const sc = Math.max(.6, Math.min(2.2, rr / 120)), black = h && h.kind === "black", rgb = black ? "60,60,60" : "200,30,20", line = black ? "200,200,200" : "255,90,70";
-  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.clip();
-  ctx.fillStyle = `rgba(${rgb},${.2 + Math.sin(now / 300) * .04})`; ctx.fillRect(cx - rr, cy - rr, rr * 2, rr * 2);
-  const step = Math.max(10, 16 * sc); ctx.strokeStyle = `rgba(${line},.38)`; ctx.lineWidth = 1; ctx.beginPath();
-  for (let gx = cx - rr - ((cx - rr) % step); gx <= cx + rr; gx += step) { ctx.moveTo(gx, cy - rr); ctx.lineTo(gx, cy + rr); }
-  for (let gy = cy - rr - ((cy - rr) % step); gy <= cy + rr; gy += step) { ctx.moveTo(cx - rr, gy); ctx.lineTo(cx + rr, gy); }
-  ctx.stroke(); ctx.restore();
-  rpRing(ctx, cx, cy, rr, `rgb(${line})`, 3, 1); rpRing(ctx, cx, cy, rr + 5, `rgba(${line},.4)`, 1.5, 1);
-  const rate = 2.5, slot = Math.floor(rp.t * rate);
-  const spot = k => { const an = rpHash(k, 1) * Math.PI * 2, d = Math.sqrt(rpHash(k, 2)) * rr * .94; return [cx + Math.cos(an) * d, cy + Math.sin(an) * d]; };
-  for (let k = slot - Math.ceil(8 * rate); k <= slot + 3; k++) {
-    if (rpHash(k, 3) < .22) continue;  // 가끔 빈 박자
-    const age = rp.t - k / rate, [bx, by] = spot(k);
-    if (age < 0) {  // 곧 떨어질 자리: X 표시가 점점 또렷하게 + 하늘에서 내려오는 포탄 줄기
-      const u = Math.max(0, 1 + age / 1); if (u <= 0) continue;
-      ctx.save(); ctx.translate(bx, by); ctx.strokeStyle = `rgba(255,225,120,${.35 + u * .65})`; ctx.lineWidth = 2.5; const s = 7 * sc * (1.3 - u * .3);
-      ctx.beginPath(); ctx.moveTo(-s, -s); ctx.lineTo(s, s); ctx.moveTo(s, -s); ctx.lineTo(-s, s); ctx.stroke(); ctx.restore();
-      if (u > .6) { const v = (u - .6) / .4, hx = bx + 20 * sc * (1 - v), hy = by - 60 * sc * (1 - v); ctx.strokeStyle = `rgba(255,220,170,${v})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(hx + 7 * sc, hy - 20 * sc); ctx.lineTo(hx, hy); ctx.stroke(); }
-      continue;
-    }
-    rpBlast(ctx, bx, by, age, sc, k, pip);
+function rpBlast(c, x, y, age, sc, seed, pip) { fxRzBlast(c, x, y, age, sc, seed); }  // 폭격 폭발 (RZ-07)
+function rpRedZone(ctx, cx, cy, rr, now, pip, h) {  // 레드존 (RZ-07, 바깥 흑백 없이): 안쪽만 옅게 붉게 + RZ-05 테두리 한 줄 + 여기저기 떨어지는 폭격
+  const sc = Math.max(.55, Math.min(2.4, rr / 111)), black = h && h.kind === "black";
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.fillStyle = black ? "rgba(40,40,40,.22)" : "rgba(255,50,30,.1)"; ctx.fill(); ctx.restore();
+  rpRing(ctx, cx, cy, rr, black ? "#CFCFCF" : "#FF5A46", 3, 1);
+  const rate = 2.2, slot = Math.floor(rp.t * rate);
+  for (let k = slot - Math.ceil(4.6 * rate); k <= slot; k++) {
+    if (rpHash(k, 3) < .18) continue;  // 가끔 빈 박자
+    const age = rp.t - k / rate, an = rpHash(k, 1) * Math.PI * 2, d = Math.sqrt(rpHash(k, 2)) * rr * .9;
+    fxRzBlast(ctx, cx + Math.cos(an) * d, cy + Math.sin(an) * d, age, sc, k);
   }
   if (h) rpHazardTag(ctx, h, cx, cy, rr);
 }
@@ -4333,28 +4543,21 @@ function rpHazardTag(ctx, h, cx, cy, rr) {  // 이름 + 지난 시간 (진행 �
   ctx.font = "700 13px Pretendard, 'Malgun Gothic', sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
   rpLabel(ctx, `${h.name} · ${mmss(h.age)}`, cx, cy - rr - 10, h.col, 1);
 }
-function rpSandZone(ctx, cx, cy, rr, now, h, pip) {  // 미라마 모래폭풍: 누런 먼지 덩어리 + 안에서 소용돌이치는 모래 + 가는 방향 화살표
-  const T = now / 1000;
-  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.clip();
-  const g = ctx.createRadialGradient(cx, cy, rr * .1, cx, cy, rr); g.addColorStop(0, "rgba(190,140,70,.55)"); g.addColorStop(.75, "rgba(200,150,80,.42)"); g.addColorStop(1, "rgba(210,160,90,.18)");
-  ctx.fillStyle = g; ctx.fillRect(cx - rr, cy - rr, rr * 2, rr * 2);
-  const n = pip ? 50 : 140;
-  ctx.lineCap = "round";
-  for (let i = 0; i < n; i++) {  // 소용돌이 모래 줄기
-    const r0 = Math.sqrt(rpHash(i, 11)) * rr, an = rpHash(i, 12) * Math.PI * 2 + T * (.25 + .5 * (1 - r0 / rr)), L = 6 + rpHash(i, 13) * 14;
-    const x = cx + Math.cos(an) * r0, y = cy + Math.sin(an) * r0, ta = an + Math.PI / 2;
-    ctx.strokeStyle = `rgba(245,222,170,${.25 + rpHash(i, 14) * .45})`; ctx.lineWidth = 1 + rpHash(i, 15) * 1.5;
-    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(ta) * L, y + Math.sin(ta) * L); ctx.stroke();
-  }
-  for (let k = 0; k < 5; k++) { const an = k * 1.3 + T * .2, d = rr * (.2 + .15 * k); rpPuff(ctx, cx + Math.cos(an) * d, cy + Math.sin(an) * d, rr * .35, 150, .25); }
+function rpSandZone(ctx, cx, cy, rr, now, h, pip) {  // 미라마 모래폭풍 (SS-01): 누런 먼지 덩어리가 휘감기며 굽은 모래 줄기가 돌고, 가장자리는 부드럽게 + 가는 방향 화살표
+  const F = FX, T = now / 1000, s = rr / 105.6; F.go(ctx, s, T);
+  const n = pip ? 20 : 34;
+  for (let i = 0; i < n; i++) { const an = F.hh(i, 1) * F.TAU + T * .12 * (i % 2 ? 1 : -1), d = Math.sqrt(F.hh(i, 2)) * rr * .92, q = F.fbm(i * .3, T * .2);
+    F.puff(cx + Math.cos(an) * d, cy + Math.sin(an) * d, (24 + F.hh(i, 3) * 22) * s, [190 + q * 30, 150 + q * 26, 96 + q * 20].map(Math.round), .38 + q * .2); }
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.clip(); ctx.lineCap = "round";
+  for (let j = 0; j < 14; j++) { const r = 20 * s + F.hh(j, 4) * rr * .8, a0 = F.hh(j, 5) * F.TAU + T * (.5 + F.hh(j, 6) * .4);
+    ctx.beginPath(); ctx.arc(cx, cy, r, a0, a0 + .9); ctx.strokeStyle = "rgba(255,230,180,.38)"; ctx.lineWidth = Math.min(5, (1 + F.hh(j, 7) * 1.4) * Math.max(1, s * .5)); ctx.stroke(); }
   ctx.restore();
-  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.setLineDash([10, 7]); ctx.lineDashOffset = -now / 50;
-  ctx.strokeStyle = "rgba(255,196,138,.95)"; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore();
   const sp = Math.hypot(h.vx, h.vy);
-  if (sp > 1e-6) {  // 가는 방향
-    const ax = h.vx / sp, ay = h.vy / sp, sx = cx + ax * rr, sy = cy + ay * rr, L = 26;
-    ctx.save(); ctx.strokeStyle = "#FFC48A"; ctx.fillStyle = "#FFC48A"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + ax * L, sy + ay * L); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(sx + ax * (L + 9), sy + ay * (L + 9)); ctx.lineTo(sx + ax * L - ay * 7, sy + ay * L + ax * 7); ctx.lineTo(sx + ax * L + ay * 7, sy + ay * L - ax * 7); ctx.fill(); ctx.restore();
+  if (sp > 1e-6) {  // 가는 방향 화살표 (먼지 안쪽 가장자리)
+    const ax = h.vx / sp, ay = h.vy / sp, an = Math.atan2(ay, ax), k = Math.max(1, Math.min(2.2, rr / 160));
+    ctx.save(); ctx.translate(cx + ax * rr * .72, cy + ay * rr * .72); ctx.rotate(an); ctx.scale(k, k);
+    ctx.beginPath(); [[14, 0], [2, -7], [2, -2.5], [-12, -2.5], [-12, 2.5], [2, 2.5], [2, 7]].forEach(([px, py], i) => i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)); ctx.closePath();
+    ctx.fillStyle = "rgba(255,226,170,.95)"; ctx.fill(); ctx.strokeStyle = "rgba(60,40,10,.8)"; ctx.lineWidth = 1.2; ctx.stroke(); ctx.restore();
   }
   rpHazardTag(ctx, h, cx, cy, rr);
 }
@@ -4538,8 +4741,10 @@ function rpFrame(now) {
   }
   if (rp.kc && rp.t >= rp.kc.e.t + 2.5) rpKillcamEnd();  // 킬캠 끝 → 보던 자리로
   rpUpdatePip(now, dt);
-  rpEvents(now); rpLegend(now); rpDraw(dt, now);
-  if (rp.pip && rp.pip.on && rp.pip.cam) rpDraw(dt, now, {c: $("#rpPipCanvas"), cam: rp.pip.cam});  // 오른쪽 아래 보조 화면
+  try {  // 한 장면에서 그림 오류가 나도 재생이 멈추지 않게
+    rpEvents(now); rpLegend(now); rpDraw(dt, now);
+    if (rp.pip && rp.pip.on && rp.pip.cam) rpDraw(dt, now, {c: $("#rpPipCanvas"), cam: rp.pip.cam});  // 오른쪽 아래 보조 화면
+  } catch (err) { if (!rp._errShown) { rp._errShown = true; console.error(err); } }
   rp.raf = requestAnimationFrame(rpFrame);
 }
 /* 킬캠: 우리 팀원이 쓰러지거나 죽은 순간, 직전 8초를 그 사람 자리에서 다시 보기 (마지막 1.5초는 느리게) */
