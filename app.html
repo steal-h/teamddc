@@ -5,6 +5,7 @@
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@600&family=Rajdhani:wght@700&display=swap">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TEAM DDC 게임 어워즈</title>
@@ -1406,6 +1407,25 @@ html,body{overscroll-behavior-y:none}
   .history td:nth-child(5){grid-area:dl;font-size:12px}
   .hist-mon b{font-size:18px}.hist-mon span{font-size:12px}
 }
+/* 폰에서 앱 설치 · 전체 화면 버튼 (설치한 앱으로 열면 안 보임) */
+.app-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid var(--accent);border-radius:999px;color:var(--accent);background:rgba(242,169,0,.08);font:600 12.5px var(--body);cursor:pointer}
+.app-btn[hidden]{display:none!important}
+.top{position:relative}
+.app-wrap{position:absolute;right:0;top:0;display:flex;gap:6px;z-index:2}
+.app-btn{min-height:32px;min-width:32px;justify-content:center}
+/* 팀 현황판 (TB-07 + 네온 테두리) */
+.rp-teams{gap:10px!important}
+.rp-teams .t7{display:flex;align-items:center;gap:7px;padding:4px 10px;border:1.5px solid var(--tc);border-radius:6px;background:rgba(5,6,4,.72);
+  box-shadow:0 0 10px color-mix(in srgb,var(--tc) 60%,transparent),inset 0 0 8px color-mix(in srgb,var(--tc) 28%,transparent);white-space:nowrap}
+.rp-teams .t7 .tno{font:600 20px/1 "Teko","Oswald","Arial Narrow",sans-serif;color:var(--tc);padding-top:3px;text-shadow:0 0 8px color-mix(in srgb,var(--tc) 70%,transparent)}
+.rp-teams .t7.ours .tno{font:700 15px/1 "Rajdhani",Arial,sans-serif;letter-spacing:.06em;padding-top:0}
+.rp-teams .t7 .tbars{display:flex;gap:2px}
+.rp-teams .t7 .tbars i{width:4px;height:15px;background:#fff;box-shadow:0 0 3px rgba(0,0,0,.8)}
+.rp-teams .t7 .tbars i.down{background:#FF4D3A;box-shadow:0 0 6px #FF4D3A;animation:t7blink 1s steps(2) infinite}
+.rp-teams .t7 .tbars i.dead{background:rgba(255,255,255,.2);box-shadow:none}
+.rp-teams .t7 .tk{font:600 16px/1 "Teko","Oswald","Arial Narrow",sans-serif;color:#E8E2CC;padding-top:3px}
+@keyframes t7blink{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.rp-teams .t7 .tbars i.down{animation:none}}
 /* 지난 기록: 달 넘기기 + 치킨 수 */
 .hist-mon{display:flex;align-items:center;gap:10px;margin:0 0 10px}
 .hist-mon>div{flex:1;min-width:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
@@ -1551,6 +1571,7 @@ html,body{overscroll-behavior-y:none}
 <div class="wrap">
   <div class="top">
     <div class="brand"><b>TEAM DDC</b><span>게임 어워즈</span></div>
+    <div class="app-wrap"><button class="app-btn" id="btnInstall" type="button" hidden title="홈 화면에 앱으로 설치 (주소창 없이 열림)">📲 설치</button><button class="app-btn" id="btnFull" type="button" hidden title="전체 화면">⛶</button></div>
     <div class="nav" role="tablist">
       <button class="btn" role="tab" aria-selected="true" data-tab="awards">오늘의 어워즈</button>
       <button class="btn" role="tab" aria-selected="false" data-tab="cards">선수 카드</button>
@@ -3319,14 +3340,12 @@ function rpTeamBoard() {  // 남은 팀이 4팀 이하가 되면 화면 위에 �
   const kills = tm => tm === (R.our_team ?? -1) && !R.team_kills ? R.events.filter(e => e.k === "kill" && e.t <= rp.t).length
     : (R.team_kills || []).filter(([t, k]) => t <= rp.t && k === tm).length;
   const order = st => st === "ok" ? 0 : st === "down" ? 1 : 2;
-  const person = (st, c) => { const f = st === "ok" ? c : st === "down" ? "none" : "#3a3e33", sk = st === "down" ? "#E0532F" : "none";
-    return `<svg viewBox="0 0 12 18"><circle cx="6" cy="4" r="3.2" fill="${f}" stroke="${sk}" stroke-width="1.6"/><path d="M1 17v-5a5 5 0 0 1 10 0v5z" fill="${f}" stroke="${sk}" stroke-width="1.6"/></svg>`; };
+  // TB-07 미니멀 + TB-13 네온 테두리: 팀 번호(팀 색) · 생존 막대 4개(흰색=생존, 빨강=기절, 흐림=사망) · 킬
   const html = live.sort((x, y) => (y.tm === (R.our_team ?? -1)) - (x.tm === (R.our_team ?? -1)) || kills(y.tm) - kills(x.tm)).map(o => {
     const ours = o.tm === (R.our_team ?? -1), col = ours ? "#F2A900" : teamColor(o.tm);
-    const ppl = o.m.slice().sort((x, y) => order(x) - order(y)).map(st => person(st, col)).join("");
-    const k = kills(o.tm), kh = R.team_kills || ours ? `<em>${k}<small>킬</small></em>` : "";
-    const head = ours ? `<span class="tag">DDC</span>` : `<span class="tn">${o.tm}</span>`;
-    return `<div class="tm ${ours ? "ours" : ""}" style="--tc:${col}">${head}${ppl}${kh}</div>`;
+    const bars = o.m.slice().sort((x, y) => order(x) - order(y)).map(st => `<i class="${st}"></i>`).join("");
+    const k = kills(o.tm), kh = R.team_kills || ours ? `<span class="tk">${k}K</span>` : "";
+    return `<div class="t7 ${ours ? "ours" : ""}" style="--tc:${col}"><span class="tno">${ours ? "DDC" : String(o.tm).padStart(2, "0")}</span><span class="tbars">${bars}</span>${kh}</div>`;
   }).join("");
   if (el.innerHTML !== html) el.innerHTML = html;
   el.classList.add("on");
@@ -3661,7 +3680,7 @@ function rpCamera(dt) {
     rp.cam.s += (ts - rp.cam.s) * k; rp.cam.x += (tx - rp.cam.x) * k; rp.cam.y += (ty - rp.cam.y) * k; rpClampCam(); return;
   }
   if (rp.manual) { rpClampCam(); return; }  // 마우스로 직접 움직이는 중
-  let tx = rp.cam.x, ty = rp.cam.y, ts = rp.cam.s;  // 따라갈 사람이 없을 땐 지금 화면 그대로 (갑자기 전체 지도로 줌아웃하지 않게)
+  let tx = rp.cam.x, ty = rp.cam.y, ts = rp.cam.s, aimed = false;  // 따라갈 사람이 없을 땐 지금 화면 그대로 (갑자기 전체 지도로 줌아웃하지 않게)
   const split = rp.pip && rp.pip.on, inMain = p => !split || rp.pip.main.includes(p.nick);  // 분할 화면: 메인 화면은 메인 무리만
   const mainPos = split ? R.players.filter(inMain).map(p => curPos(p, rp.t)).filter(Boolean) : [];
   // 교전 확대: 총소리가 나는 중이거나, 마지막 총격 6초 안 / 다음 총격 3초 전부터. 그 밖(교전이 식은 틈)은 넓게 따라가기
@@ -3697,7 +3716,7 @@ function rpCamera(dt) {
     const zk = rpCfg().zoom_fit / 2.6;  // 적 근접 줌 배율 (2.6 = 기본): 낮추면 교전 화면도 더 크게, 높이면 더 넓게
     const minSpan = Math.min(1, rpCfg().zoom_near_m * 1.15 * zk / R.size_m);
     ts = Math.min(.35 * Math.max(1, zk), Math.max(minSpan, Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) * 1.7 * zk));
-    tx = (Math.min(...xs) + Math.max(...xs)) / 2; ty = (Math.min(...ys) + Math.max(...ys)) / 2;
+    tx = (Math.min(...xs) + Math.max(...xs)) / 2; ty = (Math.min(...ys) + Math.max(...ys)) / 2; aimed = true;
     if (kill && kill.ax != null) {  // 쓰러뜨린 순간: 쏜 사람과 맞은 사람 쪽으로 잠깐 당김 — 가까운 교전일수록 세게, 먼 저격은 거의 그대로
       const dm = Math.hypot(kill.ax - kill.x, kill.ay - kill.y) * R.size_m, C = rpCfg();
       const w = Math.max(0, Math.min(1, (C.punch_far_m - dm) / Math.max(1, C.punch_far_m - C.punch_near_m))) * kEnv;
@@ -3715,7 +3734,7 @@ function rpCamera(dt) {
       const Zn = zoneAt(rp.t), zoneSpan = Zn && Zn.sr ? Zn.sr * 2 * 1.3 : 1;  // 지금 블루존 지름 기준
       const minSpan = Math.min(1, 1600 / R.size_m, Math.max(300 / R.size_m, zoneSpan * .45));
       ts = Math.min(1, zoneSpan, Math.max(minSpan, Math.max(x1 - x0, y1 - y0) * 1.7 + minSpan * .3));
-      tx = (x0 + x1) / 2; ty = (y0 + y1) / 2;
+      tx = (x0 + x1) / 2; ty = (y0 + y1) / 2; aimed = true;
       // 가장 가까운 적과의 거리: 멀면 넓게, 가까우면 크게 (거리는 천천히 따라가서 줌이 들락날락하지 않게)
       // 단, 실제 교전 기운(최근 15초·앞으로 8초 안에 400m 안 총격)이 있을 때만 크게. 교전이 끝났거나 안 일어나면 넓게 돌아감
       const C = rpCfg(), far = C.zoom_far_m / R.size_m, lim4 = 400 / R.size_m;
@@ -3747,6 +3766,10 @@ function rpCamera(dt) {
       }
     }
   } else rp.encD = null;
+  if (aimed) {  // 폰처럼 작은 화면: 자동 카메라를 더 가까이 (PC는 그대로). 너무 붙지는 않게 최소 120m 범위
+    const cv = $("#rpCanvas"), small = cv && Math.min(cv.clientWidth, cv.clientHeight) < 560;
+    if (small) ts = Math.max(Math.min(ts, 120 / R.size_m), ts * .62);
+  }
   // 멀리 떨어진 곳으로 넘어갈 때(다른 무리·장면): 길게 미끄러지지 않고 짧은 흐림과 함께 바로 넘어감
   const nowMs = performance.now();
   if (Math.hypot(tx - rp.cam.x, ty - rp.cam.y) > Math.max(rp.cam.s, ts) * 1.3 && nowMs - (rp.cutAt || 0) > 1500) {
@@ -5523,6 +5546,26 @@ function renderShareCard(r) {
     <div class="sc-hl">${hl}</div>
     <div class="sc-foot"><span>${esc(dayHeadline(r))}</span><span>제작 스틸황</span></div>`;
 }
+
+/* ───── 앱 설치 · 전체 화면 (폰) ───── */
+(() => {
+  const standalone = () => matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches || navigator.standalone;
+  const touch = matchMedia("(pointer:coarse)").matches;
+  const inst = $("#btnInstall"), full = $("#btnFull");
+  let deferred = null;
+  const paint = () => {
+    const app = standalone(), fs = !!document.fullscreenElement;
+    inst.hidden = !(deferred && !app);
+    full.hidden = !(touch && !fs && document.documentElement.requestFullscreen && !matchMedia("(display-mode: fullscreen)").matches);
+    full.title = app ? "상태바까지 숨기기" : "전체 화면 (주소창 숨기기)";
+  };
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; paint(); });  // 크롬이 '설치할 수 있는 앱'으로 알아본 경우에만 옴
+  addEventListener("appinstalled", () => { deferred = null; paint(); });
+  inst.onclick = async () => { if (!deferred) return; deferred.prompt(); try { await deferred.userChoice; } catch {} deferred = null; paint(); };
+  full.onclick = async () => { try { await document.documentElement.requestFullscreen({navigationUI: "hide"}); } catch {} paint(); };
+  document.addEventListener("fullscreenchange", paint);
+  paint();
+})();
 
 /* ───── 누적 ───── */
 let histYM = "";
