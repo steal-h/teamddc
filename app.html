@@ -1697,6 +1697,110 @@ td.mapc .mapn{color:color-mix(in srgb,var(--mc) 70%,var(--bone));font-weight:700
 @keyframes vpulse{0%{box-shadow:0 0 0 0 rgba(124,217,146,.55)}70%,100%{box-shadow:0 0 0 6px rgba(124,217,146,0)}}
 @media (prefers-reduced-motion:reduce){.visit .vdot i{animation:none}}
 @media (max-width:620px){.visit{font-size:11px;padding:2px 8px;gap:5px}.visit .uic{display:none}}
+
+/* v78 점수 계산 안내: 표 없이 배점 칸 + 단계 목록 */
+#scoreDlg{width:min(760px,96vw)}
+#scoreDlg .body{display:flex;flex-direction:column;gap:14px;padding:20px 24px 16px}
+#scoreBody{display:flex;flex-direction:column;gap:16px}
+#scoreDlg .sc-lead{margin:0;color:var(--bone);font-size:15px;line-height:1.55}
+#scoreDlg .sc-lead b{color:var(--accent);font-weight:700}
+.sc-items{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.sc-items>div{background:var(--field,#20241A);border:1px solid var(--line);border-radius:8px;padding:9px 12px;display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:2px 8px}
+.sc-items span{color:var(--dust);font-size:12.5px}
+.sc-items b{font:400 24px/1 var(--num);color:var(--bone);grid-row:span 2;align-self:center}.sc-items b small{font:500 12px var(--body);color:var(--dust);margin-left:2px}
+.sc-items em{font-style:normal;font-size:12px;color:color-mix(in srgb,var(--accent) 70%,var(--bone))}
+#scoreDlg ol.sc-steps{columns:auto!important;list-style:none;counter-reset:st;margin:0!important;padding:0!important;display:grid;gap:0;border-top:1px solid var(--line)}
+.sc-steps li{counter-increment:st;display:grid;grid-template-columns:28px 104px minmax(0,1fr);gap:10px;align-items:baseline;padding:9px 0!important;margin:0!important;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.5}
+.sc-steps li::before{content:counter(st);font:500 13px var(--num);color:#14170F;background:var(--accent);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;align-self:start;margin-top:-1px}
+.sc-steps li b{color:var(--bone)}.sc-steps li span{color:var(--dust)}
+#scoreDlg .score-note{margin:0;font-size:12.5px;color:var(--dust)}
+@media (max-width:620px){.sc-items{grid-template-columns:repeat(2,minmax(0,1fr))}.sc-steps li{grid-template-columns:24px minmax(0,1fr);gap:4px 10px}.sc-steps li span{grid-column:2}#scoreDlg .body{padding:16px 16px 12px}}
+
+/* v78 오늘의 리플레이: RC-08 중계 화면 하단 자막 */
+.rcb{position:relative;padding:4px 0 12px}
+.rcb-bd{display:flex;align-items:stretch;filter:drop-shadow(0 10px 20px rgba(0,0,0,.4))}
+.rcb-rk{background:var(--accent);color:var(--accent-ink);clip-path:polygon(0 0,100% 0,86% 100%,0 100%);padding:14px 40px 14px 24px;display:flex;flex-direction:column;justify-content:center}
+.rcb-rk b{font:400 54px/.9 var(--num)}.rcb-rk span{font:700 11px var(--body);letter-spacing:.2em}
+.rcb-mid{flex:1;margin-left:-18px;background:linear-gradient(90deg,#1A1D14,#262B1E);clip-path:polygon(4% 0,100% 0,97% 100%,0 100%);padding:14px 50px 14px 46px;display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0}
+.rcb-mid small{font:700 11px var(--body);letter-spacing:.22em;color:var(--mc)}
+.rcb-mid>b{font:400 32px/1.05 var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rcb-st{display:flex;gap:18px;font:700 12.5px var(--body);letter-spacing:.06em;color:var(--dust)}.rcb-st em{font-style:normal;color:var(--bone);font-size:17px;margin-right:4px;font-variant-numeric:tabular-nums}
+.rcb-side{margin-left:-14px;background:#11130C;clip-path:polygon(9% 0,100% 0,100% 100%,0 100%);padding:14px 18px 14px 34px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.rcb-side .btn{min-height:38px;padding:6px 16px;white-space:nowrap}
+.rcb::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:3px;background:linear-gradient(90deg,var(--accent),var(--mc),transparent)}
+.rcb-admin{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px}
+body.viewer .rcb-admin{display:none}
+@media (max-width:620px){.rcb-bd{flex-wrap:wrap}.rcb-rk{padding:10px 30px 10px 16px}.rcb-rk b{font-size:40px}.rcb-mid{padding:10px 18px 10px 30px}.rcb-mid>b{font-size:24px}.rcb-st{gap:10px;font-size:11px}.rcb-st em{font-size:15px}
+  .rcb-side{margin:8px 0 0;width:100%;clip-path:none;flex-direction:row;padding:0;background:none}.rcb-side .btn{flex:1;min-height:44px}.rcb::after{bottom:-2px}.rcb-admin{display:grid;grid-template-columns:1fr 1fr}.rcb-admin .btn{white-space:normal;line-height:1.25}}
+/* v78 오늘의 맵: MC-01 지도 타일 (치킨 표시는 어두운 유리 위 금색 글씨: 노란 맵 색·지도 그림과 겹쳐도 또렷하게) */
+.mct{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:12px}
+.mct-t{position:relative;aspect-ratio:4/3;max-width:100%;border-radius:8px;overflow:hidden;background:#20241A var(--img,none) center/cover;border:1px solid color-mix(in srgb,var(--c) 55%,transparent);display:flex;flex-direction:column;justify-content:flex-end;padding:14px}
+.mct-t::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(15,17,11,.94) 10%,rgba(15,17,11,.25) 70%)}
+.mct-t>*{position:relative}
+.mct-n{font:400 26px/1 var(--display);color:var(--c)}
+.mct-big{position:absolute;top:10px;right:14px;font:400 46px/1 var(--num);color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.7)}.mct-big small{font:500 14px var(--body)}
+.mct-s{font-size:13px;color:var(--dust)}.mct-s b{color:var(--bone)}
+.mct-ck{position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;gap:5px;font:400 13px/1 var(--display);color:#FFD86B;background:rgba(14,16,11,.78);border:1px solid rgba(255,216,107,.7);padding:5px 9px 4px 6px;border-radius:4px;backdrop-filter:blur(3px);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.mct-ck img{width:16px;height:16px}
+.mct-t.most{box-shadow:0 0 0 2px var(--c)}
+@media (max-width:620px){.mct{grid-template-columns:1fr;gap:8px}.mct-t{aspect-ratio:auto;min-height:110px}.mct-big{font-size:38px}}
+
+/* v78 경기 목록 리플레이 버튼: 행 높이 가운데에, 오른쪽 여백 없이 꽉 차게 */
+table.games td.rpc{vertical-align:middle;width:1%;padding:8px 12px 8px 4px}
+table.games .btn.rpb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-width:86px;min-height:88px;padding:10px 12px;border-color:color-mix(in srgb,var(--accent) 45%,var(--line));color:var(--bone);background:rgba(242,169,0,.05)}
+table.games .btn.rpb:hover{background:rgba(242,169,0,.14);border-color:var(--accent)}
+table.games .btn.rpb svg{width:24px;height:24px}
+table.games .btn.rpb circle{fill:none;stroke:var(--accent);stroke-width:1.5}table.games .btn.rpb path{fill:var(--accent)}
+table.games .btn.rpb span{font-size:13px;font-weight:700}
+@media (max-width:620px){table.games td.rpc{width:auto;padding:0}table.games .btn.rpb{flex-direction:row;min-height:44px;width:100%;margin-top:6px}table.games .btn.rpb svg{width:20px;height:20px}}
+
+/* v78 헤더 표시(방문자 · 웹 공유 · 조회 전용): 알약 대신 옆 버튼과 같은 네모, 같은 높이 */
+.nav .app-btn{border-radius:3px!important}
+.nav .visit,.nav .pub-badge,body.viewer .nav .viewer-badge{border-radius:3px!important;align-self:stretch;min-height:44px;padding-block:0!important;border-color:var(--line)}
+@media (max-width:900px){.nav .visit,.nav .pub-badge,body.viewer .nav .viewer-badge{min-height:0}}
+
+/* v78 하이라이트: HL-09 큰 숫자 계기판 */
+.hlx{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.hlx>div{background:var(--panel);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.hlx span{font-size:12.5px;color:var(--accent);font-weight:700}
+.hlx em{font-style:normal;font:400 30px/1.05 var(--num);color:var(--bone);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}.hlx em small{font:500 12.5px var(--body);color:var(--dust);margin-left:2px}
+.hlx b{font-size:13.5px;font-weight:500;color:var(--dust);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hlx .bad span{color:var(--flare)}
+@media (min-width:901px){.hlx>div:last-child:nth-child(5n+1){grid-column:span 5}.hlx>div:last-child:nth-child(5n+2){grid-column:span 4}.hlx>div:last-child:nth-child(5n+3){grid-column:span 3}.hlx>div:last-child:nth-child(5n+4){grid-column:span 2}}
+@media (min-width:621px) and (max-width:900px){.hlx>div:last-child:nth-child(3n+1){grid-column:span 3}.hlx>div:last-child:nth-child(3n+2){grid-column:span 2}}
+@media (max-width:620px){.hlx>div:last-child:nth-child(odd){grid-column:span 2}}
+@media (max-width:900px){.hlx{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:620px){.hlx{grid-template-columns:repeat(2,minmax(0,1fr))}.hlx em{font-size:24px}.hlx>div{padding:10px 12px}}
+/* v78 경기 목록: GL-03 촘촘한 표 + 팀원 킬·딜량 막대 */
+.glt-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+.glt{width:100%;border-collapse:collapse;font-size:14px}
+.glt th{font:500 12px var(--body);color:var(--dust);text-align:left;padding:9px 12px;background:var(--panel-2);white-space:nowrap}.glt th span{font-weight:400;opacity:.8}
+.glt th.n,.glt td.n{text-align:right}
+.glt td{padding:8px 12px;border-top:1px solid rgba(90,98,72,.6);white-space:nowrap;vertical-align:middle}
+.glt td.n{font-variant-numeric:tabular-nums;font-weight:700}
+.glt td.no,.glt td.tm{color:var(--dust);font-variant-numeric:tabular-nums}
+.glt .mc{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:color-mix(in srgb,var(--c) 70%,var(--bone))}.glt .mc i{width:10px;height:10px;border-radius:2px;background:var(--c)}
+.glt td.rk small{color:var(--dust);margin-left:2px;font-size:12px}.glt td.rk .chick{width:16px;height:16px;vertical-align:-3px;margin-right:2px}
+.glt tr.w td{background:rgba(242,169,0,.08)}.glt tr.w td.rk{color:var(--accent);font-weight:700}
+.glt td.ps{width:44%;min-width:300px;padding-block:6px}
+.glt .ps>div{display:grid;grid-template-columns:76px 32px minmax(40px,1fr) 38px;gap:8px;align-items:center;font-size:12.5px;line-height:1.55}
+.glt .ps .nm{display:flex;align-items:center;gap:3px;overflow:hidden;text-overflow:ellipsis}.glt .ps .nm .crown{width:14px;height:11px;flex:none}
+.glt .ps .k{color:var(--dust)}.glt .ps .d{text-align:right;font-variant-numeric:tabular-nums;color:var(--dust)}
+.glt .ps .br{height:5px;border-radius:3px;background:var(--panel-2);overflow:hidden}.glt .ps .br i{display:block;height:100%;background:var(--dust);border-radius:3px}
+.glt .ps .m .nm{color:var(--accent);font-weight:700}.glt .ps .m .br i{background:var(--accent)}
+.glt td.pl{width:1%;padding-right:12px}
+.glt .ib{width:38px;height:38px;border-radius:3px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:rgba(242,169,0,.06);color:var(--accent);display:grid;place-items:center;cursor:pointer}
+.glt .ib:hover{background:rgba(242,169,0,.16);border-color:var(--accent)}
+.glt .ib svg{width:20px;height:20px}.glt .ib circle{fill:none;stroke:currentColor;stroke-width:1.5}.glt .ib path{fill:currentColor}
+@media (max-width:760px){
+  .glt-wrap{overflow:visible;border:0;background:none}
+  .glt thead{display:none}.glt,.glt tbody{display:block}
+  .glt tr{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto;grid-template-areas:"no tm mc rk pl" "ps ps ps ps ps";gap:4px 10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin-bottom:8px}
+  .glt tr.w{background:rgba(242,169,0,.08);border-color:rgba(242,169,0,.35)}.glt tr.w td{background:transparent}
+  .glt td{border:0;padding:0}.glt td.no{grid-area:no}.glt td.tm{grid-area:tm}.glt td:nth-child(3){grid-area:mc}.glt td.rk{grid-area:rk}.glt td.pl{grid-area:pl;padding:0}
+  .glt td.n{display:none}.glt td.ps{grid-area:ps;width:auto;min-width:0;padding-top:4px}
+  .glt .ps>div{grid-template-columns:70px 30px minmax(0,1fr) 36px}
+}
 </style>
 </head>
 <body class="viewer">
@@ -2336,16 +2440,17 @@ function dateLabelOf(r) {
   const d = new Date(r.date + "T12:00:00");
   return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일 ${r.weekday}요일`;
 }
-function mapsHtml(r) {
+function mapsHtml(r) {  // v78 오늘의 맵 (MC-01 지도 타일)
   const maps = r.maps || [];
   if (!maps.length) return "";
   const max = Math.max(...maps.map(m => m.count));
-  const tops = maps.filter(m => m.most).map(m => esc(m.map)).join(", ");
+  const codeOf = name => (r.games || []).find(g => g.map === name && g.map_code)?.map_code || state?.map_codes?.[name];
+  const killsOf = name => (r.games || []).filter(g => g.map === name).reduce((a, g) => a + g.players.reduce((b, p) => b + p.kills, 0), 0);
   return `<div class="sec"><h3>오늘의 맵</h3></div>
-    <div class="maps"><p class="maps-top">가장 많이 한 맵<b>${tops}</b>${maps.filter(m => m.most).length > 1 ? "각 " : ""}${max}판</p>
-    ${maps.map(m => `<div class="map-row ${m.most ? "most" : ""}" style="--mc:${mapColor(m.map)}"><span class="map-name">${esc(m.map)}</span>
-      <i><em style="width:${m.count / max * 100}%"></em></i><span class="map-n">${m.count}판</span>
-      <span class="map-sub">${m.chickens ? "치킨 " + m.chickens : ""}</span><span class="map-sub">평균 ${m.avg_rank}등</span></div>`).join("")}</div>`;
+    <div class="mct" style="--n:${Math.min(maps.length, 4)}">${maps.map(m => { const code = codeOf(m.map);
+      return `<div class="mct-t ${m.count === max ? "most" : ""}" style="--c:${mapColor(code || m.map)}${code ? `;--img:url('api/map?code=${encodeURIComponent(code)}')` : ""}">
+        ${m.chickens ? `<span class="mct-ck"><img src="${CHICK_IMG}" alt="">치킨 ${m.chickens}</span>` : ""}<span class="mct-big">${m.count}<small>판</small></span>
+        <span class="mct-n">${esc(m.map)}</span><span class="mct-s">평균 <b>${m.avg_rank}등</b> · 팀 ${killsOf(m.map)}킬</span></div>`; }).join("")}</div>`;
 }
 function dayHeadline(r) {  // 오늘의 어워즈 제목: 그날 성적에 맞는 멘트 (같은 날은 늘 같은 문구)
   const G = r.games || [], ranks = G.map(g => g.rank).filter(x => x > 0);
@@ -2375,15 +2480,17 @@ function bestGame(r) {
   const dmg = g => g.players.reduce((a, p) => a + p.damage, 0);
   return [...gs].sort((a, b) => a.rank - b.rank || kills(b) - kills(a) || dmg(b) - dmg(a))[0];
 }
-function replayCard(r) {
+function replayCard(r) {  // v78 오늘의 리플레이 (RC-08 중계 화면 하단 자막)
   const g = bestGame(r);
   if (!g) return "";
-  const k = g.players.reduce((a, p) => a + p.kills, 0);
+  const k = g.players.reduce((a, p) => a + p.kills, 0), dmg = g.players.reduce((a, p) => a + (p.damage || 0), 0);
+  const no = (r.games || []).indexOf(g) + 1, md = g.mode || "", eng = /솔로/.test(md) ? "SOLO" : /듀오/.test(md) ? "DUO" : "SQUAD";
   return `<div class="sec"><h3>오늘의 리플레이</h3></div>
-    <div class="rp-card mapt" style="--mc:${mapColor(g.map_code || g.map)}"><div><small>오늘의 리플레이</small><b>${esc(g.map)} ${g.rank === 1 ? "치킨" : g.rank + "등"}</b>
-      <p>${g.time} 시작, ${esc(g.mode)}, 팀 ${k}킬. 다른 판은 아래 경기 목록에서 볼 수 있어요.</p></div>
-      <div class="btns"><button class="btn" data-rp="${esc(g.id)}">이 판 리플레이</button><button class="btn primary" id="btnReel">오늘의 명장면</button>
-        <button class="btn" id="btnReelSend">명장면 영상 디스코드 공유</button><button class="btn" id="btnReelSave">명장면 영상 저장</button></div></div>
+    <div class="rcb" style="--mc:${mapColor(g.map_code || g.map)}"><div class="rcb-bd"><div class="rcb-rk"><span>PLACE</span><b>#${g.rank}</b></div>
+      <div class="rcb-mid"><small>${no ? `MATCH ${no} · ` : ""}${esc(g.time)} · ${eng}</small><b>${esc(g.map)} ${g.rank === 1 ? "치킨" : g.rank + "등"}</b>
+        <div class="rcb-st"><span><em>${k}</em>KILLS</span><span><em>${fmt(Math.round(dmg))}</em>DMG</span><span><em>${g.teams || "-"}</em>TEAMS</span></div></div>
+      <div class="rcb-side"><button class="btn primary" id="btnReel" type="button">오늘의 명장면</button><button class="btn" data-rp="${esc(g.id)}" type="button">이 판 리플레이</button></div></div></div>
+    <div class="rcb-admin"><button class="btn" id="btnReelSend">명장면 영상 디스코드 공유</button><button class="btn" id="btnReelSave">명장면 영상 저장</button></div>
     <p class="reel-msg" id="reelMsg" aria-live="polite"></p>`;
 }
 function kdaOf(t) {  // (킬 + 어시) ÷ 죽은 횟수 (예전 기록엔 죽은 횟수가 없어서 판 수 − 치킨으로 짐작)
@@ -2437,21 +2544,20 @@ function renderDay(r, report, reveal) {
           return `<span class="bdg ach-new lv${lv}" tabindex="0" data-tip-t="${esc(t)}" data-tip-lv="${esc(TIER_NAMES[lv] || "")}" data-tip-c="${esc(cat)}" data-tip-d="${esc(d)}">${esc(t)}</span>`; }).join("")}</div>` : `<p class="pc-none">없음</p>`}</section>
     </article>`;
   }).join("");
-  const hl = r.highlights.map(h => `<li class="${h.label === "팀킬범" || h.tone === "bad" ? "bad" : ""}"><div><small>${esc(h.label)}</small><b>${esc(h.name)}</b></div><span>${esc(h.value)}</span></li>`).join("");
+  const hl = r.highlights.map(h => {  // v78 HL-09 큰 숫자 계기판: 기록 숫자를 가장 크게
+    const m = String(h.value || "").match(/([\d,.]+)\s*([^\d\s,.]*)/), bad = h.label === "팀킬범" || h.tone === "bad";
+    return `<div class="${bad ? "bad" : ""}"><span>${esc(h.label)}</span><em>${m ? `${esc(m[1])}<small>${esc(m[2])}</small>` : `<small>${esc(h.value || "")}</small>`}</em><b>${esc(h.name)}</b></div>`; }).join("");
   const dmgMax = Math.max(1, ...r.games.flatMap(g => g.players.map(p => p.damage)));
   const CROWN = `<svg class="crown" viewBox="0 0 24 18" aria-label="이 판 MVP"><path d="M2 15 L4 4 L9 9 L12 2 L15 9 L20 4 L22 15 Z" fill="#F2B33D" stroke="#8C6414" stroke-width="1.2" stroke-linejoin="round"/><rect x="2" y="15" width="20" height="2.6" rx="1" fill="#D99A22"/></svg>`;
-  const games = r.games.map((g, i) => ({g, i})).reverse().map(({g, i}) => {
-    const mvp = [...g.players].sort((a, b) => b.kills - a.kills || b.damage - a.damage)[0];  // 킬 많은 순, 같으면 딜량
-    return `<tr>
-      <td class="n">${i + 1}</td><td class="n">${g.time}</td>
-      <td class="mapc" style="white-space:nowrap;--mc:${mapColor(g.map_code || g.map)}"><span class="mapn">${esc(g.map)}</span><div class="who gm-mode">${esc(g.mode)}</div></td>
-      <td class="n ${g.rank === 1 ? "chicken" : ""}">${g.rank === 1 ? `<img class="chick" src="${CHICK_IMG}" alt="">치킨` : g.rank + "등"}<div class="who">${g.teams}팀 중</div></td>
-      <td><div class="gl">${g.players.map(p => `<div class="gl-row ${p === mvp && (p.kills || p.damage) ? "mvp" : ""}">
-        <span class="gl-name"><span class="crown-slot">${p === mvp && (p.kills || p.damage) ? CROWN : ""}</span>${esc(p.name)}</span>
-        <span class="gl-k">${p.kills}킬</span>
-        <span class="gl-bar"><i style="width:${p.damage / dmgMax * 100}%"></i></span>
-        <span class="gl-d">${fmt(p.damage)}</span></div>`).join("")}</div></td>
-      <td>${g.id ? `<button class="btn sm" data-rp="${esc(g.id)}">리플레이</button>` : ""}</td></tr>`; }).join("");
+  const games = r.games.map((g, i) => ({g, i})).reverse().map(({g, i}) => {  // v78 GL-03 촘촘한 표 + 팀원 킬·딜량 막대
+    const mvp = [...g.players].sort((a, b) => b.kills - a.kills || b.damage - a.damage)[0], hasM = mvp && (mvp.kills || mvp.damage);
+    const tk = g.players.reduce((a, p) => a + p.kills, 0), td = g.players.reduce((a, p) => a + (p.damage || 0), 0);
+    return `<tr class="${g.rank === 1 ? "w" : ""}"><td class="no">${i + 1}</td><td class="tm">${g.time}</td>
+      <td><span class="mc" style="--c:${mapColor(g.map_code || g.map)}"><i></i>${esc(g.map)}</span></td>
+      <td class="rk">${g.rank === 1 ? `<img class="chick" src="${CHICK_IMG}" alt="">치킨` : g.rank + "등"}<small>/${g.teams}</small></td>
+      <td class="n">${tk}</td><td class="n">${fmt(Math.round(td))}</td>
+      <td class="ps">${g.players.map(p => `<div class="${p === mvp && hasM ? "m" : ""}"><span class="nm">${p === mvp && hasM ? CROWN : ""}${esc(p.name)}</span><span class="k">${p.kills}킬</span><span class="br"><i style="width:${p.damage / dmgMax * 100}%"></i></span><span class="d">${fmt(p.damage)}</span></div>`).join("")}</td>
+      <td class="pl">${g.id ? `<button class="ib" type="button" data-rp="${esc(g.id)}" aria-label="${i + 1}판 리플레이" title="리플레이"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5"/><path d="M8.2 6.6v6.8l5.4-3.4z"/></svg></button>` : ""}</td></tr>`; }).join("");
 
   const bg = mapUrl(r);
   $("#awards").innerHTML = `
@@ -2481,9 +2587,9 @@ function renderDay(r, report, reveal) {
     <div class="sec"><h3>수상자 상세 기록</h3></div>
     <div class="cards">${cards}</div>
     <div class="split">
-      <div><div class="sec"><h3>하이라이트</h3></div><ul class="hl">${hl || "<li>기록 없음</li>"}</ul></div>
+      <div><div class="sec"><h3>하이라이트</h3></div>${hl ? `<div class="hlx">${hl}</div>` : `<p class="pc-none">기록 없음</p>`}</div>
       <div><div class="sec"><h3>경기 목록</h3></div>
-        <div class="tbl"><table class="games"><thead><tr><th>#</th><th>시작</th><th>맵</th><th>팀 순위</th><th>킬과 딜량 <span class="who" style="font-weight:400">(최근 판이 위)</span></th><th></th></tr></thead>
+        <div class="glt-wrap"><table class="glt"><thead><tr><th>#</th><th>시작</th><th>맵</th><th>순위</th><th class="n">팀 킬</th><th class="n">팀 딜량</th><th>팀원 킬 · 딜량 <span>(최근 판이 위)</span></th><th></th></tr></thead>
         <tbody>${games}</tbody></table></div></div>
     </div>`;
   bindShare(r.date, report);
@@ -2610,16 +2716,26 @@ function ensureAudio() {
     }
   } catch { audio = null; }
 }
+/* v78 효과음 (효과음 고르기 페이지에서 고른 소리): 그 페이지와 똑같이 만드는 도구 */
+const SX = {
+  out(vol) { const g = audio.createGain(); g.gain.value = vol; g.connect(master || audio.destination); return g; },
+  env(g, t, att, dur, vol) { g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(Math.max(.0002, vol), t + att); g.gain.exponentialRampToValueAtTime(.0001, t + dur); },
+  T(o, t, f, dur, vol, type = "sine", f1 = null, att = .005) { const s = audio.createOscillator(), g = audio.createGain(); s.type = type; s.frequency.setValueAtTime(f, t); if (f1) s.frequency.exponentialRampToValueAtTime(Math.max(20, f1), t + dur); SX.env(g, t, att, dur, vol); s.connect(g).connect(o); s.start(t); s.stop(t + dur + .05); },
+  N(o, t, dur, vol, type = "bandpass", f = 1000, q = 1, f1 = null, att = .002) { const s = audio.createBufferSource(), fl = audio.createBiquadFilter(), g = audio.createGain(); s.buffer = noiseBuf; fl.type = type; fl.frequency.setValueAtTime(f, t); fl.Q.value = q; if (f1) fl.frequency.exponentialRampToValueAtTime(f1, t + dur); SX.env(g, t, att, dur, vol); s.connect(fl).connect(g).connect(o); s.start(t, Math.random() * .5); s.stop(t + dur + .05); },
+  FM(o, t, f, ratio, index, dur, vol) { const c = audio.createOscillator(), m = audio.createOscillator(), mg = audio.createGain(), g = audio.createGain(); c.frequency.value = f; m.frequency.value = f * ratio; mg.gain.setValueAtTime(f * index, t); mg.gain.exponentialRampToValueAtTime(Math.max(1, f * index * .04), t + dur); SX.env(g, t, .003, dur, vol); m.connect(mg).connect(c.frequency); c.connect(g).connect(o); c.start(t); m.start(t); c.stop(t + dur + .1); m.stop(t + dur + .1); },
+  wet(o, amt) { const g = audio.createGain(), s = audio.createGain(); s.gain.value = amt; g.connect(o); g.connect(s).connect(sfx._rev()); return g; },
+  midi: n => 440 * Math.pow(2, (n - 69) / 12),
+};
 const soundOn = () => audio && $("#optSound").checked;
 const sfx = {
   revive() {  // 소생: 올라가는 밝은 화음
     if (!soundOn() || !audio) return; const t = audio.currentTime;
-    [523, 659, 784, 1047].forEach((f, i) => this.tone(f, t + i * .07, .32, .14, "sine"));
+    const w = SX.wet(SX.out(1.14), .5); [79, 84, 88, 91].forEach((n, i) => SX.FM(w, t + i * .06, SX.midi(n), 4, .9, .6, .14));  // REVIVE-01 힐 반짝
   },
   knock(bad) {  // 기절: 처치보다 짧고 가벼운 소리 (우리가 당하면 낮은 소리)
     if (!soundOn() || !audio) return; const t = audio.currentTime;
     if (bad) { this.tone(220, t, .18, .25, "sawtooth"); this.tone(165, t + .08, .22, .2, "sawtooth"); }
-    else { this.noise(t, .06, .35, 1800); this.tone(660, t, .1, .22); this.tone(880, t + .06, .12, .18); }
+    else { const o = SX.out(.79); SX.T(o, t, 900, .06, .3, "sine", 700); SX.T(o, t + .07, 1200, .07, .25, "sine", 950); }  // KNOCK-01 톡 두 번
   },
   tone(freq, at, dur, vol, type = "triangle") {
     const o = audio.createOscillator(), g = audio.createGain();
@@ -2670,11 +2786,9 @@ const sfx = {
     g.gain.setValueAtTime(.0001, at); g.gain.exponentialRampToValueAtTime(vol, at + .004); g.gain.exponentialRampToValueAtTime(.0001, at + dur);
     m.connect(mg).connect(c.frequency); c.connect(g).connect(dst); c.start(at); m.start(at); c.stop(at + dur + .1); m.stop(at + dur + .1);
   },
-  levelup() {  // 등급 승급 (UP-02 레벨업 차임): 띠리리링~ 밝은 차임 + 반짝이
+  levelup() {  // 등급 승급 (효과음 고르기 UP-02 상승 하프): 끝없이 올라가는 하프
     if (!soundOn() || !audio) return; const t = audio.currentTime + .02, N = n => 440 * Math.pow(2, (n - 69) / 12);
-    const bus = audio.createGain(), send = audio.createGain(); send.gain.value = .5; bus.connect(master || audio.destination); bus.connect(send).connect(this._rev());
-    [72, 76, 79, 84].forEach((n, i) => this.bell(N(n), t + i * .09, 3.5, 1.4, .3, i === 3 ? 1.6 : .5, bus));
-    for (let k = 0; k < 8; k++) this.bell(N(96 + (k % 4) * 3), t + .4 + k * .05, 2, .8, .04, .3, bus);
+    const w = SX.wet(SX.out(3), .5); [60, 64, 67, 72, 76, 79, 84, 88].forEach((n, i) => SX.T(w, t + i * .05, N(n), .5, .09, "triangle"));  // UP-02 상승 하프
   },
   gameover() {  // 워스트 발표 (WS-04 게임 오버): 삐-삐-삐-뿌 하고 내려가는 8비트 소리
     if (!soundOn() || !audio) return; const t = audio.currentTime + .02, N = n => 440 * Math.pow(2, (n - 69) / 12);
@@ -3437,6 +3551,7 @@ function rpEvents(now) {
     fresh.forEach(e => rp.flashes.push({e, until: now + 1600}));
     if (rp.playing && fresh.length <= 3) {
       const snd = rp.sndOn ? sfx : SFX_MUTE;  // 리플레이 효과음을 끄면 알림 소리도 끔
+      if (rp.sndOn && ["kill", "knock", "downed", "died", "revive"].includes(fresh[fresh.length - 1].k)) rpDuck();
       const e = fresh[fresh.length - 1];
       if (e.k === "kill") { rpToast(`${rpName(e.by)} 처치! ${e.w}${e.d ? ", " + e.d + "m" : ""}`); snd.kill(); }
       else if (e.k === "knock") { rpToast(`${rpName(e.by)} 기절시킴! ${e.w || ""}${e.d ? ", " + e.d + "m" : ""}`); snd.knock(); }
@@ -5149,6 +5264,11 @@ function rpLabel(c, t, x, y, col, a) { if (a <= 0) return; c.save(); c.globalAlp
 const SHAKE = {c4: [18, 1.5], p: [11, .8], m: [15, .6], grenade: [4, .35], sticky: [4, .35], car: [8, .7], brdm: [14, 1.1]};  // 폭발 크기별 [세기(px), 지속(초)]
 /* v77 리플레이 효과음: 지도 위 일을 화면 속 위치에 맞춰 좌우·거리감 있게 (화면 가운데에서 멀수록 작고 먹먹하게) */
 const RPS = {last: 0, n: 0, hum: null};
+function rpWorldBus() {  // 지도 소리를 모으는 통로: 처치·기절·소생 알림이 나면 잠깐 절반으로 줄여 알림이 묻히지 않게
+  if (!RPS.bus || RPS.bus.context !== audio) { RPS.bus = audio.createGain(); RPS.bus.connect(master || audio.destination); }
+  return RPS.bus;
+}
+function rpDuck() { if (!audio || !RPS.bus) return; const t = audio.currentTime, g = RPS.bus.gain; g.cancelScheduledValues(t); g.setTargetAtTime(.5, t, .02); g.setTargetAtTime(1, t + .6, .15); }
 function rpSndAt(x, y) {  // 지도 좌표 → [크기 0~1, 좌우 -1~1], 화면에서 너무 멀면 null
   const P = rp.proj; if (!P) return null;
   const sx = P.X(x), sy = P.Y(y), dx = (sx - P.W / 2) / (P.W / 2), dy = (sy - P.H / 2) / (P.H / 2), d = Math.hypot(dx, dy);
@@ -5159,7 +5279,7 @@ function rpVoice(g, pan, dur, build) {  // 소리 하나: build(목적지 노드
   const a = audio, t = a.currentTime, lp = a.createBiquadFilter(), gn = a.createGain(), out = master || a.destination;
   lp.type = "lowpass"; lp.frequency.value = 700 + 9000 * g * g; gn.gain.value = g;
   let last = gn; if (a.createStereoPanner) { const pn = a.createStereoPanner(); pn.pan.value = pan; gn.connect(pn); last = pn; }
-  lp.connect(gn); last.connect(out); build(lp, t);
+  lp.connect(gn); last.connect(rpWorldBus()); build(lp, t);
   setTimeout(() => { try { last.disconnect(); } catch {} }, (dur + .3) * 1000);
 }
 function rpNoise(dst, at, dur, vol, freq, type = "bandpass", q = 1) {
@@ -5175,20 +5295,20 @@ function rpTone(dst, at, f0, f1, dur, vol, type = "sine") {
   o.connect(g).connect(dst); o.start(at); o.stop(at + dur + .02);
 }
 const RP_SND = {
-  shot: (d, t, k) => { rpNoise(d, t, .09, .55 * k, 1900, "bandpass", .8); rpTone(d, t, 140, 60, .07, .35 * k, "square"); },
+  shot: (d, t, k) => { SX.T(d, t, 1400, .04, .15 * 3 * k, "sine", 600); },  // SHOT-06 팝콘
   boom: (d, t, k) => { rpNoise(d, t, 1.1, .9 * k, 380, "lowpass"); rpTone(d, t, 70, 30, .9, .8 * k); rpNoise(d, t, .15, .5 * k, 2500, "bandpass"); },
-  flash: (d, t, k) => { rpNoise(d, t, .25, .7 * k, 3500, "highpass"); rpTone(d, t, 2400, 1800, .5, .08 * k); },
-  fire: (d, t, k) => { rpNoise(d, t, .12, .5 * k, 4200, "bandpass", 2); rpNoise(d, t + .05, 1.2, .35 * k, 900, "bandpass", .6); },
-  hiss: (d, t, k) => { rpNoise(d, t, 1.4, .25 * k, 5000, "highpass"); },
-  zap: (d, t, k) => { for (let i = 0; i < 5; i++) rpTone(d, t + i * .05, 900 + Math.random() * 900, 300, .06, .18 * k, "sawtooth"); rpNoise(d, t, .4, .25 * k, 6000, "highpass"); },
-  knock: (d, t, k) => { rpTone(d, t, 180, 70, .18, .45 * k, "triangle"); rpNoise(d, t, .08, .3 * k, 900); },
-  death: (d, t, k) => { rpTone(d, t, 110, 45, .4, .5 * k, "sine"); rpNoise(d, t + .04, .25, .25 * k, 500, "lowpass"); },
+  flash: (d, t, k) => { k *= .76; SX.T(d, t, 120, .3, .6 * k, "sine", 40); SX.N(d, t, .2, .7 * k, "highpass", 2000); SX.T(d, t + .1, 4000, 1.2, .05 * k, "sine"); },  // FLASH-10 큰 쾅 + 삐
+  fire: (d, t, k) => { SX.N(d, t, .7, .6 * 1.03 * k, "bandpass", 300, .7, 2000, .1); },  // FIRE-04 훅 불길
+  hiss: (d, t, k) => { SX.N(d, t, 1.6, .2 * 2.15 * k, "bandpass", 6000, 3, null, .1); },  // SMOKE-07 가스 새는 소리
+  zap: (d, t, k) => { k *= .86; SX.T(d, t, 1200, .6, .12 * k, "sawtooth", 100); SX.T(d, t, 800, .6, .08 * k, "square", 60); },  // ZAP-05 레이저 전기
+  knock: (d, t, k) => { SX.T(d, t, 900, .25, .12 * 3 * k, "triangle", 250); },  // FKNOCK-03 내려가는 띠융
+  death: (d, t, k) => { k *= .87; SX.T(d, t, 80, .4, .6 * k, "sine", 40); SX.N(d, t, .2, .4 * k, "lowpass", 400); },  // FDEATH-01 비석 쿵
 };
 function rpPlaySnd(kind, x, y, vol = 1) {
   const sp = rpSndAt(x, y); if (!sp) return;
   const now = performance.now(); if (now - RPS.last > 60) { RPS.last = now; RPS.n = 0; }
   if (kind === "shot" && ++RPS.n > 5) return;  // 한꺼번에 너무 많은 총성은 줄임
-  const dur = {boom: 1.2, fire: 1.3, hiss: 1.5, death: .5}[kind] || .5;
+  const dur = {boom: 1.2, fire: .8, hiss: 1.8, flash: 1.4, zap: .7, death: .5}[kind] || .5;
   rpVoice(sp[0] * vol, sp[1], dur, (d, t) => RP_SND[kind](d, t, 1));
 }
 function rpSound(t0, t1) {  // 재생하며 지나간 0.x초 사이에 일어난 소리들
@@ -5229,14 +5349,15 @@ function rpHum(b) {  // 엔진 소리는 끊기지 않게 하나를 계속 켜 �
   if (!b) { if (RPS.hum) RPS.hum.g.gain.setTargetAtTime(0, audio.currentTime, .15); return; }
   if (!RPS.hum) {
     const o = audio.createOscillator(), o2 = audio.createOscillator(), lp = audio.createBiquadFilter(), g = audio.createGain();
-    o.type = "sawtooth"; o2.type = "square"; lp.type = "lowpass"; lp.frequency.value = 420; g.gain.value = 0;
+    o.type = "triangle"; o2.type = "sine"; lp.type = "lowpass"; lp.frequency.value = 500; g.gain.value = 0;  // ENGINE-01 부드러운 세단
     let last = g; if (audio.createStereoPanner) { const pn = audio.createStereoPanner(); g.connect(pn); last = pn; RPS.pan = pn; }
-    o.connect(lp); o2.connect(lp); lp.connect(g); last.connect(master || audio.destination); o.start(); o2.start();
-    RPS.hum = {o, o2, g};
+    o.connect(lp); o2.connect(lp); lp.connect(g); last.connect(rpWorldBus()); o.start(); o2.start();
+    RPS.hum = {o, o2, g, lp};
   }
-  const t = audio.currentTime, f = 45 + Math.min(130, b.kmh) * .55;
+  const t = audio.currentTime, sp = Math.min(130, b.kmh) / 130, f = 55 + sp * 65;
+  RPS.hum.lp.frequency.setTargetAtTime(500 * (1 + sp * .8), t, .2);
   RPS.hum.o.frequency.setTargetAtTime(f, t, .2); RPS.hum.o2.frequency.setTargetAtTime(f * .5, t, .2);
-  RPS.hum.g.gain.setTargetAtTime(b.kmh > 8 ? .07 * b.g : .02 * b.g, t, .2);
+  RPS.hum.g.gain.setTargetAtTime(b.kmh > 8 ? .076 * b.g : .022 * b.g, t, .2);
   if (RPS.pan) RPS.pan.pan.setTargetAtTime(b.pan, t, .2);
 }
 function throwTiming(kind, boomAt) {  // 투척물 비행 시간 · C4 타이머 · 떨어져서 터지기까지 (그림과 흔들림이 같은 시각을 쓰게)
@@ -5916,34 +6037,22 @@ const SCORE_ROWS = [
   ["survival", "평균 생존", m => m.survival_min + "분", a => a.survival_min + "분"],
   ["bluechip", "블루칩으로 살린 인원", null, null],
 ];
-function openScore(r) {
-  const w = state.weights, f = state.fair || {};
-  const ps = r.ranking;
-  const rows = SCORE_ROWS.map(([k, label, raw, adj]) => `<tr><td class="k">${label}<small>${k === "bluechip" ? `1명당 ${w.bluechip_per_person ?? 5}점, 최대 ${w[k]}점` : `배점 ${w[k]}점`}</small></td>
-    ${ps.map(p => { const a = p.adjusted;
-      if (k === "bluechip") return `<td class="v"><b>${p.parts[k] ?? 0}점</b><small>${p.totals.bluechip ?? 0}명</small></td>`;
-      if (k === "survival" && p.tel?.alive_s) {  // PUBG 공식 값과 실제 생존 시간 비교
-        const g = p.totals.games || 1;
-        return `<td class="v"><b>${p.parts[k] ?? 0}점</b><small>${raw(p.metrics)}${a ? " → " + adj(a) : ""}</small><small>PUBG 기록 ${(p.tel.stat_surv / 60 / g).toFixed(1)}분 → 실제 ${(p.tel.alive_s / 60 / g).toFixed(1)}분</small></td>`;
-      }
-      return `<td class="v"><b>${p.parts[k] ?? 0}점</b><small>${raw(p.metrics)}${a ? " → " + adj(a) : ""}</small></td>`; }).join("")}</tr>`).join("");
-  const pen = ps.some(p => p.penalty) ? `<tr><td class="k">감점<small>팀킬·팀원 기절 ${w.teamkill_penalty}, 자살 ${w.suicide_penalty ?? 5}, 기절당함 ${w.downed_penalty ?? .5}점씩</small></td>${ps.map(p => { const t = p.totals || {};
-    const why = [(t.teamkills || t.teamknocks) ? `팀킬·팀원 기절 ${(t.teamkills || 0) + (t.teamknocks || 0)}` : "", t.suicides ? `자살 ${t.suicides}` : "", t.downed ? `기절 ${t.downed}` : ""].filter(Boolean).join(", ");
-    return `<td class="v"><b>${p.penalty ? "−" + p.penalty : "0"}</b>${why ? `<small>${why}</small>` : ""}</td>`; }).join("")}</tr>` : "";
+function openScore(r) {  // v78: 설명만 간결하게 (점수 표는 뺌)
+  const w = state.weights, f = state.fair || {}, A = state.abs_full || {};
+  const ITEMS = [["판당 딜량", w.damage, fmt(A.damage ?? 340)], ["판당 킬", w.kills, A.kills ?? 2.4], ["판당 기절", w.dbnos, A.dbnos ?? 2.5],
+    ["판당 어시", w.assists, A.assists ?? 1], ["판당 소생", w.revives, A.revives ?? .8], ["평균 생존", w.survival, (A.survival_min ?? 20) + "분"]];
   $("#scoreBody").innerHTML = `
-    <ol>
-      <li>오늘 같이 한 판만 모아서 사람마다 <b>판당 평균</b>을 냅니다.</li>
-      <li><b>판 수 보정</b>: 판 수가 적은 사람은 오늘 넷 평균 쪽으로 조금 당겨서 계산해요. 평균 기록 ${f.shrink_games ?? 2}판을 섞는 셈이라, 1~2판만 하고 운 좋게 높은 사람이 1등을 가져가기 어렵습니다. 다 같이 같은 판 수를 했다면 순서는 거의 그대로예요.</li>
-      <li><b>절대평가</b>: 항목마다 정해 둔 기준을 채우면 만점이에요. 판당 딜량 ${fmt(state.abs_full?.damage ?? 340)}, 킬 ${state.abs_full?.kills ?? 2.4}, 기절 ${state.abs_full?.dbnos ?? 2.5}, 어시 ${state.abs_full?.assists ?? 1}, 소생 ${state.abs_full?.revives ?? .8}, 생존 ${state.abs_full?.survival_min ?? 20}분.
-        덜 하면 <b>곡선</b>으로 받아요: 기준의 절반만 해도 그 항목 점수의 약 70%, 4분의 1이면 50%. 그래서 보통 실력이면 하루 75~80점, 정말 잘한 날만 만점 가까이 가요.</li>
-      <li><b>블루칩</b>은 100점 위에 더해지는 <b>보너스</b>예요. 블루칩으로 살린 팀원 1명당 ${w.bluechip_per_person ?? 5}점, 최대 ${w.bluechip}점.</li>
-      <li><b>평균 생존</b>은 실제로 살아 있던 시간만 세요. 죽어 있던 시간은 빼고, 블루칩 비행기에 탄 순간부터 다시 셉니다. 아래 표에 PUBG 공식 기록과 같이 보여드려요. 블루칩으로 복귀한 판이 없으면 두 값이 거의 같아요.</li>
-      <li>헤드샷 비율과 평균 순위는 기록으로만 보여주고 점수에는 넣지 않아요. 4인 스쿼드는 팀 순위가 넷 다 같아서 차이가 나지 않거든요.</li>
-      <li>모두 더한 뒤 <b>감점</b>을 빼요 (모두 횟수만큼): 팀킬이나 팀원을 기절시킨 1회당 ${w.teamkill_penalty}점, 자살 1회당 ${w.suicide_penalty ?? 5}점, 기절당함 1회당 ${w.downed_penalty ?? .5}점. 합계가 높은 순서로 1~4등이에요.</li>
+    <p class="sc-lead">항목 점수를 더해 <b>100점 만점</b>, 여기에 <b>블루칩 보너스</b>를 더하고 <b>감점</b>을 빼요. 합계가 높은 순서로 1~4등이에요.</p>
+    <div class="sc-items" aria-label="항목별 배점과 만점 기준">${ITEMS.map(([n, pt, full]) => `<div><span>${n}</span><b>${pt ?? "-"}<small>점</small></b><em>만점 기준 ${full}</em></div>`).join("")}</div>
+    <ol class="sc-steps">
+      <li><b>판당 평균</b><span>오늘 같이 한 판만 모아서 사람마다 판당 평균을 내요.</span></li>
+      <li><b>판 수 보정</b><span>${+(f.shrink_games ?? 2) > 0 ? `판 수가 적은 사람은 오늘 넷 평균 기록 ${f.shrink_games ?? 2}판을 섞어서 계산해요. 1~2판만 하고 운 좋게 높은 사람이 1등을 가져가기 어려워요.` : "지금은 꺼져 있어요. 판 수와 상관없이 판당 평균 그대로 계산해요."}</span></li>
+      <li><b>절대평가</b><span>만점 기준을 채우면 그 항목 만점이에요. 덜 하면 곡선으로 받아서, 기준의 절반이면 약 70%, 4분의 1이면 50%를 받아요.</span></li>
+      <li><b>평균 생존</b><span>실제로 살아 있던 시간만 세요. 죽어 있던 시간은 빼고, 블루칩 비행기에 탄 순간부터 다시 세요.</span></li>
+      <li><b>블루칩 보너스</b><span>블루칩으로 살린 팀원 1명당 ${w.bluechip_per_person ?? 5}점, 최대 ${w.bluechip}점을 100점 위에 더해요.</span></li>
+      <li><b>감점</b><span>팀킬이나 팀원 기절 1회당 ${w.teamkill_penalty}점, 자살 1회당 ${w.suicide_penalty ?? 5}점, 기절당함 1회당 ${w.downed_penalty ?? .5}점을 빼요.</span></li>
     </ol>
-    <div class="tbl"><table class="score-tbl"><thead><tr><th>항목</th>${ps.map(p => `<th class="p">${p.rank}위 ${esc(p.name)}</th>`).join("")}</tr></thead>
-    <tbody>${rows}${pen}<tr class="total"><td>합계</td>${ps.map(p => `<td class="v">${sc(p.total)}점</td>`).join("")}</tr></tbody></table></div>
-    <p class="score-note">작은 글씨는 '실제 기록 → 보정한 값'이에요. 점수는 보정한 값으로 계산합니다.</p>`;
+    <p class="score-note">헤드샷 비율과 평균 순위는 기록으로만 보여주고 점수에는 넣지 않아요. 4인 스쿼드는 팀 순위가 넷 다 같기 때문이에요.</p>`;
   $("#scoreDlg").showModal();
   $("#scoreCloseTop").focus();
 }
