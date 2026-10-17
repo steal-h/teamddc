@@ -1432,6 +1432,14 @@ html,body{overscroll-behavior-y:none}
 .rp-teams .t7 .tk{font:600 16px/1 "Teko","Oswald","Arial Narrow",sans-serif;color:#E8E2CC;padding-top:3px}
 @keyframes t7blink{50%{opacity:.35}}
 @media (prefers-reduced-motion:reduce){.rp-teams .t7 .tbars i.down{animation:none}}
+/* 눕힌 폰·좁은 가로 화면: 머리줄이 제목과 겹치지 않게 (버튼은 아이콘만, 넘치면 다음 줄로) */
+@media (orientation:landscape) and (max-height:500px), (min-width:621px) and (max-width:900px){
+  .top,.top.stacked{flex-wrap:wrap!important}
+  .brand{flex:none}
+  .nav{flex-wrap:wrap!important;justify-content:flex-end;min-width:0;margin-left:auto}
+  .app-btn .lbl,body.viewer .viewer-badge .lbl{display:none}
+  .app-btn{padding:4px 9px!important;font-size:15px!important}body.viewer .viewer-badge{padding:4px 9px!important}
+}
 /* 지난 기록: 달 넘기기 + 치킨 수 */
 .hist-mon{display:flex;align-items:center;gap:10px;margin:0 0 10px}
 .hist-mon>div{flex:1;min-width:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
@@ -1581,8 +1589,8 @@ html,body{overscroll-behavior-y:none}
       <button class="btn" role="tab" aria-selected="true" data-tab="awards">오늘의 어워즈</button>
       <button class="btn" role="tab" aria-selected="false" data-tab="cards">선수 카드</button>
       <button class="btn" role="tab" aria-selected="false" data-tab="cum">누적 기록</button>
-      <span class="viewer-badge" title="관리자가 저장한 기록만 볼 수 있어요">👀 조회 전용</span>
-      <span class="app-wrap"><button class="app-btn" id="btnInstall" type="button" hidden title="홈 화면에 앱으로 설치 (주소창 없이 열림)">📲 앱 설치</button><button class="app-btn" id="btnFull" type="button" hidden title="전체 화면">⛶ 전체 화면</button></span>
+      <span class="viewer-badge" title="관리자가 저장한 기록만 볼 수 있어요">👀<span class="lbl"> 조회 전용</span></span>
+      <span class="app-wrap"><button class="app-btn" id="btnInstall" type="button" hidden title="홈 화면에 앱으로 설치 (주소창 없이 열림)">📲<span class="lbl"> 앱 설치</span></button><button class="app-btn" id="btnFull" type="button" hidden title="전체 화면">⛶<span class="lbl"> 전체 화면</span></button></span>
       <i class="nav-br" aria-hidden="true"></i>
       <button class="pub-badge" id="pubBadge" type="button" title="웹 공유 상태 — 눌러서 설정 열기"></button>
       <button class="btn" id="btnSettings">설정</button>
@@ -5579,7 +5587,7 @@ function renderShareCard(r) {
     const app = standalone(), fs = !!document.fullscreenElement;
     inst.hidden = !(deferred && !app);
     full.hidden = !(touch && !fs && document.documentElement.requestFullscreen && !matchMedia("(display-mode: fullscreen)").matches);
-    full.title = app ? "상태바까지 숨기기" : "전체 화면 (주소창 숨기기)"; full.textContent = app ? "⛶" : "⛶ 전체 화면";
+    full.title = app ? "상태바까지 숨기기" : "전체 화면 (주소창 숨기기)"; full.innerHTML = app ? "⛶" : `⛶<span class="lbl"> 전체 화면</span>`;
   };
   addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; paint(); });  // 크롬이 '설치할 수 있는 앱'으로 알아본 경우에만 옴
   addEventListener("appinstalled", () => { deferred = null; paint(); });
