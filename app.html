@@ -3,6 +3,7 @@
 <head>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -1371,6 +1372,40 @@ body.viewer .share-row .seg,body.viewer #btnCopyImg,body.viewer #btnSaveImg,body
 /* 치킨 픽셀 닭 */
 .rs1 .rk-chick{height:.9em;width:auto;vertical-align:-.05em;image-rendering:pixelated;margin-right:2px}
 .history td.win .chick{height:17px;width:auto;margin-right:4px;vertical-align:-3px;image-rendering:pixelated}
+/* 한글은 낱말 중간에서 줄이 바뀌지 않게 (예: "오 / 늘") */
+html{word-break:keep-all;overflow-wrap:break-word}
+/* 폰: 아래로 당겨 새로고침 막기 (앱처럼) */
+html,body{overscroll-behavior-y:none}
+@media (max-width:620px){
+  /* 누적 기록: 표 대신 선수마다 카드 */
+  .cum{background:none!important;border:0!important;overflow:visible!important}
+  .cum table,.cum tbody{display:block}
+  .cum thead{display:none}
+  .cum tr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"nm nm nm av" "c1 c2 c3 c4" "ds ds ds dy";gap:8px 6px;align-items:center;
+    background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:8px}
+  .cum td{display:block;padding:0!important;border:0!important}
+  .cum td:nth-child(1){grid-area:nm;min-width:0}.cum td:nth-child(1) b{font-size:18px!important}
+  .cum td:nth-child(2){grid-area:c1}.cum td:nth-child(3){grid-area:c2}.cum td:nth-child(4){grid-area:c3}.cum td:nth-child(5){grid-area:c4}
+  .cum td.c{display:grid;justify-items:center;gap:1px;background:var(--panel-2);border-radius:6px;padding:6px 0!important;font-size:20px!important;line-height:1.1}
+  .cum td.c::before{font:600 10.5px var(--body);color:var(--dust)}
+  .cum td:nth-child(2)::before{content:"1등"}.cum td:nth-child(3)::before{content:"2등"}.cum td:nth-child(4)::before{content:"3등"}.cum td:nth-child(5)::before{content:"4등"}
+  .cum td:nth-child(6){grid-area:dy;text-align:right;color:var(--dust);font-size:12px}
+  .cum td:nth-child(7){grid-area:av;text-align:right;font:500 20px var(--num);color:var(--accent);white-space:nowrap}
+  .cum td:nth-child(7)::before{content:"평균 ";font:600 11px var(--body);color:var(--dust)}
+  .cum td:nth-child(8),.cum td:last-child{display:block!important;grid-area:ds}
+  .cum .dist{height:8px;border-radius:4px}
+  /* 지난 기록: 날마다 카드 (날짜·게임·치킨 한 줄, 아래 순위) */
+  .history{background:none!important;border:0!important;overflow:visible!important}
+  .history table,.history tbody{display:block}
+  .history thead{display:none}
+  .history tr{display:grid;grid-template-columns:auto auto 1fr auto;grid-template-areas:"dt gm ck dl" "or or or or";gap:6px 12px;align-items:center;
+    background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+  .history td{display:block;padding:0!important;border:0!important}
+  .history td:nth-child(1){grid-area:dt;font-size:14.5px}.history td:nth-child(2){grid-area:gm;color:var(--dust);font-size:13px}
+  .history td:nth-child(3){grid-area:ck;font-size:13px}.history td:nth-child(4){grid-area:or;font-size:13px!important;line-height:1.5}
+  .history td:nth-child(5){grid-area:dl;font-size:12px}
+  .hist-mon b{font-size:18px}.hist-mon span{font-size:12px}
+}
 /* 지난 기록: 달 넘기기 + 치킨 수 */
 .hist-mon{display:flex;align-items:center;gap:10px;margin:0 0 10px}
 .hist-mon>div{flex:1;min-width:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
@@ -1512,7 +1547,7 @@ body.viewer .share-row .seg,body.viewer #btnCopyImg,body.viewer #btnSaveImg,body
 }
 </style>
 </head>
-<body>
+<body class="viewer">
 <div class="wrap">
   <div class="top">
     <div class="brand"><b>TEAM DDC</b><span>게임 어워즈</span></div>
@@ -4070,7 +4105,7 @@ function rpDraw(dt, now, view) {
     if (g.inCar && /brdm/i.test(g.inCar[3] || "")) {  // BRDM은 장갑차 그림 (테두리 = 탄 사람 색) + 맞으면 차량 체력바
       drawBRDM(ctx, x, y, r * 2.9, rpHeading(g.p.nick, t => posAt(g.p, t)), fillCol);
       if (R.our_team != null) drawTeamTag(ctx, x + r * 1.15, y - r * 1.05, R.our_team, "#F2A900");
-      drawSeats(ctx, x + r * 1.15 + 10, y - r * 1.05, rpBrdmCount(R, g.inCar[4]), "#F2A900");  // 탑승 인원
+      drawSeats(ctx, x - 14.5, y + r * 1.75 + 10, rpBrdmCount(R, g.inCar[4]), "#F2A900");  // 탑승 인원 (체력바 아래 가운데)
       rpHpBar(ctx, rpCarHp(g.inCar[4]), x, y + r * 1.75, Math.max(30, r * 2.6), 4, true);
     }
     else if (g.inCar && /mortar/i.test(g.inCar[3] || "")) drawMortarSeat(ctx, x, y, r, fillCol, rp.t, g.p.nick);  // 박격포 설치·사용 중: 박격포 그림
@@ -4151,7 +4186,7 @@ function rpDraw(dt, now, view) {
         if (!foeCars.some(o => o.tm === en.tm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 40)) {
           const vh = (en.vh || []).find(v => rp.t >= v[0] && rp.t <= v[1]);
           if (vh && vh[2] === 2) drawMortarSeat(ctx, x, y, big ? 9 : 7, teamColor(en.tm || 0), rp.t, en.n);
-          else if (vh && vh[2]) { drawBRDM(ctx, x, y, big ? 28 : 20, rpHeading("e:" + en.n, t => interp(en.tr, t)), teamColor(en.tm || 0)); drawTeamTag(ctx, x + (big ? 12 : 9), y - (big ? 11 : 8), en.tm, teamColor(en.tm || 0)); drawSeats(ctx, x + (big ? 22 : 19), y - (big ? 11 : 8), Math.max(1, rpBrdmCount(R, vh[3], en.tm)), teamColor(en.tm || 0)); rpHpBar(ctx, rpCarHp(vh[3]), x, y + (big ? 18 : 14), big ? 26 : 20, 3, true); }
+          else if (vh && vh[2]) { drawBRDM(ctx, x, y, big ? 28 : 20, rpHeading("e:" + en.n, t => interp(en.tr, t)), teamColor(en.tm || 0)); drawTeamTag(ctx, x + (big ? 12 : 9), y - (big ? 11 : 8), en.tm, teamColor(en.tm || 0)); drawSeats(ctx, x - 14.5, y + (big ? 26 : 21), Math.max(1, rpBrdmCount(R, vh[3], en.tm)), teamColor(en.tm || 0)); rpHpBar(ctx, rpCarHp(vh[3]), x, y + (big ? 18 : 14), big ? 26 : 20, 3, true); }
           else drawWheel(ctx, x, y, big ? 9 : 6, teamColor(en.tm || 0));
           foeCars.push({q, tm: en.tm});
         }
