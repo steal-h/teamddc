@@ -1909,7 +1909,7 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 @media (max-width:620px){.spot-st{gap:12px;justify-content:flex-start}.spot-st b{font-size:22px}.spot-st small{font-size:11px}.medals::before{left:-10px;right:-10px}}
 @media (orientation:landscape) and (max-height:500px){.spot-st{justify-content:flex-start;gap:18px}.spot-st b{font-size:22px}}
 /* v91 등고선 배경 (그날 가장 많이 한 맵 색) */
-body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:var(--topo,none);background-size:900px 900px;background-position:center top;-webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.55),#000 30%,#000);mask-image:linear-gradient(180deg,rgba(0,0,0,.55),#000 30%,#000)}
+body::before{content:none;display:none;background-image:var(--topo,none);background-size:900px 900px;background-position:center top;-webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.55),#000 30%,#000);mask-image:linear-gradient(180deg,rgba(0,0,0,.55),#000 30%,#000)}
 html.share-mode body::before{display:none}
 @media print{body::before{display:none}}
 /* v91 전술 펜 */
@@ -2225,7 +2225,7 @@ function setTopo(map) {  // map = 맵 코드나 한글 이름 (없으면 기본 
   const run = () => { try { document.documentElement.style.setProperty("--topo", `url(${topoTile(seed, /^#[0-9a-f]{6}$/i.test(col) ? col : "#A9A68F")})`); } catch {} };
   (window.requestIdleCallback || (f => setTimeout(f, 60)))(run);
 }
-setTopo(null);
+
 
 // v77 숫자 카운트업: 점수·딜량·킬·능력치가 화면에 들어올 때 0에서 차오름 (한 번만)
 const countUpIO = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { countUpIO.unobserve(e.target); countUpRun(e.target); } }), {threshold: .4}) : null;
@@ -2646,7 +2646,6 @@ function mapsHtml(r) {  // v78 오늘의 맵 (MC-01 지도 타일)
   const maps = r.maps || [];
   if (!maps.length) return "";
   const max = Math.max(...maps.map(m => m.count));
-  setTimeout(() => { const top = maps.find(m => m.count === max); setTopo(top && (codeOf(top.map) || top.map)); });  // v91 등고선 배경 색 = 가장 많이 한 맵
   const codeOf = name => (r.games || []).find(g => g.map === name && g.map_code)?.map_code || state?.map_codes?.[name];
   const killsOf = name => (r.games || []).filter(g => g.map === name).reduce((a, g) => a + g.players.reduce((b, p) => b + p.kills, 0), 0);
   return `<div class="sec"><h3>오늘의 맵</h3></div>
@@ -2771,7 +2770,7 @@ function renderDay(r, report, reveal) {
         ${avatar(first, "lg") || trophy()}
         <div class="award">최우수 플레이어</div>
         <div class="name">${esc(first.name)}</div>
-        <div class="line spot-st"><span><b>${sc(first.total)}</b><small>총점</small></span><span><b>${fmt(first.metrics.damage)}</b><small>판당 딜</small></span><span><b>${first.metrics.kills}</b><small>판당 킬</small></span><span><b>${first.metrics.headshot_pct}%</b><small>헤드샷</small></span></div>
+        <div class="line spot-st"><span><b>${sc(first.total)}</b><small>총점</small></span></div>
         ${badgesHtml(first)}
       </div></div>
       <div class="medals">${medals}</div>
