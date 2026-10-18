@@ -602,7 +602,7 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 .rp-phud .st b{width:17px;height:17px;border-radius:4px;display:grid;place-items:center;font-size:10px;background:rgba(255,255,255,.1);flex:none}
 .rp-phud .st.fight{color:#FFD772}.rp-phud .st.fight b{background:rgba(242,169,0,.25)}.rp-phud .st.heal{color:#9be37a}.rp-phud .st.heal b{background:rgba(155,227,122,.2)}
 .rp-phud .st.down{color:#FF8C6E}.rp-phud .st.down b{background:rgba(224,83,47,.3)}.rp-phud .st.car b{background:rgba(127,178,229,.25)}
-.rp-phud .ph.dead{opacity:.45;filter:grayscale(1)}.rp-phud .ph.down{border-color:rgba(224,83,47,.6);animation:phdown 1s ease-in-out infinite alternate}
+.rp-phud .ph.dead{opacity:.45;filter:grayscale(1)}.rp-phud .ph.down{border-color:rgba(224,83,47,.6)}
 @keyframes phdown{to{box-shadow:0 0 14px rgba(224,83,47,.45)}}
 .rp-toast{bottom:84px!important}
 @container (max-width:1060px){.rp-stage .rp-hud.rp-hud-br{bottom:calc(14px + 70px * var(--hud,1) + 8px)}}  /* 좁은 화면에서만 팀원 카드와 겹치지 않게 위로 */
@@ -1060,7 +1060,7 @@ html.share-mode .pc .beam,html.share-mode .pc .meteor,html.share-mode .pc .ldot{
 .rp-hint{position:absolute;left:14px;bottom:14px;background:rgba(20,23,15,.82);border:1px solid #3A4030;border-radius:4px;padding:6px 12px;font-size:13px;color:var(--dust);transition:opacity .6s;pointer-events:none}
 .rp-hint.off{opacity:0}
 .replay.rec .rp-hint{display:none}
-.reel-msg{margin:8px 0 0;color:var(--accent);font-size:14px;min-height:20px}
+.reel-msg{margin:8px 0 0;color:var(--accent);font-size:14px;min-height:20px}.reel-msg:empty{min-height:0;margin:0}.share-msg+.reel-msg{text-align:center}
 .reel-msg.err{color:var(--flare)}
 .rp-card .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 
@@ -1640,9 +1640,16 @@ html,body{overscroll-behavior-y:none}
 
 /* v77 자기장 경고: 팀원이 블루존 밖이면 카드 테두리가 푸르게 깜빡 */
 .rp-phud .ph.oz{border-color:#5AA8FF;animation:phzone 1.1s ease-in-out infinite alternate}
-.rp-phud .ph.oz.down{animation:phzone 1.1s ease-in-out infinite alternate,phdown 1s ease-in-out infinite alternate}
+/* v80 빨간 경고: 체력이 적거나 기절이면 빨갛게 깜빡, 맞는 순간엔 빨갛게 번쩍 (파란 자기장 경고와 함께 보일 수 있게 겉 그림자·::after·::before를 나눠 씀) */
+.rp-phud .ph{position:relative}
+.rp-phud .ph::before,.rp-phud .ph::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;opacity:0}
+.rp-phud .ph.low::after,.rp-phud .ph.down::after{border:2px solid #FF4A3A;box-shadow:0 0 14px rgba(255,60,40,.6),inset 0 0 12px rgba(255,60,40,.35);animation:phred .5s ease-in-out infinite alternate}
+.rp-phud .ph.down::after{animation-duration:.85s}
+.rp-phud .ph.hit::before{background:rgba(255,45,25,.42);border:2px solid #FF6A50;animation:phhit .5s ease-out both}
+@keyframes phred{from{opacity:.12}to{opacity:1}}
+@keyframes phhit{0%{opacity:1}100%{opacity:0}}
 @keyframes phzone{from{box-shadow:0 0 0 1px rgba(90,168,255,.35),inset 0 0 0 0 rgba(90,168,255,0)}to{box-shadow:0 0 0 2px rgba(90,168,255,.95),0 0 16px rgba(70,150,255,.6),inset 0 0 14px rgba(70,150,255,.28)}}
-@media (prefers-reduced-motion:reduce){.rp-phud .ph.oz{animation:none;box-shadow:0 0 0 2px #5AA8FF}}
+/* 경고 깜빡임은 정보라서 "동작 줄이기" 설정에서도 그대로 둠 (천천히 깜빡임) */
 
 /* v77 리플레이 아이콘 버튼 (효과음 · 시네마) */
 .rp-top .btns .btn.ic{width:38px;padding:0;display:inline-grid;place-items:center;flex:none}
@@ -1783,8 +1790,8 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .glt td.rk small{color:var(--dust);margin-left:2px;font-size:12px}.glt td.rk .chick{width:16px;height:16px;vertical-align:-3px;margin-right:2px}
 .glt tr.w td{background:rgba(242,169,0,.08)}.glt tr.w td.rk{color:var(--accent);font-weight:700}
 .glt td.ps{width:44%;min-width:300px;padding-block:6px}
-.glt .ps>div{display:grid;grid-template-columns:76px 32px minmax(40px,1fr) 38px;gap:8px;align-items:center;font-size:12.5px;line-height:1.55}
-.glt .ps .nm{display:flex;align-items:center;gap:3px;overflow:hidden;text-overflow:ellipsis}.glt .ps .nm .crown{width:14px;height:11px;flex:none}
+.glt .ps>div{display:grid;grid-template-columns:14px 76px 32px minmax(40px,1fr) 38px;gap:8px;align-items:center;font-size:12.5px;line-height:1.55}
+.glt .ps .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.glt .ps .cw{display:flex;align-items:center;justify-content:center;margin-right:-4px}.glt .ps .cw .crown{width:14px;height:11px;flex:none}
 .glt .ps .k{color:var(--dust)}.glt .ps .d{text-align:right;font-variant-numeric:tabular-nums;color:var(--dust)}
 .glt .ps .br{height:5px;border-radius:3px;background:var(--panel-2);overflow:hidden}.glt .ps .br i{display:block;height:100%;background:var(--dust);border-radius:3px}
 .glt .ps .m .nm{color:var(--accent);font-weight:700}.glt .ps .m .br i{background:var(--accent)}
@@ -1799,7 +1806,7 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
   .glt tr.w{background:rgba(242,169,0,.08);border-color:rgba(242,169,0,.35)}.glt tr.w td{background:transparent}
   .glt td{border:0;padding:0}.glt td.no{grid-area:no}.glt td.tm{grid-area:tm}.glt td:nth-child(3){grid-area:mc}.glt td.rk{grid-area:rk}.glt td.pl{grid-area:pl;padding:0}
   .glt td.n{display:none}.glt td.ps{grid-area:ps;width:auto;min-width:0;padding-top:4px}
-  .glt .ps>div{grid-template-columns:70px 30px minmax(0,1fr) 36px}
+  .glt .ps>div{grid-template-columns:14px 70px 30px minmax(0,1fr) 36px}
 }
 </style>
 </head>
@@ -2490,8 +2497,7 @@ function replayCard(r) {  // v78 오늘의 리플레이 (RC-08 중계 화면 하
       <div class="rcb-mid"><small>${no ? `MATCH ${no} · ` : ""}${esc(g.time)} · ${eng}</small><b>${esc(g.map)} ${g.rank === 1 ? "치킨" : g.rank + "등"}</b>
         <div class="rcb-st"><span><em>${k}</em>KILLS</span><span><em>${fmt(Math.round(dmg))}</em>DMG</span><span><em>${g.teams || "-"}</em>TEAMS</span></div></div>
       <div class="rcb-side"><button class="btn primary" id="btnReel" type="button">오늘의 명장면</button><button class="btn" data-rp="${esc(g.id)}" type="button">이 판 리플레이</button></div></div></div>
-    <div class="rcb-admin"><button class="btn" id="btnReelSend">명장면 영상 디스코드 공유</button><button class="btn" id="btnReelSave">명장면 영상 저장</button></div>
-    <p class="reel-msg" id="reelMsg" aria-live="polite"></p>`;
+`;
 }
 function kdaOf(t) {  // (킬 + 어시) ÷ 죽은 횟수 (예전 기록엔 죽은 횟수가 없어서 판 수 − 치킨으로 짐작)
   const d = t.deaths ?? Math.max(0, (t.games || 0) - (t.wins || 0));
@@ -2556,7 +2562,7 @@ function renderDay(r, report, reveal) {
       <td><span class="mc" style="--c:${mapColor(g.map_code || g.map)}"><i></i>${esc(g.map)}</span></td>
       <td class="rk">${g.rank === 1 ? `<img class="chick" src="${CHICK_IMG}" alt="">치킨` : g.rank + "등"}<small>/${g.teams}</small></td>
       <td class="n">${tk}</td><td class="n">${fmt(Math.round(td))}</td>
-      <td class="ps">${g.players.map(p => `<div class="${p === mvp && hasM ? "m" : ""}"><span class="nm">${p === mvp && hasM ? CROWN : ""}${esc(p.name)}</span><span class="k">${p.kills}킬</span><span class="br"><i style="width:${p.damage / dmgMax * 100}%"></i></span><span class="d">${fmt(p.damage)}</span></div>`).join("")}</td>
+      <td class="ps">${g.players.map(p => `<div class="${p === mvp && hasM ? "m" : ""}"><span class="cw">${p === mvp && hasM ? CROWN : ""}</span><span class="nm">${esc(p.name)}</span><span class="k">${p.kills}킬</span><span class="br"><i style="width:${p.damage / dmgMax * 100}%"></i></span><span class="d">${fmt(p.damage)}</span></div>`).join("")}</td>
       <td class="pl">${g.id ? `<button class="ib" type="button" data-rp="${esc(g.id)}" aria-label="${i + 1}판 리플레이" title="리플레이"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5"/><path d="M8.2 6.6v6.8l5.4-3.4z"/></svg></button>` : ""}</td></tr>`; }).join("");
 
   const bg = mapUrl(r);
@@ -2580,8 +2586,10 @@ function renderDay(r, report, reveal) {
       <button class="btn primary" id="btnDiscord">디스코드 채널에 공유</button>
       <button class="btn" id="btnReplay">시상식 다시 보기</button>
       <button class="btn" id="btnScore">점수 계산 보기</button>
+      ${bestGame(r) ? `<button class="btn" id="btnReelSend">명장면 영상 디스코드 공유</button><button class="btn" id="btnReelSave">명장면 영상 저장</button>` : ""}
     </div>
     <div class="share-msg" id="shareMsg" aria-live="polite"></div>
+    <p class="reel-msg" id="reelMsg" aria-live="polite"></p>
     ${mapsHtml(r)}
     ${replayCard(r)}
     <div class="sec"><h3>수상자 상세 기록</h3></div>
@@ -2684,6 +2692,7 @@ function startBgm() {
 const BGM_SCENE = {  // [크기, 저역 통과 Hz(낮을수록 먹먹), 빠르기]
   intro: [.5, 18000, 1], worst: [.3, 650, .94], third: [.4, 2400, 1], second: [.5, 6000, 1.02],
   slot: [.58, 18000, 1.06], hit: [.12, 18000, 1.06], champ: [.7, 18000, 1], end: [.42, 9000, 1],
+  reelcard: [.55, 18000, 1], reelplay: [.2, 1800, 1],  // v80 명장면: 자막 카드에선 크게, 장면 재생 중엔 작고 먹먹하게 (총소리가 들리게)
 };
 function bgmScene(name, sec = .8) {
   const sc0 = BGM_SCENE[name]; if (!sc0 || !bgmEl) return;
@@ -3358,6 +3367,21 @@ async function openReplay(id) {
 
 /* ───── 오늘의 명장면 (하이라이트 릴) ───── */
 let reelToken = 0;
+const reelSfx = {  // v80 명장면 연출 효과음 (시상식처럼): 자막 카드가 날아들 때 휙 → 쾅 → 종, 시작·끝은 크게
+  whoosh(t, dur = .38, vol = .3) { SX.N(SX.out(1), t, dur, vol, "bandpass", 380, 1.6, 4200, dur * .7); },
+  hit(t, big) { const o = SX.out(1); SX.T(o, t, big ? 120 : 100, big ? 1 : .55, big ? .75 : .55, "sine", 36, .004); SX.N(o, t, .22, .45, "lowpass", 900); SX.N(o, t, .08, .25, "highpass", 3500); },
+  chime(t, ns, vol = .12) { const w = SX.wet(SX.out(1), .55); ns.forEach((n, i) => sfx.bell(SX.midi(n), t + i * .07, 3.5, 2.2, vol, 1.6, w)); },
+  ok() { return soundOn() && noiseBuf; },
+  intro() { if (!this.ok()) return; const t = audio.currentTime + .02; sfx.riser(.9); this.hit(t + .9, true); this.chime(t + 1.0, [72, 76, 79, 84], .1); bgmScene("reelcard", .4); },
+  card(place) {  // TOP 숫자가 작을수록 (1이 최고) 높고 화려하게
+    if (!this.ok()) return; const t = audio.currentTime + .02, top = place === 1;
+    bgmScene("reelcard", .3); this.whoosh(t); this.hit(t + .3, top);
+    this.chime(t + .42, top ? [79, 83, 86, 91] : place === 2 ? [76, 79, 83] : [72, 76], top ? .12 : .1);
+    if (top) setTimeout(() => sfx.fanfare(), 650);
+  },
+  go() { if (!this.ok()) return; const t = audio.currentTime + .02; SX.T(SX.out(1), t, 1500, .08, .12, "square", 1500); bgmScene("reelplay", .6); },  // 장면 시작 '삑'
+  end() { if (!this.ok()) return; bgmScene("end", 1.5); this.whoosh(audio.currentTime + .02, .5, .25); setTimeout(() => { sfx.boom(); sfx.fanfare(); }, 420); },
+};
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function reelCard(tk, {big, title, sub}, ms, buttons = "") {
   const el = $("#rpReel");
@@ -3383,6 +3407,8 @@ async function openReel(date, rec = false) {
   for (const m of ms) { try { await getReplayData(m.id); } catch {} }  // 미리 받아 둠
   $("#rpLoading").classList.add("hidden");
   rp.cine = true; paintRpButtons();
+  if (!rec && $("#optSound").checked) { startBgm(); rp.reelBgm = true; bgmScene("reelcard", .1); }
+  if (!rec) reelSfx.intro();
   await reelCard(tk, {big: "TEAM DDC", title: "오늘의 명장면", sub: `${date}, 명장면 ${ms.length}개`}, 2300);
   for (const m of ms) {
     if (tk !== reelToken) return;
@@ -3392,18 +3418,21 @@ async function openReel(date, rec = false) {
     rp.t = m.t0; rp.cam = {x: m.fx, y: m.fy, s: Math.min(1, size)}; rp.follow = true;
     rp.seen = R.events.filter(e => e.t <= rp.t).length; renderFeed();
     rp.reel = {end: m.t1}; rp.playing = false; rpStartLoop();
+    if (!rec) reelSfx.card(m.place);
     await reelCard(tk, {big: `TOP ${m.place}`, title: m.title, sub: `${m.map_name} ${m.time}${m.sub ? ", " + m.sub : ""}`}, 2400);
     if (tk !== reelToken) return;
-    rp.playing = true;
+    rp.playing = true; if (!rec) reelSfx.go();
     const t0 = performance.now();
     while (tk === reelToken && rp.t < m.t1 && performance.now() - t0 < 30000) await sleep(100);
     await sleep(500);
   }
   if (tk !== reelToken) return;
   rp.playing = false; rp.reel = null;
+  if (!rec) reelSfx.end();
   if (rec) { await reelCard(tk, {big: "GG", title: "오늘의 명장면 끝", sub: "제작 스틸황"}, 2200); window.__reelDone = true; return; }
   await reelCard(tk, {big: "GG", title: "오늘의 명장면 끝", sub: "제작 스틸황"}, 0,
     `<div class="btns"><button class="btn primary" id="reelAgain">다시 보기</button><button class="btn" id="reelClose">닫기</button></div>`);
+  setTimeout(() => { if (tk === reelToken && rp.reelBgm) { stopBgm(); rp.reelBgm = false; } }, 4000);  // 끝 화면에서 배경음악은 천천히 끔
   $("#reelAgain").onclick = () => openReel(date);
   $("#reelClose").onclick = closeReplay;
   $("#reelAgain").focus();
@@ -3424,6 +3453,7 @@ async function reelVideo(date, send, msgEl) {
 
 function closeReplay() {
   try { rpHum(false); } catch {}
+  if (rp.reelBgm) { stopBgm(); rp.reelBgm = false; }
   try { if (rp.cinema) rpCinema(false); } catch {}
   reelToken++;
   if (rp.kc) rpKillcamEnd(false);
@@ -3724,12 +3754,26 @@ function rpPlayerHud() {  // 메인 화면 아래: 팀원 체력바 + 지금 상
     const av = rp.avatars[p.nick], src = av && av.complete && av.naturalWidth ? av.src : null;
     const pic = src ? `<img class="pic" src="${esc(src)}" alt="">` : `<span class="pic">${p.slot + 1}</span>`;
     const zq = st !== "dead" && zoneAt(rp.t), pq = zq && zq.sr > 0 && posAt(p, rp.t), oz = pq && !p.air?.some(sg => rp.t >= sg.t0 && rp.t < (sg.t1 ?? 0)) && Math.hypot(pq[0] - zq.sx, pq[1] - zq.sy) > zq.sr;  // 자기장(블루존) 밖
-    return `<div class="ph ${st === "dead" ? "dead" : st === "down" ? "down" : hp < 35 ? "low" : ""}${oz ? " oz" : ""}" style="--pc:${RP_COLORS[p.slot % 4]}">${pic}
+    let hitT = null, prev = 100;  // v80 피격: 0.5초 안에 체력이 깎였으면 카드가 빨갛게 번쩍 (자기장 밖의 잔 피해는 빼고)
+    if (st !== "dead") for (const h of p.hp || []) { if (h[0] > rp.t) break; const dd = prev - h[1]; if (h[0] > rp.t - .5 && (dd >= 10 || (dd >= 2 && !oz))) hitT = h[0]; prev = h[1]; }
+    const cls = `ph ${st === "dead" ? "dead" : st === "down" ? "down" : hp < 35 ? "low" : ""}${oz ? " oz" : ""}`;
+    return {cls, hitT, pc: RP_COLORS[p.slot % 4], inner: `${pic}
       <div class="nm"><span>${esc(p.name)}</span><em>${k}킬${as ? ` <small>${as}어시</small>` : ""}</em></div><div class="hp"><i style="width:${st === "dead" || st === "down" ? 0 : hp}%"></i></div>
-      <div class="st" style="--sc:${icol}">${isvg}<span>${esc(label)}</span></div></div>`;
-  }).join("");
-  if (el.innerHTML !== html) el.innerHTML = html;
-  if (elM && elM.offsetParent && elM.innerHTML !== html) elM.innerHTML = html;  // 휴대폰: 교전 기록 위 팀원 상태
+      <div class="st" style="--sc:${icol}">${isvg}<span>${esc(label)}</span></div>`};
+  });
+  rpHudPatch(el, html);
+  if (elM && elM.offsetParent) rpHudPatch(elM, html);  // 휴대폰: 교전 기록 위 팀원 상태
+}
+function rpHudPatch(box, cards) {  // v80 카드를 매번 새로 만들지 않고 바뀐 곳만 고침 → 깜빡임 애니메이션이 끊기지 않음
+  if (box.children.length !== cards.length || [...box.children].some(c => !c.classList.contains("ph"))) { box.innerHTML = ""; cards.forEach(() => box.appendChild(document.createElement("div"))); }
+  cards.forEach((c, i) => {
+    const d = box.children[i], hit = c.hitT != null;
+    if (hit && d._hit !== c.hitT) { d.className = c.cls; void d.offsetWidth; d._hit = c.hitT; }  // 새로 맞을 때마다 번쩍임을 처음부터
+    const cls = c.cls + (hit ? " hit" : "");
+    if (d.className !== cls) d.className = cls;
+    if (d._pc !== c.pc) { d.style.setProperty("--pc", c.pc); d._pc = c.pc; }
+    if (d._h !== c.inner) { d.innerHTML = c.inner; d._h = c.inner; }
+  });
 }
 function rpDrawGraph() {  // 재생 막대 위 '교전 강도' 그래프: 10초마다 총격·피격·기절·처치를 더해 높이로
   const R = rp.data, c = $("#rpGraph"); if (!R || !c) return;
@@ -5348,16 +5392,18 @@ function rpHum(b) {  // 엔진 소리는 끊기지 않게 하나를 계속 켜 �
   if (!audio) return;
   if (!b) { if (RPS.hum) RPS.hum.g.gain.setTargetAtTime(0, audio.currentTime, .15); return; }
   if (!RPS.hum) {
-    const o = audio.createOscillator(), o2 = audio.createOscillator(), lp = audio.createBiquadFilter(), g = audio.createGain();
+    const o = audio.createOscillator(), o2 = audio.createOscillator(), o3 = audio.createOscillator(), g3 = audio.createGain(), lp = audio.createBiquadFilter(), g = audio.createGain();
     o.type = "triangle"; o2.type = "sine"; lp.type = "lowpass"; lp.frequency.value = 500; g.gain.value = 0;  // ENGINE-01 부드러운 세단
+    o3.type = "sawtooth"; g3.gain.value = .35; o3.connect(g3).connect(lp);  // v80 배음 추가: 노트북·폰 스피커는 100Hz 아래를 거의 못 내서 기본음만으론 안 들렸음
+    const tr = audio.createGain(), lfo = audio.createOscillator(), ld = audio.createGain(); tr.gain.value = 1; ld.gain.value = .22; lfo.frequency.value = 14; lfo.connect(ld).connect(tr.gain);  // 엔진 떨림
     let last = g; if (audio.createStereoPanner) { const pn = audio.createStereoPanner(); g.connect(pn); last = pn; RPS.pan = pn; }
-    o.connect(lp); o2.connect(lp); lp.connect(g); last.connect(rpWorldBus()); o.start(); o2.start();
-    RPS.hum = {o, o2, g, lp};
+    o.connect(lp); o2.connect(lp); lp.connect(tr).connect(g); last.connect(rpWorldBus()); o.start(); o2.start(); o3.start(); lfo.start();
+    RPS.hum = {o, o2, o3, lfo, g, lp};
   }
   const t = audio.currentTime, sp = Math.min(130, b.kmh) / 130, f = 55 + sp * 65;
   RPS.hum.lp.frequency.setTargetAtTime(500 * (1 + sp * .8), t, .2);
-  RPS.hum.o.frequency.setTargetAtTime(f, t, .2); RPS.hum.o2.frequency.setTargetAtTime(f * .5, t, .2);
-  RPS.hum.g.gain.setTargetAtTime(b.kmh > 8 ? .076 * b.g : .022 * b.g, t, .2);
+  RPS.hum.o.frequency.setTargetAtTime(f, t, .2); RPS.hum.o2.frequency.setTargetAtTime(f * .5, t, .2); RPS.hum.o3.frequency.setTargetAtTime(f * 2, t, .2); RPS.hum.lfo.frequency.setTargetAtTime(f / 6, t, .2);
+  RPS.hum.g.gain.setTargetAtTime(b.kmh > 8 ? .13 * b.g : .045 * b.g, t, .2);
   if (RPS.pan) RPS.pan.pan.setTargetAtTime(b.pan, t, .2);
 }
 function throwTiming(kind, boomAt) {  // 투척물 비행 시간 · C4 타이머 · 떨어져서 터지기까지 (그림과 흔들림이 같은 시각을 쓰게)
