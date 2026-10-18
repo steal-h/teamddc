@@ -1639,7 +1639,10 @@ html,body{overscroll-behavior-y:none}
 /* v75 휴대폰 가로 화면: 설치한 앱·전체 화면에선 리플레이 밖에서 세로로 고정 (안내 화면 없음) */
 
 /* v77 자기장 경고: 팀원이 블루존 밖이면 카드 테두리가 푸르게 깜빡 */
-.rp-phud .ph.oz{border-color:#5AA8FF;animation:phzone 1.1s ease-in-out infinite alternate}
+/* v81 자기장 경고: 빨간 경고와 똑같이 (속도·두께·번짐) 색만 파랑 */
+.rp-phud .ph .phc{display:contents}
+.rp-phud .ph .phz{position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;opacity:0;border:2px solid #4FA3FF;box-shadow:0 0 14px rgba(70,150,255,.6),inset 0 0 12px rgba(70,150,255,.35)}
+.rp-phud .ph.oz .phz{animation:phred .5s ease-in-out infinite alternate}
 /* v80 빨간 경고: 체력이 적거나 기절이면 빨갛게 깜빡, 맞는 순간엔 빨갛게 번쩍 (파란 자기장 경고와 함께 보일 수 있게 겉 그림자·::after·::before를 나눠 씀) */
 .rp-phud .ph{position:relative}
 .rp-phud .ph::before,.rp-phud .ph::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;opacity:0}
@@ -1787,7 +1790,8 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .glt td.n{font-variant-numeric:tabular-nums;font-weight:700}
 .glt td.no,.glt td.tm{color:var(--dust);font-variant-numeric:tabular-nums}
 .glt .mc{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:color-mix(in srgb,var(--c) 70%,var(--bone))}.glt .mc i{width:10px;height:10px;border-radius:2px;background:var(--c)}
-.glt td.rk small{color:var(--dust);margin-left:2px;font-size:12px}.glt td.rk .chick{width:16px;height:16px;vertical-align:-3px;margin-right:2px}
+.glt td.rk small{color:var(--dust);margin-left:3px;font-size:12px}.glt td.rk .chick{width:16px;height:16px;vertical-align:-3px;margin-right:3px}
+.glt .rkg{display:inline-grid;grid-template-columns:4.4em auto;align-items:baseline}.glt .rkg b{font-weight:inherit;text-align:right;white-space:nowrap}  /* v82 치킨 그림 자리를 모든 줄에 두고 순위 글자는 오른쪽 맞춤 → '/팀 수'가 한 줄로 맞음 */
 .glt tr.w td{background:rgba(242,169,0,.08)}.glt tr.w td.rk{color:var(--accent);font-weight:700}
 .glt td.ps{width:44%;min-width:300px;padding-block:6px}
 .glt .ps>div{display:grid;grid-template-columns:14px 76px 32px minmax(40px,1fr) 38px;gap:8px;align-items:center;font-size:12.5px;line-height:1.55}
@@ -2560,7 +2564,7 @@ function renderDay(r, report, reveal) {
     const tk = g.players.reduce((a, p) => a + p.kills, 0), td = g.players.reduce((a, p) => a + (p.damage || 0), 0);
     return `<tr class="${g.rank === 1 ? "w" : ""}"><td class="no">${i + 1}</td><td class="tm">${g.time}</td>
       <td><span class="mc" style="--c:${mapColor(g.map_code || g.map)}"><i></i>${esc(g.map)}</span></td>
-      <td class="rk">${g.rank === 1 ? `<img class="chick" src="${CHICK_IMG}" alt="">치킨` : g.rank + "등"}<small>/${g.teams}</small></td>
+      <td class="rk"><span class="rkg"><b>${g.rank === 1 ? `<img class="chick" src="${CHICK_IMG}" alt="">치킨` : g.rank + "등"}</b><small>/${g.teams}</small></span></td>
       <td class="n">${tk}</td><td class="n">${fmt(Math.round(td))}</td>
       <td class="ps">${g.players.map(p => `<div class="${p === mvp && hasM ? "m" : ""}"><span class="cw">${p === mvp && hasM ? CROWN : ""}</span><span class="nm">${esc(p.name)}</span><span class="k">${p.kills}킬</span><span class="br"><i style="width:${p.damage / dmgMax * 100}%"></i></span><span class="d">${fmt(p.damage)}</span></div>`).join("")}</td>
       <td class="pl">${g.id ? `<button class="ib" type="button" data-rp="${esc(g.id)}" aria-label="${i + 1}판 리플레이" title="리플레이"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5"/><path d="M8.2 6.6v6.8l5.4-3.4z"/></svg></button>` : ""}</td></tr>`; }).join("");
@@ -2730,7 +2734,7 @@ const SX = {
   out(vol) { const g = audio.createGain(); g.gain.value = vol; g.connect(master || audio.destination); return g; },
   env(g, t, att, dur, vol) { g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(Math.max(.0002, vol), t + att); g.gain.exponentialRampToValueAtTime(.0001, t + dur); },
   T(o, t, f, dur, vol, type = "sine", f1 = null, att = .005) { const s = audio.createOscillator(), g = audio.createGain(); s.type = type; s.frequency.setValueAtTime(f, t); if (f1) s.frequency.exponentialRampToValueAtTime(Math.max(20, f1), t + dur); SX.env(g, t, att, dur, vol); s.connect(g).connect(o); s.start(t); s.stop(t + dur + .05); },
-  N(o, t, dur, vol, type = "bandpass", f = 1000, q = 1, f1 = null, att = .002) { const s = audio.createBufferSource(), fl = audio.createBiquadFilter(), g = audio.createGain(); s.buffer = noiseBuf; fl.type = type; fl.frequency.setValueAtTime(f, t); fl.Q.value = q; if (f1) fl.frequency.exponentialRampToValueAtTime(f1, t + dur); SX.env(g, t, att, dur, vol); s.connect(fl).connect(g).connect(o); s.start(t, Math.random() * .5); s.stop(t + dur + .05); },
+  N(o, t, dur, vol, type = "bandpass", f = 1000, q = 1, f1 = null, att = .002) { const s = audio.createBufferSource(), fl = audio.createBiquadFilter(), g = audio.createGain(); s.buffer = noiseBuf; s.loop = true; fl.type = type; fl.frequency.setValueAtTime(f, t); fl.Q.value = q; if (f1) fl.frequency.exponentialRampToValueAtTime(f1, t + dur); SX.env(g, t, att, dur, vol); s.connect(fl).connect(g).connect(o); s.start(t, Math.random() * .5); s.stop(t + dur + .05); },
   FM(o, t, f, ratio, index, dur, vol) { const c = audio.createOscillator(), m = audio.createOscillator(), mg = audio.createGain(), g = audio.createGain(); c.frequency.value = f; m.frequency.value = f * ratio; mg.gain.setValueAtTime(f * index, t); mg.gain.exponentialRampToValueAtTime(Math.max(1, f * index * .04), t + dur); SX.env(g, t, .003, dur, vol); m.connect(mg).connect(c.frequency); c.connect(g).connect(o); c.start(t); m.start(t); c.stop(t + dur + .1); m.stop(t + dur + .1); },
   wet(o, amt) { const g = audio.createGain(), s = audio.createGain(); s.gain.value = amt; g.connect(o); g.connect(s).connect(sfx._rev()); return g; },
   midi: n => 440 * Math.pow(2, (n - 69) / 12),
@@ -3367,21 +3371,30 @@ async function openReplay(id) {
 
 /* ───── 오늘의 명장면 (하이라이트 릴) ───── */
 let reelToken = 0;
-const reelSfx = {  // v80 명장면 연출 효과음 (시상식처럼): 자막 카드가 날아들 때 휙 → 쾅 → 종, 시작·끝은 크게
-  whoosh(t, dur = .38, vol = .3) { SX.N(SX.out(1), t, dur, vol, "bandpass", 380, 1.6, 4200, dur * .7); },
-  hit(t, big) { const o = SX.out(1); SX.T(o, t, big ? 120 : 100, big ? 1 : .55, big ? .75 : .55, "sine", 36, .004); SX.N(o, t, .22, .45, "lowpass", 900); SX.N(o, t, .08, .25, "highpass", 3500); },
-  chime(t, ns, vol = .12) { const w = SX.wet(SX.out(1), .55); ns.forEach((n, i) => sfx.bell(SX.midi(n), t + i * .07, 3.5, 2.2, vol, 1.6, w)); },
+const reelSfx = {  // v82 명장면 효과음 (효과음 고르기 3에서 고른 소리, 시상식 소리와 겹치지 않게)
   ok() { return soundOn() && noiseBuf; },
-  intro() { if (!this.ok()) return; const t = audio.currentTime + .02; sfx.riser(.9); this.hit(t + .9, true); this.chime(t + 1.0, [72, 76, 79, 84], .1); bgmScene("reelcard", .4); },
-  card(place) {  // TOP 숫자가 작을수록 (1이 최고) 높고 화려하게
-    if (!this.ok()) return; const t = audio.currentTime + .02, top = place === 1;
-    bgmScene("reelcard", .3); this.whoosh(t); this.hit(t + .3, top);
-    this.chime(t + .42, top ? [79, 83, 86, 91] : place === 2 ? [76, 79, 83] : [72, 76], top ? .12 : .1);
-    if (top) setTimeout(() => sfx.fanfare(), 650);
+  out(v) { return SX.out(v); },
+  lp(o, f) { const x = audio.createBiquadFilter(); x.type = "lowpass"; x.frequency.value = f; x.connect(o); return x; },
+  crush(o, k) { const w = audio.createWaveShaper(), c = new Float32Array(1024); for (let i = 0; i < 1024; i++) c[i] = Math.tanh(k * (i / 512 - 1) / 10); w.curve = c; w.connect(o); return w; },
+  intro() {  // RIN-09 레이더 스캔: '핑-' 하고 화면을 훑음
+    if (!this.ok()) return; const t = audio.currentTime + .02, o = this.out(4.53);
+    SX.T(SX.wet(o, .7), t, 1300, 1.2, .15, "sine"); SX.N(o, t + .1, 1.3, .12, "bandpass", 500, 2, 3000, .6); bgmScene("reelcard", .4);
   },
-  go() { if (!this.ok()) return; const t = audio.currentTime + .02; SX.T(SX.out(1), t, 1500, .08, .12, "square", 1500); bgmScene("reelplay", .6); },  // 장면 시작 '삑'
-  end() { if (!this.ok()) return; bgmScene("end", 1.5); this.whoosh(audio.currentTime + .02, .5, .25); setTimeout(() => { sfx.boom(); sfx.fanfare(); }, 420); },
+  card(place) {
+    if (!this.ok()) return; const t = audio.currentTime + .02; bgmScene("reelcard", .3);
+    if (place === 1) {  // RTOP-04 파워 코드: 전기기타 같은 '빠-밤'
+      const o = this.out(1.5), g = audio.createGain(); g.gain.value = .25; const f = this.lp(o, 3000); g.connect(this.crush(f, 20));
+      [[45, 0, .2], [52, 0, .2], [47, .25, 1.1], [54, .25, 1.1]].forEach(([n, d, l]) => SX.T(g, t + d, SX.midi(n), l, .5, "sawtooth", null, .01));
+      SX.T(o, t + .25, 90, .5, .5, "sine", 35, .004); SX.N(o, t + .25, .12, .25, "lowpass", 700);
+    } else { const o = this.out(4.13); SX.T(o, t, SX.midi(84), .07, .1, "square"); SX.T(o, t + .07, SX.midi(91), .18, .1, "square"); }  // RCARD-09 8비트 띠링
+  },
+  go() { if (!this.ok()) return; const t = audio.currentTime + .02; SX.T(SX.out(1), t, 1500, .08, .12, "square", 1500); bgmScene("reelplay", .6); },  // 장면 시작 '삑' (지금 소리 유지)
+  end() {  // REND-08 8비트 끝
+    if (!this.ok()) return; bgmScene("end", 1.5); const t = audio.currentTime + .02, o = this.out(7.67);
+    [[72, 0, .12], [67, .14, .12], [64, .28, .12], [72, .45, .6]].forEach(([n, d, l]) => SX.T(o, t + d, SX.midi(n), l, .1, "square"));
+  },
 };
+
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function reelCard(tk, {big, title, sub}, ms, buttons = "") {
   const el = $("#rpReel");
@@ -3765,14 +3778,16 @@ function rpPlayerHud() {  // 메인 화면 아래: 팀원 체력바 + 지금 상
   if (elM && elM.offsetParent) rpHudPatch(elM, html);  // 휴대폰: 교전 기록 위 팀원 상태
 }
 function rpHudPatch(box, cards) {  // v80 카드를 매번 새로 만들지 않고 바뀐 곳만 고침 → 깜빡임 애니메이션이 끊기지 않음
-  if (box.children.length !== cards.length || [...box.children].some(c => !c.classList.contains("ph"))) { box.innerHTML = ""; cards.forEach(() => box.appendChild(document.createElement("div"))); }
+  if (box.children.length !== cards.length || [...box.children].some(c => !c.classList.contains("ph"))) {
+    box.innerHTML = ""; cards.forEach(() => { const d = document.createElement("div"); d.innerHTML = `<div class="phc"></div><i class="phz" aria-hidden="true"></i>`; d.className = "ph"; box.appendChild(d); });
+  }
   cards.forEach((c, i) => {
     const d = box.children[i], hit = c.hitT != null;
     if (hit && d._hit !== c.hitT) { d.className = c.cls; void d.offsetWidth; d._hit = c.hitT; }  // 새로 맞을 때마다 번쩍임을 처음부터
     const cls = c.cls + (hit ? " hit" : "");
     if (d.className !== cls) d.className = cls;
     if (d._pc !== c.pc) { d.style.setProperty("--pc", c.pc); d._pc = c.pc; }
-    if (d._h !== c.inner) { d.innerHTML = c.inner; d._h = c.inner; }
+    if (d._h !== c.inner) { d.firstElementChild.innerHTML = c.inner; d._h = c.inner; }  // 내용만 바꾸고 파란 경고 테두리(.phz)는 그대로 둠
   });
 }
 function rpDrawGraph() {  // 재생 막대 위 '교전 강도' 그래프: 10초마다 총격·피격·기절·처치를 더해 높이로
@@ -5339,12 +5354,16 @@ function rpTone(dst, at, f0, f1, dur, vol, type = "sine") {
   o.connect(g).connect(dst); o.start(at); o.stop(at + dur + .02);
 }
 const RP_SND = {
-  shot: (d, t, k) => { SX.T(d, t, 1400, .04, .15 * 3 * k, "sine", 600); },  // SHOT-06 팝콘
+  shot: (d, t, k) => { k *= 1.92; SX.T(d, t, 1800, .1, .2 * k, "sine", 600); SX.T(d, t, 3600, .1, .05 * k, "sine", 1200); },  // v81 SHOT-27 레이저 삐융
   boom: (d, t, k) => { rpNoise(d, t, 1.1, .9 * k, 380, "lowpass"); rpTone(d, t, 70, 30, .9, .8 * k); rpNoise(d, t, .15, .5 * k, 2500, "bandpass"); },
   flash: (d, t, k) => { k *= .76; SX.T(d, t, 120, .3, .6 * k, "sine", 40); SX.N(d, t, .2, .7 * k, "highpass", 2000); SX.T(d, t + .1, 4000, 1.2, .05 * k, "sine"); },  // FLASH-10 큰 쾅 + 삐
-  fire: (d, t, k) => { SX.N(d, t, .7, .6 * 1.03 * k, "bandpass", 300, .7, 2000, .1); },  // FIRE-04 훅 불길
-  hiss: (d, t, k) => { SX.N(d, t, 1.6, .2 * 2.15 * k, "bandpass", 6000, 3, null, .1); },  // SMOKE-07 가스 새는 소리
-  zap: (d, t, k) => { k *= .86; SX.T(d, t, 1200, .6, .12 * k, "sawtooth", 100); SX.T(d, t, 800, .6, .08 * k, "square", 60); },  // ZAP-05 레이저 전기
+  fire: (d, t, k) => { k *= .48; SX.T(d, t, 80, .9, .4 * k, "sine", 45, .1); SX.N(d, t, 1, .5 * k, "lowpass", 600, 1, 200, .15); },  // v81 FIRE-16 불덩이 후우웅
+  hiss: (d, t, k) => {  // SMOKE-07 가스 새는 소리 (v81: 1.6초 → 약 3.4초, 쭉 이어지다 천천히 사라짐)
+    const s = audio.createBufferSource(), f = audio.createBiquadFilter(), g = audio.createGain(), v = .2 * 2.15 * k;
+    s.buffer = noiseBuf; s.loop = true; f.type = "bandpass"; f.Q.value = 3; f.frequency.setValueAtTime(6000, t); f.frequency.linearRampToValueAtTime(4800, t + 3.4);
+    g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(v, t + .1); g.gain.setValueAtTime(v, t + 1.6); g.gain.linearRampToValueAtTime(v * .55, t + 2.4); g.gain.exponentialRampToValueAtTime(.0001, t + 3.4);
+    s.connect(f).connect(g).connect(d); s.start(t, Math.random() * .5); s.stop(t + 3.5); },
+  zap: (d, t, k) => { k *= .34; const f = audio.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 900; f.connect(d); SX.T(f, t, 60, 1.1, .2 * k, "square", null, .1); SX.T(f, t, 60.8, 1.1, .2 * k, "square", null, .1); },  // v81 ZAP-13 고압선 험
   knock: (d, t, k) => { SX.T(d, t, 900, .25, .12 * 3 * k, "triangle", 250); },  // FKNOCK-03 내려가는 띠융
   death: (d, t, k) => { k *= .87; SX.T(d, t, 80, .4, .6 * k, "sine", 40); SX.N(d, t, .2, .4 * k, "lowpass", 400); },  // FDEATH-01 비석 쿵
 };
@@ -5352,7 +5371,7 @@ function rpPlaySnd(kind, x, y, vol = 1) {
   const sp = rpSndAt(x, y); if (!sp) return;
   const now = performance.now(); if (now - RPS.last > 60) { RPS.last = now; RPS.n = 0; }
   if (kind === "shot" && ++RPS.n > 5) return;  // 한꺼번에 너무 많은 총성은 줄임
-  const dur = {boom: 1.2, fire: .8, hiss: 1.8, flash: 1.4, zap: .7, death: .5}[kind] || .5;
+  const dur = {boom: 1.2, fire: 1.2, hiss: 3.6, flash: 1.4, zap: 1.3, death: .5}[kind] || .5;
   rpVoice(sp[0] * vol, sp[1], dur, (d, t) => RP_SND[kind](d, t, 1));
 }
 function rpSound(t0, t1) {  // 재생하며 지나간 0.x초 사이에 일어난 소리들
@@ -5384,27 +5403,39 @@ function rpSound(t0, t1) {  // 재생하며 지나간 0.x초 사이에 일어난
     if (statusAt(p, t1) === "dead") continue; const v = vehAt(p, t1); if (!v || /mortar/i.test(v[3] || "")) continue;
     const a = posAt(p, t1 - .5), b = posAt(p, t1); if (!a || !b) continue;
     const kmh = Math.hypot(b[0] - a[0], b[1] - a[1]) * R.size_m / .5 * 3.6, sp = rpSndAt(b[0], b[1]);
-    if (sp && (!best || sp[0] > best.g)) best = {g: sp[0], pan: sp[1], kmh};
+    if (sp && kmh > 5 && (!best || sp[0] > best.g)) best = {g: sp[0], pan: sp[1], kmh, brdm: /brdm/i.test(v[3] || "")};  // v81 멈춰 있으면 소리 없음
   }
   rpHum(best);
 }
-function rpHum(b) {  // 엔진 소리는 끊기지 않게 하나를 계속 켜 두고 크기·높이만 바꿈
+const RP_ENGINE = {  // 엔진 소리 종류: make() 로 한 번 만들고, set(속도 0~1, 시각) 으로 높이·밝기만 바꿈
+  car: {vol: .13, make(a, out) {  // ENGINE-01 부드러운 세단 (+ v80 배음·떨림: 노트북·폰 스피커는 100Hz 아래를 거의 못 냄)
+    const o = a.createOscillator(), o2 = a.createOscillator(), o3 = a.createOscillator(), g3 = a.createGain(), lp = a.createBiquadFilter();
+    o.type = "triangle"; o2.type = "sine"; o3.type = "sawtooth"; g3.gain.value = .35; lp.type = "lowpass"; lp.frequency.value = 500;
+    const tr = a.createGain(), lfo = a.createOscillator(), ld = a.createGain(); tr.gain.value = 1; ld.gain.value = .22; lfo.frequency.value = 14; lfo.connect(ld).connect(tr.gain);
+    o.connect(lp); o2.connect(lp); o3.connect(g3).connect(lp); lp.connect(tr).connect(out); [o, o2, o3, lfo].forEach(x => x.start());
+    return (sp, t) => { const f = 55 + sp * 65; lp.frequency.setTargetAtTime(500 * (1 + sp * .8), t, .2); o.frequency.setTargetAtTime(f, t, .2); o2.frequency.setTargetAtTime(f * .5, t, .2); o3.frequency.setTargetAtTime(f * 2, t, .2); lfo.frequency.setTargetAtTime(f / 6, t, .2); };
+  }},
+  brdm: {vol: .2 * .54, make(a, out) {  // v82 BRDM-07 부드러운 저음: 조용하게 '웅-' (일반 차와 다른 낮은 소리)
+    const o = a.createOscillator(), o2 = a.createOscillator(), o3 = a.createOscillator(), g3 = a.createGain(), lpf = a.createBiquadFilter(); o.type = "sine"; o2.type = "triangle"; o3.type = "sawtooth"; g3.gain.value = .2; lpf.type = "lowpass"; lpf.frequency.value = 450;
+    o.connect(lpf); o2.connect(lpf); o3.connect(g3).connect(lpf); lpf.connect(out); [o, o2, o3].forEach(x => x.start());
+    return (sp, t) => { const f = 40 + sp * 30; o.frequency.setTargetAtTime(f, t, .3); o2.frequency.setTargetAtTime(f * 2, t, .3); o3.frequency.setTargetAtTime(f * 3, t, .3); };
+  }},
+};
+function rpHum(b) {  // 엔진 소리는 끊기지 않게 종류마다 하나씩 켜 두고 크기·높이만 바꿈 (v81: 달릴 때만 소리, BRDM은 따로)
   if (!audio) return;
-  if (!b) { if (RPS.hum) RPS.hum.g.gain.setTargetAtTime(0, audio.currentTime, .15); return; }
-  if (!RPS.hum) {
-    const o = audio.createOscillator(), o2 = audio.createOscillator(), o3 = audio.createOscillator(), g3 = audio.createGain(), lp = audio.createBiquadFilter(), g = audio.createGain();
-    o.type = "triangle"; o2.type = "sine"; lp.type = "lowpass"; lp.frequency.value = 500; g.gain.value = 0;  // ENGINE-01 부드러운 세단
-    o3.type = "sawtooth"; g3.gain.value = .35; o3.connect(g3).connect(lp);  // v80 배음 추가: 노트북·폰 스피커는 100Hz 아래를 거의 못 내서 기본음만으론 안 들렸음
-    const tr = audio.createGain(), lfo = audio.createOscillator(), ld = audio.createGain(); tr.gain.value = 1; ld.gain.value = .22; lfo.frequency.value = 14; lfo.connect(ld).connect(tr.gain);  // 엔진 떨림
-    let last = g; if (audio.createStereoPanner) { const pn = audio.createStereoPanner(); g.connect(pn); last = pn; RPS.pan = pn; }
-    o.connect(lp); o2.connect(lp); lp.connect(tr).connect(g); last.connect(rpWorldBus()); o.start(); o2.start(); o3.start(); lfo.start();
-    RPS.hum = {o, o2, o3, lfo, g, lp};
+  RPS.eng = RPS.eng || {};
+  const t = audio.currentTime, want = b ? (b.brdm ? "brdm" : "car") : null;
+  for (const k in RPS.eng) if (k !== want) RPS.eng[k].g.gain.setTargetAtTime(0, t, .15);
+  if (!want) return;
+  if (!RPS.eng[want] || RPS.eng[want].ctx !== audio) {
+    const g = audio.createGain(); g.gain.value = 0; let last = g, pn = null;
+    if (audio.createStereoPanner) { pn = audio.createStereoPanner(); g.connect(pn); last = pn; }
+    last.connect(rpWorldBus());
+    RPS.eng[want] = {g, pn, ctx: audio, set: RP_ENGINE[want].make(audio, g)};
   }
-  const t = audio.currentTime, sp = Math.min(130, b.kmh) / 130, f = 55 + sp * 65;
-  RPS.hum.lp.frequency.setTargetAtTime(500 * (1 + sp * .8), t, .2);
-  RPS.hum.o.frequency.setTargetAtTime(f, t, .2); RPS.hum.o2.frequency.setTargetAtTime(f * .5, t, .2); RPS.hum.o3.frequency.setTargetAtTime(f * 2, t, .2); RPS.hum.lfo.frequency.setTargetAtTime(f / 6, t, .2);
-  RPS.hum.g.gain.setTargetAtTime(b.kmh > 8 ? .13 * b.g : .045 * b.g, t, .2);
-  if (RPS.pan) RPS.pan.pan.setTargetAtTime(b.pan, t, .2);
+  const E = RPS.eng[want], sp = Math.min(130, b.kmh) / 130;
+  E.set(sp, t); E.g.gain.setTargetAtTime(RP_ENGINE[want].vol * b.g * Math.min(1, (b.kmh - 4) / 12), t, .2);
+  if (E.pn) E.pn.pan.setTargetAtTime(b.pan, t, .2);
 }
 function throwTiming(kind, boomAt) {  // 투척물 비행 시간 · C4 타이머 · 떨어져서 터지기까지 (그림과 흔들림이 같은 시각을 쓰게)
   const wait = {grenade: .5, sticky: .3}[kind] || 0;
@@ -5560,7 +5591,8 @@ function rpParkedBrdms(R, t) {  // 지금 아무도 안 탄 BRDM들: 마지막�
       for (const r2 of rides) {
         if (r2 === r || r2.t1 <= E) continue;
         const T = Math.max(r2.t0, E);
-        const same = r.key && r2.key ? r.key === r2.key : dist(r2.pos(T), P) < (r2.t0 < E ? 60 : 25);
+        const near = dist(r2.pos(T), P) < (r2.t0 < E ? 60 : 25);  // v81 열쇠가 달라도(기록이 끊겨 새 열쇠가 붙음) 같은 자리에서 다시 타면 같은 차로 봄
+        const same = (r.key && r2.key && r.key === r2.key) || near;
         if (same) K = Math.min(K, T);
       }
       for (const key in R.cars || {}) {
@@ -5576,7 +5608,11 @@ function rpParkedBrdms(R, t) {  // 지금 아무도 안 탄 BRDM들: 마지막�
     R._brdmPark = out;
   }
   const M = R.size_m || 8000, cur = R._brdmPark.filter(b => t > b.t0 && t < b.t1).sort((a, b) => b.t0 - a.t0);
-  return cur.filter((b, i) => !cur.slice(0, i).some(o => Math.hypot(o.x - b.x, o.y - b.y) * M < 15));  // 같이 내린 사람들: 한 대만
+  const riding = [];  // v81 지금 BRDM을 타고 있는 사람 자리: 세워 둔 차 바로 옆이면 그 차를 다시 탄 것 → 세워 둔 그림은 지움
+  for (const p of R.players) { const v = vehAt(p, t); if (v && /brdm/i.test(v[3] || "") && statusAt(p, t) !== "dead") { const q = posAt(p, t); if (q) riding.push(q); } }
+  for (const en of R.enemies || []) for (const v of en.vh || []) if (v[2] === 1 && t >= v[0] && t <= (v[1] ?? R.duration) && !(en.d != null && t >= en.d)) { const q = interp(en.tr, t); if (q) riding.push(q); }
+  return cur.filter((b, i) => !cur.slice(0, i).some(o => Math.hypot(o.x - b.x, o.y - b.y) * M < 15)  // 같이 내린 사람들: 한 대만
+    && !riding.some(q => t > b.t0 + .5 && Math.hypot(q[0] - b.x, q[1] - b.y) * M < 30));
 }
 function rpCarHp(key) {  // 차량 체력 기록 → 체력바용 [시각, 체력%, 0]
   const c = key && rp.data.cars && rp.data.cars[key]; if (!c) return null;
