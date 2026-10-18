@@ -274,7 +274,7 @@ dialog h3{margin:0 0 4px;font:400 24px/1.2 var(--display)}
 [data-pane="deco"] .field>span,[data-pane="deco"] .vol-row{grid-column:1/-1}
 [data-pane="deco"] .set-btns{margin:0;grid-column:2;grid-row:2/4;align-self:center}
 .check.big{margin-bottom:12px;color:var(--bone)}
-.vol-row{display:flex;align-items:center;gap:10px}.vol-row input{flex:1;accent-color:var(--accent)}.vol-row b{width:44px;text-align:right}
+.vol-row{display:flex;align-items:center;gap:10px}.vol-row .vl{width:9.5em;flex:none;display:flex;flex-direction:column;line-height:1.3}.vol-row .vl small{font-size:11.5px;color:var(--dust)}.vol-row input{flex:1;accent-color:var(--accent)}.vol-row b{width:44px;text-align:right}
 .set-dlg .dlg-actions{margin:0;padding:12px 24px;border-top:1px solid var(--line);background:var(--panel)}
 @media (max-width:640px){.three{grid-template-columns:1fr 1fr}.set-dlg .two{grid-template-columns:1fr}.set-body{height:min(560px,66vh);padding:14px 16px 6px}.set-head{padding:14px 16px 0}.set-dlg .dlg-actions{padding:10px 16px}}
 
@@ -1240,6 +1240,9 @@ body.viewer .viewer-badge{display:inline-flex;align-items:center;gap:6px;padding
   .rp-feed{font-size:13.5px;padding:4px 0}.rp-feed div{padding:6px 12px}
   /* 팀 현황판: 작게, 위쪽 가운데 */
   .rp-teams{top:42px!important;gap:3px!important;zoom:calc(var(--teamz,1) * .74)!important}
+  /* v83 팀 현황판이 나오면 '생존 N명'은 숨기고 현황판을 맨 위로 */
+  #replay:has(#rpTeams.on) .rp-hud-tr,#replay:has(#rpTeams.on) .rp-hud:has(#rpSpd){display:none}  /* v84 '생존 N명'·'배속 · 동선 숨김' 글자 숨김 */
+  #replay:has(#rpTeams.on) .rp-teams{top:8px!important}  /* 맨 위 가운데 */
 }
 @media (max-width:620px) and (max-height:500px){.rp-body{grid-template-rows:none}}
 
@@ -2014,7 +2017,9 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
         <p class="help status" id="rpImgStatus"></p>
         <div class="set-btns"><button class="btn" type="button" id="btnOpenReplayImgs">그림 폴더 열기</button></div></div>
       <div class="field"><span>효과음과 음악 <small>sounds 에 bgm · reveal · tick · stop · fanfare · kill</small></span>
-        <label class="vol-row">크기 <input type="range" id="vol" min="0" max="100" step="5"><b id="volTxt"></b></label>
+        <label class="vol-row"><span class="vl">전체 크기<small>시상식·음악·모든 효과음</small></span><input type="range" id="vol" min="0" max="100" step="5"><b id="volTxt"></b></label>
+        <label class="vol-row"><span class="vl">리플레이 지도 소리<small>총성·폭발·엔진</small></span><input type="range" id="rpVolW" min="0" max="150" step="5"><b id="rpVolWTxt"></b></label>
+        <label class="vol-row"><span class="vl">리플레이 알림 소리<small>처치·기절·소생</small></span><input type="range" id="rpVolA" min="0" max="150" step="5"><b id="rpVolATxt"></b></label>
         <p class="help status" id="sndStatus"></p>
         <div class="set-btns"><button class="btn" type="button" id="btnOpenSounds">sounds 폴더 열기</button></div></div>
       <div class="field"><span>트로피·메달 <small>images 에 trophy · gold · silver · bronze</small></span>
@@ -2665,10 +2670,14 @@ async function loadSounds() {
     try { SND[k] = await audio.decodeAudioData(await (await fetch(url)).arrayBuffer()); sndLoaded[k] = url; } catch {}
   }
 }
+let SFX_DEST = null;  // v83 효과음이 나갈 곳: 리플레이 알림 소리는 잠깐 '리플레이 알림 통로'로 보내 설정의 크기를 따름
+const sfxOut = () => SFX_DEST || master || audio.destination;
+const RPV = {world: 1, alert: 1};  // 설정 → 리플레이 효과음 크기 (지도 소리 · 알림 소리)
+try { RPV.world = Number(localStorage.getItem("ddc_rpvol_w") ?? 100) / 100; RPV.alert = Number(localStorage.getItem("ddc_rpvol_a") ?? 100) / 100; } catch {}
 function playBuf(k, vol = 1) {
   if (!soundOn() || !SND[k]) return false;
   const src = audio.createBufferSource(), g = audio.createGain();
-  src.buffer = SND[k]; g.gain.value = vol; src.connect(g).connect(master); src.start();
+  src.buffer = SND[k]; g.gain.value = vol; src.connect(g).connect(sfxOut()); src.start();
   return true;
 }
 function setVolume(v) {
@@ -2731,7 +2740,7 @@ function ensureAudio() {
 }
 /* v78 효과음 (효과음 고르기 페이지에서 고른 소리): 그 페이지와 똑같이 만드는 도구 */
 const SX = {
-  out(vol) { const g = audio.createGain(); g.gain.value = vol; g.connect(master || audio.destination); return g; },
+  out(vol) { const g = audio.createGain(); g.gain.value = vol; g.connect(sfxOut()); return g; },
   env(g, t, att, dur, vol) { g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(Math.max(.0002, vol), t + att); g.gain.exponentialRampToValueAtTime(.0001, t + dur); },
   T(o, t, f, dur, vol, type = "sine", f1 = null, att = .005) { const s = audio.createOscillator(), g = audio.createGain(); s.type = type; s.frequency.setValueAtTime(f, t); if (f1) s.frequency.exponentialRampToValueAtTime(Math.max(20, f1), t + dur); SX.env(g, t, att, dur, vol); s.connect(g).connect(o); s.start(t); s.stop(t + dur + .05); },
   N(o, t, dur, vol, type = "bandpass", f = 1000, q = 1, f1 = null, att = .002) { const s = audio.createBufferSource(), fl = audio.createBiquadFilter(), g = audio.createGain(); s.buffer = noiseBuf; s.loop = true; fl.type = type; fl.frequency.setValueAtTime(f, t); fl.Q.value = q; if (f1) fl.frequency.exponentialRampToValueAtTime(f1, t + dur); SX.env(g, t, att, dur, vol); s.connect(fl).connect(g).connect(o); s.start(t, Math.random() * .5); s.stop(t + dur + .05); },
@@ -2743,7 +2752,7 @@ const soundOn = () => audio && $("#optSound").checked;
 const sfx = {
   revive() {  // 소생: 올라가는 밝은 화음
     if (!soundOn() || !audio) return; const t = audio.currentTime;
-    const w = SX.wet(SX.out(1.14), .5); [79, 84, 88, 91].forEach((n, i) => SX.FM(w, t + i * .06, SX.midi(n), 4, .9, .6, .14));  // REVIVE-01 힐 반짝
+    [523, 659, 784, 1047].forEach((f, i) => this.tone(f, t + i * .07, .32, .14, "sine"));  // v83 예전 소리로 되돌림 (도-미-솔-도)
   },
   knock(bad) {  // 기절: 처치보다 짧고 가벼운 소리 (우리가 당하면 낮은 소리)
     if (!soundOn() || !audio) return; const t = audio.currentTime;
@@ -2756,13 +2765,13 @@ const sfx = {
     g.gain.setValueAtTime(0.0001, at);
     g.gain.exponentialRampToValueAtTime(vol, at + 0.02);
     g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
-    o.connect(g).connect(master || audio.destination); o.start(at); o.stop(at + dur + 0.05);
+    o.connect(g).connect(sfxOut()); o.start(at); o.stop(at + dur + 0.05);
   },
   noise(at, dur, vol, freq, type = "bandpass") {
     const n = audio.createBufferSource(), f = audio.createBiquadFilter(), g = audio.createGain();
     n.buffer = noiseBuf; f.type = type; f.frequency.value = freq;
     g.gain.setValueAtTime(vol, at); g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
-    n.connect(f).connect(g).connect(master || audio.destination); n.start(at); n.stop(at + dur);
+    n.connect(f).connect(g).connect(sfxOut()); n.start(at); n.stop(at + dur);
   },
   ding(freq) { if (!soundOn() || playBuf("reveal")) return; const t = audio.currentTime; this.tone(freq, t, 0.7, 0.22); this.tone(freq * 2, t, 0.4, 0.06, "sine"); },
   boo() { if (!soundOn()) return; const t = audio.currentTime; [392, 370, 349, 262].forEach((f, i) => this.tone(f, t + i * 0.22, i === 3 ? 0.8 : 0.24, 0.16, "sawtooth")); },
@@ -2776,14 +2785,14 @@ const sfx = {
     s.buffer = noiseBuf; s.loop = true; f.type = "bandpass"; f.Q.value = 6;
     f.frequency.setValueAtTime(300, t); f.frequency.exponentialRampToValueAtTime(5000, t + dur);
     g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.22, t + dur * .9); g.gain.exponentialRampToValueAtTime(.0001, t + dur + .05);
-    s.connect(f).connect(g).connect(master || audio.destination); s.start(t); s.stop(t + dur + .1);
+    s.connect(f).connect(g).connect(sfxOut()); s.start(t); s.stop(t + dur + .1);
   },
   boom() {  // 1위 등장: 낮게 울리는 쿵
     if (!soundOn() || !audio) return; const t = audio.currentTime;
     const o = audio.createOscillator(), g = audio.createGain(); o.type = "sine";
     o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(38, t + .9);
     g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.8, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + 1.2);
-    o.connect(g).connect(master || audio.destination); o.start(t); o.stop(t + 1.3);
+    o.connect(g).connect(sfxOut()); o.start(t); o.stop(t + 1.3);
     this.noise(t, .4, .3, 600);
   },
   _rev() {  // 잔향 (홀 울림) 한 번만 만들어 둠
@@ -2810,7 +2819,7 @@ const sfx = {
       o.type = "square"; o.frequency.setValueAtTime(N(n), at); if (i === 3) o.frequency.exponentialRampToValueAtTime(N(n - 12), at + .8);
       f.type = "lowpass"; f.frequency.value = 3000;
       g.gain.setValueAtTime(.0001, at); g.gain.exponentialRampToValueAtTime(.3, at + .003); g.gain.exponentialRampToValueAtTime(.0001, at + dur);
-      o.connect(f).connect(g).connect(master || audio.destination); o.start(at); o.stop(at + dur + .05);
+      o.connect(f).connect(g).connect(sfxOut()); o.start(at); o.stop(at + dur + .05);
     });
   },
   tick(p = 1) { if (!soundOn() || playBuf("tick", .8)) return; this.tone(1800 * p, audio.currentTime, 0.04, 0.12, "square"); },
@@ -3596,6 +3605,8 @@ function rpEvents(now) {
       const snd = rp.sndOn ? sfx : SFX_MUTE;  // 리플레이 효과음을 끄면 알림 소리도 끔
       if (rp.sndOn && ["kill", "knock", "downed", "died", "revive"].includes(fresh[fresh.length - 1].k)) rpDuck();
       const e = fresh[fresh.length - 1];
+      if (audio && rp.sndOn) SFX_DEST = rpAlertBus();
+      try {
       if (e.k === "kill") { rpToast(`${rpName(e.by)} 처치! ${e.w}${e.d ? ", " + e.d + "m" : ""}`); snd.kill(); }
       else if (e.k === "knock") { rpToast(`${rpName(e.by)} 기절시킴! ${e.w || ""}${e.d ? ", " + e.d + "m" : ""}`); snd.knock(); }
       else if (e.k === "downed") { rpToast(`${rpName(e.who)} 기절당함`, true); snd.knock(true); }
@@ -3605,6 +3616,7 @@ function rpEvents(now) {
       else if (e.k === "board") rpToast(`${rpName(e.who)} 블루칩 헬기 탑승!`);
       else if (e.k === "loot") rpToast(`${rpName(e.who)} 보급 획득!`);
       else if (e.k === "recall") rpToast(`${rpName(e.who)} 복귀 착지!`);
+      } finally { SFX_DEST = null; }
     }
   }
   rp.seen = idx; renderFeed();
@@ -4527,8 +4539,10 @@ function rpDraw(dt, now, view) {
     // 같은 차: 차 종류가 같고 40m 안 (달리는 차는 팀원마다 위치 기록 시각이 달라 몇십 m 어긋날 수 있음)
     // 차 열쇠가 같으면 거리와 상관없이 같은 차, 열쇠가 없으면 같이 탄 시각(5초 안)이면 150m까지 같은 차로 봄
     // (빠르게 달리다 내릴 때 팀원마다 위치 기록이 늦어 핸들이 하나 더 보이던 문제)
-    const same = cars.find(o => o.inCar[3] === g.inCar[3] && (o.inCar[4] && g.inCar[4] ? o.inCar[4] === g.inCar[4]
-      : Math.hypot(o.m[0] - g.m[0], o.m[1] - g.m[1]) * R.size_m < (Math.abs(o.inCar[0] - g.inCar[0]) < 5 ? 150 : 40)));
+    // v83 열쇠가 같으면 같은 차. 열쇠가 달라도(기록이 끊겨 새 열쇠가 붙는 경우) 가까우면 같은 차로 봄 → 한 대에 핸들이 여러 개 보이던 문제
+    const same = cars.find(o => (o.inCar[4] && g.inCar[4] && o.inCar[4] === g.inCar[4])
+      || (o.inCar[3] === g.inCar[3] && Math.hypot(o.m[0] - g.m[0], o.m[1] - g.m[1]) * R.size_m < (Math.abs(o.inCar[0] - g.inCar[0]) < 5 ? 150 : Math.min(150, 40 + rpVel(g.p) * 2.5))));
+    // 빨리 달릴수록 팀원마다 위치 기록이 더 어긋나므로 같은 차로 보는 거리를 늘림 (시속 100km면 약 110m)
     if (same) { g.hideIcon = true; same.r = Math.max(same.r, g.r); } else cars.push(g);
   }
   const rank = st => st === "ok" ? 2 : st === "down" ? 1 : 0;  // 살아 있는 사람을 맨 위에
@@ -4637,7 +4651,7 @@ function rpDraw(dt, now, view) {
       const down = (en.kn || []).some(([a, b]) => rp.t >= a && rp.t < b);  // 기절 중
       if (!down && rpFoeInCar(en, rp.t)) {  // 차에 타면 핸들 (같은 차의 같은 팀은 하나만), BRDM은 장갑차
         const vh = (en.vh || []).find(v => rp.t >= v[0] && rp.t <= (v[1] ?? Infinity));
-        if (!foeCars.some(o => o.tm === en.tm && (o.key && vh && vh[3] ? o.key === vh[3] : Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < (big ? 60 : 90)))) {
+        if (!foeCars.some(o => o.tm === en.tm && ((o.key && vh && vh[3] && o.key === vh[3]) || Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < (big ? 60 : 90)))) {
           if (vh && vh[2] === 2) drawMortarSeat(ctx, x, y, big ? 9 : 7, teamColor(en.tm || 0), rp.t, en.n);
           else if (vh && vh[2]) { drawBRDM(ctx, x, y, big ? 28 : 20, rpHeading("e:" + en.n, t => interp(en.tr, t)), teamColor(en.tm || 0)); drawTeamTag(ctx, x + (big ? 12 : 9), y - (big ? 11 : 8), en.tm, teamColor(en.tm || 0)); drawSeats(ctx, x - 14.5, y + (big ? 26 : 21), Math.max(1, rpBrdmCount(R, vh[3], en.tm)), teamColor(en.tm || 0)); rpHpBar(ctx, rpCarHp(vh[3]), x, y + (big ? 18 : 14), big ? 26 : 20, 3, true); }
           else drawWheel(ctx, x, y, big ? 9 : 6, teamColor(en.tm || 0));
@@ -5324,10 +5338,14 @@ const SHAKE = {c4: [18, 1.5], p: [11, .8], m: [15, .6], grenade: [4, .35], stick
 /* v77 리플레이 효과음: 지도 위 일을 화면 속 위치에 맞춰 좌우·거리감 있게 (화면 가운데에서 멀수록 작고 먹먹하게) */
 const RPS = {last: 0, n: 0, hum: null};
 function rpWorldBus() {  // 지도 소리를 모으는 통로: 처치·기절·소생 알림이 나면 잠깐 절반으로 줄여 알림이 묻히지 않게
-  if (!RPS.bus || RPS.bus.context !== audio) { RPS.bus = audio.createGain(); RPS.bus.connect(master || audio.destination); }
+  if (!RPS.bus || RPS.bus.context !== audio) { RPS.bus = audio.createGain(); RPS.bus.gain.value = RPV.world; RPS.bus.connect(master || audio.destination); }
   return RPS.bus;
 }
-function rpDuck() { if (!audio || !RPS.bus) return; const t = audio.currentTime, g = RPS.bus.gain; g.cancelScheduledValues(t); g.setTargetAtTime(.5, t, .02); g.setTargetAtTime(1, t + .6, .15); }
+function rpDuck() { if (!audio || !RPS.bus) return; const t = audio.currentTime, g = RPS.bus.gain; g.cancelScheduledValues(t); g.setTargetAtTime(.5 * RPV.world, t, .02); g.setTargetAtTime(RPV.world, t + .6, .15); }
+function rpAlertBus() {  // 리플레이 알림 소리 (처치·기절·사망·소생) 통로
+  if (!RPS.abus || RPS.abus.context !== audio) { RPS.abus = audio.createGain(); RPS.abus.connect(master || audio.destination); }
+  RPS.abus.gain.value = RPV.alert; return RPS.abus;
+}
 function rpSndAt(x, y) {  // 지도 좌표 → [크기 0~1, 좌우 -1~1], 화면에서 너무 멀면 null
   const P = rp.proj; if (!P) return null;
   const sx = P.X(x), sy = P.Y(y), dx = (sx - P.W / 2) / (P.W / 2), dy = (sy - P.H / 2) / (P.H / 2), d = Math.hypot(dx, dy);
@@ -5354,7 +5372,11 @@ function rpTone(dst, at, f0, f1, dur, vol, type = "sine") {
   o.connect(g).connect(dst); o.start(at); o.stop(at + dur + .02);
 }
 const RP_SND = {
-  shot: (d, t, k) => { k *= 1.92; SX.T(d, t, 1800, .1, .2 * k, "sine", 600); SX.T(d, t, 3600, .1, .05 * k, "sine", 1200); },  // v81 SHOT-27 레이저 삐융
+  shot: (d, t, k) => {  // v84 SHOT-68 탄피 짤 (작게): 부드러운 '탁' 뒤 아주 작은 탄피 '짤', 발마다 높이·크기가 조금씩 다름
+    k *= 1.85; const j = (v, a = .08) => v * (1 + (Math.random() * 2 - 1) * a);
+    const lp = (o, f) => { const x = audio.createBiquadFilter(); x.type = "lowpass"; x.frequency.value = f; x.connect(o); return x; }, f = lp(d, 2600);
+    SX.N(f, t, .05, j(.45) * k, "bandpass", j(1300), .8, null, .003); SX.T(f, t, j(120), .05, .25 * k, "sine", 55);
+    SX.FM(lp(d, 4500), t + j(.07, .2), j(3200, .1), 3.3, .6, .06, .025 * k); },
   boom: (d, t, k) => { rpNoise(d, t, 1.1, .9 * k, 380, "lowpass"); rpTone(d, t, 70, 30, .9, .8 * k); rpNoise(d, t, .15, .5 * k, 2500, "bandpass"); },
   flash: (d, t, k) => { k *= .76; SX.T(d, t, 120, .3, .6 * k, "sine", 40); SX.N(d, t, .2, .7 * k, "highpass", 2000); SX.T(d, t + .1, 4000, 1.2, .05 * k, "sine"); },  // FLASH-10 큰 쾅 + 삐
   fire: (d, t, k) => { k *= .48; SX.T(d, t, 80, .9, .4 * k, "sine", 45, .1); SX.N(d, t, 1, .5 * k, "lowpass", 600, 1, 200, .15); },  // v81 FIRE-16 불덩이 후우웅
@@ -5667,6 +5689,9 @@ function rpFacing(p, now) {  // 바라보는 방향 (배그 기록에 시선 방
   let d = want - m.a; while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2;
   m.a += d * Math.min(1, dt * 9);  // 부드럽게 돌아감
   return m.a;
+}
+function rpVel(p) {  // 지금 속도 (m/초)
+  const R = rp.data, a = posAt(p, rp.t - 1), b = posAt(p, rp.t); return a && b ? Math.hypot(b[0] - a[0], b[1] - a[1]) * R.size_m : 0;
 }
 function drawWheel(ctx, x, y, r, col) {  // 차량 핸들 아이콘 (플레이어 색 테두리)
   ctx.save();
@@ -6337,6 +6362,7 @@ function openSettings() {
   $("#pubToken").placeholder = pb.token_set ? "저장돼 있어요 (바꿀 때만 입력)" : "github_pat_… 또는 ghp_…";
   renderPub(pb);
   $("#vol").value = Math.round(volume * 100); $("#volTxt").textContent = Math.round(volume * 100) + "%";
+  for (const [id, k] of [["rpVolW", "world"], ["rpVolA", "alert"]]) { $("#" + id).value = Math.round(RPV[k] * 100); $("#" + id + "Txt").textContent = Math.round(RPV[k] * 100) + "%"; }
   const snd = Object.keys(state.sounds || {});
   $("#sndStatus").textContent = snd.length ? `사용 중: ${snd.join(", ")}` : "기본 소리 사용 중";
   const withPic = state.players.filter(p => pimg(p)).map(p => p.name);
@@ -6397,6 +6423,13 @@ $("#btnOpenReplayImgs").onclick = () => api("api/open_images", {replay: true}).c
 $("#btnOpenSounds").onclick = () => api("api/open_images", {sounds: true}).catch(e => alert(e.message));
 $("#vol").oninput = e => { const v = e.target.value / 100; setVolume(v); $("#volTxt").textContent = e.target.value + "%"; };
 $("#vol").onchange = () => { ensureAudio(); sfx.ding(659.25); };
+for (const [id, k, key] of [["rpVolW", "world", "ddc_rpvol_w"], ["rpVolA", "alert", "ddc_rpvol_a"]]) {  // v83 리플레이 효과음 크기 (이 기기에 저장)
+  $("#" + id).oninput = e => { RPV[k] = e.target.value / 100; $("#" + id + "Txt").textContent = e.target.value + "%"; try { localStorage.setItem(key, e.target.value); } catch {}
+    if (audio && k === "world" && RPS.bus) RPS.bus.gain.value = RPV.world; };
+  $("#" + id).onchange = () => { ensureAudio(); if (!audio || !noiseBuf) return;  // 들어 보기: 지도 소리는 총성 3발, 알림 소리는 처치 소리
+    if (k === "world") { const b = rpWorldBus(), t = audio.currentTime; for (let i = 0; i < 3; i++) RP_SND.shot(b, t + i * .25, 1); }
+    else { SFX_DEST = rpAlertBus(); try { sfx.kill(); } finally { SFX_DEST = null; } } };
+}
 $("#btnOpenPlayers").onclick = () => api("api/open_images", {players: true}).catch(e => alert(e.message));
 $("#settingsForm").addEventListener("submit", async e => {
   if (e.submitter?.value !== "save") return;
