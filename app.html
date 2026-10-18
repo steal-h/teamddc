@@ -1844,7 +1844,7 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .dlabel{display:flex;align-items:baseline;gap:8px;white-space:nowrap;pointer-events:none}
 .dlabel b{font:400 34px/1.05 var(--display);color:var(--bone)}.dlabel small{font-size:14px;font-weight:600;color:var(--dust)}
 .controls.v86 #date{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
-.controls.v86 .dp-wrap{cursor:pointer}.controls.v86 .dlabel b::after{content:"▾";font-size:.45em;color:var(--dust);margin-left:8px;vertical-align:middle}.controls.v86 .dp-wrap:hover .dlabel b,.controls.v86 #date:focus-visible+.dp-cal,.controls.v86 .dp-wrap:focus-within .dlabel b{color:var(--accent)}
+.controls.v86 .dp-wrap{cursor:pointer}.controls.v86 .dp-wrap:hover .dlabel b,.controls.v86 #date:focus-visible+.dp-cal,.controls.v86 .dp-wrap:focus-within .dlabel b{color:var(--accent)}
 .controls.v86 .dp-wrap:has(#date:focus-visible){outline:2px solid var(--accent);outline-offset:4px;border-radius:4px}
 .controls.v86 .dp-cal{top:calc(100% + 8px);left:0}
 .dquick{display:flex;gap:6px}
@@ -1853,12 +1853,20 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .dq svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7}
 body.viewer #dToday,body.viewer #dYest{display:none}
 body:not(.viewer) .ctl-go .viewer-only{display:none}
-.ctl-go{margin-left:auto;flex:none;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(150px,1fr);gap:8px}
+.ctl-go{flex:none;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(150px,1fr);gap:8px}
 .ctl-go .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:46px;padding:10px 18px;font-size:15px;font-weight:700;white-space:nowrap}
 .ctl-go .btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;flex:none}.ctl-go .btn svg.fill{fill:currentColor;stroke:none}
 .ctl-go .btn:not(.primary){color:var(--bone)}
 .ctl-go .btn[hidden],.ctl-go .btn:not(.viewer-only)[style*="none"]{display:none}
-.ctl-opts{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;flex:1 1 300px;min-width:0;padding-left:18px;border-left:1px solid var(--line)}  /* v87 날짜와 같은 줄 */
+.optdd{position:relative;margin-left:auto}
+#btnOpts{display:inline-flex;align-items:center;gap:7px;min-height:46px;padding:10px 14px;font-size:14.5px;font-weight:700;color:var(--bone);white-space:nowrap}
+#btnOpts b{color:var(--accent);font-variant-numeric:tabular-nums}#btnOpts svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;transition:transform .2s}
+#btnOpts[aria-expanded=true]{border-color:var(--accent)}#btnOpts[aria-expanded=true] svg{transform:rotate(180deg)}
+.ctl-opts{position:absolute;right:0;top:calc(100% + 6px);z-index:30;width:250px;display:grid;gap:11px;padding:14px 16px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;box-shadow:0 12px 28px rgba(0,0,0,.5)}
+.ctl-opts[hidden]{display:none}
+body.viewer .optdd{display:none}
+.dcalb{width:40px;height:40px;border-radius:8px;border:1px solid var(--line);background:none;color:var(--dust);display:grid;place-items:center;cursor:pointer;padding:0;flex:none}
+.dcalb svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7}.dcalb:hover{color:var(--accent);border-color:var(--accent)}
 .ctl-opts .check{font-size:14px}
 body.viewer .ctl-opts{display:none}
 body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
@@ -1867,7 +1875,6 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
   .top.v86 .nav{order:3;flex-basis:100%;display:grid;grid-template-columns:repeat(3,1fr)}
   .top.v86 .nav .btn[data-tab]{padding:8px 4px}
   .ctl-go{margin-left:0;flex-basis:100%;grid-auto-columns:1fr}
-  .ctl-opts{flex-basis:100%;padding-left:0;border-left:0}
 }
 @media (max-width:620px){
   .statusbar{margin:-4px 0 10px;font-size:12px;gap:4px 12px}
@@ -1884,6 +1891,52 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
   .top.v86 .nav{order:0;flex-basis:auto;display:flex}
   .dlabel b{font-size:26px}
 }
+
+/* ───── v89 AW-08 스포트라이트 무대: 어두운 무대 + 1위에게만 조명, 2~4위는 객석 (상자 크기는 예전과 같음) ───── */
+.hero{background:radial-gradient(ellipse 36% 62% at 50% 0%,rgba(255,236,180,.26),transparent 72%),radial-gradient(ellipse 60% 26% at 50% 64%,rgba(242,169,0,.10),transparent 70%),#121410;border:1px solid #2b2f22}
+.hero-bg{opacity:.12}
+.plaque{background:none}  /* v90 1위 두 줄 노란 테두리는 예전처럼 */
+.plaque>div{background:radial-gradient(ellipse 55% 85% at 50% 0%,rgba(255,236,180,.14),transparent 75%);box-shadow:none}
+.plaque .av-lg{filter:drop-shadow(0 0 22px rgba(242,179,61,.45))}
+.plaque .award{color:var(--gold);letter-spacing:.14em;font-weight:800}
+.plaque .name{background:linear-gradient(180deg,#FFF6D8 10%,#F2B33D 90%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 18px rgba(242,179,61,.25))}
+.spot-st{display:flex;justify-content:center;gap:30px;margin-top:6px}
+.spot-st span{display:grid;justify-items:center;line-height:1.1}.spot-st b{font:400 32px/1 var(--num);color:var(--bone)}.spot-st small{color:var(--dust);font-size:12.5px;margin-top:3px;white-space:nowrap}
+.medals{position:relative;padding-top:18px}
+.medals::before{content:"";position:absolute;left:-20px;right:-20px;top:0;height:16px;background:linear-gradient(180deg,rgba(242,169,0,.16),transparent);border-top:2px solid rgba(242,169,0,.45)}
+.medal-card{background:#1c1f17;border-color:var(--line);border-radius:12px 12px 4px 4px}  /* v90 2·3위 회색 테두리 */
+.medal-card.worst{background:linear-gradient(180deg,rgba(224,83,47,.16),#1c1f17 70%);border-color:rgba(224,83,47,.6)}
+@media (max-width:620px){.spot-st{gap:12px;justify-content:flex-start}.spot-st b{font-size:22px}.spot-st small{font-size:11px}.medals::before{left:-10px;right:-10px}}
+@media (orientation:landscape) and (max-height:500px){.spot-st{justify-content:flex-start;gap:18px}.spot-st b{font-size:22px}}
+/* v91 등고선 배경 (그날 가장 많이 한 맵 색) */
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:var(--topo,none);background-size:900px 900px;background-position:center top;-webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.55),#000 30%,#000);mask-image:linear-gradient(180deg,rgba(0,0,0,.55),#000 30%,#000)}
+html.share-mode body::before{display:none}
+@media print{body::before{display:none}}
+/* v91 전술 펜 */
+.rp-penpad{position:absolute;inset:0;z-index:5;touch-action:none;cursor:crosshair}
+.rp-penpad[data-tool="erase"]{cursor:none}
+.rp-penbar{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:7;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 10px;max-width:calc(100% - 16px);padding:6px 8px;background:rgba(20,23,15,.9);border:1px solid #5A6248;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.45)}
+.rp-penbar[hidden],.rp-penpad[hidden]{display:none}
+.rp-penbar .pen-g{display:flex;align-items:center;gap:4px}
+.rp-penbar button{appearance:none;border:1px solid #5A6248;background:#2B3022;color:var(--bone);border-radius:6px;min-height:32px;padding:0 9px;font:700 12.5px var(--body);cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.rp-penbar button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.rp-penbar button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#2A2208}
+.rp-penbar button:disabled{opacity:.4;cursor:default}
+.rp-penbar button:focus-visible{outline:2px solid var(--bone);outline-offset:1px}
+.rp-penbar .pen-cols button{width:26px;min-height:26px;height:26px;padding:0;border-radius:50%;background:var(--c);border:2px solid rgba(238,232,213,.35)}
+.rp-penbar .pen-cols button[aria-pressed="true"]{border-color:var(--bone);box-shadow:0 0 0 2px var(--accent)}
+.rp-penbar .pen-w{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dust)}
+.rp-penbar .pen-w input{width:96px;accent-color:var(--accent)}
+.rp-penbar .pen-w b{min-width:1.4em;color:var(--bone);font-variant-numeric:tabular-nums}
+.rp-penbar #rpPenDot{width:18px;height:18px;display:grid;place-items:center}.rp-penbar #rpPenDot::after{content:"";width:min(18px,var(--d));height:min(18px,var(--d));border-radius:50%;background:var(--c);box-shadow:0 0 0 1px rgba(0,0,0,.5)}
+.rp-penbar .pen-done{background:#EEE8D5!important;color:#14170F!important;border-color:#EEE8D5!important}
+.rp-penmsg{position:absolute;left:50%;bottom:16px;transform:translate(-50%,8px);z-index:8;background:rgba(20,23,15,.92);border:1px solid var(--accent);color:var(--bone);padding:6px 12px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.rp-penmsg.on{opacity:1;transform:translate(-50%,0)}
+.replay.pen .rp-hud:not(.rp-hud-br),.replay.pen .rp-teams,.replay.pen .rp-grp,.replay.pen .rp-hint{display:none!important}
+#rpPen[aria-pressed="true"]{background:var(--accent);color:#2A2208;border-color:var(--accent)}
+#rpPen.has:not([aria-pressed="true"])::after{content:"";position:absolute;right:5px;top:5px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+#rpPen{position:relative}
+@media (max-width:620px){.rp-penbar{gap:5px 6px;padding:5px 6px;top:6px}.rp-penbar button{min-height:30px;padding:0 7px;font-size:12px}.rp-penbar .pen-cols button{width:24px;height:24px;min-height:24px}.rp-penbar .pen-w input{width:80px}.rp-penbar .pen-lbl{display:none}}
 </style>
 </head>
 <body class="viewer">
@@ -1912,17 +1965,20 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
       <div class="ctl-row">
         <div class="dbig">
           <span class="dp-wrap"><span class="dlabel" aria-hidden="true"><b id="dMain">-</b><small id="dDow"></small></span><input type="text" id="date" readonly inputmode="none" autocomplete="off" aria-haspopup="dialog" aria-label="날짜 고르기" placeholder="날짜"><span class="dp-cal" id="dpCal" hidden></span></span>
+          <button class="dcalb" id="dCal" type="button" aria-label="달력 열기" title="달력 열기"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.6" y="4" width="14.8" height="13" rx="1.5"/><path d="M2.6 8h14.8M6.5 2.4v3M13.5 2.4v3"/></svg></button>
         </div>
-        <div class="ctl-opts">
-          <label class="check"><input type="checkbox" id="optRefresh" checked> dak.gg 전적 갱신</label>
-          <label class="check" title="네 명이 다 같이 한 판만 점수에 넣어요"><input type="checkbox" id="optFour"> 4인 판만</label>
-          <label class="check" title="일반 게임은 빼고 랭크(경쟁전) 판만 점수에 넣어요"><input type="checkbox" id="optRanked"> 랭크 게임만</label>
-          <label class="check"><input type="checkbox" id="optSave" checked> 누적에 저장</label>
-          <label class="check"><input type="checkbox" id="optShow" checked> 시상식 연출</label>
-          <label class="check"><input type="checkbox" id="optSound" checked> 효과음</label>
+        <div class="optdd" id="optDD">  <!-- v88 옵션은 접어 두고 (TB-04) 누르면 펼침 -->
+          <button class="btn" id="btnOpts" type="button" aria-expanded="false" aria-controls="optPanel">옵션 <b id="optCount">-</b><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 8l4 4 4-4"/></svg></button>
+          <div class="ctl-opts" id="optPanel" hidden>
+            <label class="check"><input type="checkbox" id="optRefresh" checked> dak.gg 전적 갱신</label>
+            <label class="check" title="네 명이 다 같이 한 판만 점수에 넣어요"><input type="checkbox" id="optFour"> 4인 판만</label>
+            <label class="check" title="일반 게임은 빼고 랭크(경쟁전) 판만 점수에 넣어요"><input type="checkbox" id="optRanked"> 랭크 게임만</label>
+            <label class="check"><input type="checkbox" id="optSave" checked> 누적에 저장</label>
+            <label class="check"><input type="checkbox" id="optShow" checked> 시상식 연출</label>
+            <label class="check"><input type="checkbox" id="optSound" checked> 효과음</label>
+          </div>
         </div>
         <div class="ctl-go">
-          <button class="btn viewer-only" id="btnViewDay" type="button">이 날 보기</button>
           <button class="btn" id="btnBackfill" type="button" title="최근 14일을 한 번에 분석해서 누적에 저장"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10a7 7 0 1 0 2-4.9"/><path d="M3 3v3.5h3.5M10 6v4l3 2"/></svg><span>14일 한 번에</span></button>
           <button class="btn primary" id="btnAnalyze" type="button"><svg viewBox="0 0 20 20" aria-hidden="true" class="fill"><path d="M6 4l10 6-10 6z"/></svg><span>분석하기</span></button>
         </div>
@@ -1970,11 +2026,19 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 <div class="replay hidden" id="replay" role="dialog" aria-modal="true" aria-label="리플레이">
   <div class="rp-top">
     <div><b id="rpTitle">리플레이</b><span id="rpSub"></span></div>
-    <div class="btns"><button class="btn ic" id="rpSnd" type="button" aria-pressed="true" title="효과음 켜기·끄기" aria-label="효과음"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="spk" d="M3 8h3l4-3v10l-4-3H3z"/><path class="on" d="M13 7.5a3.5 3.5 0 0 1 0 5M15.2 5.5a6.4 6.4 0 0 1 0 9"/><path class="off" d="m13 8 4 4m0-4-4 4"/></svg></button><button class="btn ic" id="rpCinema" type="button" title="시네마 모드 (C): 버튼을 모두 숨기고 영화처럼 보기" aria-label="시네마 모드"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="4.5" width="15" height="11" rx="1.5"/><path d="M2.5 7.5h15M2.5 12.5h15"/></svg></button><button class="btn" id="rpView">전체 지도 보기</button><button class="btn" id="rpClose">닫기</button></div>
+    <div class="btns"><button class="btn ic" id="rpSnd" type="button" aria-pressed="true" title="효과음 켜기·끄기" aria-label="효과음"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="spk" d="M3 8h3l4-3v10l-4-3H3z"/><path class="on" d="M13 7.5a3.5 3.5 0 0 1 0 5M15.2 5.5a6.4 6.4 0 0 1 0 9"/><path class="off" d="m13 8 4 4m0-4-4 4"/></svg></button><button class="btn ic" id="rpPen" type="button" aria-pressed="false" title="전술 펜 (P): 지도 위에 그리기 · 화살표 · 지우개" aria-label="전술 펜"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M13.5 3.5l3 3L7 16H4v-3z"/><path d="M11.5 5.5l3 3"/></svg></button><button class="btn ic" id="rpCinema" type="button" title="시네마 모드 (C): 버튼을 모두 숨기고 영화처럼 보기" aria-label="시네마 모드"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="4.5" width="15" height="11" rx="1.5"/><path d="M2.5 7.5h15M2.5 12.5h15"/></svg></button><button class="btn" id="rpView">전체 지도 보기</button><button class="btn" id="rpClose">닫기</button></div>
   </div>
   <div class="rp-body">
     <div class="rp-stage">
       <canvas id="rpCanvas"></canvas>
+      <div class="rp-penpad" id="rpPenPad" hidden></div>
+      <div class="rp-penbar" id="rpPenBar" role="toolbar" aria-label="전술 펜" hidden>
+        <div class="pen-g" role="group" aria-label="도구"><button type="button" data-tool="pen" title="펜 (P)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 15c3-1 4-8 7-8s2 6 7 5"/></svg><span class="pen-lbl">펜</span></button><button type="button" data-tool="arrow" title="화살표 (A)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M9 4h7v7"/></svg><span class="pen-lbl">화살표</span></button><button type="button" data-tool="erase" title="지우개 (E)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m8 16-4-4 8-8 5 5-7 7zM6 10l5 5M8 16h9"/></svg><span class="pen-lbl">지우개</span></button></div>
+        <div class="pen-g pen-cols" role="group" aria-label="펜 색상"></div>
+        <label class="pen-w"><span class="pen-lbl">굵기</span><span id="rpPenDot" aria-hidden="true"></span><input type="range" id="rpPenW" min="1" max="16" step="1" aria-label="펜 굵기"><b id="rpPenWTxt"></b></label>
+        <div class="pen-g"><button type="button" id="rpPenUndo" title="되돌리기 (Ctrl+Z)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5 3 9l4 4"/><path d="M3 9h9a5 5 0 0 1 0 10h-2"/></svg><span class="pen-lbl">되돌리기</span></button><button type="button" id="rpPenClear">모두 지우기</button><button type="button" id="rpPenSave" title="지금 화면을 사진으로 저장">사진 저장</button><button type="button" id="rpPenDone" class="pen-done">완료</button></div>
+      </div>
+      <div class="rp-penmsg" id="rpPenMsg" role="status" aria-live="polite"></div>
       <div class="rp-hud"><span id="rpSpd"></span></div>
       <div class="rp-hud rp-hud-tr"><span id="rpAlive"></span></div>
       <div class="rp-teams" id="rpTeams" aria-label="남은 팀 현황"></div>
@@ -2102,6 +2166,7 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
         <label class="vol-row"><span class="vl">전체 크기<small>시상식·음악·모든 효과음</small></span><input type="range" id="vol" min="0" max="100" step="5"><b id="volTxt"></b></label>
         <label class="vol-row"><span class="vl">리플레이 지도 소리<small>총성·폭발·엔진</small></span><input type="range" id="rpVolW" min="0" max="150" step="5"><b id="rpVolWTxt"></b></label>
         <label class="vol-row"><span class="vl">리플레이 알림 소리<small>처치·기절·소생</small></span><input type="range" id="rpVolA" min="0" max="150" step="5"><b id="rpVolATxt"></b></label>
+        <label class="vol-row"><span class="vl">리플레이 배경 소리<small>맵마다 바람·벌레·파도·풍경</small></span><input type="range" id="rpVolB" min="0" max="150" step="5"><b id="rpVolBTxt"></b></label>
         <p class="help status" id="sndStatus"></p>
         <div class="set-btns"><button class="btn" type="button" id="btnOpenSounds">sounds 폴더 열기</button></div></div>
       <div class="field"><span>트로피·메달 <small>images 에 trophy · gold · silver · bronze</small></span>
@@ -2123,6 +2188,44 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt
 const MAP_THEME = {에란겔: "#7DB05F", 미라마: "#D8A65E", 사녹: "#3FB58E", 비켄디: "#9CC9EA", 태이고: "#E08A4C", 데스턴: "#5E93DA", 파라모: "#C27458", 헤이븐: "#9A96B8", 카라킨: "#CBB284", 론도: "#D277AE", 훈련장: "#A9A68F"};  // v77 맵별 테마 색
 const MAP_CODE_NAME = {Baltic_Main: "에란겔", Erangel_Main: "에란겔", Desert_Main: "미라마", Savage_Main: "사녹", DihorOtok_Main: "비켄디", Tiger_Main: "태이고", Kiki_Main: "데스턴", Chimera_Main: "파라모", Heaven_Main: "헤이븐", Summerland_Main: "카라킨", Neon_Main: "론도", Range_Main: "훈련장"};
 const mapColor = m => MAP_THEME[m] || MAP_THEME[MAP_CODE_NAME[m]] || "#A9A68F";
+/* v91 등고선 배경: 지형도처럼 옅은 등고선 + 군용 격자. 그날 가장 많이 한 맵의 색 · 맵마다 다른 지형 모양 */
+const TOPO = {key: null};
+function topoTile(seed, col) {  // 이어 붙여도 이음새가 없는 900px 타일 (주기적인 값 잡음 → 마칭 스퀘어로 등고선)
+  const N = 900, c = document.createElement("canvas"); c.width = c.height = N; const g = c.getContext("2d");
+  let s = seed >>> 0 || 1; const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  const oct = [[5, 1], [10, .45], [20, .18]].map(([L, a]) => ({L, a, v: Array.from({length: L * L}, rnd)}));
+  const sm = t => t * t * (3 - 2 * t);
+  const H = (x, y) => { let h = 0; for (const o of oct) { const fx = x / N * o.L, fy = y / N * o.L, ix = Math.floor(fx), iy = Math.floor(fy), tx = sm(fx - ix), ty = sm(fy - iy), L = o.L;
+    const v = (i, j) => o.v[((j % L + L) % L) * L + ((i % L + L) % L)];
+    h += o.a * ((v(ix, iy) * (1 - tx) + v(ix + 1, iy) * tx) * (1 - ty) + (v(ix, iy + 1) * (1 - tx) + v(ix + 1, iy + 1) * tx) * ty); } return h / 1.63; };
+  const st = 6, M = N / st, F = new Float32Array((M + 1) * (M + 1));
+  for (let j = 0; j <= M; j++) for (let i = 0; i <= M; i++) F[j * (M + 1) + i] = H(i * st, j * st);
+  const [r, gg, b] = [1, 3, 5].map(k => parseInt(col.slice(k, k + 2), 16));
+  for (let lv = 1; lv < 24; lv++) {  // 높이 0.04 간격, 5번째마다 굵은 주곡선
+    const z = lv * .04, idx = lv % 5 === 0; g.beginPath();
+    for (let j = 0; j < M; j++) for (let i = 0; i < M; i++) {
+      const a = F[j * (M + 1) + i], bq = F[j * (M + 1) + i + 1], cq = F[(j + 1) * (M + 1) + i + 1], d = F[(j + 1) * (M + 1) + i];
+      const k = (a > z) | (bq > z) << 1 | (cq > z) << 2 | (d > z) << 3; if (!k || k === 15) continue;
+      const x = i * st, y = j * st, e = (p, q) => (z - p) / (q - p) * st;
+      const T = [x + e(a, bq), y], R = [x + st, y + e(bq, cq)], B = [x + e(d, cq), y + st], L = [x, y + e(a, d)];
+      const seg = {1: [L, T], 2: [T, R], 3: [L, R], 4: [R, B], 5: [L, T, R, B], 6: [T, B], 7: [L, B], 8: [L, B], 9: [T, B], 10: [T, R, L, B], 11: [R, B], 12: [L, R], 13: [T, R], 14: [L, T]}[k];
+      for (let n = 0; n < seg.length; n += 2) { g.moveTo(seg[n][0], seg[n][1]); g.lineTo(seg[n + 1][0], seg[n + 1][1]); }
+    }
+    g.strokeStyle = `rgba(${r},${gg},${b},${idx ? .2 : .1})`; g.lineWidth = idx ? 1.4 : .9; g.stroke();
+  }
+  g.strokeStyle = "rgba(238,232,213,.045)"; g.lineWidth = 1; g.beginPath();  // 군용 격자 (1칸 = 150px)
+  for (let v = 0; v < N; v += 150) { g.moveTo(v + .5, 0); g.lineTo(v + .5, N); g.moveTo(0, v + .5); g.lineTo(N, v + .5); } g.stroke();
+  g.fillStyle = "rgba(238,232,213,.07)"; g.font = "600 10px Oswald, sans-serif";
+  for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) g.fillText(String.fromCharCode(65 + i) + (j + 1), i * 150 + 5, j * 150 + 13);
+  return c.toDataURL("image/png");
+}
+function setTopo(map) {  // map = 맵 코드나 한글 이름 (없으면 기본 올리브)
+  const col = (map && mapColor(map)) || "#A9A68F", key = (map || "") + col; if (TOPO.key === key) return; TOPO.key = key;
+  let seed = 7; for (const ch of String(map || "DDC")) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0;
+  const run = () => { try { document.documentElement.style.setProperty("--topo", `url(${topoTile(seed, /^#[0-9a-f]{6}$/i.test(col) ? col : "#A9A68F")})`); } catch {} };
+  (window.requestIdleCallback || (f => setTimeout(f, 60)))(run);
+}
+setTopo(null);
 
 // v77 숫자 카운트업: 점수·딜량·킬·능력치가 화면에 들어올 때 0에서 차오름 (한 번만)
 const countUpIO = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { countUpIO.unobserve(e.target); countUpRun(e.target); } }), {threshold: .4}) : null;
@@ -2543,6 +2646,7 @@ function mapsHtml(r) {  // v78 오늘의 맵 (MC-01 지도 타일)
   const maps = r.maps || [];
   if (!maps.length) return "";
   const max = Math.max(...maps.map(m => m.count));
+  setTimeout(() => { const top = maps.find(m => m.count === max); setTopo(top && (codeOf(top.map) || top.map)); });  // v91 등고선 배경 색 = 가장 많이 한 맵
   const codeOf = name => (r.games || []).find(g => g.map === name && g.map_code)?.map_code || state?.map_codes?.[name];
   const killsOf = name => (r.games || []).filter(g => g.map === name).reduce((a, g) => a + g.players.reduce((b, p) => b + p.kills, 0), 0);
   return `<div class="sec"><h3>오늘의 맵</h3></div>
@@ -2667,7 +2771,7 @@ function renderDay(r, report, reveal) {
         ${avatar(first, "lg") || trophy()}
         <div class="award">최우수 플레이어</div>
         <div class="name">${esc(first.name)}</div>
-        <div class="line">총점 <b>${sc(first.total)}</b> 점, 판당 딜량 ${fmt(first.metrics.damage)}, 판당 킬 ${first.metrics.kills}</div>
+        <div class="line spot-st"><span><b>${sc(first.total)}</b><small>총점</small></span><span><b>${fmt(first.metrics.damage)}</b><small>판당 딜</small></span><span><b>${first.metrics.kills}</b><small>판당 킬</small></span><span><b>${first.metrics.headshot_pct}%</b><small>헤드샷</small></span></div>
         ${badgesHtml(first)}
       </div></div>
       <div class="medals">${medals}</div>
@@ -2755,8 +2859,8 @@ async function loadSounds() {
 }
 let SFX_DEST = null;  // v83 효과음이 나갈 곳: 리플레이 알림 소리는 잠깐 '리플레이 알림 통로'로 보내 설정의 크기를 따름
 const sfxOut = () => SFX_DEST || master || audio.destination;
-const RPV = {world: 1, alert: 1};  // 설정 → 리플레이 효과음 크기 (지도 소리 · 알림 소리)
-try { RPV.world = Number(localStorage.getItem("ddc_rpvol_w") ?? 100) / 100; RPV.alert = Number(localStorage.getItem("ddc_rpvol_a") ?? 100) / 100; } catch {}
+const RPV = {world: 1, alert: 1, amb: 1};  // 설정 → 리플레이 효과음 크기 (지도 소리 · 알림 소리)
+try { RPV.world = Number(localStorage.getItem("ddc_rpvol_w") ?? 100) / 100; RPV.alert = Number(localStorage.getItem("ddc_rpvol_a") ?? 100) / 100; RPV.amb = Number(localStorage.getItem("ddc_rpvol_b") ?? 100) / 100; } catch {}
 function playBuf(k, vol = 1) {
   if (!soundOn() || !SND[k]) return false;
   const src = audio.createBufferSource(), g = audio.createGain();
@@ -3440,7 +3544,7 @@ async function getReplayData(id) {
 async function openReplay(id) {
   { const sm = document.getElementById("rpSum"); if (sm) sm.hidden = true; }
   ensureAudio(); reelToken++;
-  cancelAnimationFrame(rp.raf); rp.data = null;
+  cancelAnimationFrame(rp.raf); rp.data = null; PEN.undo = []; rpPen(false);
   $("#replay").classList.remove("hidden", "rec"); document.body.style.overflow = "hidden";
   $("#rpReel").classList.remove("on");
   $("#rpLoading").classList.remove("hidden");
@@ -3557,7 +3661,7 @@ async function reelVideo(date, send, msgEl) {
 }
 
 function closeReplay() {
-  try { rpHum(false); } catch {}
+  try { rpHum(false); rpAmb(null); rpPen(false); } catch {}
   if (rp.reelBgm) { stopBgm(); rp.reelBgm = false; }
   try { if (rp.cinema) rpCinema(false); } catch {}
   reelToken++;
@@ -4271,7 +4375,7 @@ function rpCamera(dt) {
   } else rp.encD = null;
   if (aimed) {  // 폰처럼 작은 화면: 자동 카메라를 더 가까이 (PC는 그대로). 너무 붙지는 않게 최소 120m 범위
     const cv = $("#rpCanvas"), small = cv && Math.min(cv.clientWidth, cv.clientHeight) < 560;
-    if (small) ts = Math.max(Math.min(ts, 120 / R.size_m), ts * .62);
+    if (small) ts = Math.max(Math.min(ts, 110 / R.size_m), ts * .5);  // v88 .62 → .5 (약 24% 더 가까이), 최소 범위 110m (주변 흐름은 보이게)
   }
   // 멀리 떨어진 곳으로 넘어갈 때(다른 무리·장면): 길게 미끄러지지 않고 짧은 흐림과 함께 바로 넘어감
   const nowMs = performance.now();
@@ -4452,7 +4556,7 @@ function rpDraw(dt, now, view) {
     const x2 = X(jx), y2 = Y(jy);
     if (e < 0) { const j = (rpHash(Math.floor(rp.t * 40), 1) - .5) * 4 * Math.min(1, (e + 1) * 2); drawBadge(ctx, "jerrycan", x2 + j, y2, 26); continue; }  // 터지기 직전: 배그 연료통 그림이 덜덜
     fxFuel(ctx, x2, y2, e, fxS(M, .26, .85), Math.round(jt * 10) % 997);
-    if (e < 2.5) drawBadge(ctx, "jerrycan", x2, y2 - 34 * fxS(M, .26, .85) - 16, 22);
+    if (e < .3) { ctx.save(); ctx.globalAlpha = 1 - e / .3; drawBadge(ctx, "jerrycan", x2, y2, 26 * (1 + e * 1.5)); ctx.restore(); }  // v91 통은 터진 자리 그대로에서 터지며 사라짐 (위에 떠 있던 표시 없앰)
   }
 
   // BRDM: 모두 내려도 세워 둔 자리에 계속 표시 (마지막으로 탄 팀 번호와 함께), 터지면 사라짐
@@ -4548,11 +4652,11 @@ function rpDraw(dt, now, view) {
   for (const [tf, fx, fy, ix, iy, ti, est, who, side] of R.mortars || []) {
     if (side && !rp.foes) continue;
     const age = rp.t - tf; if (age < 0 || rp.t > ti + 6) continue;
-    const x1 = X(fx), y1 = Y(fy), x2 = X(ix), y2 = Y(iy), fly = Math.max(.5, ti - tf), arc = Math.min(160, Math.hypot(x2 - x1, y2 - y1) * .45 + 30), col = side ? "255,110,90" : "200,180,255";
+    const x1 = X(fx), y1 = Y(fy), x2 = X(ix), y2 = Y(iy), fly = Math.max(.5, ti - tf), arc = Math.min(160, Math.hypot(x2 - x1, y2 - y1) * .45 + 30), col = side ? "255,86,64" : "255,184,77";  // v92 우리 팀 = 주황빛 노랑, 적 = 빨강 (혜성 꼬리와 어울리게)
     if (rp.t < ti) fxMortarFlight(ctx, x1, y1, x2, y2, age / fly, arc, col, est, 1);  // MT-05: 포물선 전체 + 큰 포탄
     else {
       const e = rp.t - ti; if (e < 1) fxMortarFlight(ctx, x1, y1, x2, y2, null, arc, col, est, 1 - e);
-      fxMortar(ctx, x2, y2, e, fxS(M, .36, .95), Math.round(tf) % 997);  // 폭발 (흔들림은 MT-01처럼 크게)
+      fxMortar(ctx, x2, y2, e, Math.max(.4, fxS(M, .5, .95)), Math.round(tf) % 997);  // 폭발 (흔들림은 MT-01처럼 크게)
     }
   }
   // 빛기둥: 블루칩 송신(파랑), 플레어건(빨강), 비상호출(노랑)
@@ -4651,7 +4755,7 @@ function rpDraw(dt, now, view) {
       rpHpBar(ctx, rpCarHp(g.inCar[4]), x, y + r * 1.75, Math.max(30, r * 2.6), 4, true);
     }
     else if (g.inCar && /mortar/i.test(g.inCar[3] || "")) drawMortarSeat(ctx, x, y, r, fillCol, rp.t, g.p.nick);  // 박격포 설치·사용 중: 박격포 그림
-    else if (g.inCar) drawWheel(ctx, x, y, r, fillCol);  // 차에 타면 사진 대신 핸들
+    else if (g.inCar) drawVeh(ctx, x, y, r, fillCol, g.inCar[3], () => rpHeading(g.p.nick, t => posAt(g.p, t)), now);  // 차에 타면 사진 대신 핸들 (v90 글라이더·자전거·보트는 V-03 실루엣)
     else {
       ctx.beginPath(); ctx.arc(x, y, r + 3, 0, Math.PI * 2); ctx.fillStyle = "#14170F"; ctx.fill();
       ctx.beginPath(); ctx.arc(x, y, r + 2, 0, Math.PI * 2); ctx.fillStyle = fillCol; ctx.fill();
@@ -4737,7 +4841,7 @@ function rpDraw(dt, now, view) {
         if (!foeCars.some(o => o.tm === en.tm && ((o.key && vh && vh[3] && o.key === vh[3]) || Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < (big ? 60 : 90)))) {
           if (vh && vh[2] === 2) drawMortarSeat(ctx, x, y, big ? 9 : 7, teamColor(en.tm || 0), rp.t, en.n);
           else if (vh && vh[2]) { drawBRDM(ctx, x, y, big ? 28 : 20, rpHeading("e:" + en.n, t => interp(en.tr, t)), teamColor(en.tm || 0)); drawTeamTag(ctx, x + (big ? 12 : 9), y - (big ? 11 : 8), en.tm, teamColor(en.tm || 0)); drawSeats(ctx, x - 14.5, y + (big ? 26 : 21), Math.max(1, rpBrdmCount(R, vh[3], en.tm)), teamColor(en.tm || 0)); rpHpBar(ctx, rpCarHp(vh[3]), x, y + (big ? 18 : 14), big ? 26 : 20, 3, true); }
-          else drawWheel(ctx, x, y, big ? 9 : 6, teamColor(en.tm || 0));
+          else drawVeh(ctx, x, y, big ? 9 : 6, teamColor(en.tm || 0), vh && vh[4], () => rpHeading("e:" + en.n, t => interp(en.tr, t)), now);
           foeCars.push({q, tm: en.tm, key: vh && vh[3]});
         }
         rpHpBar(ctx, en.hp, x, y + (big ? 13 : 10), big ? 20 : 14, 3);
@@ -4873,6 +4977,7 @@ function rpDraw(dt, now, view) {
     if (shk) ctx.translate(shk[0], shk[1]);
     break;
   }
+  if (!pip) rpPenDraw(ctx, X, Y);  // v91 전술 펜 그림
   if (pip) return;  // 보조 화면은 축척 없이
   // 축척
   const m100 = S / R.size_m * 100, steps = [100, 200, 500, 1000, 2000];
@@ -4908,7 +5013,7 @@ function loadReplayImgs() {
   for (const [k, url] of Object.entries(state?.replay_images || {})) { if (replayImgs[k]?.src.endsWith(url)) continue; const im = new Image(); im.src = url; replayImgs[k] = im; }
 }
 const THROW_COL = {grenade: "#9DBA62", molotov: "#FF8A3D", smoke: "#C8CDD3", flash: "#FFF1A8", sticky: "#FFB04D", c4: "#E0532F",
-  bluezone: "#7FB2E5", panzerfaust: "#E0532F", mortar: "#B48CF2", jerrycan: "#FF6A3D"};
+  bluezone: "#7FB2E5", panzerfaust: "#E0532F", mortar: "#FFB84D", jerrycan: "#FF6A3D"};
 function drawBadge(ctx, kind, x, y, sz = 30, spin = 0, tcol = null) {  // 투척 무기: 배경 없이 아이템 그림만 (BRDM처럼 모양 그대로 팀 색 테두리)
   const im = replayImgs[kind];
   if (im && im.complete && im.naturalWidth) {
@@ -5252,9 +5357,13 @@ function fxPanzer(c, tx, ty, an, a, s, seed) {  // PF-10 잔해 불길: 폭발 �
 }
 function fxMortar(c, x, y, a, s, seed) {  // 박격포 폭발 (MT-05/01): 섬광 → 흙먼지 고리 → 큰 불덩이 → 파편 → 충격파 → 연기
   const F = FX, S = F.go(c, s, fxNow()); if (a < 0 || a > 6) return;
-  if (a < 6) F.scorch(x, y, 16 * S, Math.min(1, a / .25) * (1 - a / 6) * .85, seed);
-  if (a < .09) F.hot(x, y, 54 * S, 1 - a / .09); F.dustRing(x, y, a, 1.2, 52 * S, "128,104,78", 9); F.fireball(x, y, a, 19 * S, seed, .9, 8);
-  F.shrapnel(x, y, a, 12, seed, 60 * S, 11 * S, "255,205,140", .6); F.shock(x, y, a, .45, 56 * S, 2.6 * S); F.plume(x, y, a - .3, seed, 6, 16 * S, .5, [112, 106, 100], 3.4, .55);
+  // v91 더 크게: 섬광 · 불덩이 · 충격파를 키우고, 흙먼지 고리를 두 겹 + 흙기둥 연기를 더 높고 길게
+  if (a < 6) F.scorch(x, y, 24 * S, Math.min(1, a / .25) * (1 - a / 6) * .9, seed);
+  if (a < .12) F.hot(x, y, 84 * S, 1 - a / .12);
+  F.dustRing(x, y, a, 1.4, 78 * S, "128,104,78", 12); F.dustRing(x, y, a - .12, 2, 112 * S, "150,128,100", 9);
+  F.fireball(x, y, a, 28 * S, seed, 1.05, 10);
+  F.shrapnel(x, y, a, 20, seed, 110 * S, 15 * S, "255,205,140", .75); F.shock(x, y, a, .55, 88 * S, 3.4 * S);
+  F.plume(x, y, a - .25, seed, 9, 26 * S, .55, [116, 100, 82], 4.2, .6); F.embers(x, y, a - .15, 12, seed + 3, 30 * S, 2.6, 1);
 }
 function fxFuel(c, x, y, a, s, seed) {  // FC-06 검은 연기 기둥 (불길은 크고 넓게): 터진 뒤 넓게 타오르는 불 + 바람 따라 길게 흐르는 시커먼 연기 + 그을음 자국
   const F = FX, S = F.go(c, s, fxNow()), fade = 1 - F.sst(10.6, 12, a), wind = [1, -.35]; if (a < 0 || fade <= 0) return;
@@ -5353,15 +5462,29 @@ function fxMortarFlight(c, x1, y1, x2, y2, k, arc, col, est, al) {  // MT-05: �
   c.strokeStyle = `rgba(${col},${.35 * al})`; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); c.restore();
   const hx = (x1 + x2) / 2, hy = (y1 + y2) / 2;
   if (arc > 24) { c.save(); c.globalAlpha = .45 * al; c.strokeStyle = `rgb(${col})`; c.lineWidth = 1; c.beginPath(); c.moveTo(hx, hy); c.lineTo(hx, hy - arc); c.stroke(); c.restore();
-    rpLabel(c, "높이", hx + 16, hy - arc / 2, "#CFC2FF", .8 * al); }
+    rpLabel(c, "높이", hx + 16, hy - arc / 2, `rgb(${col})`, .8 * al); }
   rpRing(c, x2, y2, 11, `rgba(${col},1)`, 1.6, al);
   c.save(); c.globalAlpha = .8 * al; c.strokeStyle = `rgb(${col})`; c.lineWidth = 1.2; c.beginPath(); c.moveTo(x2 - 16, y2); c.lineTo(x2 + 16, y2); c.moveTo(x2, y2 - 16); c.lineTo(x2, y2 + 16); c.stroke(); c.restore();
   if (k == null) return;
-  for (let j = 1; j <= 9; j++) { const [qx, qy] = pt(Math.max(0, k - j * .015)); rpPuff(c, qx, qy, 4 + j * .8, 175, .38 * (1 - j / 10)); }  // 연기 꼬리
-  const [px, py] = pt(k), up = Math.sin(Math.PI * k);  // 포탄: 높이 오를수록 조금 더 크게
+  // v92 MS-07 혜성 꼬리: 포물선을 따라 뒤로 길게 빛나는 꼬리 → 밝은 빛 → 탄두가 노랗게 달아오른 포탄 (날아가는 방향으로 기울어짐)
+  const [px, py] = pt(k), up = Math.sin(Math.PI * k), L = 22 + up * 6;
   c.beginPath(); c.ellipse(x1 + (x2 - x1) * k, y1 + (y2 - y1) * k, 5 + up * 2, 2.5 + up, 0, 0, Math.PI * 2); c.fillStyle = "rgba(0,0,0,.3)"; c.fill();  // 땅 그림자
-  const r = 7 + up * 3; rpGlowC(c, px, py, r * 3.2, "230,215,255", 1); c.beginPath(); c.arc(px, py, r, 0, Math.PI * 2); c.fillStyle = "#fff"; c.fill();
-  c.lineWidth = 1.6; c.strokeStyle = "rgba(60,50,90,.75)"; c.stroke();
+  c.save(); c.lineCap = "round"; const N = 14;
+  for (let j = N; j >= 1; j--) { const u0 = Math.max(0, k - j * .007), u1 = Math.max(0, k - (j - 1) * .007), f = 1 - j / N; if (u1 <= u0) continue;
+    const [ax, ay] = pt(u0), [bx, by] = pt(u1); c.strokeStyle = `rgba(255,${Math.round(130 + 90 * f)},${Math.round(50 + 100 * f)},${.85 * f})`; c.lineWidth = L * .45 * (.35 + .65 * f); c.beginPath(); c.moveTo(ax, ay); c.lineTo(bx, by); c.stroke(); }
+  c.restore();
+  const [ax, ay] = pt(Math.min(1, k + .01)), [bx, by] = pt(Math.max(0, k - .01)), an = Math.atan2(ay - by, ax - bx);
+  rpGlowC(c, px, py, L * 1.1, "255,200,120", 1);
+  c.save(); c.translate(px, py); c.rotate(an);
+  const h = L * .18;  // 꼬리대 + 날개
+  c.fillStyle = "#33332B"; c.beginPath(); c.rect(-L * .44, -h * .24, L * .25, h * .48);
+  c.moveTo(-L * .33, -h * .24); c.lineTo(-L * .38, -h * .9); c.lineTo(-L * .5, -h * .9); c.lineTo(-L * .5, -h * .24); c.closePath();
+  c.moveTo(-L * .33, h * .24); c.lineTo(-L * .38, h * .9); c.lineTo(-L * .5, h * .9); c.lineTo(-L * .5, h * .24); c.closePath(); c.fill(); c.strokeStyle = "rgba(0,0,0,.8)"; c.lineWidth = 1; c.stroke();
+  const body = () => { c.beginPath(); c.moveTo(L * .5, 0); c.bezierCurveTo(L * .46, -h * .55, L * .3, -h, L * .1, -h); c.lineTo(-L * .04, -h * .96); c.bezierCurveTo(-L * .12, -h * .8, -L * .17, -h * .45, -L * .21, -h * .3);
+    c.lineTo(-L * .21, h * .3); c.bezierCurveTo(-L * .17, h * .45, -L * .12, h * .8, -L * .04, h * .96); c.lineTo(L * .1, h); c.bezierCurveTo(L * .3, h, L * .46, h * .55, L * .5, 0); c.closePath(); };
+  body(); const g = c.createLinearGradient(0, -h, 0, h); g.addColorStop(0, "#8A8A78"); g.addColorStop(.45, "#4A4A40"); g.addColorStop(1, "#26261F"); c.fillStyle = g; c.fill(); c.lineWidth = 1.3; c.strokeStyle = "rgba(0,0,0,.8)"; c.stroke();
+  c.save(); body(); c.clip(); c.fillStyle = "#FFD88A"; c.fillRect(L * .36, -h * 2, L * .3, h * 4); c.restore();
+  c.restore();
 }
 function rpHeavy(c, kind, x1, y1, x2, y2, age, side, dmg, seed) {  // 판처파우스트 (PF-10: 곧게 날아가는 로켓 → 잔해 불길)·박격포 (MT-05, 쏜 기록이 없는 예전 리플레이)
   const fly = kind === "p" ? .45 : 1.3, e = age - fly, M = rp._M || 1, an = Math.atan2(y2 - y1, x2 - x1);
@@ -5369,11 +5492,11 @@ function rpHeavy(c, kind, x1, y1, x2, y2, age, side, dmg, seed) {  // 판처파�
   if (age < fly) {
     const k = age / fly;
     if (kind === "p") { const s = fxS(M, .26, .85), px = x1 + (x2 - x1) * k, py = y1 + (y2 - y1) * k; FX.go(c, s, fxNow()); FX.streak(px, py, an, 30 * s + Math.hypot(x2 - x1, y2 - y1) * .25 * k, 2 * s, "215,210,200", .6, "source-over"); fxRocket(c, px, py, an, s); return; }
-    fxMortarFlight(c, x1, y1, x2, y2, k, Math.hypot(x2 - x1, y2 - y1) * .45 + 30, side ? "255,110,90" : "200,180,255", false, 1);
+    fxMortarFlight(c, x1, y1, x2, y2, k, Math.hypot(x2 - x1, y2 - y1) * .45 + 30, side ? "255,86,64" : "255,184,77", false, 1);
     return;
   }
   if (kind === "p") fxPanzer(c, x2, y2, an, e, fxS(M, .26, .85), seed);
-  else { if (e < 1) fxMortarFlight(c, x1, y1, x2, y2, null, Math.hypot(x2 - x1, y2 - y1) * .45 + 30, side ? "255,110,90" : "200,180,255", false, 1 - e); fxMortar(c, x2, y2, e, fxS(M, .36, .95), seed); }
+  else { if (e < 1) fxMortarFlight(c, x1, y1, x2, y2, null, Math.hypot(x2 - x1, y2 - y1) * .45 + 30, side ? "255,86,64" : "255,184,77", false, 1 - e); fxMortar(c, x2, y2, e, Math.max(.4, fxS(M, .5, .95)), seed); }
   if (dmg && e < 1.8) rpDmg(c, dmg, x2, y2, e / 1.8, side);
 }
 function rpMortarBoom(c, x, y, e, seed = 0) {  // 박격포 폭발: 섬광 → 흙먼지가 사방으로 퍼짐 + 버섯구름이 솟았다가 흩어짐 (약 3.5초)
@@ -5417,7 +5540,7 @@ function rpBeam(ctx, bx, by, age, dur, outer, inner, label, labelCol, now, scale
 }
 function rpLabel(c, t, x, y, col, a) { if (a <= 0) return; c.save(); c.globalAlpha = a; c.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; c.textAlign = "center"; c.textBaseline = "middle";
   c.lineWidth = 3; c.strokeStyle = "rgba(10,10,8,.85)"; c.strokeText(t, x, y); c.fillStyle = col; c.fillText(t, x, y); c.restore(); }
-const SHAKE = {c4: [18, 1.5], p: [11, .8], m: [15, .6], grenade: [4, .35], sticky: [4, .35], car: [8, .7], brdm: [14, 1.1]};  // 폭발 크기별 [세기(px), 지속(초)]
+const SHAKE = {c4: [18, 1.5], p: [11, .8], m: [24, .9], grenade: [4, .35], sticky: [4, .35], car: [8, .7], brdm: [14, 1.1]};  // 폭발 크기별 [세기(px), 지속(초)]
 /* v77 리플레이 효과음: 지도 위 일을 화면 속 위치에 맞춰 좌우·거리감 있게 (화면 가운데에서 멀수록 작고 먹먹하게) */
 const RPS = {last: 0, n: 0, hum: null};
 function rpWorldBus() {  // 지도 소리를 모으는 통로: 처치·기절·소생 알림이 나면 잠깐 절반으로 줄여 알림이 묻히지 않게
@@ -5472,6 +5595,7 @@ function rpPlaySnd(kind, x, y, vol = 1) {
   const sp = rpSndAt(x, y); if (!sp) return;
   const now = performance.now(); if (now - RPS.last > 60) { RPS.last = now; RPS.n = 0; }
   if (kind === "shot" && ++RPS.n > 5) return;  // 한꺼번에 너무 많은 총성은 줄임
+  if (kind !== "knock" && kind !== "death") RPS.loud = now;  // 총성·폭발 동안 배경 소리 줄이기
   const dur = {boom: 1.2, fire: 1.2, hiss: 3.6, flash: 1.4, zap: 1.3, death: .5}[kind] || .5;
   rpVoice(sp[0] * vol, sp[1], dur, (d, t) => RP_SND[kind](d, t, 1));
 }
@@ -5537,6 +5661,115 @@ function rpHum(b) {  // 엔진 소리는 끊기지 않게 종류마다 하나씩
   const E = RPS.eng[want], sp = Math.min(130, b.kmh) / 130;
   E.set(sp, t); E.g.gain.setTargetAtTime(RP_ENGINE[want].vol * b.g * Math.min(1, (b.kmh - 4) / 12), t, .2);
   if (E.pn) E.pn.pan.setTargetAtTime(b.pan, t, .2);
+}
+/* v91 맵별 배경 소리: 맵마다 바람·벌레·파도·풍경 소리를 아주 작게 깔아 둠 (지도 소리 통로로 → 지도 소리 크기·알림 때 줄이기를 그대로 따름)
+   l = 계속 나는 소리 층, e = 가끔 나는 소리 [종류, 1초당 횟수], n = 맵끼리 크기 맞춤 */
+const AMB = {
+  Erangel_Main: {nm: "숲 바람 · 새", l: [["wind", 420, .6, 1, .07]], e: [["bird", .16]]},
+  Desert_Main: {nm: "마른 사막 바람", l: [["wind", 850, .7, 1, .05], ["wind", 2600, .9, .35, .11]], e: [["gust", .06]]},
+  Savage_Main: {nm: "정글 매미 · 새", l: [["cicada", 5200, 1, .23], ["wind", 350, .6, .5, .05]], e: [["bird", .3]]},
+  DihorOtok_Main: {nm: "눈보라 바람", l: [["howl", 520, 1], ["wind", 300, .5, .7, .06]], e: [["gust", .08]]},
+  Tiger_Main: {nm: "시골 들판 귀뚜라미", l: [["wind", 380, .6, .8, .06]], e: [["cricket", .45], ["bird", .05]]},
+  Kiki_Main: {nm: "바닷가 도시", l: [["surf", 1], ["drone", [55, 82.5], .4]], e: [["gust", .04]]},
+  Chimera_Main: {nm: "높은 산 바람 · 화산", l: [["howl", 380, 1], ["drone", [36, 54], .6]], e: [["gust", .06]]},
+  Heaven_Main: {nm: "비 오는 공장 도시", l: [["rain", 1], ["drone", [50, 75, 100], .45]], e: []},
+  Summerland_Main: {nm: "바닷가 사막", l: [["surf", 1], ["wind", 800, .7, .6, .05]], e: [["gust", .04]]},
+  Neon_Main: {nm: "네온 도시 · 대나무 숲 풍경", l: [["wind", 420, .6, .7, .06], ["neon", .5], ["drone", [110, 164.8, 220], .35]], e: [["chime", .1], ["bird", .05]]},
+  Range_Main: {nm: "조용한 바람", l: [["wind", 420, .6, 1, .07]], e: []},
+};
+AMB.Baltic_Main = AMB.Erangel_Main;
+const AMB_NORM = {Erangel_Main: 0.156, Desert_Main: 0.180, Savage_Main: 0.266, DihorOtok_Main: 0.178, Tiger_Main: 0.194, Kiki_Main: 0.075, Chimera_Main: 0.092, Heaven_Main: 0.074, Summerland_Main: 0.086, Neon_Main: 0.121, Range_Main: 0.154};  // 맵끼리 크기 맞춤 (OfflineAudioContext 로 잰 크기 → 모두 같은 크기)
+AMB_NORM.Baltic_Main = AMB_NORM.Erangel_Main;
+const AMB_LEVEL = .5;
+function ambBuf(a) {  // 바람용 6초짜리 잡음 (짧은 잡음을 되풀이하면 '쉭쉭' 반복이 들려서 따로 길게)
+  if (RPS.ambBuf && RPS.ambBuf.sampleRate === a.sampleRate && RPS.ambCtx === a) return RPS.ambBuf;
+  const b = a.createBuffer(1, a.sampleRate * 6, a.sampleRate), d = b.getChannelData(0); let p = 0;
+  for (let i = 0; i < d.length; i++) { const w = Math.random() * 2 - 1; p = p * .985 + w * .15; d[i] = w * .6 + p; }  // 흰 잡음 + 낮은 잡음 조금
+  RPS.ambCtx = a; return (RPS.ambBuf = b);
+}
+const AMB_LAYER = {
+  wind(a, out, [f, q, v, rate]) {  // 바람: 걸러 낸 잡음, 천천히 커졌다 작아졌다 + 높이도 살짝 흔들림
+    const s = a.createBufferSource(), fl = a.createBiquadFilter(), g = a.createGain(), l1 = a.createOscillator(), d1 = a.createGain(), l2 = a.createOscillator(), d2 = a.createGain();
+    s.buffer = ambBuf(a); s.loop = true; fl.type = "bandpass"; fl.frequency.value = f; fl.Q.value = q; g.gain.value = v * .6;
+    l1.frequency.value = rate; d1.gain.value = v * .4; l1.connect(d1).connect(g.gain); l2.frequency.value = rate * .63; d2.gain.value = f * .3; l2.connect(d2).connect(fl.frequency);
+    s.connect(fl).connect(g).connect(out); s.start(0, Math.random() * 5); l1.start(); l2.start(); return [s, l1, l2];
+  },
+  howl(a, out, [f, v]) {  // 눈보라·높은 산: 좁게 걸러 '우우' 우는 바람
+    const s = a.createBufferSource(), fl = a.createBiquadFilter(), g = a.createGain(), l = a.createOscillator(), d = a.createGain(), l2 = a.createOscillator(), d2 = a.createGain();
+    s.buffer = ambBuf(a); s.loop = true; fl.type = "bandpass"; fl.Q.value = 6; fl.frequency.value = f; l.frequency.value = .09; d.gain.value = f * .35; l.connect(d).connect(fl.frequency);
+    g.gain.value = v * .6; l2.frequency.value = .055; d2.gain.value = v * .4; l2.connect(d2).connect(g.gain);
+    s.connect(fl).connect(g).connect(out); s.start(0, Math.random() * 5); l.start(); l2.start(); return [s, l, l2];
+  },
+  cicada(a, out, [f, v, am]) {  // 매미: 높은 잡음을 빠르게 떨게 + 천천히 커졌다 작아졌다
+    const s = a.createBufferSource(), fl = a.createBiquadFilter(), g = a.createGain(), m = a.createOscillator(), md = a.createGain(), sw = a.createGain(), l = a.createOscillator(), ld = a.createGain();
+    s.buffer = ambBuf(a); s.loop = true; fl.type = "bandpass"; fl.frequency.value = f; fl.Q.value = 7;
+    g.gain.value = .5; m.type = "square"; m.frequency.value = am; md.gain.value = .5; m.connect(md).connect(g.gain);
+    sw.gain.value = v * .6; l.frequency.value = .07; ld.gain.value = v * .4; l.connect(ld).connect(sw.gain);
+    s.connect(fl).connect(g).connect(sw).connect(out); s.start(0, Math.random() * 5); m.start(); l.start(); return [s, m, l];
+  },
+  surf(a, out, [v]) {  // 파도: 낮게 걸러 8초마다 밀려왔다 빠지게
+    const s = a.createBufferSource(), fl = a.createBiquadFilter(), g = a.createGain(), l = a.createOscillator(), d = a.createGain(), l2 = a.createOscillator(), d2 = a.createGain();
+    s.buffer = ambBuf(a); s.loop = true; fl.type = "lowpass"; fl.frequency.value = 600; l2.frequency.value = .125; d2.gain.value = 350; l2.connect(d2).connect(fl.frequency);
+    g.gain.value = v * .55; l.frequency.value = .125; d.gain.value = v * .45; l.connect(d).connect(g.gain);
+    s.connect(fl).connect(g).connect(out); s.start(0, Math.random() * 5); l.start(); l2.start(); return [s, l, l2];
+  },
+  rain(a, out, [v]) {  // 비: 높은 잡음 + 낮은 웅웅
+    const s = a.createBufferSource(), hp = a.createBiquadFilter(), lp = a.createBiquadFilter(), g = a.createGain();
+    s.buffer = ambBuf(a); s.loop = true; hp.type = "highpass"; hp.frequency.value = 1800; lp.type = "lowpass"; lp.frequency.value = 7000; g.gain.value = v;
+    s.connect(hp).connect(lp).connect(g).connect(out); s.start(0, Math.random() * 5); return [s];
+  },
+  drone(a, out, [fs, v]) {  // 멀리서 나는 도시·공장·화산 웅웅
+    const lp = a.createBiquadFilter(), g = a.createGain(), l = a.createOscillator(), d = a.createGain(), ns = [];
+    lp.type = "lowpass"; lp.frequency.value = 420; g.gain.value = v * .7; l.frequency.value = .05; d.gain.value = v * .3; l.connect(d).connect(g.gain);
+    fs.forEach((f, i) => { const o = a.createOscillator(); o.type = i ? "sine" : "triangle"; o.frequency.value = f; o.detune.value = (Math.random() - .5) * 12; const og = a.createGain(); og.gain.value = 1 / (i + 1); o.connect(og).connect(lp); o.start(); ns.push(o); });
+    lp.connect(g).connect(out); l.start(); return [...ns, l];
+  },
+  neon(a, out, [v]) {  // 론도 네온 간판: 아주 작은 '지지직' 전기 소리가 가끔 깜빡임
+    const o = a.createOscillator(), lp = a.createBiquadFilter(), g = a.createGain(), fl = a.createOscillator(), fd = a.createGain();
+    o.type = "sawtooth"; o.frequency.value = 120; lp.type = "bandpass"; lp.frequency.value = 1200; lp.Q.value = 2; g.gain.value = v * .5;
+    fl.type = "square"; fl.frequency.value = .23; fd.gain.value = v * .5; fl.connect(fd).connect(g.gain);
+    o.connect(lp).connect(g).connect(out); o.start(); fl.start(); return [o, fl];
+  },
+};
+const AMB_EVENT = {  // 가끔 나는 소리 (좌우 아무 데서나)
+  bird(a, d, t) { const n = 2 + Math.floor(Math.random() * 3), f0 = 2400 + Math.random() * 1400;
+    for (let i = 0; i < n; i++) { const at = t + i * (.11 + Math.random() * .05), o = a.createOscillator(), g = a.createGain(); o.frequency.setValueAtTime(f0, at); o.frequency.exponentialRampToValueAtTime(f0 * (1.25 + Math.random() * .3), at + .07);
+      g.gain.setValueAtTime(.0001, at); g.gain.exponentialRampToValueAtTime(.05, at + .012); g.gain.exponentialRampToValueAtTime(.0001, at + .09); o.connect(g).connect(d); o.start(at); o.stop(at + .12); } return 1; },
+  cricket(a, d, t) { const f = 4300 + Math.random() * 600;
+    for (let r = 0; r < 3; r++) for (let i = 0; i < 3; i++) { const at = t + r * .32 + i * .045, o = a.createOscillator(), g = a.createGain(); o.frequency.value = f;
+      g.gain.setValueAtTime(.0001, at); g.gain.exponentialRampToValueAtTime(.028, at + .006); g.gain.exponentialRampToValueAtTime(.0001, at + .032); o.connect(g).connect(d); o.start(at); o.stop(at + .05); } return 1.2; },
+  chime(a, d, t) { const P = [1047, 1175, 1319, 1568, 1760, 2093], n = 2 + Math.floor(Math.random() * 3);  // 대나무 숲 풍경: 5음계 종 2~4번
+    for (let i = 0; i < n; i++) sfx.bell(P[Math.floor(Math.random() * P.length)], t + i * (.18 + Math.random() * .25), 3.5, 1.1, .03, 2.6, d); return 3; },
+  gust(a, d, t) { const s = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain(), dur = 2.2 + Math.random() * 1.5;
+    s.buffer = ambBuf(a); f.type = "bandpass"; f.Q.value = 1.2; f.frequency.setValueAtTime(320, t); f.frequency.exponentialRampToValueAtTime(1100, t + dur * .5); f.frequency.exponentialRampToValueAtTime(400, t + dur);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.09, t + dur * .45); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    s.connect(f).connect(g).connect(d); s.start(t, Math.random() * 3); s.stop(t + dur + .05); return dur; },
+};
+function ambBuild(a, map, dst) {  // 맵 하나의 배경 소리 묶음을 만들어 dst 로 → {g, nodes, ev, map}
+  const P = AMB[map] || AMB.Erangel_Main, g = a.createGain(); g.gain.value = 0; const n = a.createGain(); n.gain.value = AMB_NORM[map] ?? AMB_NORM.Erangel_Main; n.connect(g).connect(dst);
+  const nodes = []; for (const [k, ...arg] of P.l) nodes.push(...AMB_LAYER[k](a, n, arg));
+  return {g, n, nodes, map, P, next: {}};
+}
+function rpAmb(map) {  // 매 장면마다 부름: map = 지금 들려줄 맵 (없으면 천천히 꺼짐)
+  if (!audio) return;
+  const a = audio, t = a.currentTime, cur = RPS.amb;
+  if (cur && (cur.ctx !== a || cur.map !== map)) {  // 다른 맵이거나 끔 → 1.5초 동안 줄이고 정리
+    if (cur.ctx === a) { cur.g.gain.cancelScheduledValues(t); cur.g.gain.setTargetAtTime(0, t, .4); }
+    const old = cur; setTimeout(() => { for (const x of old.nodes) try { x.stop(); } catch {} try { old.g.disconnect(); } catch {} }, 2000);
+    RPS.amb = null;
+  }
+  if (!map || RPV.amb <= 0) return;
+  if (!RPS.amb) { RPS.amb = ambBuild(a, map, rpWorldBus()); RPS.amb.ctx = a; RPS.amb.want = -1; }
+  const A = RPS.amb, loud = performance.now() - (RPS.loud || 0) < 1500;  // 총성·폭발이 나는 동안은 배경 소리를 줄임
+  const want = AMB_LEVEL * RPV.amb * (loud ? .4 : 1);
+  if (Math.abs(want - A.want) > .001) { A.g.gain.setTargetAtTime(want, t, loud ? .15 : .8); A.want = want; }
+  for (const [k, rate] of A.P.e) {  // 가끔 나는 소리: 1초당 rate 번쯤 (겹치지 않게)
+    if ((A.next[k] || 0) > t) continue;
+    if (A.next[k] == null) { A.next[k] = t + Math.random() / rate; continue; }
+    let d = A.g; if (a.createStereoPanner) { const pn = a.createStereoPanner(); pn.pan.value = Math.random() * 1.6 - .8; pn.connect(A.g); d = pn; setTimeout(() => { try { pn.disconnect(); } catch {} }, 6000); }
+    const len = AMB_EVENT[k](a, d, t + .05);
+    A.next[k] = t + len + (-Math.log(1 - Math.random()) / rate);
+  }
 }
 function throwTiming(kind, boomAt) {  // 투척물 비행 시간 · C4 타이머 · 떨어져서 터지기까지 (그림과 흔들림이 같은 시각을 쓰게)
   const wait = {grenade: .5, sticky: .3}[kind] || 0;
@@ -5771,6 +6004,43 @@ function rpFacing(p, now) {  // 바라보는 방향 (배그 기록에 시선 방
 }
 function rpVel(p) {  // 지금 속도 (m/초)
   const R = rp.data, a = posAt(p, rp.t - 1), b = posAt(p, rp.t); return a && b ? Math.hypot(b[0] - a[0], b[1] - a[1]) * R.size_m : 0;
+}
+function vehKind(vid) {  // v88 특수 탈것: 글라이더 · 자전거 · 보트 (그 밖은 일반 차 → 핸들)
+  const v = String(vid || "").toLowerCase();
+  return /glider/.test(v) ? "glider" : /bicycle|mountainbike|bike_|_bike/.test(v) && !/motorbike/.test(v) ? "bike" : /boat|pg117|aquarail|airboat/.test(v) ? "boat" : "car";
+}
+const VSHAPE = {  // v90 특수 탈것 V-03 (탈것 시안): 위에서 본 배그 모양. 좌표: 길이 ≈ 2, 위(−y)가 앞쪽
+  glider(c) {  // 모터 글라이더: 긴 날개 · 몸통 + 가는 꼬리 막대 · T자 꼬리
+    c.beginPath();
+    c.moveTo(-1.0, -.2); c.lineTo(-.15, -.3); c.lineTo(.15, -.3); c.lineTo(1.0, -.2); c.lineTo(1.0, -.1); c.lineTo(.15, -.08); c.lineTo(-.15, -.08); c.lineTo(-1.0, -.1); c.closePath();
+    c.moveTo(.13, -.92); c.quadraticCurveTo(.2, -.55, .14, -.05); c.lineTo(.05, .25); c.lineTo(.035, .8); c.lineTo(-.035, .8); c.lineTo(-.05, .25); c.lineTo(-.14, -.05); c.quadraticCurveTo(-.2, -.55, -.13, -.92); c.quadraticCurveTo(0, -1.04, .13, -.92); c.closePath();
+    c.moveTo(-.38, .76); c.lineTo(.38, .76); c.lineTo(.34, .88); c.lineTo(-.34, .88); c.closePath();
+  },
+  boat(c) {  // 보트 (PG-117): 뾰족한 뱃머리 · 뒤 모터
+    c.beginPath(); c.moveTo(0, -1); c.quadraticCurveTo(.4, -.62, .42, -.15); c.lineTo(.42, .82); c.quadraticCurveTo(.42, .92, .32, .92); c.lineTo(-.32, .92); c.quadraticCurveTo(-.42, .92, -.42, .82); c.lineTo(-.42, -.15); c.quadraticCurveTo(-.4, -.62, 0, -1); c.closePath();
+    c.moveTo(.1, .9); c.lineTo(.1, 1.08); c.lineTo(-.1, 1.08); c.lineTo(-.1, .9); c.closePath();
+  },
+  bike(c) {  // 산악자전거: 두 바퀴 · 핸들 · 몸체 · 안장
+    c.beginPath(); c.ellipse(0, -.62, .06, .32, 0, 0, Math.PI * 2); c.ellipse(0, .62, .07, .32, 0, 0, Math.PI * 2);
+    c.moveTo(-.36, -.5); c.lineTo(.36, -.5); c.lineTo(.36, -.42); c.lineTo(-.36, -.42); c.closePath();
+    c.moveTo(.035, -.45); c.lineTo(.035, .4); c.lineTo(-.035, .4); c.lineTo(-.035, -.45); c.closePath();
+    c.ellipse(0, .25, .08, .14, 0, 0, Math.PI * 2);
+  },
+  detail: {
+    boat(c) { c.beginPath(); c.moveTo(-.3, -.22); c.quadraticCurveTo(0, -.42, .3, -.22); c.lineTo(.3, -.12); c.quadraticCurveTo(0, -.3, -.3, -.12); c.closePath(); c.rect(-.24, .1, .2, .24); c.rect(.04, .1, .2, .24); c.rect(-.24, .5, .48, .2); },
+    glider(c, t) { c.beginPath(); c.ellipse(0, -.62, .08, .2, 0, 0, Math.PI * 2); c.fill(); const a = (t || 0) / 60; c.save(); c.translate(0, .06); c.rotate(a); c.beginPath(); c.ellipse(0, 0, .3, .05, 0, 0, Math.PI * 2); c.rotate(Math.PI / 2); c.ellipse(0, 0, .3, .05, 0, 0, Math.PI * 2); c.restore(); },
+  },
+};
+function drawVeh(ctx, x, y, r, col, vid, headFn, now) {  // 일반 차는 핸들, 특수 탈것은 배지 없는 실루엣 (가는 방향으로 돌아감)
+  const k = vehKind(vid); if (k === "car") return drawWheel(ctx, x, y, r, col);
+  const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, s = r * 1.45;
+  ctx.save(); ctx.translate(x, y); ctx.rotate(ang + Math.PI / 2); ctx.scale(s, s); ctx.lineJoin = "round";
+  ctx.shadowColor = "rgba(0,0,0,.5)"; ctx.shadowBlur = 4; ctx.shadowOffsetY = 2 / s;
+  VSHAPE[k](ctx); ctx.lineWidth = 2.4 / s; ctx.strokeStyle = "#14170F"; ctx.stroke(); ctx.fillStyle = col; ctx.fill();
+  ctx.shadowColor = "transparent"; ctx.fillStyle = "rgba(20,23,15,.55)";
+  if (k === "boat") { VSHAPE.detail.boat(ctx); ctx.fill(); }
+  if (k === "glider") { ctx.fillStyle = "rgba(20,23,15,.7)"; VSHAPE.detail.glider(ctx, now); ctx.fill(); }
+  ctx.restore();
 }
 function drawWheel(ctx, x, y, r, col) {  // 차량 핸들 아이콘 (플레이어 색 테두리)
   ctx.save();
@@ -6072,6 +6342,7 @@ function rpFrame(now) {
     if (rp.t >= R.duration) { rp.playing = false; paintRpButtons(); if (!rp.reel) rpShowSummary(); }
   }
   if (!rp.playing || rp.dragging) try { rpHum(false); } catch {}
+  try { rpAmb(rp.playing && !rp.dragging && rp.sndOn && soundOn() && rp.curSpeed <= 12 && !rp.reelBgm ? R.map : null); } catch {}  // v91 맵별 배경 소리
   if (rp.kc && rp.t >= rp.kc.e.t + 2.5) rpKillcamEnd();  // 킬캠 끝 → 보던 자리로
   rpUpdatePip(now, dt);
   try {  // 한 장면에서 그림 오류가 나도 재생이 멈추지 않게
@@ -6201,13 +6472,132 @@ $("#rpLegend").addEventListener("keydown", e => { const el = e.target.closest("[
     else tch = null;
   });
 })();
+/* v91 전술 펜: 리플레이 지도 위에 손으로 그리기 · 화살표 · 지우개. 그린 선은 지도 위치에 붙어 있어서 확대·이동해도 그 자리에 남음 */
+const PEN_COLS = [["#F2A900", "노랑"], ["#FF4D3A", "빨강"], ["#FFFFFF", "하양"], ["#4FC3F7", "하늘"], ["#7CFC5A", "초록"], ["#B27CFF", "보라"], ["#14170F", "검정"]];
+const PEN = {on: false, tool: "pen", col: "#F2A900", w: 4, hover: null, cur: null, undo: [], byMatch: new WeakMap()};
+try { const s = JSON.parse(localStorage.getItem("ddc_pen") || "{}"); if (PEN_COLS.some(c => c[0] === s.col)) PEN.col = s.col; if (s.w >= 1 && s.w <= 16) PEN.w = s.w; } catch {}
+const penSave = () => { try { localStorage.setItem("ddc_pen", JSON.stringify({col: PEN.col, w: PEN.w})); } catch {} };
+function penStrokes() { const R = rp.data; if (!R) return []; if (!PEN.byMatch.has(R)) PEN.byMatch.set(R, []); return PEN.byMatch.get(R); }
+function penSet(list) { if (rp.data) PEN.byMatch.set(rp.data, list); }
+function penView() {  // 화면 ↔ 지도 좌표 (rpDraw 와 같은 계산)
+  const r = $("#rpCanvas").getBoundingClientRect(), S = Math.min(r.width, r.height) / rp.cam.s;
+  return {r, S, toW: (cx, cy) => [rp.cam.x + (cx - r.left - r.width / 2) / S, rp.cam.y + (cy - r.top - r.height / 2) / S],
+    toS: (p) => [(p[0] - rp.cam.x) * S + r.width / 2, (p[1] - rp.cam.y) * S + r.height / 2]};
+}
+function penPush() { PEN.undo.push(penStrokes().slice()); if (PEN.undo.length > 60) PEN.undo.shift(); paintPen(); }
+function penErase(cx, cy) {  // 지우개: 닿은 부분만 지움 (선이 둘로 나뉠 수 있음), 화살표는 통째로
+  const V = penView(), rad = Math.max(10, PEN.w * 2.5), x = cx - V.r.left, y = cy - V.r.top, out = []; let hit = false;
+  const near = p => { const s = V.toS(p); return Math.hypot(s[0] - x, s[1] - y) < rad; };
+  for (const s of penStrokes()) {
+    if (s.t === "arrow") { const a = V.toS(s.p[0]), b = V.toS(s.p[1]), L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, k = Math.max(0, Math.min(1, ((x - a[0]) * (b[0] - a[0]) + (y - a[1]) * (b[1] - a[1])) / (L * L)));
+      if (Math.hypot(a[0] + (b[0] - a[0]) * k - x, a[1] + (b[1] - a[1]) * k - y) < rad + s.w / 2) { hit = true; continue; } out.push(s); continue; }
+    if (!s.p.some(near)) { out.push(s); continue; }
+    hit = true; let run = [];
+    for (const p of s.p) { if (near(p)) { if (run.length > 1) out.push({...s, p: run}); run = []; } else run.push(p); }
+    if (run.length > 1) out.push({...s, p: run});
+  }
+  if (hit) penSet(out);
+  return hit;
+}
+function rpPenDraw(ctx, X, Y) {  // rpDraw 끝에서 부름 (메인 화면만)
+  if (!rp.data) return;
+  const list = penStrokes(), cur = PEN.cur ? [PEN.cur] : [];
+  if (!list.length && !cur.length && !(PEN.on && PEN.hover)) return;
+  ctx.save(); ctx.lineCap = "round"; ctx.lineJoin = "round";
+  const path = s => {
+    ctx.beginPath();
+    if (s.t === "arrow") { const [a, b] = s.p, x1 = X(a[0]), y1 = Y(a[1]), x2 = X(b[0]), y2 = Y(b[1]), an = Math.atan2(y2 - y1, x2 - x1), h = 7 + s.w * 2.6;
+      ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.moveTo(x2 - Math.cos(an - .45) * h, y2 - Math.sin(an - .45) * h); ctx.lineTo(x2, y2); ctx.lineTo(x2 - Math.cos(an + .45) * h, y2 - Math.sin(an + .45) * h); return; }
+    const P = s.p.map(p => [X(p[0]), Y(p[1])]);
+    if (P.length === 1) { ctx.moveTo(P[0][0], P[0][1]); ctx.lineTo(P[0][0] + .01, P[0][1]); return; }
+    ctx.moveTo(P[0][0], P[0][1]);
+    for (let i = 1; i < P.length - 1; i++) ctx.quadraticCurveTo(P[i][0], P[i][1], (P[i][0] + P[i + 1][0]) / 2, (P[i][1] + P[i + 1][1]) / 2);  // 부드럽게
+    ctx.lineTo(P[P.length - 1][0], P[P.length - 1][1]);
+  };
+  for (const s of [...list, ...cur]) {  // 어두운 테두리를 먼저 그려서 어떤 지도 색 위에서도 잘 보이게
+    path(s); ctx.strokeStyle = s.c === "#14170F" ? "rgba(238,232,213,.55)" : "rgba(10,12,8,.55)"; ctx.lineWidth = s.w + 3; ctx.stroke();
+    ctx.strokeStyle = s.c; ctx.lineWidth = s.w; ctx.stroke();
+  }
+  if (PEN.on && PEN.hover && PEN.tool === "erase") { const rad = Math.max(10, PEN.w * 2.5); ctx.beginPath(); ctx.arc(PEN.hover[0], PEN.hover[1], rad, 0, Math.PI * 2); ctx.lineWidth = 1.5; ctx.strokeStyle = "rgba(238,232,213,.9)"; ctx.setLineDash([4, 3]); ctx.stroke(); ctx.setLineDash([]); }
+  ctx.restore();
+}
+function rpPen(on) {  // 펜 켜기·끄기
+  PEN.on = on ?? !PEN.on; PEN.cur = null; PEN.hover = null;
+  if (PEN.on) { if (rp.cinema) rpCinema(false); if (rp.playing) { rp.playing = false; paintRpButtons(); } }  // 그릴 때는 멈춘 화면에서
+  $("#replay").classList.toggle("pen", PEN.on); $("#rpPenBar").hidden = !PEN.on; $("#rpPenPad").hidden = !PEN.on;
+  $("#rpPen").setAttribute("aria-pressed", String(PEN.on)); paintPen();
+}
+function paintPen() {
+  document.querySelectorAll("#rpPenBar [data-tool]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.tool === PEN.tool)));
+  document.querySelectorAll("#rpPenBar [data-col]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.col === PEN.col)));
+  $("#rpPenW").value = PEN.w; $("#rpPenDot").style.cssText = `--d:${Math.max(3, PEN.w)}px;--c:${PEN.col}`; $("#rpPenWTxt").textContent = PEN.w;
+  const n = penStrokes().length; $("#rpPenUndo").disabled = !PEN.undo.length; $("#rpPenClear").disabled = !n;
+  $("#rpPenPad").dataset.tool = PEN.tool; $("#rpPen").classList.toggle("has", n > 0);
+}
+(() => {
+  const bar = $("#rpPenBar"), pad = $("#rpPenPad");
+  bar.querySelector(".pen-cols").innerHTML = PEN_COLS.map(([c, n]) => `<button type="button" data-col="${c}" style="--c:${c}" title="${n}" aria-label="${n}"></button>`).join("");
+  bar.addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.tool) PEN.tool = b.dataset.tool;
+    else if (b.dataset.col) { PEN.col = b.dataset.col; if (PEN.tool === "erase") PEN.tool = "pen"; penSave(); }
+    else if (b.id === "rpPenUndo") { if (PEN.undo.length) penSet(PEN.undo.pop()); }
+    else if (b.id === "rpPenClear") { if (penStrokes().length) { penPush(); penSet([]); } }
+    else if (b.id === "rpPenSave") penSaveImg();
+    else if (b.id === "rpPenDone") return rpPen(false);
+    paintPen();
+  });
+  $("#rpPenW").oninput = e => { PEN.w = +e.target.value; penSave(); paintPen(); };
+  $("#rpPen").onclick = () => rpPen();
+  let erasing = false;
+  pad.addEventListener("pointerdown", e => {
+    if (!rp.data || (e.pointerType === "mouse" && e.button !== 0)) return;
+    e.preventDefault(); pad.setPointerCapture(e.pointerId); const V = penView(), w = V.toW(e.clientX, e.clientY);
+    PEN.hover = [e.clientX - V.r.left, e.clientY - V.r.top];
+    if (PEN.tool === "erase") { erasing = {before: penStrokes().slice(), hit: false}; if (penErase(e.clientX, e.clientY)) { PEN.undo.push(erasing.before); erasing.hit = true; } paintPen(); return; }
+    PEN.cur = {t: PEN.tool, c: PEN.col, w: PEN.w, p: PEN.tool === "arrow" ? [w, w] : [w], id: e.pointerId};
+  });
+  pad.addEventListener("pointermove", e => {
+    const V = penView(); PEN.hover = [e.clientX - V.r.left, e.clientY - V.r.top];
+    if (erasing) { if (penErase(e.clientX, e.clientY) && !erasing.hit) { PEN.undo.push(erasing.before); erasing.hit = true; paintPen(); } return; }
+    const s = PEN.cur; if (!s || s.id !== e.pointerId) return;
+    const w = V.toW(e.clientX, e.clientY);
+    if (s.t === "arrow") { s.p[1] = w; return; }
+    const last = V.toS(s.p[s.p.length - 1]); if (Math.hypot(last[0] - PEN.hover[0], last[1] - PEN.hover[1]) >= 2.5) s.p.push(w);  // 2.5px 마다 점 (지우개로 중간을 지울 수 있게 촘촘히)
+  });
+  const end = e => {
+    if (erasing) { erasing = false; paintPen(); return; }
+    const s = PEN.cur; if (!s || s.id !== e.pointerId) return; PEN.cur = null; delete s.id;
+    if (s.t === "arrow") { const V = penView(), a = V.toS(s.p[0]), b = V.toS(s.p[1]); if (Math.hypot(b[0] - a[0], b[1] - a[1]) < 8) return; }
+    penPush(); penSet([...penStrokes(), s]); paintPen();
+  };
+  pad.addEventListener("pointerup", end); pad.addEventListener("pointercancel", end);
+  pad.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") PEN.hover = null; });
+  pad.addEventListener("wheel", e => { e.preventDefault(); $("#rpCanvas").dispatchEvent(new WheelEvent("wheel", e)); }, {passive: false});  // 펜을 켠 채로도 휠 확대·축소
+  addEventListener("keydown", e => {
+    if ($("#replay").classList.contains("hidden") || !rp.data || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    const k = e.key.toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && k === "z" && PEN.undo.length) { e.preventDefault(); penSet(PEN.undo.pop()); paintPen(); return; }
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (k === "p" || k === "ㅔ") rpPen();
+    else if (PEN.on && (k === "e" || k === "ㄷ")) { PEN.tool = PEN.tool === "erase" ? "pen" : "erase"; paintPen(); }
+    else if (PEN.on && (k === "a" || k === "ㅁ")) { PEN.tool = "arrow"; paintPen(); }
+  }, true);
+})();
+function penSaveImg() {  // 지금 화면 (지도 + 그림)을 사진으로 저장
+  const c = $("#rpCanvas"), name = `DDC_전술_${($("#rpTitle").textContent || "리플레이").replace(/[\\/:*?"<>|\s]+/g, "_")}_${mmss(rp.t).replace(":", "분")}초.png`;
+  try {
+    c.toBlob(b => { if (!b) return rpPenMsg("저장하지 못했어요"); const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); rpPenMsg("사진으로 저장했어요"); }, "image/png");
+  } catch { rpPenMsg("이 지도는 사진으로 저장할 수 없어요"); }
+}
+function rpPenMsg(t) { const m = $("#rpPenMsg"); m.textContent = t; m.classList.add("on"); clearTimeout(m._t); m._t = setTimeout(() => m.classList.remove("on"), 1800); }
 rp.cine = true;
 document.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => { rp.speed = +b.dataset.sp; paintRpButtons(); });
 $("#rpSeek").addEventListener("input", e => { if (!rp.data) return; rp.dragging = true; rp.t = +e.target.value; rp.flashes = []; });
 $("#rpSeek").addEventListener("change", () => { rp.dragging = false; });
 addEventListener("keydown", e => {
   if ($("#replay").classList.contains("hidden") || !rp.data) return;
-  if (e.key === "Escape") { if (rp.cinema) rpCinema(false); else closeReplay(); }
+  if (e.key === "Escape") { if (PEN.on) rpPen(false); else if (rp.cinema) rpCinema(false); else closeReplay(); }
   else if (e.key === " " && e.target.tagName !== "BUTTON") { e.preventDefault(); $("#rpPlay").click(); }
   else if (e.key === "ArrowLeft" && e.target.tagName !== "INPUT") { rp.t = Math.max(0, rp.t - 10); rp.flashes = []; }
   else if (e.key === "ArrowRight" && e.target.tagName !== "INPUT") { rp.t = Math.min(rp.data.duration, rp.t + 10); rp.flashes = []; }
@@ -6407,13 +6797,16 @@ document.addEventListener("click", e => { if (!e.target.closest(".dp-wrap")) $("
     const n = new Date(new Date(v + "T00:00:00").getTime() + k * 864e5).toLocaleDateString("sv-SE");
     if (n > (state?.today || n) || n < (state?.min_date || "2000-01-01")) return; go(n);
   };
-  // v87 ‹ › · 오늘 · 어제 · 달력 버튼은 뺌 (큰 날짜를 누르면 달력)
+  $("#dCal").onclick = e => { e.stopPropagation(); setOpen(false); $("#dpCal").hidden ? dpOpen() : ($("#dpCal").hidden = true); };  // v88 달력 버튼 (큰 날짜를 눌러도 열림)
+  // v88 옵션 접기: 켜진 개수 표시, 바깥을 누르거나 Esc면 닫힘
+  const boxes = [...document.querySelectorAll("#optPanel input[type=checkbox]")], cnt = () => { $("#optCount").textContent = `${boxes.filter(b => b.checked).length}/${boxes.length}`; };
+  boxes.forEach(b => b.addEventListener("change", cnt)); cnt(); window.paintOptCount = cnt;
+  const setOpen = o => { $("#optPanel").hidden = !o; $("#btnOpts").setAttribute("aria-expanded", String(o)); };
+  $("#btnOpts").onclick = e => { e.stopPropagation(); setOpen($("#optPanel").hidden); };
+  document.addEventListener("click", e => { if (!e.target.closest("#optDD")) setOpen(false); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") setOpen(false); });
   window.paintDateBig = paint; paint();
 })();
-$("#btnViewDay").onclick = () => {
-  const d = $("#date").value, saved = state.days.find(x => x.date === d);
-  if (saved) openDay(d); else alert("관리자가 이 날의 기록을 아직 저장하지 않았어요. 누적 기록 탭에서 저장된 날을 볼 수 있어요.");
-};
 $("#btnSettings").onclick = openSettings;
 function openSettings() {
   renderIconPicker();
@@ -6465,7 +6858,7 @@ function openSettings() {
   $("#pubToken").placeholder = pb.token_set ? "저장돼 있어요 (바꿀 때만 입력)" : "github_pat_… 또는 ghp_…";
   renderPub(pb);
   $("#vol").value = Math.round(volume * 100); $("#volTxt").textContent = Math.round(volume * 100) + "%";
-  for (const [id, k] of [["rpVolW", "world"], ["rpVolA", "alert"]]) { $("#" + id).value = Math.round(RPV[k] * 100); $("#" + id + "Txt").textContent = Math.round(RPV[k] * 100) + "%"; }
+  for (const [id, k] of [["rpVolW", "world"], ["rpVolA", "alert"], ["rpVolB", "amb"]]) { $("#" + id).value = Math.round(RPV[k] * 100); $("#" + id + "Txt").textContent = Math.round(RPV[k] * 100) + "%"; }
   const snd = Object.keys(state.sounds || {});
   $("#sndStatus").textContent = snd.length ? `사용 중: ${snd.join(", ")}` : "기본 소리 사용 중";
   const withPic = state.players.filter(p => pimg(p)).map(p => p.name);
@@ -6526,7 +6919,7 @@ $("#btnOpenReplayImgs").onclick = () => api("api/open_images", {replay: true}).c
 $("#btnOpenSounds").onclick = () => api("api/open_images", {sounds: true}).catch(e => alert(e.message));
 $("#vol").oninput = e => { const v = e.target.value / 100; setVolume(v); $("#volTxt").textContent = e.target.value + "%"; };
 $("#vol").onchange = () => { ensureAudio(); sfx.ding(659.25); };
-for (const [id, k, key] of [["rpVolW", "world", "ddc_rpvol_w"], ["rpVolA", "alert", "ddc_rpvol_a"]]) {  // v83 리플레이 효과음 크기 (이 기기에 저장)
+for (const [id, k, key] of [["rpVolW", "world", "ddc_rpvol_w"], ["rpVolA", "alert", "ddc_rpvol_a"], ["rpVolB", "amb", "ddc_rpvol_b"]]) {  // v83 리플레이 효과음 크기 (이 기기에 저장)
   $("#" + id).oninput = e => { RPV[k] = e.target.value / 100; $("#" + id + "Txt").textContent = e.target.value + "%"; try { localStorage.setItem(key, e.target.value); } catch {}
     if (audio && k === "world" && RPS.bus) RPS.bus.gain.value = RPV.world; };
   $("#" + id).onchange = () => { ensureAudio(); if (!audio || !noiseBuf) return;  // 들어 보기: 지도 소리는 총성 3발, 알림 소리는 처치 소리
@@ -6702,7 +7095,7 @@ paintRpSnd();
 $("#rpSnd").onclick = () => { rp.sndOn = !rp.sndOn; try { localStorage.setItem("ddc_rpsnd", rp.sndOn ? "1" : "0"); } catch {} paintRpSnd(); if (rp.sndOn) ensureAudio(); else rpHum(false); };
 let cineTimer = 0;
 function rpCinema(on) {
-  const el = $("#replay"); el.classList.toggle("cinema", on); el.classList.remove("cine-ui"); rp.cinema = on;
+  const el = $("#replay"); if (on && PEN.on) rpPen(false); el.classList.toggle("cinema", on); el.classList.remove("cine-ui"); rp.cinema = on;
   if (on) { rp.manual = false; rp.follow = true; rp.playing = true; paintRpButtons(); try { if (!document.fullscreenElement && matchMedia("(pointer:fine)").matches) el.requestFullscreen?.().catch(() => {}); } catch {} }
   else { try { if (document.fullscreenElement === el) document.exitFullscreen(); } catch {} }
   rp.graphKey = null;
