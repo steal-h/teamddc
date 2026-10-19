@@ -84,6 +84,15 @@ button,input,select{font:inherit;color:inherit}
 .medal-card.worst .award{color:var(--flare)}
 .absent{text-align:center;margin-top:10px;color:var(--dust)}
 .share-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:20px 0 6px}
+/* v100 SR-02 한 줄 아이콘 툴바 */
+.share-row.tbar{gap:0;width:fit-content;max-width:100%;margin:20px auto 6px;border:1px solid var(--line);border-radius:10px;background:rgba(0,0,0,.18);padding:4px;flex-wrap:nowrap}
+.tbar .tb-g{display:flex;align-items:center;gap:2px;padding:0 4px}.tbar .tb-g+.tb-g{border-left:1px solid var(--line)}
+.tbar .btn{border:0;border-radius:7px;min-height:38px;padding:8px 12px;color:var(--dust);background:none;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;font-size:14px}
+.tbar .btn:hover{color:var(--bone);background:rgba(255,255,255,.05)}.tbar .btn.primary{background:var(--accent);color:var(--accent-ink,#2A2208)}
+.tbar .btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.tbar .seg{margin-right:4px}
+body.viewer .tbar .tb-share,body.viewer .tbar .tb-reel{display:none}body.viewer .tbar .tb-g{border-left:0!important}
+@media (max-width:620px){.tbar .btn span{display:none}.tbar .btn{padding:8px 11px}.tbar .seg button{padding:6px 9px}}
 .share-msg{text-align:center;min-height:24px;color:var(--accent);font-weight:600;margin-bottom:24px}
 .share-msg.err{color:var(--flare)}
 
@@ -1840,6 +1849,13 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .icb svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round}
 .icb:hover{color:var(--bone);border-color:var(--dust)}.icb:disabled{opacity:.4;cursor:default}
 #btnQuit:hover{color:var(--flare);border-color:var(--flare)}
+/* v99 소리 크기 (조회 전용에서도): 설정 화면의 볼륨 막대와 같은 값 */
+.mix-wrap{position:relative;display:inline-flex}
+.mix-panel{position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:260px;background:#1C1F17;border:1px solid var(--line);border-radius:10px;padding:12px 14px;box-shadow:0 10px 28px rgba(0,0,0,.55);display:grid;gap:8px}
+.mix-panel[hidden]{display:none}.mix-panel>b{font-size:14px}.mix-panel>small{color:var(--dust);font-size:11.5px;margin-top:-6px}
+.mix-panel label{display:grid;grid-template-columns:64px 1fr 40px;align-items:center;gap:8px;font-size:13px;color:var(--dust)}
+.mix-panel input{accent-color:var(--accent);width:100%}.mix-panel em{font-style:normal;color:var(--bone);text-align:right;font-variant-numeric:tabular-nums;font-size:12.5px}
+#btnMix[aria-expanded=true]{color:var(--accent);border-color:var(--accent)}
 .controls.v86{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin-bottom:22px}
 .ctl-row{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap}
 .dbig{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
@@ -1910,7 +1926,10 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 .spot-sub{display:flex;justify-content:center;gap:16px;margin-top:6px;font-size:13px;color:var(--dust);flex-wrap:wrap}.spot-sub b{color:var(--bone);font-weight:700;font-variant-numeric:tabular-nums;margin-left:3px}.spot-st small{color:var(--dust);font-size:12.5px;margin-top:3px;white-space:nowrap}
 .medals{position:relative;padding-top:18px}
 .medals::before{content:"";position:absolute;left:-20px;right:-20px;top:0;height:16px;background:linear-gradient(180deg,rgba(242,169,0,.16),transparent);border-top:2px solid rgba(242,169,0,.45)}
-.medal-card{background:#1c1f17;border-color:var(--line);border-radius:12px}  /* v90 2·3위 회색 테두리 */
+.medal-card{background:#1c1f17;border-color:var(--line);border-radius:12px}
+/* v100 2·3위 명암: 2위 은빛, 3위 동빛이 위에서 은은하게 */
+.medal-card.r2:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(200,205,211,.16),transparent 70%),linear-gradient(180deg,#262a22,#1c1f17);border-color:rgba(200,205,211,.45)}
+.medal-card.r3:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(196,123,69,.16),transparent 70%),linear-gradient(180deg,#252219,#1c1f17);border-color:rgba(196,123,69,.45)}  /* v90 2·3위 회색 테두리 */
 .medal-card.worst{background:linear-gradient(180deg,rgba(224,83,47,.16),#1c1f17 70%);border-color:rgba(224,83,47,.6)}
 @media (max-width:620px){.spot-st{gap:12px;justify-content:flex-start}.plaque .spot-st b{font-size:40px}.spot-st small{font-size:11px}.spot-sub{justify-content:flex-start;gap:10px;font-size:12px;grid-column:2}.medals::before{left:-10px;right:-10px}}
 @media (orientation:landscape) and (max-height:500px){.spot-st{justify-content:flex-start;gap:18px}.plaque .spot-st b{font-size:36px}.spot-sub{justify-content:flex-start;grid-column:2}}
@@ -1962,6 +1981,14 @@ html.share-mode body::before{display:none}
       <i class="tab-ind" id="tabInd" aria-hidden="true"></i>
     </div>
     <div class="top-ic">
+      <span class="mix-wrap"><button class="icb" id="btnMix" type="button" aria-label="소리 크기" title="소리 크기" aria-expanded="false" aria-controls="mixPanel"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8h3l4-3v10l-4-3H3z"/><path d="M13 7.5a3.5 3.5 0 0 1 0 5M15.2 5.5a6.4 6.4 0 0 1 0 9"/></svg></button>
+        <div class="mix-panel" id="mixPanel" role="dialog" aria-label="소리 크기" hidden>
+          <b>소리 크기</b><small>이 기기에만 저장돼요</small>
+          <label><span>전체</span><input type="range" min="0" max="100" step="5" data-mix="vol"><em></em></label>
+          <label><span>지도 소리</span><input type="range" min="0" max="150" step="5" data-mix="rpVolW"><em></em></label>
+          <label><span>알림 소리</span><input type="range" min="0" max="150" step="5" data-mix="rpVolA"><em></em></label>
+          <label><span>배경 소리</span><input type="range" min="0" max="150" step="5" data-mix="rpVolB"><em></em></label>
+        </div></span>
       <button class="icb" id="btnSettings" type="button" aria-label="설정" title="설정"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 2.6h3.4l.5 2.6a7.6 7.6 0 0 1 1.9 1.1l2.5-.9 1.7 2.9-2 1.8a7.6 7.6 0 0 1 0 2.2l2 1.8-1.7 2.9-2.5-.9a7.6 7.6 0 0 1-1.9 1.1l-.5 2.6h-3.4l-.5-2.6a7.6 7.6 0 0 1-1.9-1.1l-2.5.9-1.7-2.9 2-1.8a7.6 7.6 0 0 1 0-2.2l-2-1.8 1.7-2.9 2.5.9a7.6 7.6 0 0 1 1.9-1.1z"/><circle cx="12" cy="12" r="3"/></svg></button>
       <button class="icb" id="btnQuit" type="button" aria-label="종료" title="종료"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.4v7"/><path d="M5.5 5.3a6.5 6.5 0 1 0 9 0"/></svg></button>
     </div>
@@ -2718,7 +2745,7 @@ function renderDay(r, report, reveal) {
   current = {result: r, report};
   const [first, ...rest] = r.ranking;
   const dateLabel = dateLabelOf(r);
-  const medals = rest.map(p => `<div class="medal-card ${p.rank === 4 ? "worst" : ""}">
+  const medals = rest.map(p => `<div class="medal-card r${p.rank} ${p.rank === 4 ? "worst" : ""}">
       ${avatar(p, "md") || medal(p.rank)}<div class="rank">${p.rank}위</div><div class="award">${esc(p.award)}</div>
       <div class="name">${esc(p.name)}</div><div class="score"><b>${sc(p.total)}</b> 점</div>${badgesHtml(p)}</div>`).join("");
   const cards = r.ranking.map(p => {
@@ -2793,12 +2820,11 @@ function renderDay(r, report, reveal) {
       <div class="medals">${medals}</div>
     </div></div>
     ${r.absent.length ? `<p class="absent">불참: ${r.absent.map(esc).join(", ")}</p>` : ""}
-    <div class="share-row">
-      <div class="seg" role="group" aria-label="공유 이미지 모양"><button data-fmt="h">가로형</button><button data-fmt="v">세로형</button></div>
-      <button class="btn primary" id="btnDiscord">디스코드 채널에 공유</button>
-      <button class="btn" id="btnReplay">시상식 다시 보기</button>
-      <button class="btn" id="btnScore">점수 계산 보기</button>
-      ${bestGame(r) ? `<button class="btn" id="btnReelSend">명장면 영상 디스코드 공유</button><button class="btn" id="btnReelSave">명장면 영상 저장</button>` : ""}
+    <div class="share-row tbar">  <!-- v100 SR-02 한 줄 아이콘 툴바: 공유 | 명장면 영상 | 보기 -->
+      <span class="tb-g tb-share"><div class="seg" role="group" aria-label="공유 이미지 모양"><button data-fmt="h">가로형</button><button data-fmt="v">세로형</button></div>
+      <button class="btn primary" id="btnDiscord" title="디스코드 채널에 공유"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10 17 3l-4 14-3-6z"/><path d="m10 11 7-8"/></svg><span>디스코드 공유</span></button></span>
+      ${bestGame(r) ? `<span class="tb-g tb-reel"><button class="btn" id="btnReelSend" title="명장면 영상 디스코드 공유"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="4.5" width="15" height="11" rx="1.5"/><path d="m8.5 8 3.5 2-3.5 2z"/></svg><span>영상 공유</span></button><button class="btn" id="btnReelSave" title="명장면 영상 저장"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9M6.5 8.5 10 12l3.5-3.5M4 15.5h12"/></svg><span>영상 저장</span></button></span>` : ""}
+      <span class="tb-g"><button class="btn" id="btnReplay" title="시상식 다시 보기"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 10a6.5 6.5 0 1 0 2-4.7"/><path d="M3 3v3.5h3.5"/><path d="m9 7.5 3.5 2.5L9 12.5z"/></svg><span>시상식</span></button><button class="btn" id="btnScore" title="점수 계산 보기"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="2.5" width="12" height="15" rx="1.5"/><path d="M7 6h6M7 10h1M10 10h1M13 10h0M7 13.5h1M10 13.5h1M13 13.5h0"/></svg><span>점수 계산</span></button></span>
     </div>
     <div class="share-msg" id="shareMsg" aria-live="polite"></div>
     <p class="reel-msg" id="reelMsg" aria-live="polite"></p>
@@ -6137,10 +6163,11 @@ function shadowOf(c, kind, x, y, r, ang, now, dx, dy, a, blur) {  // 같은 모�
   c.save(); c.globalAlpha = a; if (blur) c.filter = `blur(${blur}px)`; sprite(c, kind, x + dx, y + dy, r, "#000000", ang, now, null, P); c.restore();
 }
 
-  const WHITE = {...NAT}; for (const k in WHITE) WHITE[k] = "#fff"; Object.assign(WHITE, {flat: true, ol: "#fff", lw: .13, noRider: true});
-  return function draw(c, kind, x, y, r, col, ang, now) {
-    c.save(); c.shadowColor = "rgba(0,0,0,.6)"; c.shadowBlur = 4; sprite(c, kind, x, y, r, col, ang, now, null, WHITE); c.restore();
-    sprite(c, kind, x, y, r, col, ang, now, null, {...NAT, jacket: col, jacket2: col, noRider: true, accent: col});
+  return function draw(c, kind, x, y, r, col, ang, now) {  // v98 테두리 = 팀 색, 외장(글라이더 몸체 · 자전거 프레임 · 오토바이 탱크·펜더) = 팀 색
+    const O = {...NAT}; for (const k in O) O[k] = col; Object.assign(O, {flat: true, ol: col, lw: .13, noRider: true});
+    c.save(); c.shadowColor = "rgba(0,0,0,.6)"; c.shadowBlur = 4; sprite(c, kind, x, y, r, col, ang, now, null, O); c.restore();
+    const dk = mix(col, "#000000", .45);
+    sprite(c, kind, x, y, r, col, ang, now, null, {...NAT, pod: col, pod2: dk, frame: col, frame2: dk, tank: col, tank2: mix(col, "#000000", .6), jacket: col, jacket2: col, noRider: true});
   };
 })();
 function drawVeh(ctx, x, y, r, col, vid, headFn, now) {  // 일반 차는 핸들, 특수 탈것은 배지 없는 실루엣 (가는 방향으로 돌아감)
@@ -7032,6 +7059,17 @@ $("#btnOpenReplayImgs").onclick = () => api("api/open_images", {replay: true}).c
 $("#btnOpenSounds").onclick = () => api("api/open_images", {sounds: true}).catch(e => alert(e.message));
 $("#vol").oninput = e => { const v = e.target.value / 100; setVolume(v); $("#volTxt").textContent = e.target.value + "%"; };
 $("#vol").onchange = () => { ensureAudio(); sfx.ding(659.25); };
+(() => {  // v99 소리 크기 창: 설정 화면의 막대(#vol · #rpVolW · #rpVolA · #rpVolB)를 그대로 움직여서 저장·적용도 같게
+  const P = $("#mixPanel"), btn = $("#btnMix"), ins = [...P.querySelectorAll("[data-mix]")];
+  const val = id => id === "vol" ? Math.round(volume * 100) : Math.round(RPV[{rpVolW: "world", rpVolA: "alert", rpVolB: "amb"}[id]] * 100);
+  const paint = () => ins.forEach(i => { i.value = val(i.dataset.mix); i.nextElementSibling.textContent = i.value + "%"; });
+  ins.forEach(i => { i.oninput = () => { const t = $("#" + i.dataset.mix); t.value = i.value; t.dispatchEvent(new Event("input")); if (i.dataset.mix === "vol") try { localStorage.setItem("ddc_vol", String(i.value / 100)); } catch {} i.nextElementSibling.textContent = i.value + "%"; };
+    i.onchange = () => { if (i.dataset.mix === "vol") $("#vol").dispatchEvent(new Event("change")); }; });
+  const open = o => { P.hidden = !o; btn.setAttribute("aria-expanded", String(o)); if (o) paint(); };
+  btn.onclick = e => { e.stopPropagation(); open(P.hidden); };
+  document.addEventListener("click", e => { if (!e.target.closest(".mix-wrap")) open(false); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") open(false); });
+})();
 for (const [id, k, key] of [["rpVolW", "world", "ddc_rpvol_w"], ["rpVolA", "alert", "ddc_rpvol_a"], ["rpVolB", "amb", "ddc_rpvol_b"]]) {  // v83 리플레이 효과음 크기 (이 기기에 저장)
   $("#" + id).oninput = e => { RPV[k] = e.target.value / 100; $("#" + id + "Txt").textContent = e.target.value + "%"; try { localStorage.setItem(key, e.target.value); } catch {}
     if (audio && k === "world" && RPS.bus) RPS.bus.gain.value = RPV.world; };
