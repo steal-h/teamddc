@@ -1920,7 +1920,9 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 /* v103 BG-07 작전 지도: 오늘 맵 사진을 더 선명하게 + 노란 좌표 격자 (2~4위 카드는 그대로) */
 .hero .hero-bg{opacity:.3;filter:saturate(.65) contrast(1.05);-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 45%,transparent 78%);mask-image:linear-gradient(180deg,#000 0%,#000 45%,transparent 78%)}
 .hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(242,169,0,.07) 0 1px,transparent 1px 80px),repeating-linear-gradient(90deg,rgba(242,169,0,.07) 0 1px,transparent 1px 80px);-webkit-mask-image:linear-gradient(180deg,#000 30%,transparent 75%);mask-image:linear-gradient(180deg,#000 30%,transparent 75%)}  /* v104 지도·격자가 아래 2~4위 쪽으로 자연스럽게 사라지게 */
-.hero::after{background:radial-gradient(ellipse at 50% 38%,rgba(18,20,16,.4),rgba(18,20,16,.82) 75%)}
+.hero::after{background:radial-gradient(ellipse at 50% 38%,rgba(38,43,30,.35),rgba(43,48,34,.86) 78%)}
+/* v105 검정 무대 → 국방색 무대: 페이지 바탕(올리브)과 자연스럽게 이어지게, 스포트라이트는 그대로 */
+.hero{background:radial-gradient(ellipse 36% 62% at 50% 0%,rgba(255,236,180,.22),transparent 72%),radial-gradient(ellipse 60% 26% at 50% 64%,rgba(242,169,0,.08),transparent 70%),linear-gradient(180deg,#252a1d 0%,#2B3022 100%)!important;border-color:#3B4230!important}
 .plaque{background:none}  /* v90 1위 두 줄 노란 테두리는 예전처럼 */
 .plaque>div{background:radial-gradient(ellipse 55% 85% at 50% 0%,rgba(255,236,180,.14),transparent 75%);box-shadow:none}
 .plaque .av-lg{filter:drop-shadow(0 0 22px rgba(242,179,61,.45))}
