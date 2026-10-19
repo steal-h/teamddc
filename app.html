@@ -1828,7 +1828,12 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .top.v86 .nav{display:flex;flex-wrap:nowrap;gap:4px;background:rgba(0,0,0,.2);border-radius:8px;padding:3px;width:auto;margin:0}
 .top.v86 .nav .btn[data-tab]{border:0;border-radius:6px;min-height:38px;padding:8px 16px;font-weight:700;font-size:14px;color:var(--dust);background:none;flex:none}
 .top.v86 .nav .btn[data-tab]::after{display:none}
-.top.v86 .nav .btn[data-tab][aria-selected=true]{background:var(--panel-2);color:var(--bone);box-shadow:inset 0 -2px 0 var(--accent)}
+.top.v86 .nav .btn[data-tab][aria-selected=true]{color:var(--bone)}
+/* v96 TB-01 미끄러지는 노란 밑줄: 상자 없이 글자만, 고른 탭 아래 (머리 줄 선 위) 빛나는 노란 줄이 옆으로 따라감 */
+.top.v86 .nav{position:relative;background:none!important;padding:0!important;gap:6px}
+.top.v86 .nav .btn[data-tab]{padding:8px 8px;font-size:15px}
+.tab-ind{position:absolute;left:0;top:0;width:0;height:3px;border-radius:3px;background:var(--accent);box-shadow:0 0 10px rgba(242,169,0,.6);pointer-events:none;transition:left .3s cubic-bezier(.3,1.3,.5,1),width .3s,top .2s}
+@media (prefers-reduced-motion:reduce){.tab-ind{transition:none}}
 .top.v86 .nav .btn[data-tab]:hover{color:var(--bone)}
 .top-ic{display:flex;gap:6px}
 .icb{width:40px;height:40px;border-radius:8px;border:1px solid var(--line);background:none;color:var(--dust);display:grid;place-items:center;cursor:pointer;padding:0}
@@ -1901,13 +1906,14 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 .plaque .award{color:var(--gold);letter-spacing:.14em;font-weight:800}
 .plaque .name{background:linear-gradient(180deg,#FFF6D8 10%,#F2B33D 90%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 18px rgba(242,179,61,.25))}
 .spot-st{display:flex;justify-content:center;gap:30px;margin-top:6px}
-.spot-st span{display:grid;justify-items:center;line-height:1.1}.spot-st b{font:400 32px/1 var(--num);color:var(--bone)}.spot-st small{color:var(--dust);font-size:12.5px;margin-top:3px;white-space:nowrap}
+.spot-st span{display:grid;justify-items:center;line-height:1.1}.plaque .spot-st b{font:400 64px/1 var(--num);color:var(--bone)}
+.spot-sub{display:flex;justify-content:center;gap:16px;margin-top:6px;font-size:13px;color:var(--dust);flex-wrap:wrap}.spot-sub b{color:var(--bone);font-weight:700;font-variant-numeric:tabular-nums;margin-left:3px}.spot-st small{color:var(--dust);font-size:12.5px;margin-top:3px;white-space:nowrap}
 .medals{position:relative;padding-top:18px}
 .medals::before{content:"";position:absolute;left:-20px;right:-20px;top:0;height:16px;background:linear-gradient(180deg,rgba(242,169,0,.16),transparent);border-top:2px solid rgba(242,169,0,.45)}
-.medal-card{background:#1c1f17;border-color:var(--line);border-radius:12px 12px 4px 4px}  /* v90 2·3위 회색 테두리 */
+.medal-card{background:#1c1f17;border-color:var(--line);border-radius:12px}  /* v90 2·3위 회색 테두리 */
 .medal-card.worst{background:linear-gradient(180deg,rgba(224,83,47,.16),#1c1f17 70%);border-color:rgba(224,83,47,.6)}
-@media (max-width:620px){.spot-st{gap:12px;justify-content:flex-start}.spot-st b{font-size:22px}.spot-st small{font-size:11px}.medals::before{left:-10px;right:-10px}}
-@media (orientation:landscape) and (max-height:500px){.spot-st{justify-content:flex-start;gap:18px}.spot-st b{font-size:22px}}
+@media (max-width:620px){.spot-st{gap:12px;justify-content:flex-start}.plaque .spot-st b{font-size:40px}.spot-st small{font-size:11px}.spot-sub{justify-content:flex-start;gap:10px;font-size:12px;grid-column:2}.medals::before{left:-10px;right:-10px}}
+@media (orientation:landscape) and (max-height:500px){.spot-st{justify-content:flex-start;gap:18px}.plaque .spot-st b{font-size:36px}.spot-sub{justify-content:flex-start;grid-column:2}}
 /* v91 등고선 배경 (그날 가장 많이 한 맵 색) */
 body::before{content:none;display:none;background-image:var(--topo,none);background-size:900px 900px;background-position:center top;-webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.55),#000 30%,#000);mask-image:linear-gradient(180deg,rgba(0,0,0,.55),#000 30%,#000)}
 html.share-mode body::before{display:none}
@@ -1953,9 +1959,10 @@ html.share-mode body::before{display:none}
       <button class="btn" role="tab" aria-selected="true" data-tab="awards">오늘의 어워즈</button>
       <button class="btn" role="tab" aria-selected="false" data-tab="cards">선수 카드</button>
       <button class="btn" role="tab" aria-selected="false" data-tab="cum">누적 기록</button>
+      <i class="tab-ind" id="tabInd" aria-hidden="true"></i>
     </div>
     <div class="top-ic">
-      <button class="icb" id="btnSettings" type="button" aria-label="설정" title="설정"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="2.7"/><path d="M10 1.9v2.4M10 15.7v2.4M1.9 10h2.4M15.7 10h2.4M4.3 4.3 6 6M14 14l1.7 1.7M4.3 15.7 6 14M14 6l1.7-1.7"/></svg></button>
+      <button class="icb" id="btnSettings" type="button" aria-label="설정" title="설정"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 2.6h3.4l.5 2.6a7.6 7.6 0 0 1 1.9 1.1l2.5-.9 1.7 2.9-2 1.8a7.6 7.6 0 0 1 0 2.2l2 1.8-1.7 2.9-2.5-.9a7.6 7.6 0 0 1-1.9 1.1l-.5 2.6h-3.4l-.5-2.6a7.6 7.6 0 0 1-1.9-1.1l-2.5.9-1.7-2.9 2-1.8a7.6 7.6 0 0 1 0-2.2l-2-1.8 1.7-2.9 2.5.9a7.6 7.6 0 0 1 1.9-1.1z"/><circle cx="12" cy="12" r="3"/></svg></button>
       <button class="icb" id="btnQuit" type="button" aria-label="종료" title="종료"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.4v7"/><path d="M5.5 5.3a6.5 6.5 0 1 0 9 0"/></svg></button>
     </div>
   </div>
@@ -2334,7 +2341,16 @@ function showTab(name) {
   ["awards", "cards", "cum"].forEach(t => $("#tab-" + t).classList.toggle("hidden", name !== t));
   if (name === "cum") { const c = $("#cum"); c.classList.remove("page-in"); void c.offsetWidth; c.classList.add("page-in"); }
   if (name === "cards") loadCards();
+  moveTabInd();
 }
+function moveTabInd() {  // v96 노란 밑줄을 고른 탭 아래, 머리 줄 선 바로 위로
+  const ind = $("#tabInd"), b = document.querySelector(".top.v86 .nav [aria-selected=true]"), nav = ind && ind.parentElement, top = document.querySelector(".top.v86");
+  if (!ind || !b || !top) return;
+  const nr = nav.getBoundingClientRect(), br = b.getBoundingClientRect(), tr = top.getBoundingClientRect();
+  ind.style.left = (br.left - nr.left + 6) + "px"; ind.style.width = Math.max(0, br.width - 12) + "px"; ind.style.top = (tr.bottom - nr.top - 2) + "px";
+}
+addEventListener("resize", moveTabInd); addEventListener("load", moveTabInd); try { document.fonts.ready.then(moveTabInd); } catch {}
+setTimeout(moveTabInd, 50);
 
 /* ───── 선수 카드 ───── */
 const CHICK_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 22' shape-rendering='crispEdges'%3E%3Crect x='6' y='0' width='2' height='1' fill='%23942735'/%3E%3Crect x='5' y='1' width='1' height='1' fill='%2334363a'/%3E%3Crect x='6' y='1' width='2' height='1' fill='%23dd2e44'/%3E%3Crect x='8' y='1' width='1' height='1' fill='%2334363a'/%3E%3Crect x='5' y='2' width='1' height='1' fill='%2334363a'/%3E%3Crect x='6' y='2' width='2' height='1' fill='%23dd2e44'/%3E%3Crect x='8' y='2' width='1' height='1' fill='%2334363a'/%3E%3Crect x='6' y='3' width='1' height='1' fill='%23ce3548'/%3E%3Crect x='7' y='3' width='1' height='1' fill='%23ca3145'/%3E%3Crect x='8' y='3' width='1' height='1' fill='%2334363a'/%3E%3Crect x='3' y='4' width='1' height='1' fill='%2334363a'/%3E%3Crect x='4' y='4' width='1' height='1' fill='%23b0b5b9'/%3E%3Crect x='5' y='4' width='1' height='1' fill='%23e1e8ed'/%3E%3Crect x='6' y='4' width='1' height='1' fill='%23df7483'/%3E%3Crect x='7' y='4' width='1' height='1' fill='%23df8b99'/%3E%3Crect x='8' y='4' width='1' height='1' fill='%23e1e8ed'/%3E%3Crect x='9' y='4' width='1' height='1' fill='%23b0b5b9'/%3E%3Crect x='10' y='4' width='1' height='1' fill='%2334363a'/%3E%3Crect x='2' y='5' width='1' height='1' fill='%234b4d51'/%3E%3Crect x='3' y='5' width='3' height='1' fill='%23e1e8ed'/%3E%3Crect x='6' y='5' width='1' height='1' fill='%23e1d1d8'/%3E%3Crect x='7' y='5' width='4' height='1' fill='%23e1e8ed'/%3E%3Crect x='11' y='5' width='1' height='1' fill='%2334363a'/%3E%3Crect x='2' y='6' width='1' height='1' fill='%23c8ced3'/%3E%3Crect x='3' y='6' width='8' height='1' fill='%23e1e8ed'/%3E%3Crect x='11' y='6' width='1' height='1' fill='%23c8ced3'/%3E%3Crect x='12' y='6' width='1' height='1' fill='%2334363a'/%3E%3Crect x='1' y='7' width='1' height='1' fill='%237d8085'/%3E%3Crect x='2' y='7' width='10' height='1' fill='%23e1e8ed'/%3E%3Crect x='12' y='7' width='1' height='1' fill='%2365676c'/%3E%3Crect x='1' y='8' width='1' height='1' fill='%23b0b5b9'/%3E%3Crect x='2' y='8' width='10' height='1' fill='%23e1e8ed'/%3E%3Crect x='12' y='8' width='1' height='1' fill='%23969b9f'/%3E%3Crect x='1' y='9' width='1' height='1' fill='%23c8ced3'/%3E%3Crect x='2' y='9' width='10' height='1' fill='%23e1e8ed'/%3E%3Crect x='12' y='9' width='1' height='1' fill='%23c8ced3'/%3E%3Crect x='1' y='10' width='1' height='1' fill='%23c8ced3'/%3E%3Crect x='2' y='10' width='1' height='1' fill='%238e9398'/%3E%3Crect x='3' y='10' width='1' height='1' fill='%23888f94'/%3E%3Crect x='4' y='10' width='2' height='1' fill='%23e1e8ed'/%3E%3Crect x='6' y='10' width='2' height='1' fill='%23e1e7eb'/%3E%3Crect x='8' y='10' width='2' height='1' fill='%23e1e8ed'/%3E%3Crect x='10' y='10' width='1' height='1' fill='%23888f94'/%3E%3Crect x='11' y='10' width='1' height='1' fill='%238e9398'/%3E%3Crect x='12' y='10' width='1' height='1' fill='%23c8ced3'/%3E%3Crect x='1' y='11' width='1' height='1' fill='%23e1e8ed'/%3E%3Crect x='2' y='11' width='1' height='1' fill='%23444a4e'/%3E%3Crect x='3' y='11' width='1' height='1' fill='%233b3f40'/%3E%3Crect x='4' y='11' width='1' height='1' fill='%23ebbc7e'/%3E%3Crect x='5' y='11' width='1' height='1' fill='%23f6a93d'/%3E%3Crect x='6' y='11' width='2' height='1' fill='%23fca931'/%3E%3Crect x='8' y='11' width='1' height='1' fill='%23f6a83d'/%3E%3Crect x='9' y='11' width='1' height='1' fill='%23ebbc7e'/%3E%3Crect x='10' y='11' width='1' height='1' fill='%233b3f40'/%3E%3Crect x='11' y='11' width='1' height='1' fill='%23444a4e'/%3E%3Crect x='12' y='11' width='1' height='1' fill='%23e1e8ed'/%3E%3Crect x='1' y='12' width='1' height='1' fill='%23e1e8ed'/%3E%3Crect x='2' y='12' width='1' height='1' fill='%23cfccc8'/%3E%3Crect x='3' y='12' width='1' height='1' fill='%23d7973f'/%3E%3Crect x='4' y='12' width='1' height='1' fill='%23fda62b'/%3E%3Crect x='5' y='12' width='4' height='1' fill='%23ffac33'/%3E%3Crect x='9' y='12' width='1' height='1' fill='%23fda72b'/%3E%3Crect x='10' y='12' width='1' height='1' fill='%23d7973f'/%3E%3Crect x='11' y='12' width='1' height='1' fill='%23cfccc8'/%3E%3Crect x='12' y='12' width='1' height='1' fill='%23e1e8ed'/%3E%3Crect x='0' y='13' width='1' height='1' fill='%2334363a'/%3E%3Crect x='1' y='13' width='1' height='1' fill='%23e1e8ed'/%3E%3Crect x='2' y='13' width='1' height='1' fill='%23ecc58d'/%3E%3Crect x='3' y='13' width='1' height='1' fill='%23feab31'/%3E%3Crect x='4' y='13' width='6' height='1' fill='%23ffac33'/%3E%3Crect x='10' y='13' width='1' height='1' fill='%23feab31'/%3E%3Crect x='11' y='13' width='1' height='1' fill='%23ecc58d'/%3E%3Crect x='12' y='13' width='1' height='1' fill='%23e1e8ed'/%3E%3Crect x='13' y='13' width='1' height='1' fill='%2334363a'/%3E%3Crect x='0' y='14' width='1' height='1' fill='%2334363a'/%3E%3Crect x='1' y='14' width='1' height='1' fill='%23e1e8ed'/%3E%3Crect x='2' y='14' width='1' height='1' fill='%23e7ceaa'/%3E%3Crect x='3' y='14' width='1' height='1' fill='%23f29923'/%3E%3Crect x='4' y='14' width='1' height='1' fill='%23f5910e'/%3E%3Crect x='5' y='14' width='1' height='1' fill='%23f69412'/%3E%3Crect x='6' y='14' width='2' height='1' fill='%23f69614'/%3E%3Crect x='8' y='14' width='1' height='1' fill='%23f69412'/%3E%3Crect x='9' y='14' width='1' height='1' fill='%23f5910e'/%3E%3Crect x='10' y='14' width='1' height='1' fill='%23f29923'/%3E%3Crect x='11' y='14' width='1' height='1' fill='%23e7ceaa'/%3E%3Crect x='12' y='14' width='1' height='1' fill='%23e1e8ed'/%3E%3Crect x='13' y='14' width='1' height='1' fill='%2334363a'/%3E%3Crect x='0' y='15' width='1' height='1' fill='%2334363a'/%3E%3Crect x='1' y='15' width='2' height='1' fill='%23e1e8ed'/%3E%3Crect x='3' y='15' width='1' height='1' fill='%23e9c594'/%3E%3Crect x='4' y='15' width='1' height='1' fill='%23f29923'/%3E%3Crect x='5' y='15' width='4' height='1' fill='%23f4900c'/%3E%3Crect x='9' y='15' width='1' height='1' fill='%23f29923'/%3E%3Crect x='10' y='15' width='1' height='1' fill='%23e9c594'/%3E%3Crect x='11' y='15' width='2' height='1' fill='%23e1e8ed'/%3E%3Crect x='13' y='15' width='1' height='1' fill='%2334363a'/%3E%3Crect x='0' y='16' width='1' height='1' fill='%234b4d51'/%3E%3Crect x='1' y='16' width='3' height='1' fill='%23e1e8ed'/%3E%3Crect x='4' y='16' width='1' height='1' fill='%23e5d4bc'/%3E%3Crect x='5' y='16' width='1' height='1' fill='%23e8c798'/%3E%3Crect x='6' y='16' width='1' height='1' fill='%23ea8d55'/%3E%3Crect x='7' y='16' width='1' height='1' fill='%23ea8249'/%3E%3Crect x='8' y='16' width='1' height='1' fill='%23e8c798'/%3E%3Crect x='9' y='16' width='1' height='1' fill='%23e5d4bc'/%3E%3Crect x='10' y='16' width='3' height='1' fill='%23e1e8ed'/%3E%3Crect x='13' y='16' width='1' height='1' fill='%234b4d51'/%3E%3Crect x='0' y='17' width='1' height='1' fill='%2365676c'/%3E%3Crect x='1' y='17' width='5' height='1' fill='%23e1e8ed'/%3E%3Crect x='6' y='17' width='2' height='1' fill='%23dd2e44'/%3E%3Crect x='8' y='17' width='1' height='1' fill='%23e1d1d8'/%3E%3Crect x='9' y='17' width='4' height='1' fill='%23e1e8ed'/%3E%3Crect x='13' y='17' width='1' height='1' fill='%2365676c'/%3E%3Crect x='0' y='18' width='1' height='1' fill='%237d8085'/%3E%3Crect x='1' y='18' width='4' height='1' fill='%23e1e8ed'/%3E%3Crect x='5' y='18' width='1' height='1' fill='%23e1d1d8'/%3E%3Crect x='6' y='18' width='2' height='1' fill='%23dd2e44'/%3E%3Crect x='8' y='18' width='1' height='1' fill='%23e1d1d8'/%3E%3Crect x='9' y='18' width='4' height='1' fill='%23e1e8ed'/%3E%3Crect x='13' y='18' width='1' height='1' fill='%2365676c'/%3E%3Crect x='0' y='19' width='1' height='1' fill='%237d8085'/%3E%3Crect x='1' y='19' width='2' height='1' fill='%23e1e8ed'/%3E%3Crect x='3' y='19' width='1' height='1' fill='%23c8ced3'/%3E%3Crect x='4' y='19' width='1' height='1' fill='%23e1e8ed'/%3E%3Crect x='5' y='19' width='1' height='1' fill='%23d497a2'/%3E%3Crect x='6' y='19' width='2' height='1' fill='%23dd2e44'/%3E%3Crect x='8' y='19' width='1' height='1' fill='%23d497a2'/%3E%3Crect x='9' y='19' width='4' height='1' fill='%23e1e8ed'/%3E%3Crect x='13' y='19' width='1' height='1' fill='%237d8085'/%3E%3Crect x='0' y='20' width='1' height='1' fill='%2334363a'/%3E%3Crect x='1' y='20' width='1' height='1' fill='%23c8ced3'/%3E%3Crect x='2' y='20' width='1' height='1' fill='%23969b9f'/%3E%3Crect x='3' y='20' width='1' height='1' fill='%237d8085'/%3E%3Crect x='4' y='20' width='1' height='1' fill='%23c8ced3'/%3E%3Crect x='5' y='20' width='1' height='1' fill='%2392515d'/%3E%3Crect x='6' y='20' width='2' height='1' fill='%23dd2e44'/%3E%3Crect x='8' y='20' width='1' height='1' fill='%2392515d'/%3E%3Crect x='9' y='20' width='1' height='1' fill='%23c8ced3'/%3E%3Crect x='10' y='20' width='1' height='1' fill='%2365676c'/%3E%3Crect x='11' y='20' width='1' height='1' fill='%23969b9f'/%3E%3Crect x='12' y='20' width='1' height='1' fill='%23c8ced3'/%3E%3Crect x='13' y='20' width='1' height='1' fill='%2334363a'/%3E%3Crect x='5' y='21' width='1' height='1' fill='%2334363a'/%3E%3Crect x='6' y='21' width='2' height='1' fill='%23c42b3f'/%3E%3C/svg%3E";  // 치킨 픽셀 닭 (선명하게 다시 찍음: 확대해도 안 깨짐)
@@ -2771,6 +2787,7 @@ function renderDay(r, report, reveal) {
         <div class="award">최우수 플레이어</div>
         <div class="name">${esc(first.name)}</div>
         <div class="line spot-st"><span><b>${sc(first.total)}</b><small>총점</small></span></div>
+        <div class="spot-sub"><span>KDA <b>${kdaOf(first.totals)}</b></span><span>판당 킬 <b>${first.metrics.kills}</b></span><span>판당 딜 <b>${fmt(first.metrics.damage)}</b></span></div>
         ${badgesHtml(first)}
       </div></div>
       <div class="medals">${medals}</div>
@@ -6006,7 +6023,7 @@ function rpVel(p) {  // 지금 속도 (m/초)
 }
 function vehKind(vid) {  // v88 특수 탈것: 글라이더 · 자전거 · 보트 (그 밖은 일반 차 → 핸들)
   const v = String(vid || "").toLowerCase();
-  return /glider/.test(v) ? "glider" : /bicycle|mountainbike|bike_|_bike/.test(v) && !/motorbike/.test(v) ? "bike" : /boat|pg117|aquarail|airboat/.test(v) ? "boat" : "car";
+  return /glider/.test(v) ? "glider" : /motorbike|motorcycle|dirtbike|scooter/.test(v) ? "moto" : /bicycle|mountainbike|bike_|_bike/.test(v) ? "bike" : /boat|pg117|aquarail|airboat/.test(v) ? "boat" : "car";
 }
 const VSHAPE = {  // v90 특수 탈것 V-03 (탈것 시안): 위에서 본 배그 모양. 좌표: 길이 ≈ 2, 위(−y)가 앞쪽
   glider(c) {  // 모터 글라이더: 긴 날개 · 몸통 + 가는 꼬리 막대 · T자 꼬리
@@ -6030,9 +6047,106 @@ const VSHAPE = {  // v90 특수 탈것 V-03 (탈것 시안): 위에서 본 배�
     glider(c, t) { c.beginPath(); c.ellipse(0, -.62, .08, .2, 0, 0, Math.PI * 2); c.fill(); const a = (t || 0) / 60; c.save(); c.translate(0, .06); c.rotate(a); c.beginPath(); c.ellipse(0, 0, .3, .05, 0, 0, Math.PI * 2); c.rotate(Math.PI / 2); c.ellipse(0, 0, .3, .05, 0, 0, Math.PI * 2); c.restore(); },
   },
 };
+/* v97 특수 탈것 VS-04 흰 테두리 스티커 (탈것 시안 2): 위에서 본 실사 그림 + 하얀 테두리, 탄 사람은 그리지 않음. 팀 색은 날개 앞 띠 · 프레임 · 탱크 줄로 */
+const VEH2 = (() => {
+const NAT = {pod: "#E9A925", pod2: "#B87912", wing: "#20242A", wing2: "#4A525C", tan: "#C2965E", frame: "#C8352B", frame2: "#7E1C16", tank: "#8E1F1F", tank2: "#3E0B0B",
+  tire: "#151515", tire2: "#3A3A3A", metal: "#C9CDD2", metal2: "#6C737B", seat: "#1E1E1E", glass: "#8EC5E8", helmet: "#2A2A2A", skin: "#E0B48A"};
+function shade(c, x0, x1, a, b, flat) { if (flat) return a; const g = c.createLinearGradient(x0, 0, x1, 0); g.addColorStop(0, b); g.addColorStop(.42, a); g.addColorStop(.58, a); g.addColorStop(1, b); return g; }
+function vshade(c, y0, y1, a, b, flat) { if (flat) return a; const g = c.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, a); g.addColorStop(1, b); return g; }
+function rr2(c, x, y, w, h, r) { c.beginPath(); c.roundRect ? c.roundRect(x, y, w, h, r) : c.rect(x, y, w, h); }
+function rider(c, P, y, face) { if (P.noRider) return;  // 위에서 본 사람: 어깨(팀 색 옷) + 헬멧 (또는 프로필 사진)
+  c.beginPath(); c.ellipse(0, y, .26, .13, 0, 0, Math.PI * 2); c.fillStyle = shade(c, -.26, .26, P.jacket, P.jacket2, P.flat); c.fill(); P.ol && (c.lineWidth = P.lw, c.strokeStyle = P.ol, c.stroke());
+  c.beginPath(); c.ellipse(-.22, y - .12, .05, .1, -.3, 0, Math.PI * 2); c.ellipse(.22, y - .12, .05, .1, .3, 0, Math.PI * 2); c.fillStyle = P.jacket2; c.fill();  // 팔
+  if (face && face.complete && face.naturalWidth) { c.save(); c.beginPath(); c.arc(0, y - .02, .17, 0, Math.PI * 2); c.clip(); c.drawImage(face, -.17, y - .19, .34, .34); c.restore(); c.beginPath(); c.arc(0, y - .02, .17, 0, Math.PI * 2); c.lineWidth = .04; c.strokeStyle = P.jacket; c.stroke(); return; }
+  c.beginPath(); c.arc(0, y - .03, .12, 0, Math.PI * 2); c.fillStyle = vshade(c, y - .15, y + .09, P.helmet2 || "#555", P.helmet, P.flat); c.fill(); P.ol && (c.lineWidth = P.lw, c.strokeStyle = P.ol, c.stroke());
+  if (!P.flat && !P.line) { c.beginPath(); c.ellipse(-.03, y - .08, .05, .03, -.5, 0, Math.PI * 2); c.fillStyle = "rgba(255,255,255,.35)"; c.fill(); }
+}
+const SPR = {
+  glider(c, P, t, face) {  // 배그 모터 글라이더: 노란 3륜 몸체 앞부분 + 긴 날개 + 뒤 프로펠러
+    // 뒷바퀴 덮개 · 엔진 · 프로펠러 (날개 뒤)
+    c.fillStyle = shade(c, -.4, -.28, P.pod, P.pod2, P.flat); rr2(c, -.42, .02, .12, .3, .05); c.fill(); P.ol && (c.lineWidth = P.lw, c.strokeStyle = P.ol, c.stroke());
+    c.fillStyle = shade(c, .3, .42, P.pod, P.pod2, P.flat); rr2(c, .3, .02, .12, .3, .05); c.fill(); P.ol && c.stroke();
+    c.strokeStyle = P.metal2; c.lineWidth = .03; c.beginPath(); c.moveTo(-.3, .17); c.lineTo(.3, .17); c.stroke();
+    c.fillStyle = P.seat; rr2(c, -.1, .02, .2, .3, .05); c.fill();
+    c.save(); c.translate(0, .38); c.beginPath(); c.ellipse(0, 0, .5, .07, 0, 0, Math.PI * 2); c.fillStyle = P.line ? "transparent" : "rgba(210,210,200,.28)"; c.fill(); if (P.line) { c.setLineDash([.05, .05]); c.lineWidth = .02; c.strokeStyle = P.ol; c.stroke(); c.setLineDash([]); }
+    c.rotate((t || 0) / 35); c.fillStyle = P.wing; rr2(c, -.5, -.03, 1, .06, .03); c.fill(); c.restore();
+    // 날개: 가운데 넓고 끝으로 가늘게, 살짝 뒤로 젖힘, 끝 위글렛
+    const wing = () => { c.beginPath(); c.moveTo(0, -.3); c.bezierCurveTo(.6, -.28, 1.3, -.2, 1.72, -.13); c.lineTo(1.74, -.07); c.bezierCurveTo(1.3, -.08, .6, -.07, 0, -.06); c.bezierCurveTo(-.6, -.07, -1.3, -.08, -1.74, -.07); c.lineTo(-1.72, -.13); c.bezierCurveTo(-1.3, -.2, -.6, -.28, 0, -.3); c.closePath(); };
+    wing(); c.fillStyle = P.line ? "rgba(0,0,0,0)" : vshade(c, -.32, -.02, P.wing2, P.wing, P.flat); c.fill();
+    if (!P.flat && !P.line) { c.save(); wing(); c.clip(); c.fillStyle = P.tan; c.globalAlpha = .9; c.beginPath(); c.moveTo(-1.8, -.1); c.bezierCurveTo(-.6, -.11, .6, -.11, 1.8, -.1); c.lineTo(1.8, 0); c.lineTo(-1.8, 0); c.fill();
+      c.globalAlpha = .22; c.fillStyle = "#fff"; c.beginPath(); c.moveTo(-1.6, -.15); c.bezierCurveTo(-.6, -.26, .6, -.26, 1.6, -.15); c.lineTo(1.6, -.125); c.bezierCurveTo(.6, -.235, -.6, -.235, -1.6, -.125); c.fill(); c.restore(); }
+    else if (P.flat) { c.save(); wing(); c.clip(); c.fillStyle = P.tan; c.fillRect(-1.8, -.1, 3.6, .06); c.restore(); }
+    wing(); P.ol && (c.lineWidth = P.lw, c.strokeStyle = P.ol, c.stroke());
+    c.fillStyle = P.wing; for (const sx of [-1, 1]) { c.beginPath(); c.moveTo(sx * 1.7, -.13); c.lineTo(sx * 1.8, -.2); c.lineTo(sx * 1.82, -.06); c.lineTo(sx * 1.72, -.06); c.closePath(); c.fill(); P.ol && c.stroke(); }
+    if (P.accent) { c.save(); wing(); c.clip(); c.fillStyle = P.accent; c.fillRect(-1.8, -.31, 3.6, .04); c.restore(); }
+    // 날개 지지대 (몸체 → 날개)
+    c.strokeStyle = P.line ? P.ol : "rgba(15,15,15,.75)"; c.lineWidth = .018; c.beginPath(); c.moveTo(-.12, -.45); c.lineTo(-.95, -.2); c.moveTo(.12, -.45); c.lineTo(.95, -.2); c.moveTo(-.12, .1); c.lineTo(-.85, -.1); c.moveTo(.12, .1); c.lineTo(.85, -.1); c.stroke();
+    // 몸체 앞부분 (날개 앞으로 나온 노란 코)
+    const pod = () => { c.beginPath(); c.moveTo(0, -1.0); c.bezierCurveTo(.2, -.98, .24, -.72, .22, -.36); c.lineTo(-.22, -.36); c.bezierCurveTo(-.24, -.72, -.2, -.98, 0, -1.0); c.closePath(); };
+    pod(); c.fillStyle = shade(c, -.24, .24, P.pod, P.pod2, P.flat); if (!P.line) c.fill(); P.ol && (c.lineWidth = P.lw, c.strokeStyle = P.ol, c.stroke());
+    c.beginPath(); c.moveTo(0, -.78); c.bezierCurveTo(.14, -.76, .16, -.62, .15, -.52); c.lineTo(-.15, -.52); c.bezierCurveTo(-.16, -.62, -.14, -.76, 0, -.78); c.fillStyle = P.line ? "rgba(0,0,0,0)" : vshade(c, -.78, -.52, "#D8F0FF", P.glass, P.flat); c.fill(); P.ol && c.stroke();  // 앞 유리
+    c.fillStyle = P.tire; c.beginPath(); c.ellipse(0, -1.0, .045, .07, 0, 0, Math.PI * 2); c.fill();  // 앞바퀴 끝
+    rider(c, P, -.42, face);
+  },
+  bike(c, P, t, face) {  // 산악자전거: 굵은 타이어 두 개 · 빨간 프레임 · 넓은 핸들 · 안장
+    const tire = y => { rr2(c, -.07, y - .34, .14, .68, .07); c.fillStyle = shade(c, -.07, .07, P.tire2, P.tire, P.flat); if (!P.line) c.fill(); P.ol && (c.lineWidth = P.lw, c.strokeStyle = P.ol, c.stroke());
+      if (!P.flat && !P.line) { c.strokeStyle = "rgba(255,255,255,.12)"; c.lineWidth = .02; for (let k = -.3; k <= .3; k += .06) { c.beginPath(); c.moveTo(-.06, y + k); c.lineTo(.06, y + k + .02); c.stroke(); } } };
+    tire(-.64); tire(.64);
+    c.fillStyle = P.line ? "rgba(0,0,0,0)" : shade(c, -.05, .05, P.frame, P.frame2, P.flat); rr2(c, -.045, -.5, .09, .95, .04); c.fill(); P.ol && c.stroke();  // 프레임
+    c.fillStyle = P.metal2; rr2(c, -.03, .35, .06, .3, .03); c.fill();  // 뒤 포크
+    c.beginPath(); c.arc(0, .12, .07, 0, Math.PI * 2); c.fillStyle = P.metal; c.fill();  // 크랭크
+    c.fillStyle = P.tire; rr2(c, -.17, .1, .08, .04, .02); c.fill(); rr2(c, .09, .1, .08, .04, .02); c.fill();  // 페달
+    c.strokeStyle = P.line ? P.ol : P.tire; c.lineCap = "round"; c.lineWidth = .05; c.beginPath(); c.moveTo(-.4, -.5); c.quadraticCurveTo(0, -.56, .4, -.5); c.stroke();  // 핸들
+    c.fillStyle = P.tire; for (const sx of [-1, 1]) { rr2(c, sx * .4 - .05, -.54, .1, .08, .03); c.fill(); }
+    c.beginPath(); c.ellipse(0, .3, .07, .16, 0, 0, Math.PI * 2); c.fillStyle = P.seat; if (!P.line) c.fill(); P.ol && c.stroke();  // 안장
+    if (P.accent) { c.fillStyle = P.accent; rr2(c, -.045, -.3, .09, .2, .03); c.fill(); }
+    rider(c, P, .1, face); if (!P.noRider) { c.strokeStyle = P.jacket2; c.lineWidth = .05; c.beginPath(); c.moveTo(-.22, -.18); c.lineTo(-.38, -.48); c.moveTo(.22, -.18); c.lineTo(.38, -.48); c.stroke(); c.fillStyle = "#151515"; c.beginPath(); c.arc(-.38, -.49, .045, 0, Math.PI * 2); c.arc(.38, -.49, .045, 0, Math.PI * 2); c.fill(); }  // 팔 → 핸들 + 장갑
+  },
+  moto(c, P, t, face) {  // 오토바이: 굵은 앞뒤 바퀴 · 연료 탱크 · 긴 안장 · 배기관 · 넓은 핸들과 거울
+    const tire = (y, w, h) => { rr2(c, -w / 2, y - h / 2, w, h, w / 2); c.fillStyle = shade(c, -w / 2, w / 2, P.tire2, P.tire, P.flat); if (!P.line) c.fill(); P.ol && (c.lineWidth = P.lw, c.strokeStyle = P.ol, c.stroke()); };
+    tire(-.72, .17, .56); tire(.7, .22, .6);
+    c.fillStyle = P.metal; rr2(c, .12, .05, .07, .7, .035); if (!P.line) c.fill(); P.ol && c.stroke();  // 배기관
+    c.fillStyle = P.metal2; rr2(c, .1, .2, .06, .12, .02); c.fill();
+    c.beginPath(); c.moveTo(-.16, .45); c.lineTo(.16, .45); c.lineTo(.12, .9); c.lineTo(-.12, .9); c.closePath(); c.fillStyle = shade(c, -.16, .16, P.tank, P.tank2, P.flat); if (!P.line) c.fill(); P.ol && c.stroke();  // 뒤 펜더
+    c.fillStyle = "#E23A2A"; rr2(c, -.06, .86, .12, .05, .02); c.fill();  // 뒤 등
+    c.beginPath(); c.moveTo(0, -.05); c.lineTo(.17, -.02); c.lineTo(.15, .5); c.lineTo(-.15, .5); c.lineTo(-.17, -.02); c.closePath(); c.fillStyle = vshade(c, -.05, .5, "#3A3A3A", P.seat, P.flat); if (!P.line) c.fill(); P.ol && c.stroke();  // 안장
+    c.beginPath(); c.moveTo(0, -.52); c.bezierCurveTo(.22, -.5, .25, -.2, .2, -.03); c.lineTo(-.2, -.03); c.bezierCurveTo(-.25, -.2, -.22, -.5, 0, -.52); c.closePath();  // 연료 탱크
+    c.fillStyle = shade(c, -.25, .25, P.tank, P.tank2, P.flat); if (!P.line) c.fill(); P.ol && c.stroke();
+    if (!P.flat && !P.line) { c.beginPath(); c.ellipse(-.07, -.32, .05, .13, -.1, 0, Math.PI * 2); c.fillStyle = "rgba(255,255,255,.28)"; c.fill(); }
+    if (P.accent) { c.fillStyle = P.accent; rr2(c, -.03, -.5, .06, .46, .03); c.fill(); }
+    c.fillStyle = P.metal2; rr2(c, -.1, -.66, .2, .14, .04); c.fill();  // 계기판
+    c.beginPath(); c.arc(0, -.74, .07, 0, Math.PI * 2); c.fillStyle = P.line ? "rgba(0,0,0,0)" : "#FFF3C4"; c.fill(); P.ol && c.stroke();  // 전조등
+    c.strokeStyle = P.line ? P.ol : "#1A1A1A"; c.lineCap = "round"; c.lineWidth = .055; c.beginPath(); c.moveTo(-.46, -.6); c.quadraticCurveTo(0, -.66, .46, -.6); c.stroke();  // 핸들
+    c.lineWidth = .02; c.strokeStyle = P.metal2; c.beginPath(); c.moveTo(-.3, -.62); c.lineTo(-.4, -.8); c.moveTo(.3, -.62); c.lineTo(.4, -.8); c.stroke();
+    c.fillStyle = P.metal; for (const sx of [-1, 1]) { c.beginPath(); c.ellipse(sx * .42, -.83, .07, .04, 0, 0, Math.PI * 2); c.fill(); }  // 거울
+    rider(c, P, .18, face); if (!P.noRider) { c.strokeStyle = P.jacket2; c.lineWidth = .06; c.lineCap = "round"; c.beginPath(); c.moveTo(-.22, .05); c.lineTo(-.42, -.56); c.moveTo(.22, .05); c.lineTo(.42, -.56); c.stroke(); c.fillStyle = "#151515"; c.beginPath(); c.arc(-.42, -.58, .05, 0, Math.PI * 2); c.arc(.42, -.58, .05, 0, Math.PI * 2); c.fill(); }
+  },
+};
+const SPAN = {glider: .8, bike: .85, moto: .9, boat: 1};  // 크기 맞춤 (글라이더 날개가 가장 넓음)
+function teamPal(col, base) { return {...NAT, jacket: col, jacket2: mix(col, "#000000", .35), ...base}; }
+function mix(a, b, k) { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)), A = p(a), B = p(b); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, "0")).join(""); }
+function sprite(c, kind, x, y, r, col, ang, now, face, P, opt = {}) {
+  const s = r * 1.5 * SPAN[kind];
+  c.save(); c.translate(x, y); c.rotate(ang + Math.PI / 2); c.scale(s, s); c.lineJoin = "round"; c.lineCap = "round";
+  if (opt.pre) opt.pre(c, s);
+  SPR[kind](c, P, now, opt.face ? face : null);
+  c.restore();
+}
+function shadowOf(c, kind, x, y, r, ang, now, dx, dy, a, blur) {  // 같은 모양을 검게 칠해 그림자로
+  const P = {...NAT, pod: "#000", pod2: "#000", wing: "#000", wing2: "#000", tan: "#000", frame: "#000", frame2: "#000", tank: "#000", tank2: "#000", tire: "#000", tire2: "#000", metal: "#000", metal2: "#000", seat: "#000", glass: "#000", helmet: "#000", helmet2: "#000", jacket: "#000", jacket2: "#000", flat: true};
+  c.save(); c.globalAlpha = a; if (blur) c.filter = `blur(${blur}px)`; sprite(c, kind, x + dx, y + dy, r, "#000000", ang, now, null, P); c.restore();
+}
+
+  const WHITE = {...NAT}; for (const k in WHITE) WHITE[k] = "#fff"; Object.assign(WHITE, {flat: true, ol: "#fff", lw: .13, noRider: true});
+  return function draw(c, kind, x, y, r, col, ang, now) {
+    c.save(); c.shadowColor = "rgba(0,0,0,.6)"; c.shadowBlur = 4; sprite(c, kind, x, y, r, col, ang, now, null, WHITE); c.restore();
+    sprite(c, kind, x, y, r, col, ang, now, null, {...NAT, jacket: col, jacket2: col, noRider: true, accent: col});
+  };
+})();
 function drawVeh(ctx, x, y, r, col, vid, headFn, now) {  // 일반 차는 핸들, 특수 탈것은 배지 없는 실루엣 (가는 방향으로 돌아감)
   const k = vehKind(vid); if (k === "car") return drawWheel(ctx, x, y, r, col);
   const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, s = r * 1.45;
+  if (k !== "boat") return VEH2(ctx, k, x, y, r * (k === "glider" ? 1.2 : 1.6), col, ang, now);  // v97 글라이더 · 자전거 · 오토바이 = VS-04
   ctx.save(); ctx.translate(x, y); ctx.rotate(ang + Math.PI / 2); ctx.scale(s, s); ctx.lineJoin = "round";
   ctx.shadowColor = "rgba(0,0,0,.5)"; ctx.shadowBlur = 4; ctx.shadowOffsetY = 2 / s;
   VSHAPE[k](ctx); ctx.lineWidth = 2.4 / s; ctx.strokeStyle = "#14170F"; ctx.stroke(); ctx.fillStyle = col; ctx.fill();
@@ -6960,11 +7074,12 @@ $("#settingsForm").addEventListener("submit", async e => {
   } else if (current?.result) await openDay(current.result.date);
 });
 
-/* '4인 판만'은 켜 둔 상태를 기억해 둠 */
-try { $("#optFour").checked = localStorage.getItem("ddc_four") === "1"; } catch {}
-$("#optFour").onchange = () => { try { localStorage.setItem("ddc_four", $("#optFour").checked ? "1" : "0"); } catch {} };
-try { $("#optRanked").checked = localStorage.getItem("ddc_ranked") === "1"; } catch {}
-$("#optRanked").onchange = () => { try { localStorage.setItem("ddc_ranked", $("#optRanked").checked ? "1" : "0"); } catch {} };
+/* 옵션 6개 모두 켜 둔 상태를 기억해 둠 (v95: 예전엔 4인·랭크만 기억해서 다시 켜면 4/6으로 보였음) */
+for (const [id, key, def] of [["optRefresh", "ddc_opt_refresh", 1], ["optFour", "ddc_four", 0], ["optRanked", "ddc_ranked", 0], ["optSave", "ddc_opt_save", 1], ["optShow", "ddc_opt_show", 1], ["optSound", "ddc_opt_sound", 1]]) {
+  try { const v = localStorage.getItem(key); $("#" + id).checked = v == null ? !!def : v === "1"; } catch {}
+  $("#" + id).addEventListener("change", () => { try { localStorage.setItem(key, $("#" + id).checked ? "1" : "0"); } catch {} });
+}
+try { window.paintOptCount && paintOptCount(); } catch {}
 $("#btnQuit").onclick = async () => {
   if (!confirm("프로그램을 종료할까요?")) return;
   try { await api("api/shutdown", {}); } catch {}
