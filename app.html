@@ -3519,6 +3519,22 @@ function rpZonePhase(t) {  // 자기장 페이즈: 다음 자기장(흰 원)이 
 function rpFightAt(t) { return (rp.fights || []).find(f => t >= f.t0 && t <= f.t1) || null; }
 function rpUpcomingFight(t) { return (rp.fights || []).find(f => f.t0 > t) || null; }  // (이름 주의: rpNextFight는 '다음 교전' 버튼)
 function rpFixEmergency(R) {  // 비상호출: 태워 간 순간부터 바로 비행기 (차량 탑승으로 보이지 않게)
+  if (!R._fakeRecall) {  // v114 예전 리플레이: 비상호출 중 죽은 몸이 떨어진 착지를 블루칩 복귀로 잘못 적은 경우 → 사망으로 되돌림
+    R._fakeRecall = true;
+    for (const p of R.players) {
+      const mine = R.events.filter(e => e.who === p.nick);
+      for (const rc of mine.filter(e => e.k === "recall")) {
+        const dd = mine.filter(e => e.k === "died" && e.t < rc.t).pop(); if (!dd) continue;
+        const brd = mine.some(e => e.k === "board" && e.t > dd.t && e.t < rc.t);
+        if (brd || rc.t - dd.t > 60) continue;
+        R.events = R.events.filter(e => e !== rc);
+        const later = mine.some(e => e.t > rc.t && (e.k === "died"));
+        if (p.death == null && !later) p.death = dd.t;
+        p.track = p.track.filter(q => !(q[0] > dd.t && q[0] <= (later ? rc.t + .01 : 1e9)));
+        p.air = (p.air || []).filter(a => !(a.kind === "recall" && a.t0 > dd.t - 1 && a.t0 < rc.t));
+      }
+    }
+  }
   for (const p of R.players) {
     p.veh = (p.veh || []).filter(v => !/EmergencyPickup|Aircraft/i.test(v[3] || ""));
     for (const sg of p.air || []) {
@@ -3572,7 +3588,7 @@ function mapRow(o, code, z, y, now) {
   }
   return row;
 }
-const MAP_SHIFT = {Baltic_Main: [.0035, 0], Erangel_Main: [.0035, 0]};  // v112 에란겔 지도 그림이 살짝 왼쪽에 있어서 오른쪽으로 (맵 크기 비율, +면 오른쪽/아래)
+const MAP_SHIFT = {Baltic_Main: [.0035, -.00123], Erangel_Main: [.0035, -.00123]};  // v114 위로 10m  // v112 에란겔 지도 그림이 살짝 왼쪽에 있어서 오른쪽으로 (맵 크기 비율, +면 오른쪽/아래)
 function mapShift(code) { return MAP_SHIFT[code] || [0, 0]; }
 function drawMapTiles(ctx, code, X, Y, S, W, H, dpr, base, now) {
   const o = mapTiles(code), m = o.meta; if (!m) return;
