@@ -1855,7 +1855,8 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .mix-panel[hidden]{display:none}.mix-panel>b{font-size:14px}.mix-panel>small{color:var(--dust);font-size:11.5px;margin-top:-6px}
 .mix-panel label{display:grid;grid-template-columns:64px 1fr 40px;align-items:center;gap:8px;font-size:13px;color:var(--dust)}
 .mix-panel input{accent-color:var(--accent);width:100%}.mix-panel em{font-style:normal;color:var(--bone);text-align:right;font-variant-numeric:tabular-nums;font-size:12.5px}
-#btnMix[aria-expanded=true]{color:var(--accent);border-color:var(--accent)}
+#btnMix[aria-expanded=true],#rpMix[aria-expanded=true]{color:var(--accent);border-color:var(--accent)}
+.rp-mix .mix-panel{z-index:80;text-align:left;font-weight:400;position:fixed;top:58px;right:max(8px,env(safe-area-inset-right,0px));left:auto}.rp-mix .mix-panel b{font-weight:700}
 .controls.v86{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin-bottom:22px}
 .ctl-row{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap}
 .dbig{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
@@ -1916,6 +1917,9 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 /* ───── v89 AW-08 스포트라이트 무대: 어두운 무대 + 1위에게만 조명, 2~4위는 객석 (상자 크기는 예전과 같음) ───── */
 .hero{background:radial-gradient(ellipse 36% 62% at 50% 0%,rgba(255,236,180,.26),transparent 72%),radial-gradient(ellipse 60% 26% at 50% 64%,rgba(242,169,0,.10),transparent 70%),#121410;border:1px solid #2b2f22}
 .hero-bg{opacity:.12}
+/* v103 BG-07 작전 지도: 오늘 맵 사진을 더 선명하게 + 노란 좌표 격자 (2~4위 카드는 그대로) */
+.hero .hero-bg{opacity:.42;filter:saturate(.7) contrast(1.1)}
+.hero::after{background:repeating-linear-gradient(0deg,rgba(242,169,0,.10) 0 1px,transparent 1px 80px),repeating-linear-gradient(90deg,rgba(242,169,0,.10) 0 1px,transparent 1px 80px),radial-gradient(ellipse at 50% 38%,rgba(18,20,16,.45),rgba(18,20,16,.88) 75%)}
 .plaque{background:none}  /* v90 1위 두 줄 노란 테두리는 예전처럼 */
 .plaque>div{background:radial-gradient(ellipse 55% 85% at 50% 0%,rgba(255,236,180,.14),transparent 75%);box-shadow:none}
 .plaque .av-lg{filter:drop-shadow(0 0 22px rgba(242,179,61,.45))}
@@ -2060,7 +2064,13 @@ html.share-mode body::before{display:none}
 <div class="replay hidden" id="replay" role="dialog" aria-modal="true" aria-label="리플레이">
   <div class="rp-top">
     <div><b id="rpTitle">리플레이</b><span id="rpSub"></span></div>
-    <div class="btns"><button class="btn ic" id="rpSnd" type="button" aria-pressed="true" title="효과음 켜기·끄기" aria-label="효과음"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="spk" d="M3 8h3l4-3v10l-4-3H3z"/><path class="on" d="M13 7.5a3.5 3.5 0 0 1 0 5M15.2 5.5a6.4 6.4 0 0 1 0 9"/><path class="off" d="m13 8 4 4m0-4-4 4"/></svg></button><button class="btn ic" id="rpPen" type="button" aria-pressed="false" title="전술 펜 (P): 지도 위에 그리기 · 화살표 · 지우개" aria-label="전술 펜"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M13.5 3.5l3 3L7 16H4v-3z"/><path d="M11.5 5.5l3 3"/></svg></button><button class="btn ic" id="rpCinema" type="button" title="시네마 모드 (C): 버튼을 모두 숨기고 영화처럼 보기" aria-label="시네마 모드"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="4.5" width="15" height="11" rx="1.5"/><path d="M2.5 7.5h15M2.5 12.5h15"/></svg></button><button class="btn" id="rpView">전체 지도 보기</button><button class="btn" id="rpClose">닫기</button></div>
+    <div class="btns"><button class="btn ic" id="rpSnd" type="button" aria-pressed="true" title="효과음 켜기·끄기" aria-label="효과음"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="spk" d="M3 8h3l4-3v10l-4-3H3z"/><path class="on" d="M13 7.5a3.5 3.5 0 0 1 0 5M15.2 5.5a6.4 6.4 0 0 1 0 9"/><path class="off" d="m13 8 4 4m0-4-4 4"/></svg></button><span class="mix-wrap rp-mix"><button class="btn ic mix-btn" id="rpMix" type="button" aria-label="소리 크기" title="소리 크기" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 3v14M10 3v14M16 3v14"/><circle cx="4" cy="12" r="1.8"/><circle cx="10" cy="7" r="1.8"/><circle cx="16" cy="13" r="1.8"/></svg></button><div class="mix-panel" role="dialog" aria-label="소리 크기" hidden>
+          <b>소리 크기</b><small>이 기기에만 저장돼요</small>
+          <label><span>전체</span><input type="range" min="0" max="100" step="5" data-mix="vol"><em></em></label>
+          <label><span>지도 소리</span><input type="range" min="0" max="150" step="5" data-mix="rpVolW"><em></em></label>
+          <label><span>알림 소리</span><input type="range" min="0" max="150" step="5" data-mix="rpVolA"><em></em></label>
+          <label><span>배경 소리</span><input type="range" min="0" max="150" step="5" data-mix="rpVolB"><em></em></label>
+        </div></span><button class="btn ic" id="rpPen" type="button" aria-pressed="false" title="전술 펜 (P): 지도 위에 그리기 · 화살표 · 지우개" aria-label="전술 펜"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M13.5 3.5l3 3L7 16H4v-3z"/><path d="M11.5 5.5l3 3"/></svg></button><button class="btn ic" id="rpCinema" type="button" title="시네마 모드 (C): 버튼을 모두 숨기고 영화처럼 보기" aria-label="시네마 모드"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="4.5" width="15" height="11" rx="1.5"/><path d="M2.5 7.5h15M2.5 12.5h15"/></svg></button><button class="btn" id="rpView">전체 지도 보기</button><button class="btn" id="rpClose">닫기</button></div>
   </div>
   <div class="rp-body">
     <div class="rp-stage">
@@ -3596,7 +3606,7 @@ async function openReplay(id) {
   try { R = await getReplayData(id); }
   catch (e) { $("#rpLoading").textContent = e.message; return; }
   if ($("#replay").classList.contains("hidden")) return;
-  { const g = (current?.result?.games || []).find(x => x.id === id); if (g) R._dayDmg = Object.fromEntries(g.players.map(q => [q.nick, q.damage])); }  // 예전 리플레이: 결과표 딜량은 그날 기록에서
+  { const g = (current?.result?.games || []).find(x => x.id === id); if (g) { R._dayDmg = Object.fromEntries(g.players.map(q => [q.nick, q.damage])); R._dayKills = Object.fromEntries(g.players.map(q => [q.nick, q.kills])); } }  // v103 킬도 공식 기록 (경기 목록 MVP와 같게)  // 예전 리플레이: 결과표 딜량은 그날 기록에서
   rpSetup(R);
   const firstLand = Math.min(...R.players.map(p => p.landed ?? 0));
   rp.t = Math.max(0, firstLand - 6); rp.cam = {x: .5, y: .5, s: 1}; rp.follow = true;
@@ -4061,7 +4071,7 @@ function rpSummary(R) {  // 판 요약 숫자 계산
     const end = p.death ?? (deathE ? deathE.t : R.duration);
     const land = (p.air || []).find(a => a.kind === "start"); const t0 = land ? (land.t1 ?? 0) : 0;
     const [walk, car] = segDist(p.track || [], 0, end, t => (p.veh || []).some(v => t >= v[0] && t <= v[1]));
-    return {p, alive: end, kills: R.events.filter(e => e.k === "kill" && e.by === p.nick).length, knocks: R.events.filter(e => e.k === "knock" && e.by === p.nick).length,
+    return {p, alive: end, kills: (R._dayKills || {})[p.nick] ?? R.events.filter(e => e.k === "kill" && e.by === p.nick).length, knocks: R.events.filter(e => e.k === "knock" && e.by === p.nick).length,
       downed: R.events.filter(e => e.k === "downed" && e.who === p.nick).length, walk, car, t0};
   });
   const fights = (rp.fights || []).map(f => {
@@ -4079,7 +4089,7 @@ function rpShowSummary() {  // 판 결과표 (RS-01 배그 결과창): 왼쪽 �
   const km = m => m >= 1000 ? (m / 1000).toFixed(1) + "km" : Math.round(m) + "m";
   const dmgOf = r => r.p.dmg ?? (R._dayDmg || {})[r.p.nick];  // 예전 리플레이엔 팀원별 딜량이 없음 → 그날 기록에서
   const hasDmg = S.rows.some(r => dmgOf(r) != null), td = S.rows.reduce((a, r) => a + (dmgOf(r) || 0), 0);
-  const mvp = S.rows.slice().sort((a, b) => ((dmgOf(b) || 0) + b.kills * 100 + b.knocks * 40) - ((dmgOf(a) || 0) + a.kills * 100 + a.knocks * 40))[0];
+  const mvp = S.rows.slice().sort((a, b) => b.kills - a.kills || (dmgOf(b) || 0) - (dmgOf(a) || 0))[0];  // v103 경기 목록 왕관과 같은 기준 (킬 → 딜)
   const av = r => { const src = pimg(r.p); return src ? `<img src="${src}" alt="">` : `<span class="noav">${esc((r.p.name || "?").slice(0, 1))}</span>`; };
   el.innerHTML = `<div class="rs1"><button class="x" aria-label="닫기">×</button>
     <div class="side"><div class="rk">${R.rank === 1 ? `<img class="rk-chick" src="${CHICK_IMG_ALT}" alt="치킨">` : "#" + R.rank}<span>/${R.teams}</span></div><div class="ttl">${R.rank === 1 ? "치킨! · " : ""}${esc(R.map_name)}</div><div class="sub">${esc(R.time)} 시작 · ${esc(R.mode)}</div>
@@ -7066,16 +7076,18 @@ $("#btnOpenReplayImgs").onclick = () => api("api/open_images", {replay: true}).c
 $("#btnOpenSounds").onclick = () => api("api/open_images", {sounds: true}).catch(e => alert(e.message));
 $("#vol").oninput = e => { const v = e.target.value / 100; setVolume(v); $("#volTxt").textContent = e.target.value + "%"; };
 $("#vol").onchange = () => { ensureAudio(); sfx.ding(659.25); };
-(() => {  // v99 소리 크기 창: 설정 화면의 막대(#vol · #rpVolW · #rpVolA · #rpVolB)를 그대로 움직여서 저장·적용도 같게
-  const P = $("#mixPanel"), btn = $("#btnMix"), ins = [...P.querySelectorAll("[data-mix]")];
+(() => {  // v99 소리 크기 창 (v102: 리플레이 안에도 같은 창): 설정 화면의 막대(#vol · #rpVolW · #rpVolA · #rpVolB)를 그대로 움직여서 저장·적용도 같게
   const val = id => id === "vol" ? Math.round(volume * 100) : Math.round(RPV[{rpVolW: "world", rpVolA: "alert", rpVolB: "amb"}[id]] * 100);
-  const paint = () => ins.forEach(i => { i.value = val(i.dataset.mix); i.nextElementSibling.textContent = i.value + "%"; });
-  ins.forEach(i => { i.oninput = () => { const t = $("#" + i.dataset.mix); t.value = i.value; t.dispatchEvent(new Event("input")); if (i.dataset.mix === "vol") try { localStorage.setItem("ddc_vol", String(i.value / 100)); } catch {} i.nextElementSibling.textContent = i.value + "%"; };
-    i.onchange = () => { if (i.dataset.mix === "vol") $("#vol").dispatchEvent(new Event("change")); }; });
-  const open = o => { P.hidden = !o; btn.setAttribute("aria-expanded", String(o)); if (o) paint(); };
-  btn.onclick = e => { e.stopPropagation(); open(P.hidden); };
-  document.addEventListener("click", e => { if (!e.target.closest(".mix-wrap")) open(false); });
-  document.addEventListener("keydown", e => { if (e.key === "Escape") open(false); });
+  const wraps = [...document.querySelectorAll(".mix-wrap")];
+  const open = (w, o) => { const P = w.querySelector(".mix-panel"), btn = w.querySelector("button"); P.hidden = !o; btn.setAttribute("aria-expanded", String(o));
+    if (o) P.querySelectorAll("[data-mix]").forEach(i => { i.value = val(i.dataset.mix); i.nextElementSibling.textContent = i.value + "%"; }); };
+  wraps.forEach(w => {
+    w.querySelectorAll("[data-mix]").forEach(i => { i.oninput = () => { const t = $("#" + i.dataset.mix); t.value = i.value; t.dispatchEvent(new Event("input")); i.nextElementSibling.textContent = i.value + "%"; if (i.dataset.mix === "rpVolW" && audio) try { rpWorldBus().gain.value = RPV.world; } catch {} };
+      i.onchange = () => { if (i.dataset.mix === "vol") $("#vol").dispatchEvent(new Event("change")); }; });
+    w.querySelector("button").onclick = e => { e.stopPropagation(); open(w, w.querySelector(".mix-panel").hidden); };
+  });
+  document.addEventListener("click", e => wraps.forEach(w => { if (!w.contains(e.target)) open(w, false); }));
+  document.addEventListener("keydown", e => { if (e.key !== "Escape") return; const on = wraps.filter(w => !w.querySelector(".mix-panel").hidden); if (on.length) { on.forEach(w => open(w, false)); e.stopImmediatePropagation(); } }, true);
 })();
 for (const [id, k, key] of [["rpVolW", "world", "ddc_rpvol_w"], ["rpVolA", "alert", "ddc_rpvol_a"], ["rpVolB", "amb", "ddc_rpvol_b"]]) {  // v83 리플레이 효과음 크기 (이 기기에 저장)
   $("#" + id).oninput = e => { RPV[k] = e.target.value / 100; $("#" + id + "Txt").textContent = e.target.value + "%"; try { localStorage.setItem(key, e.target.value); } catch {}
