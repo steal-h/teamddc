@@ -1867,7 +1867,7 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .dlabel b{font:400 34px/1.05 var(--display);color:var(--bone)}.dlabel small{font-size:14px;font-weight:600;color:var(--dust)}
 .controls.v86 #date{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
 /* v106 날짜와 달력 아이콘을 버튼 하나로 */
-.controls.v86 .dp-wrap{border:1px solid var(--line);border-radius:10px;padding:6px 14px 6px 16px;background:rgba(0,0,0,.12);transition:border-color .15s}
+.controls.v86 .dp-wrap{border:1px solid var(--line);border-radius:10px;padding:12px 18px 12px 20px;align-items:center;background:rgba(0,0,0,.12);transition:border-color .15s}
 .controls.v86 .dp-wrap:hover{border-color:var(--accent)}
 .dlabel .dico{width:20px;height:20px;fill:none;stroke:var(--dust);stroke-width:1.7;stroke-linecap:round;align-self:center;margin-left:4px}
 .controls.v86 .dp-wrap:hover .dico{stroke:var(--accent)}
@@ -1924,7 +1924,7 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 .hero{background:radial-gradient(ellipse 36% 62% at 50% 0%,rgba(255,236,180,.26),transparent 72%),radial-gradient(ellipse 60% 26% at 50% 64%,rgba(242,169,0,.10),transparent 70%),#121410;border:1px solid #2b2f22}
 .hero-bg{opacity:.12}
 /* v103 BG-07 작전 지도: 오늘 맵 사진을 더 선명하게 + 노란 좌표 격자 (2~4위 카드는 그대로) */
-.hero .hero-bg{opacity:.3;filter:saturate(.65) contrast(1.05)}
+.hero .hero-bg{opacity:.42;filter:saturate(.7) contrast(1.1)}
 .hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(242,169,0,.07) 0 1px,transparent 1px 80px),repeating-linear-gradient(90deg,rgba(242,169,0,.07) 0 1px,transparent 1px 80px);}  /* v104 지도·격자가 아래 2~4위 쪽으로 자연스럽게 사라지게 */
 .hero::after{background:radial-gradient(ellipse at 50% 38%,rgba(38,43,30,.35),rgba(43,48,34,.86) 78%)}
 /* v105 검정 무대 → 국방색 무대: 페이지 바탕(올리브)과 자연스럽게 이어지게, 스포트라이트는 그대로 */
@@ -1943,11 +1943,14 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 /* v100 2·3위 명암: 2위 은빛, 3위 동빛이 위에서 은은하게 */
 .medal-card.r2:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(200,205,211,.16),transparent 70%),linear-gradient(180deg,#262a22,#1c1f17);border-color:rgba(200,205,211,.45)}
 /* v106 점수 카드: 예전처럼 진한 바탕 (반투명이라 아래 작전 지도가 은은하게 비침), 2~4위도 1위처럼 지도 위에 */
-.plaque>div{background:radial-gradient(ellipse 55% 85% at 50% 0%,rgba(255,236,180,.12),transparent 75%),rgba(16,18,13,.78)!important}
-.medal-card{background:rgba(16,18,13,.78)!important;backdrop-filter:blur(1px)}
-.medal-card.r2:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(200,205,211,.16),transparent 70%),rgba(16,18,13,.78)!important}
-.medal-card.worst{background:linear-gradient(180deg,rgba(224,83,47,.2),rgba(16,18,13,.8))!important}
-.medal-card.r3:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(196,123,69,.16),transparent 70%),rgba(16,18,13,.78)!important;border-color:rgba(196,123,69,.45)}  /* v90 2·3위 회색 테두리 */
+.plaque>div{background:radial-gradient(ellipse 55% 85% at 50% 0%,rgba(255,236,180,.14),transparent 75%),rgba(16,18,13,.38)!important}  /* v107 BG-07: 카드 안으로도 작전 지도·격자가 비침 */
+.plaque .spot-st b{text-shadow:0 2px 12px rgba(0,0,0,.6)}.spot-sub,.plaque .award{text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.rank1{font:400 28px/1 var(--num)!important;color:#F2B33D!important;letter-spacing:.06em;text-shadow:0 0 14px rgba(242,179,61,.45);margin-top:2px}
+@media (max-width:620px),(orientation:landscape) and (max-height:500px){.plaque>div{position:relative}.rank1{position:absolute;top:10px;right:12px;font-size:18px;margin:0}}
+.medal-card{background:rgba(16,18,13,.5)!important;backdrop-filter:blur(1px)}
+.medal-card.r2:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(200,205,211,.16),transparent 70%),rgba(16,18,13,.5)!important}
+.medal-card.worst{background:linear-gradient(180deg,rgba(224,83,47,.22),rgba(16,18,13,.55))!important}
+.medal-card.r3:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(196,123,69,.16),transparent 70%),rgba(16,18,13,.5)!important;border-color:rgba(196,123,69,.45)}  /* v90 2·3위 회색 테두리 */
 .medal-card.worst{background:linear-gradient(180deg,rgba(224,83,47,.16),#1c1f17 70%);border-color:rgba(224,83,47,.6)}
 @media (max-width:620px){.spot-st{gap:12px;justify-content:flex-start}.plaque .spot-st b{font-size:40px}.spot-st small{font-size:11px}.spot-sub{justify-content:flex-start;gap:10px;font-size:12px;grid-column:2}.medals::before{left:-10px;right:-10px}}
 @media (orientation:landscape) and (max-height:500px){.spot-st{justify-content:flex-start;gap:18px}.plaque .spot-st b{font-size:36px}.spot-sub{justify-content:flex-start;grid-column:2}}
@@ -2835,6 +2838,7 @@ function renderDay(r, report, reveal) {
     <div class="${reveal ? "reveal" : ""}">
       <div class="plaque"><div>
         ${avatar(first, "lg") || trophy()}
+        <div class="rank1">1위</div>
         <div class="award">최우수 플레이어</div>
         <div class="name">${esc(first.name)}</div>
         <div class="line spot-st"><span><b>${sc(first.total)}</b><small>총점</small></span></div>
