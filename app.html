@@ -4269,6 +4269,12 @@ function rpUpdatePip(now, dt) {
     if (P.cam) rp.cam = {...P.cam};
     [P.main, P.sub] = [P.sub, []]; P.swapAt = now; off(); P.cam = null; rpWipe();
   }
+  if (G.length < 2 && P.on && P.cam) {  // v101 보조 화면이 꺼지기 전 몇 초 동안 멈춘 그림이 되지 않게: 보조 쪽 팀원을 계속 따라감
+    const qs = P.sub.map(n => R.players.find(p => p.nick === n)).filter(p => p && statusAt(p, rp.t) !== "dead").map(p => posAt(p, rp.t)).filter(Boolean);
+    if (qs.length) { const xs = qs.map(q => q[0]), ys = qs.map(q => q[1]), tx = (Math.min(...xs) + Math.max(...xs)) / 2, ty = (Math.min(...ys) + Math.max(...ys)) / 2, k = Math.min(1, dt * 2.4);
+      P.cam.x += (tx - P.cam.x) * k; P.cam.y += (ty - P.cam.y) * k; }
+  }
+  if (P.cam && !(isFinite(P.cam.x) && isFinite(P.cam.y) && isFinite(P.cam.s))) P.cam = null;  // 계산이 깨지면 새로
   if (G.length < 2) {
     if (P.on && !(P.sub.length && P.sub.some(n => R.players.some(p => p.nick === n && statusAt(p, rp.t) !== "dead")))) off();  // 보조 쪽이 모두 죽음 → 바로 끔
     else if (P.on) { P.leave = P.leave || now; if (now - P.leave > C.pip_close_s * 1000 && now - P.since > C.pip_min_s * 1000) off(); }
@@ -4878,9 +4884,9 @@ function rpDraw(dt, now, view) {
         continue;
       }
       const down = (en.kn || []).some(([a, b]) => rp.t >= a && rp.t < b);  // 기절 중
-      if (!down && rpFoeInCar(en, rp.t)) {  // 차에 타면 핸들 (같은 차의 같은 팀은 하나만), BRDM은 장갑차
+      if (rpFoeInCar(en, rp.t) && !(down && !(en.vh || []).some(v => rp.t >= v[0] && rp.t <= v[1]))) {  // v101 차 안에서 기절해도 차는 그대로 (예전엔 차가 사라졌다 나타남)  // 차에 타면 핸들 (같은 차의 같은 팀은 하나만), BRDM은 장갑차
         const vh = (en.vh || []).find(v => rp.t >= v[0] && rp.t <= (v[1] ?? Infinity));
-        if (!foeCars.some(o => o.tm === en.tm && ((o.key && vh && vh[3] && o.key === vh[3]) || Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < (big ? 60 : 90)))) {
+        if (!foeCars.some(o => o.tm === en.tm && ((o.key && vh && vh[3]) ? o.key === vh[3] : Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 25))) {  // v101 다른 차에 탄 같은 팀원이 90m 안에 있다고 통째로 숨기지 않게
           if (vh && vh[2] === 2) drawMortarSeat(ctx, x, y, big ? 9 : 7, teamColor(en.tm || 0), rp.t, en.n);
           else if (vh && vh[2]) { drawBRDM(ctx, x, y, big ? 28 : 20, rpHeading("e:" + en.n, t => interp(en.tr, t)), teamColor(en.tm || 0)); drawTeamTag(ctx, x + (big ? 12 : 9), y - (big ? 11 : 8), en.tm, teamColor(en.tm || 0)); drawSeats(ctx, x - 14.5, y + (big ? 26 : 21), Math.max(1, rpBrdmCount(R, vh[3], en.tm)), teamColor(en.tm || 0)); rpHpBar(ctx, rpCarHp(vh[3]), x, y + (big ? 18 : 14), big ? 26 : 20, 3, true); }
           else drawVeh(ctx, x, y, big ? 9 : 6, teamColor(en.tm || 0), vh && vh[4], () => rpHeading("e:" + en.n, t => interp(en.tr, t)), now);
@@ -5874,6 +5880,7 @@ function rpFoeHeading(fx, fy, t) {  // 맞힌 대상을 모르는 적 사격: �
 }
 function rpFoeInCar(en, t) {  // 적이 차에 탔는지: 기록이 있으면 그걸로, 예전 리플레이는 이동 속도(시속 40km 이상)로 짐작
   if (en.vh) return en.vh.some(([a, b]) => t >= a && t <= b);
+  { const R = rp.data; if (R._hasVh == null) R._hasVh = (R.enemies || []).some(e => e.vh); if (R._hasVh) return false; }  // v101 탄 기록이 있는 새 리플레이: 기록이 없으면 안 탄 것 (빨리 달려도 차·헬기로 바꾸지 않음)
   const tr = en.tr; let i = 1;
   while (i < tr.length && tr[i][0] < t) i++;
   const a = tr[i - 1], b = tr[i]; if (!a || !b || a[1] == null || b[1] == null || b[0] - a[0] > 12 || b[0] <= a[0]) return false;
