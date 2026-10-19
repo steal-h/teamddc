@@ -2820,6 +2820,8 @@ function renderDay(r, report, reveal) {
     return `<div class="${bad ? "bad" : ""}"><span>${esc(h.label)}</span><em>${m ? `${esc(m[1])}<small>${esc(m[2])}</small>` : `<small>${esc(h.value || "")}</small>`}</em><b>${esc(h.name)}</b></div>`; }).join("");
   const dmgMax = Math.max(1, ...r.games.flatMap(g => g.players.map(p => p.damage)));
   const CROWN = `<svg class="crown" viewBox="0 0 24 18" aria-label="이 판 MVP"><path d="M2 15 L4 4 L9 9 L12 2 L15 9 L20 4 L22 15 Z" fill="#F2B33D" stroke="#8C6414" stroke-width="1.2" stroke-linejoin="round"/><rect x="2" y="15" width="20" height="2.6" rx="1" fill="#D99A22"/></svg>`;
+  const ORD = (state?.players || []).map(q => (q.nickname || "").toLowerCase());  // v112 팀원 순서 고정 (설정의 플레이어 순서)
+  const plOrder = ps => [...ps].sort((a, b) => { const ia = ORD.indexOf((a.nick || "").toLowerCase()), ib = ORD.indexOf((b.nick || "").toLowerCase()); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || String(a.name).localeCompare(String(b.name)); });
   const games = r.games.map((g, i) => ({g, i})).reverse().map(({g, i}) => {  // v78 GL-03 촘촘한 표 + 팀원 킬·딜량 막대
     const mvp = [...g.players].sort((a, b) => b.kills - a.kills || b.damage - a.damage)[0], hasM = mvp && (mvp.kills || mvp.damage);
     const tk = g.players.reduce((a, p) => a + p.kills, 0), td = g.players.reduce((a, p) => a + (p.damage || 0), 0);
@@ -2827,7 +2829,7 @@ function renderDay(r, report, reveal) {
       <td><span class="mc" style="--c:${mapColor(g.map_code || g.map)}"><i></i>${esc(g.map)}</span></td>
       <td class="rk"><span class="rkg"><b>${g.rank === 1 ? `<img class="chick" src="${CHICK_IMG}" alt="">치킨` : g.rank + "등"}</b><small>/${g.teams}</small></span></td>
       <td class="n">${tk}</td><td class="n">${fmt(Math.round(td))}</td>
-      <td class="ps">${g.players.map(p => `<div class="${p === mvp && hasM ? "m" : ""}"><span class="cw">${p === mvp && hasM ? CROWN : ""}</span><span class="nm">${esc(p.name)}</span><span class="k">${p.kills}킬</span><span class="br"><i style="width:${p.damage / dmgMax * 100}%"></i></span><span class="d">${fmt(p.damage)}</span></div>`).join("")}</td>
+      <td class="ps">${plOrder(g.players).map(p => `<div class="${p === mvp && hasM ? "m" : ""}"><span class="cw">${p === mvp && hasM ? CROWN : ""}</span><span class="nm">${esc(p.name)}</span><span class="k">${p.kills}킬</span><span class="br"><i style="width:${p.damage / dmgMax * 100}%"></i></span><span class="d">${fmt(p.damage)}</span></div>`).join("")}</td>
       <td class="pl">${g.id ? `<button class="ib" type="button" data-rp="${esc(g.id)}" aria-label="${i + 1}판 리플레이" title="리플레이"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5"/><path d="M8.2 6.6v6.8l5.4-3.4z"/></svg></button>` : ""}</td></tr>`; }).join("");
 
   const bg = mapUrl(r);
@@ -3524,7 +3526,15 @@ function rpFixEmergency(R) {  // 비상호출: 태워 간 순간부터 바로 �
       const lift = R.events.filter(e => e.k === "emlift" && e.who === p.nick && e.t <= sg.t0 && sg.t0 - e.t < 180).pop();
       if (lift && lift.t < sg.t0) { sg.pts = [[lift.t, lift.x, lift.y], ...sg.pts]; sg.t0 = lift.t; }
       sg._fixed = true;
+      const P0 = sg.pts[0]; let k = sg.pts.length - 1;  // v112 끝부분이 제자리면 실제로는 안 날아간 것 (땅에서 기절·사망했는데 날아가는 중으로 보이던 문제)
+      while (k > 0 && Math.hypot(sg.pts[k][1] - sg.pts[k - 1][1], sg.pts[k][2] - sg.pts[k - 1][2]) < .0012) k--;
+      const moved = Math.max(...sg.pts.map(q => Math.hypot(q[1] - P0[1], q[2] - P0[2])));
+      if (moved < .003) { sg._drop = true; continue; }
+      if (k < sg.pts.length - 1 && sg.pts[sg.pts.length - 1][0] - sg.pts[k][0] > 8) { const rest = sg.pts.slice(k + 1); sg.pts = sg.pts.slice(0, k + 1); sg.t1 = sg.pts[k][0]; p.track = [...p.track, ...rest.map(q => [q[0], q[1], q[2]])].sort((a, b) => a[0] - b[0]); }
+      const dn = R.events.find(e => e.who === p.nick && (e.k === "downed" || e.k === "died") && e.t > sg.t0 && e.t < sg.t1);
+      if (dn && dn.k === "downed") { const q = interp(sg.pts, dn.t); sg.pts = [...sg.pts.filter(r => r[0] < dn.t), [dn.t, q[0], q[1]]]; sg.t1 = dn.t; p.track = [...p.track, [dn.t, q[0], q[1]]].sort((a, b) => a[0] - b[0]); }
     }
+    if ((p.air || []).some(a => a._drop)) { for (const a of p.air) if (a._drop) p.track = [...p.track, ...a.pts.map(q => [q[0], q[1], q[2]])]; p.track.sort((a, b) => a[0] - b[0]); p.air = p.air.filter(a => !a._drop); }
     if (p.death != null && !p._airDeathFixed) {  // 공중(낙하산)에서 죽었는데 땅 위치가 탑승한 자리로 남아 있던 경우
       p._airDeathFixed = true;
       const died = R.events.find(e => e.k === "died" && e.who === p.nick && Math.abs(e.t - p.death) < 1.5);
@@ -3562,6 +3572,8 @@ function mapRow(o, code, z, y, now) {
   }
   return row;
 }
+const MAP_SHIFT = {Baltic_Main: [.0035, 0], Erangel_Main: [.0035, 0]};  // v112 에란겔 지도 그림이 살짝 왼쪽에 있어서 오른쪽으로 (맵 크기 비율, +면 오른쪽/아래)
+function mapShift(code) { return MAP_SHIFT[code] || [0, 0]; }
 function drawMapTiles(ctx, code, X, Y, S, W, H, dpr, base, now) {
   const o = mapTiles(code), m = o.meta; if (!m) return;
   const need = S * dpr, baseW = base?.naturalWidth || 0;
@@ -3569,7 +3581,7 @@ function drawMapTiles(ctx, code, X, Y, S, W, H, dpr, base, now) {
   const want = Math.min(m.zmax, Math.max(0, Math.ceil(Math.log2(need / m.tile))));
   for (const z of [want - 1, want]) {
     if (z < 0 || m.tile * 2 ** z <= baseW) continue;
-    const n = 2 ** z, ts = S / n, x0 = X(0), y0 = Y(0);
+    const n = 2 ** z, ts = S / n, sh = mapShift(code), x0 = X(0) + sh[0] * S, y0 = Y(0) + sh[1] * S;
     const cx0 = Math.max(0, Math.floor(-x0 / ts)), cx1 = Math.min(n - 1, Math.floor((W - x0) / ts));
     const cy0 = Math.max(0, Math.floor(-y0 / ts)), cy1 = Math.min(n - 1, Math.floor((H - y0) / ts));
     for (let y = cy0; y <= cy1; y++) {
@@ -3582,6 +3594,11 @@ function drawMapTiles(ctx, code, X, Y, S, W, H, dpr, base, now) {
 }
 function rpSetup(R) {
   rpFixEmergency(R);
+  if (!R._chipEv) {  // v110 우리 팀이 부른 블루칩 보급 → 교전 기록 줄에도
+    R._chipEv = true;
+    for (const q of R.packages || []) if (q[7] === "c" && q[8] && R.players.some(p => p.nick === q[8])) R.events.push({t: q[1], k: "chipdrop", by: q[8], x: q[2], y: q[3]});
+    R.events.sort((a, b) => a.t - b.t);
+  }
   rp.pip = null; $("#rpPip")?.classList.remove("on");
   rp.data = R; rp.names = Object.fromEntries(R.players.map(p => [p.nick, p.name]));
   rp.fights = rpBuildFights(R);
@@ -3821,6 +3838,7 @@ const foeTn = name => { const tm = rpTeamOf(name); return tm == null ? "" : `<sp
 function feedLine(e) {
   const c = rpCol(e.by), wd = [e.w, e.d ? e.d + "m" : ""].filter(Boolean).join(", ");
   if (e.k === "empick") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 비상호출</div>`;
+  if (e.k === "chipdrop") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 블루칩 보급 도착</div>`;
   if (e.k === "emfail") return `<div class="bad"><time>${mmss(e.t)}</time><b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b> 비상호출 탑승 실패</div>`;
   if (e.k === "hazard") return `<div class="${e.end ? "" : "bad"}"><time>${mmss(e.t)}</time><b style="color:${e.col}">${esc(e.name)}</b> ${e.end ? "사라짐" : "발생"}</div>`;
   if (e.k === "emlift") return `<div><time>${mmss(e.t)}</time><b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b> 비상호출 비행기 탑승</div>`;
@@ -3983,7 +4001,7 @@ function rpHpNow(p, t) {  // 지금 체력 (맞은 기록 + 회복템으로 짐�
   const st = statusAt(p, t); if (st === "dead") return 0;
   let hp = 100, last = -1;
   for (const h of p.hp || []) { if (h[0] > t) break; hp = h[1]; last = h[0]; }
-  for (const e of rp.data.events) { if (e.t > t) break; if (e.t > last && e.who === p.nick && (e.k === "revive")) { hp = 5; last = e.t; } if (e.t > last && e.who === p.nick && (e.k === "recall")) { hp = 100; last = e.t; } }
+  for (const e of rp.data.events) { if (e.t > t) break; if (e.t > last && e.who === p.nick && (e.k === "revive")) { hp = 5; last = e.t; } if (e.t > last && e.who === p.nick && (e.k === "recall" || e.k === "board")) { hp = 100; last = e.t; } }  // v112 블루칩 복귀는 비행기 탈 때부터 풀피
   for (const h of p.hl || []) {
     if (h[1] < last || h[0] > t) continue;
     const done = t >= h[1], k = h[2];
@@ -4159,7 +4177,7 @@ function rpMini(now) {  // 미니맵: 맵 전체 + 자기장 + 방해 요소 + �
   if (c.width !== Math.round(W * dpr)) { c.width = c.height = Math.round(W * dpr); }
   const x = c.getContext("2d"); x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, W, W);
   const P = v => v * W;
-  if (rp.img) { x.globalAlpha = .9; x.drawImage(rp.img, 0, 0, W, W); x.globalAlpha = 1; x.fillStyle = "rgba(10,12,8,.18)"; x.fillRect(0, 0, W, W); }
+  if (rp.img) { x.globalAlpha = .9; { const sh = mapShift(R.map); x.drawImage(rp.img, sh[0] * W, sh[1] * W, W, W); } x.globalAlpha = 1; x.fillStyle = "rgba(10,12,8,.18)"; x.fillRect(0, 0, W, W); }
   const z = zoneAt(rp.t);
   if (z && z.sr > 0) { x.beginPath(); x.rect(0, 0, W, W); x.arc(P(z.sx), P(z.sy), P(z.sr), 0, Math.PI * 2, true); x.fillStyle = "rgba(40,90,220,.32)"; x.fill("evenodd");
     x.beginPath(); x.arc(P(z.sx), P(z.sy), P(z.sr), 0, Math.PI * 2); x.strokeStyle = "#9FC8FF"; x.lineWidth = 1.4; x.stroke(); }
@@ -4479,7 +4497,7 @@ function rpDraw(dt, now, view) {
   if (!pip) rp.proj = {X, Y, W, H};  // 효과음 위치(좌우·거리) 계산용
   ctx.fillStyle = "#14170F"; ctx.fillRect(0, 0, W, H);
   const shk = pip ? null : rpShake(R, X, Y, W, H, cam); if (shk) ctx.translate(shk[0], shk[1]);  // 폭발 흔들림: 지도와 그림 전체를 흔듦
-  if (rp.img) { ctx.imageSmoothingQuality = "high"; ctx.drawImage(rp.img, X(0), Y(0), S, S); drawMapTiles(ctx, R.map, X, Y, S, W, H, dpr, rp.img, now); }
+  if (rp.img) { ctx.imageSmoothingQuality = "high"; { const sh = mapShift(R.map); ctx.drawImage(rp.img, X(0) + sh[0] * S, Y(0) + sh[1] * S, S, S); } drawMapTiles(ctx, R.map, X, Y, S, W, H, dpr, rp.img, now); }
   else {
     ctx.fillStyle = "#2B3022"; ctx.fillRect(X(0), Y(0), S, S);
     ctx.strokeStyle = "rgba(183,179,156,.14)"; ctx.lineWidth = 1;
@@ -4581,7 +4599,24 @@ function rpDraw(dt, now, view) {
   const M = S / R.size_m;  // 1m가 화면에서 몇 픽셀
   rp._M = M;  // 효과 크기용 (판처파우스트·박격포 그림에서 씀)
   // 보급: 낙하산으로 내려오는 상자 → 착지 후 붉은 연기, 우리가 열면 '획득'
-  for (let [st, lt, px, py, by0, bt, ot0, pk = ""] of R.packages || []) {
+  for (let [st, lt, px, py, by0, bt, ot0, pk = "", caller, cteam] of R.packages || []) {
+    if (pk === "c") {  // v110 블루칩 보급: 송신기에서 블루칩을 쓰면 1~2분 뒤 송신기 옆에 낙하산 없이 생기는 작은 보급 상자
+      if (rp.t < lt) continue;
+      const x = X(px), y = Y(py), age = rp.t - lt, ours = caller && R.players.some(p => p.nick === caller);
+      const by = by0 && bt >= lt ? by0 : null, ot = ot0 != null && ot0 >= lt ? ot0 : by ? bt : null, opened = ot != null && rp.t >= ot;
+      if (age < 2.5) { const k = age / 2.5; rpGlowC(ctx, x, y, 40 * (1 - k * .4), "90,170,255", 1 - k); ctx.beginPath(); ctx.arc(x, y, 8 + k * 30, 0, Math.PI * 2); ctx.strokeStyle = `rgba(120,190,255,${1 - k})`; ctx.lineWidth = 2; ctx.stroke(); }
+      if (!opened || age < 60) {
+        ctx.beginPath(); ctx.arc(x, y, 14, 0, Math.PI * 2); ctx.fillStyle = "rgba(20,23,15,.75)"; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = "#5AA8FF"; ctx.stroke();
+        drawIcon(ctx, opened ? "carepackage_open" : "carepackage", x, y, 20, opened);
+      }
+      if (age < 25 || (by && rp.t >= bt && rp.t < bt + 25)) {
+        const who = by && rp.t >= bt ? rpName(by) + " 획득" : ours ? rpName(caller) + " 블루칩 보급" : (cteam != null ? cteam + "팀 " : "") + "블루칩 보급";
+        ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText(who).width + 12;
+        ctx.fillStyle = "rgba(20,23,15,.88)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y + 17, tw, 17, 8); else ctx.rect(x - tw / 2, y + 17, tw, 17); ctx.fill();
+        ctx.fillStyle = by && rp.t >= bt ? rpCol(by) : ours ? rpCol(caller) : "#9FD4FF"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(who, x, y + 26);
+      }
+      continue;
+    }
     if (lt - st < 3) st = lt - (pk === "b" ? 22 : 15);  // 떨어지기 시작한 기록이 없으면(착지 기록만 있음) 착지 전 몇 초를 낙하산으로
     const box = pk === "f" ? "flarepackage" : "carepackage", bsz = pk === "f" ? 36 : 30;
     if (rp.t >= st - 5 && rp.t < st + 7) {  // 보급·플레어 보급·BRDM: 치누크 헬기가 지나가며 떨어뜨림
@@ -4772,7 +4807,7 @@ function rpDraw(dt, now, view) {
         else { const rt = sg.route || R.plane; ang = rt ? Math.atan2(rt.vy, rt.vx) : 0; }
         // 같은 비행기에 탄 팀원은 비행기 하나만: 처음 비행기는 늘 하나, 블루칩·비상호출은 300m 안이면 같은 비행기
         // (팀원마다 위치 기록 시각이 달라 같은 비행기라도 수백 m 어긋나 보일 수 있음)
-        if (!planesDrawn.some(o => o.kind === sg.kind && (sg.kind === "start" || Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < (o.route ? 800 : 300)))) {
+        if (!planesDrawn.some(o => o.kind === sg.kind && (sg.kind === "start" || Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < (o.route ? 800 : sg.kind === "emergency" ? 1500 : 300)))) {  // v109 비상호출 헬기는 빨라서 팀원마다 위치 기록이 어긋나 2대로 보였음
           if (sg.kind === "emergency") drawHeli(ctx, x, y, ang, col, 12, now);
           else if (sg.kind === "recall") drawHeli(ctx, x, y, ang, col, 15, now, "heli_5");  // 블루칩 복귀: 치누크
           else drawPlane(ctx, x, y, ang, col, 10);
@@ -4905,7 +4940,7 @@ function rpDraw(dt, now, view) {
       if (em || guessAir) {  // 비상호출·블루칩 헬기에 탄 적 (내리면 낙하산)
         const col = teamColor(en.tm || 0);
         if (guessAir || rp.t < em[1]) {
-          if (!foePlanes.some(o => o.tm === en.tm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 300)) {
+          if (!foePlanes.some(o => o.tm === en.tm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 1500)) {
             const a = interp(en.tr, rp.t - 1) || q, b = interp(en.tr, rp.t + 1) || q;
             drawHeli(ctx, x, y, Math.atan2(Y(b[1]) - Y(a[1]), X(b[0]) - X(a[0])), col, big ? 10 : 8, now); foePlanes.push({q, tm: en.tm});
           }
@@ -4955,7 +4990,7 @@ function rpDraw(dt, now, view) {
       rpHpBar(ctx, rpCarHp(pk.key), x, y + len * .55, len, 3, true);
     }
   }
-  drawFoes();
+  try { drawFoes(); } catch (e) { console.warn("drawFoes", e); }  // v109 그림 하나가 잘못돼도 나머지 적은 그려지게
   // 차량 폭발: 체력 0이 되면 불이 붙어 붉게 깜빡이다가 쾅 (일반 차는 핸들, BRDM은 장갑차 그림)
   for (const key in R.cars || {}) {
     const c = R.cars[key]; if (!c.boom) continue;
@@ -5707,7 +5742,7 @@ function rpSound(t0, t1) {  // 재생하며 지나간 0.x초 사이에 일어난
   // 우리 팀이 차를 타고 달리는 동안: 낮은 엔진 소리 (빠를수록 높게)
   let best = null;
   for (const p of R.players) {
-    if (statusAt(p, t1) === "dead") continue; const v = vehAt(p, t1); if (!v || /mortar/i.test(v[3] || "")) continue;
+    if (statusAt(p, t1) === "dead") continue; const v = vehAt(p, t1); if (!v || /mortar/i.test(v[3] || "") || vehKind(v[3] || "") === "bike") continue;  // v112 자전거는 엔진 소리 없음
     const a = posAt(p, t1 - .5), b = posAt(p, t1); if (!a || !b) continue;
     const kmh = Math.hypot(b[0] - a[0], b[1] - a[1]) * R.size_m / .5 * 3.6, sp = rpSndAt(b[0], b[1]);
     if (sp && kmh > 5 && (!best || sp[0] > best.g)) best = {g: sp[0], pan: sp[1], kmh, brdm: /brdm/i.test(v[3] || "")};  // v81 멈춰 있으면 소리 없음
@@ -6126,6 +6161,13 @@ const VSHAPE = {  // v90 특수 탈것 V-03 (탈것 시안): 위에서 본 배�
   },
 };
 /* v97 특수 탈것 VS-04 흰 테두리 스티커 (탈것 시안 2): 위에서 본 실사 그림 + 하얀 테두리, 탄 사람은 그리지 않음. 팀 색은 날개 앞 띠 · 프레임 · 탱크 줄로 */
+function toHex6(c) {  // v109 어떤 색 표기(hsl · rgb · #abc)든 #rrggbb 로 (팀 색이 hsl 이라 색 섞기가 NaN → 그림 전체가 멈춰 적이 안 보였음)
+  if (/^#[0-9a-f]{6}$/i.test(c)) return c;
+  const x = toHex6.ctx || (toHex6.ctx = document.createElement("canvas").getContext("2d"));
+  x.fillStyle = "#000"; x.fillStyle = String(c); const v = x.fillStyle;
+  if (/^#[0-9a-f]{6}$/i.test(v)) return v;
+  const m = v.match(/\d+(\.\d+)?/g); return m ? "#" + m.slice(0, 3).map(n => Math.round(+n).toString(16).padStart(2, "0")).join("") : "#888888";
+}
 const VEH2 = (() => {
 const NAT = {pod: "#E9A925", pod2: "#B87912", wing: "#20242A", wing2: "#4A525C", tan: "#C2965E", frame: "#C8352B", frame2: "#7E1C16", tank: "#8E1F1F", tank2: "#3E0B0B",
   tire: "#151515", tire2: "#3A3A3A", metal: "#C9CDD2", metal2: "#6C737B", seat: "#1E1E1E", glass: "#8EC5E8", helmet: "#2A2A2A", skin: "#E0B48A"};
@@ -6202,7 +6244,7 @@ const SPR = {
 };
 const SPAN = {glider: .8, bike: .85, moto: .9, boat: 1};  // 크기 맞춤 (글라이더 날개가 가장 넓음)
 function teamPal(col, base) { return {...NAT, jacket: col, jacket2: mix(col, "#000000", .35), ...base}; }
-function mix(a, b, k) { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)), A = p(a), B = p(b); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, "0")).join(""); }
+function mix(a, b, k) { const p = h => { h = toHex6(h); return [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); }, A = p(a), B = p(b); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, "0")).join(""); }
 function sprite(c, kind, x, y, r, col, ang, now, face, P, opt = {}) {
   const s = r * 1.5 * SPAN[kind];
   c.save(); c.translate(x, y); c.rotate(ang + Math.PI / 2); c.scale(s, s); c.lineJoin = "round"; c.lineCap = "round";
@@ -6217,6 +6259,7 @@ function shadowOf(c, kind, x, y, r, ang, now, dx, dy, a, blur) {  // 같은 모�
 
   return function draw(c, kind, x, y, r, col, ang, now) {  // v98 테두리 = 팀 색, 외장(글라이더 몸체 · 자전거 프레임 · 오토바이 탱크·펜더) = 팀 색
     const O = {...NAT}; for (const k in O) O[k] = col; Object.assign(O, {flat: true, ol: col, lw: .13, noRider: true});
+    if (kind === "glider") { const B = {...NAT}; for (const k in B) B[k] = "#14170F"; Object.assign(B, {flat: true, ol: "#14170F", lw: .24, noRider: true}); sprite(c, kind, x, y, r, col, ang, now, null, B); }  // v109 글라이더: 팀 색 테두리 바깥에 검은 테두리
     c.save(); c.shadowColor = "rgba(0,0,0,.6)"; c.shadowBlur = 4; sprite(c, kind, x, y, r, col, ang, now, null, O); c.restore();
     const dk = mix(col, "#000000", .45);
     sprite(c, kind, x, y, r, col, ang, now, null, {...NAT, pod: col, pod2: dk, frame: col, frame2: dk, tank: col, tank2: mix(col, "#000000", .6), jacket: col, jacket2: col, noRider: true});
@@ -6225,7 +6268,7 @@ function shadowOf(c, kind, x, y, r, ang, now, dx, dy, a, blur) {  // 같은 모�
 function drawVeh(ctx, x, y, r, col, vid, headFn, now) {  // 일반 차는 핸들, 특수 탈것은 배지 없는 실루엣 (가는 방향으로 돌아감)
   const k = vehKind(vid); if (k === "car") return drawWheel(ctx, x, y, r, col);
   const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, s = r * 1.45;
-  if (k !== "boat") return VEH2(ctx, k, x, y, r * (k === "glider" ? 1.2 : 1.2), col, ang, now);  // v106 자전거·오토바이 크기 줄임 (1.6 → 1.2)  // v97 글라이더 · 자전거 · 오토바이 = VS-04
+  if (k !== "boat") { try { return VEH2(ctx, k, x, y, r * 1.2, col, ang, now); } catch (e) { return drawWheel(ctx, x, y, r, col); } }  // v106 자전거·오토바이 크기 줄임 (1.6 → 1.2)  // v97 글라이더 · 자전거 · 오토바이 = VS-04
   ctx.save(); ctx.translate(x, y); ctx.rotate(ang + Math.PI / 2); ctx.scale(s, s); ctx.lineJoin = "round";
   ctx.shadowColor = "rgba(0,0,0,.5)"; ctx.shadowBlur = 4; ctx.shadowOffsetY = 2 / s;
   VSHAPE[k](ctx); ctx.lineWidth = 2.4 / s; ctx.strokeStyle = "#14170F"; ctx.stroke(); ctx.fillStyle = col; ctx.fill();

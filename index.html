@@ -18,10 +18,10 @@ async function enter(){
   const reg=await navigator.serviceWorker.register('sw.js');
   await navigator.serviceWorker.ready;
   (reg.active||navigator.serviceWorker.controller)?.postMessage('reset');
-  location.replace('app.html?v=52009d86');
+  location.replace('app.html?v=af96831f');
 }
 (async()=>{ if(location.search.includes('r=1')||$('#go').disabled) return;
-  try{ if(await idbGet('key')&&navigator.serviceWorker.controller) location.replace('app.html?v=52009d86'); }catch{} })();
+  try{ if(await idbGet('key')&&navigator.serviceWorker.controller) location.replace('app.html?v=af96831f'); }catch{} })();
 $('#f').onsubmit=async e=>{
   e.preventDefault(); showErr(''); const b=$('#go'); b.disabled=true; b.textContent='확인하는 중...';
   try{
