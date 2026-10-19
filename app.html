@@ -3594,15 +3594,22 @@ const CHIP_TOWERS = {"Tiger_Main":[[0.1999,0.186],[0.204,0.3956],[0.2303,0.7116]
 function rpTowers(R) {  // 이 맵의 송신기 자리 + 이번 판에서 블루칩을 쓴 자리 (가까운 것은 하나로)
   if (R._towers) return R._towers;
   const L = (CHIP_TOWERS[R.map] || CHIP_TOWERS[{Erangel_Main: "Baltic_Main"}[R.map]] || []).map(q => [...q]), near = (x, y) => L.some(q => Math.hypot(q[0] - x, q[1] - y) < .006);
-  for (const e of R.events) if ((e.k === "transmit" || e.k === "ftransmit") && e.x != null && !e.est && !near(e.x, e.y)) L.push([e.x, e.y]);
+  if (!L.length) for (const e of R.events) if ((e.k === "transmit" || e.k === "ftransmit") && e.x != null && !e.est && !near(e.x, e.y)) L.push([e.x, e.y]);  // v127 목록 있는 맵은 목록만
+  if (!(CHIP_TOWERS[R.map] || CHIP_TOWERS[{Erangel_Main: "Baltic_Main"}[R.map]])) for (const c of R.chipcalls || []) if (!near(c[1], c[2])) L.push([c[1], c[2]]);  // v127 송신기 목록이 있는 맵은 목록만 (블루칩을 아무 데나 버린 자리·멀티 보급 자리가 송신기로 보이던 것)
   return R._towers = L;
 }
+function rpNearTower(R, x, y) {  // 송신기 목록이 있는 맵: 그 근처(80m)인지
+  const L = CHIP_TOWERS[R.map] || CHIP_TOWERS[{Erangel_Main: "Baltic_Main"}[R.map]]; if (!L) return true;
+  return L.some(q => Math.hypot(q[0] - x, q[1] - y) * R.size_m < 80);
+}
 function drawTower(c, x, y, s) {  // v121 TW-01 철탑: 배경 없이 격자 철탑 + 꼭대기 파란 불빛 (64칸 그림을 약 22px로)
-  c.save(); c.translate(x, y); c.scale(s * .34, s * .34); c.translate(-32, -34);
+  c.save(); c.translate(x, y); c.scale(s * .42, s * .42); c.translate(-32, -34);
   const P = new Path2D("M32 8L20 56M32 8L44 56M23 44H41M25.5 32H38.5M28 20H36M20 56L38.5 32M44 56L25.5 32M41 44L28 20M23 44L36 20");
   c.lineJoin = "round"; c.lineCap = "round";
-  c.strokeStyle = "#0b1a33"; c.lineWidth = 4.5; c.stroke(P);
-  c.strokeStyle = "#cfe6ff"; c.lineWidth = 2; c.stroke(P);
+  c.strokeStyle = "#fff"; c.lineWidth = 9; c.stroke(P);  // v125 흰 테두리 (지도 위에서 잘 보이게)
+  c.strokeStyle = "#0b1a33"; c.lineWidth = 5; c.stroke(P);
+  c.strokeStyle = "#8fc8ff"; c.lineWidth = 2.2; c.stroke(P);
+  c.beginPath(); c.arc(32, 8, 6, 0, Math.PI * 2); c.fillStyle = "#fff"; c.fill();
   c.beginPath(); c.arc(32, 8, 4.5, 0, Math.PI * 2); c.fillStyle = "#4aa8ff"; c.fill(); c.lineWidth = 2; c.strokeStyle = "#0b1a33"; c.stroke();
   c.restore();
 }
@@ -3637,6 +3644,7 @@ function drawMapTiles(ctx, code, X, Y, S, W, H, dpr, base, now) {
 }
 function rpSetup(R) {
   rpFixEmergency(R);
+  if (!R._kindS) { R._kindS = true; for (const q of R.packages || []) if (q[7] === "c" && !q[8] && !(R.chipcalls || []).length) q[7] = "s"; }  // v126 예전 리플레이: 부른 사람이 없는 작은 보급 = 멀티 보급
   if (!R._mates) { R._mates = (R.enemies || []).filter(e => e.mate); R.enemies = (R.enemies || []).filter(e => !e.mate); }  // v118 랜덤 팀원은 적 목록에서 빼서 따로
   if (!R._flareFix) {  // v116 예전 리플레이: 신호탄 하나에 호출 보급이 여러 개 붙은 경우 → 가장 가까운 하나만 호출 보급
     R._flareFix = true;
@@ -4671,10 +4679,10 @@ function rpDraw(dt, now, view) {
       const by = by0 && bt >= lt ? by0 : null, ot = ot0 != null && ot0 >= lt ? ot0 : by ? bt : null, opened = ot != null && rp.t >= ot;
       if (age < 2.5) { const k = age / 2.5; rpGlowC(ctx, x, y, 40 * (1 - k * .4), "90,170,255", 1 - k); ctx.beginPath(); ctx.arc(x, y, 8 + k * 30, 0, Math.PI * 2); ctx.strokeStyle = `rgba(120,190,255,${1 - k})`; ctx.lineWidth = 2; ctx.stroke(); }
       if (!opened || age < 60) {
-        drawAmmoBox(ctx, x, y, 18, opened);  // v117 MB-11 탄약 상자
+        drawAmmoBox(ctx, x, y, 18, opened);  // v127 블루칩 보급도 멀티 보급과 같은 탄약 상자
       }
       if (age < 25 || (by && rp.t >= bt && rp.t < bt + 25)) {
-        const who = by && rp.t >= bt ? rpName(by) + " 획득" : ours ? rpName(caller) + " 멀티 보급" : (cteam != null ? cteam + "팀 " : "") + "멀티 보급";
+        const who = by && rp.t >= bt ? rpName(by) + " 획득" : ours ? rpName(caller) + " 블루칩 보급" : (cteam != null ? cteam + "팀 " : "") + "블루칩 보급";
         ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText(who).width + 12;
         ctx.fillStyle = "rgba(20,23,15,.88)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y + 17, tw, 17, 8); else ctx.rect(x - tw / 2, y + 17, tw, 17); ctx.fill();
         ctx.fillStyle = by && rp.t >= bt ? rpCol(by) : ours ? rpCol(caller) : "#9FD4FF"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(who, x, y + 26);
@@ -4683,7 +4691,7 @@ function rpDraw(dt, now, view) {
     }
     if (lt - st < 3) st = lt - (pk === "b" ? 22 : 15);  // 떨어지기 시작한 기록이 없으면(착지 기록만 있음) 착지 전 몇 초를 낙하산으로
     const box = pk === "f" ? "flarepackage" : "carepackage", bsz = pk === "f" ? 36 : 30;
-    if (rp.t >= st - 5 && rp.t < st + 7) {  // 보급·플레어 보급·BRDM: 치누크 헬기가 지나가며 떨어뜨림
+    if (pk !== "s" && rp.t >= st - 5 && rp.t < st + 7) {  // 보급·플레어 보급·BRDM: 치누크 헬기가 지나가며 떨어뜨림
       const rt = R.plane, dx = rt ? rt.vx : 1, dy = rt ? rt.vy : 0, dl = Math.hypot(dx, dy) || 1, v = 60 / R.size_m, u = (rp.t - st) * v;
       const qx = px + dx / dl * u, qy = py + dy / dl * u, fa = Math.max(0, Math.min(1, (rp.t - st + 5) / 1.2, (st + 7 - rp.t) / 1.2));
       ctx.globalAlpha = fa; drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, pk ? 15 : 13, now, "heli_5"); ctx.globalAlpha = 1;
@@ -4704,11 +4712,12 @@ function rpDraw(dt, now, view) {
         ctx.beginPath(); ctx.arc(0, -24, 16, Math.PI, 0); ctx.fillStyle = "#EEE8D5"; ctx.fill(); ctx.strokeStyle = "#5A5446"; ctx.lineWidth = 1.2; ctx.stroke();
         ctx.beginPath(); ctx.moveTo(-15, -24); ctx.lineTo(-7, -9); ctx.moveTo(15, -24); ctx.lineTo(7, -9); ctx.moveTo(0, -24); ctx.lineTo(0, -9); ctx.stroke();
       }
-      if (pk === "b") drawBRDM(ctx, 0, 4, 36, -Math.PI / 2, null); else drawIcon(ctx, box, 0, 0, bsz);
+      if (pk === "b") drawBRDM(ctx, 0, 4, 36, -Math.PI / 2, null); else if (pk === "s") drawAmmoBox(ctx, 0, 0, 18, false); else drawIcon(ctx, box, 0, 0, bsz);
       ctx.restore();
     } else if (pk === "b") {  // BRDM: 떨어진 자리에 서 있다가, 누가 타면 그 사람 아이콘이 BRDM으로 바뀜
       if (ot != null && rp.t >= ot) continue;
-      const gone = rpBrdmTaken(R, px, py, lt); if (gone != null && rp.t >= gone) continue;  // 예전 기록: 근처 BRDM에 누가 탔으면 없앰
+      const gone = rpBrdmTaken(R, px, py, lt); if (gone != null && rp.t >= gone) continue;
+      if (Object.values(R.cars || {}).some(c => c.k === "b" && c.boom && c.boom[0] >= lt && rp.t >= c.boom[0] - 2.5 && Math.hypot(c.boom[1] - px, c.boom[2] - py) * R.size_m < 80)) continue;  // v125 떨어진 자리에서 바로 터진 BRDM  // 예전 기록: 근처 BRDM에 누가 탔으면 없앰
       drawBRDM(ctx, x, y, 34, -Math.PI / 2, null);
       ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText("BRDM").width + 12;
       ctx.fillStyle = "rgba(20,23,15,.88)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y + 20, tw, 17, 8); else ctx.rect(x - tw / 2, y + 20, tw, 17); ctx.fill();
@@ -4716,6 +4725,16 @@ function rpDraw(dt, now, view) {
       continue;
     } else {
       const age = rp.t - lt;
+      if (pk === "s") {  // v126 멀티 보급: 낙하산으로 내려와 탄약 상자로 (연막 없음)
+        if (opened && age > 60) continue;
+        drawAmmoBox(ctx, x, y, 18, opened);
+        const cl = caller ? (R.players.some(p => p.nick === caller) ? rpName(caller) + " " : (cteam != null ? cteam + "팀 " : "")) : "";
+        const lb = by && rp.t >= bt ? rpName(by) + " 획득" : age < 20 ? cl + "멀티 보급" : "";  // v128 긴급지원 신호탄으로 부른 사람
+        if (lb && (age < 20 || rp.t < bt + 25)) { ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText(lb).width + 12;
+          ctx.fillStyle = "rgba(20,23,15,.88)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y + 12, tw, 17, 8); else ctx.rect(x - tw / 2, y + 12, tw, 17); ctx.fill();
+          ctx.fillStyle = by && rp.t >= bt ? rpCol(by) : "#C9E07A"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lb, x, y + 21); }
+        continue;
+      }
       if (age < 120) for (let k = 0; k < 9; k++) {  // 붉은 연막 (바람에 날림), 플레어 보급은 노랑
         const ph = ((rp.t * .45 + k / 9) % 1), sx = x + 4 + ph * 26 + Math.sin(k * 2.3 + rp.t) * 3, sy = y - 6 - ph * 44;
         ctx.beginPath(); ctx.arc(sx, sy, 4 + ph * 9, 0, Math.PI * 2); ctx.fillStyle = `rgba(${pk === "f" ? "255,214,40" : "230,60,50"},${(1 - ph) * .45 * Math.min(1, (120 - age) / 20)})`; ctx.fill();
@@ -4844,6 +4863,15 @@ function rpDraw(dt, now, view) {
     const age = rp.t - e.t; if (age < 0 || age > 8) continue;
     if (e.k === "ftransmit") rpBeam(ctx, X(e.x), Y(e.y), age, 8, "60,140,255", "110,190,255", `${e.tm ?? ""}팀 블루칩 송신`, teamColor(e.tm || 0), now, .8);  // 적 팀의 블루칩 송신
     else rpBeam(ctx, X(e.x), Y(e.y), age, 8, "60,140,255", "110,190,255", `${rpName(e.by)} 블루칩 송신${e.est ? " (추정)" : ""}`, "#9FD4FF", now);
+  }
+  for (const [ct, cx, cy, cn, ctm, co] of R.pkflares || []) {  // v128 긴급지원 신호탄: 던진 자리에 초록 빛기둥 (멀티 보급이 떨어질 곳)
+    const age = rp.t - ct; if (age < 0 || age > 12) continue;
+    rpBeam(ctx, X(cx), Y(cy), age, 12, "60,200,90", "140,240,150", `${co ? rpName(cn) : (ctm ?? "") + "팀"} 긴급지원 신호탄`, co ? "#B8F5B0" : teamColor(ctm || 0), now, co ? 1 : .8);
+  }
+  for (const [ct, cx, cy, cn, ctm, co] of R.chipcalls || []) {  // v126 송신기에서 블루칩으로 보급 부름 → 파란 빛기둥
+    const age = rp.t - ct; if (age < 0 || age > 8) continue;
+    if (!rpNearTower(R, cx, cy)) continue;  // v127 송신기 옆에서 쓴 것만 (그냥 버린 블루칩은 빼기)
+    rpBeam(ctx, X(cx), Y(cy), age, 8, "60,140,255", "110,190,255", `${co ? rpName(cn) : (ctm ?? "") + "팀"} 블루칩 보급 호출`, co ? "#9FD4FF" : teamColor(ctm || 0), now, co ? 1 : .8);
   }
   for (const [ft, fx, fy] of R.flares || []) {  // 플레어건: 쏜 자리에 빨간 기둥 (보급이 떨어질 곳)
     const age = rp.t - ft; if (age < 0 || age > 14) continue;
@@ -6139,7 +6167,7 @@ function rpParkedBrdms(R, t) {  // 지금 아무도 안 탄 BRDM들: 마지막�
       }
       for (const key in R.cars || {}) {
         const c = R.cars[key]; if (!c.boom || c.k !== "b" || c.boom[0] <= E) continue;
-        if (r.key ? key === r.key : dist([c.boom[1], c.boom[2]], P) < 30) {
+        if ((r.key && key === r.key) || dist([c.boom[1], c.boom[2]], P) < 60) {  // v125 열쇠가 달라도 세워 둔 자리 근처에서 터지면 같은 차
           const z = c.hp.find(q => q[1] <= 0 && q[0] <= c.boom[0]); K = Math.min(K, z ? Math.max(z[0], c.boom[0] - 8) : c.boom[0] - 2.5);
         }
       }
