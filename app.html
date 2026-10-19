@@ -1866,6 +1866,12 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .dlabel{display:flex;align-items:baseline;gap:8px;white-space:nowrap;pointer-events:none}
 .dlabel b{font:400 34px/1.05 var(--display);color:var(--bone)}.dlabel small{font-size:14px;font-weight:600;color:var(--dust)}
 .controls.v86 #date{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
+/* v106 날짜와 달력 아이콘을 버튼 하나로 */
+.controls.v86 .dp-wrap{border:1px solid var(--line);border-radius:10px;padding:6px 14px 6px 16px;background:rgba(0,0,0,.12);transition:border-color .15s}
+.controls.v86 .dp-wrap:hover{border-color:var(--accent)}
+.dlabel .dico{width:20px;height:20px;fill:none;stroke:var(--dust);stroke-width:1.7;stroke-linecap:round;align-self:center;margin-left:4px}
+.controls.v86 .dp-wrap:hover .dico{stroke:var(--accent)}
+#dCal{display:none!important}
 .controls.v86 .dp-wrap{cursor:pointer}.controls.v86 .dp-wrap:hover .dlabel b,.controls.v86 #date:focus-visible+.dp-cal,.controls.v86 .dp-wrap:focus-within .dlabel b{color:var(--accent)}
 .controls.v86 .dp-wrap:has(#date:focus-visible){outline:2px solid var(--accent);outline-offset:4px;border-radius:4px}
 .controls.v86 .dp-cal{top:calc(100% + 8px);left:0}
@@ -1918,8 +1924,8 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 .hero{background:radial-gradient(ellipse 36% 62% at 50% 0%,rgba(255,236,180,.26),transparent 72%),radial-gradient(ellipse 60% 26% at 50% 64%,rgba(242,169,0,.10),transparent 70%),#121410;border:1px solid #2b2f22}
 .hero-bg{opacity:.12}
 /* v103 BG-07 작전 지도: 오늘 맵 사진을 더 선명하게 + 노란 좌표 격자 (2~4위 카드는 그대로) */
-.hero .hero-bg{opacity:.3;filter:saturate(.65) contrast(1.05);-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 45%,transparent 78%);mask-image:linear-gradient(180deg,#000 0%,#000 45%,transparent 78%)}
-.hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(242,169,0,.07) 0 1px,transparent 1px 80px),repeating-linear-gradient(90deg,rgba(242,169,0,.07) 0 1px,transparent 1px 80px);-webkit-mask-image:linear-gradient(180deg,#000 30%,transparent 75%);mask-image:linear-gradient(180deg,#000 30%,transparent 75%)}  /* v104 지도·격자가 아래 2~4위 쪽으로 자연스럽게 사라지게 */
+.hero .hero-bg{opacity:.3;filter:saturate(.65) contrast(1.05)}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(242,169,0,.07) 0 1px,transparent 1px 80px),repeating-linear-gradient(90deg,rgba(242,169,0,.07) 0 1px,transparent 1px 80px);}  /* v104 지도·격자가 아래 2~4위 쪽으로 자연스럽게 사라지게 */
 .hero::after{background:radial-gradient(ellipse at 50% 38%,rgba(38,43,30,.35),rgba(43,48,34,.86) 78%)}
 /* v105 검정 무대 → 국방색 무대: 페이지 바탕(올리브)과 자연스럽게 이어지게, 스포트라이트는 그대로 */
 .hero{background:radial-gradient(ellipse 36% 62% at 50% 0%,rgba(255,236,180,.22),transparent 72%),radial-gradient(ellipse 60% 26% at 50% 64%,rgba(242,169,0,.08),transparent 70%),linear-gradient(180deg,#252a1d 0%,#2B3022 100%)!important;border-color:#3B4230!important}
@@ -1936,7 +1942,12 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 .medal-card{background:#1c1f17;border-color:var(--line);border-radius:12px}
 /* v100 2·3위 명암: 2위 은빛, 3위 동빛이 위에서 은은하게 */
 .medal-card.r2:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(200,205,211,.16),transparent 70%),linear-gradient(180deg,#262a22,#1c1f17);border-color:rgba(200,205,211,.45)}
-.medal-card.r3:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(196,123,69,.16),transparent 70%),linear-gradient(180deg,#252219,#1c1f17);border-color:rgba(196,123,69,.45)}  /* v90 2·3위 회색 테두리 */
+/* v106 점수 카드: 예전처럼 진한 바탕 (반투명이라 아래 작전 지도가 은은하게 비침), 2~4위도 1위처럼 지도 위에 */
+.plaque>div{background:radial-gradient(ellipse 55% 85% at 50% 0%,rgba(255,236,180,.12),transparent 75%),rgba(16,18,13,.78)!important}
+.medal-card{background:rgba(16,18,13,.78)!important;backdrop-filter:blur(1px)}
+.medal-card.r2:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(200,205,211,.16),transparent 70%),rgba(16,18,13,.78)!important}
+.medal-card.worst{background:linear-gradient(180deg,rgba(224,83,47,.2),rgba(16,18,13,.8))!important}
+.medal-card.r3:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(196,123,69,.16),transparent 70%),rgba(16,18,13,.78)!important;border-color:rgba(196,123,69,.45)}  /* v90 2·3위 회색 테두리 */
 .medal-card.worst{background:linear-gradient(180deg,rgba(224,83,47,.16),#1c1f17 70%);border-color:rgba(224,83,47,.6)}
 @media (max-width:620px){.spot-st{gap:12px;justify-content:flex-start}.plaque .spot-st b{font-size:40px}.spot-st small{font-size:11px}.spot-sub{justify-content:flex-start;gap:10px;font-size:12px;grid-column:2}.medals::before{left:-10px;right:-10px}}
 @media (orientation:landscape) and (max-height:500px){.spot-st{justify-content:flex-start;gap:18px}.plaque .spot-st b{font-size:36px}.spot-sub{justify-content:flex-start;grid-column:2}}
@@ -2005,7 +2016,7 @@ html.share-mode body::before{display:none}
     <div class="controls v86">  <!-- v86 날짜 크게 (TB-09) · 버튼 두 개 같은 크기 · 옵션은 아래 줄 -->
       <div class="ctl-row">
         <div class="dbig">
-          <span class="dp-wrap"><span class="dlabel" aria-hidden="true"><b id="dMain">-</b><small id="dDow"></small></span><input type="text" id="date" readonly inputmode="none" autocomplete="off" aria-haspopup="dialog" aria-label="날짜 고르기" placeholder="날짜"><span class="dp-cal" id="dpCal" hidden></span></span>
+          <span class="dp-wrap"><span class="dlabel" aria-hidden="true"><b id="dMain">-</b><small id="dDow"></small><svg class="dico" viewBox="0 0 20 20"><rect x="2.6" y="4" width="14.8" height="13" rx="1.5"/><path d="M2.6 8h14.8M6.5 2.4v3M13.5 2.4v3"/></svg></span><input type="text" id="date" readonly inputmode="none" autocomplete="off" aria-haspopup="dialog" aria-label="날짜 고르기" placeholder="날짜"><span class="dp-cal" id="dpCal" hidden></span></span>
           <button class="dcalb" id="dCal" type="button" aria-label="달력 열기" title="달력 열기"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.6" y="4" width="14.8" height="13" rx="1.5"/><path d="M2.6 8h14.8M6.5 2.4v3M13.5 2.4v3"/></svg></button>
         </div>
         <div class="optdd" id="optDD">  <!-- v88 옵션은 접어 두고 (TB-04) 누르면 펼침 -->
@@ -4352,7 +4363,11 @@ function rpCamera(dt) {
   const split = rp.pip && rp.pip.on, inMain = p => !split || rp.pip.main.includes(p.nick);  // 분할 화면: 메인 화면은 메인 무리만
   const mainPos = split ? R.players.filter(inMain).map(p => curPos(p, rp.t)).filter(Boolean) : [];
   // 교전 확대: 총소리가 나는 중이거나, 마지막 총격 6초 안 / 다음 총격 3초 전부터. 그 밖(교전이 식은 틈)은 넓게 따라가기
-  const fz = rp.focus && rp.focus.pts && (rp.focusHot || rp.focus.pts.some(q => q.t >= rp.t - 6 && q.t <= rp.t + 3 + rpCfg().fight_pre));
+  const fzRaw = rp.focus && rp.focus.pts && (rp.focusHot || rp.focus.pts.some(q => q.t >= rp.t - 6 && q.t <= rp.t + 3 + rpCfg().fight_pre));
+  // v106 교전 중 총격 사이 잠깐 조용해질 때마다 넓은 화면 ↔ 교전 확대를 오가며 적이 사라졌다 나타나 보이던 것: 확대를 8초 더 유지
+  if (Math.abs(rp.t - (rp.fzLast ?? rp.t)) > 12) rp.fzHold = null; rp.fzLast = rp.t;
+  if (fzRaw) rp.fzHold = rp.t + 8;
+  const fz = fzRaw || (rp.focus && rp.focus.pts && rp.fzHold != null && rp.t < rp.fzHold);
   if (rp.follow && rp.cine && fz) {  // 교전 장면으로 확대: 지금 앞뒤 몇 초의 총격·피격 지점을 화면에 담음
     const f = rp.focus;
     let near = f.pts.filter(q => q.t >= rp.t - 5 && q.t <= rp.t + 3);
@@ -6206,7 +6221,7 @@ function shadowOf(c, kind, x, y, r, ang, now, dx, dy, a, blur) {  // 같은 모�
 function drawVeh(ctx, x, y, r, col, vid, headFn, now) {  // 일반 차는 핸들, 특수 탈것은 배지 없는 실루엣 (가는 방향으로 돌아감)
   const k = vehKind(vid); if (k === "car") return drawWheel(ctx, x, y, r, col);
   const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, s = r * 1.45;
-  if (k !== "boat") return VEH2(ctx, k, x, y, r * (k === "glider" ? 1.2 : 1.6), col, ang, now);  // v97 글라이더 · 자전거 · 오토바이 = VS-04
+  if (k !== "boat") return VEH2(ctx, k, x, y, r * (k === "glider" ? 1.2 : 1.2), col, ang, now);  // v106 자전거·오토바이 크기 줄임 (1.6 → 1.2)  // v97 글라이더 · 자전거 · 오토바이 = VS-04
   ctx.save(); ctx.translate(x, y); ctx.rotate(ang + Math.PI / 2); ctx.scale(s, s); ctx.lineJoin = "round";
   ctx.shadowColor = "rgba(0,0,0,.5)"; ctx.shadowBlur = 4; ctx.shadowOffsetY = 2 / s;
   VSHAPE[k](ctx); ctx.lineWidth = 2.4 / s; ctx.strokeStyle = "#14170F"; ctx.stroke(); ctx.fillStyle = col; ctx.fill();
