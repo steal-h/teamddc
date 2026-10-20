@@ -2819,7 +2819,7 @@ function renderDay(r, report, reveal) {
       <header><b style="display:flex;align-items:center;gap:8px">${avatar(p, "sm", false)}${esc(p.name)}</b><span class="pc-rk"><em>${p.rank}위</em>${tierChip}</span></header>
       <div class="pc-key"><div class="kda"><b>${kdaOf(t)}</b><span>KDA</span></div><div><b>${fmt(m.damage)}</b><span>판당 딜량</span></div><div><b>${m.kills}</b><span>판당 킬</span></div></div>
       ${group("전투", [row("판당 기절", m.dbnos), row("판당 어시", m.assists), row("헤드샷 비율", m.headshot_pct + "%"), row("최장거리 킬", t.longest + "m")])}
-      ${group("생존 · 팀", [row("평균 생존", m.survival_min + "분"), row("판당 소생", m.revives), row("치킨", t.wins + "회"), ...(tl ? [row("판당 받은 피해", fmt(tl.taken_pg))] : []), row("팀킬", t.teamkills + "회")])}
+      ${group("생존 · 팀", [row("평균 생존", m.survival_min + "분"), row("판당 소생", m.revives), row("기절당함", (t.downed ?? 0) + "회"), ...(tl ? [row("판당 받은 피해", fmt(tl.taken_pg))] : []), row("팀킬", t.teamkills + "회")])}
       ${telRows || "<div></div>"}
       <section class="pc-grp"><h4>점수 구성</h4><div class="bars">${bars}</div></section>
       <div class="pc-notes">${p.penalty ? `<div class="penalty">감점 −${p.penalty}점: ${[
@@ -4639,7 +4639,7 @@ function rpDraw(dt, now, view) {
       const kk = Math.max(L.a, k);
       const q = [rt.x0 + rt.vx * kk, rt.y0 + rt.vy * kk];
       if (!planesDrawn.some(o => o.kind === kind && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 800)) {  // 같은 블루칩 비행기는 하나만
-        if (kind === "recall") drawHeli(ctx, X(q[0]), Y(q[1]), Math.atan2(rt.vy, rt.vx), col, 15, now, "heli_5");  // 블루칩 복귀: 치누크 (실제 게임처럼)
+        if (kind === "recall") drawHeli(ctx, X(q[0]), Y(q[1]), Math.atan2(rt.vy, rt.vx), col, airSz(15, 30, 8, 30), now, "heli_5");  // 블루칩 복귀: 치누크 (실제 게임처럼)
         else drawPlane(ctx, X(q[0]), Y(q[1]), Math.atan2(rt.vy, rt.vx), col, 13);
         planesDrawn.push({q, kind, route: true});
       }
@@ -4649,7 +4649,7 @@ function rpDraw(dt, now, view) {
   const allLanded = Math.max(0, ...R.players.map(p => p.landed ?? 0));  // 다 착지하고 30초 뒤엔 비행기 경로를 지움 (판 내내 남아 있던 선)
   if (R.plane && !hideRoutes && rp.t < allLanded + 30) drawRoute(R.plane, "#EEE8D5", rp.t < allLanded ? .85 : .85 * (1 - (rp.t - allLanded) / 30), 0);
   for (const p of R.players) for (const sg of p.air || []) {  // 블루칩 비행기
-    if (!hideRoutes && sg.kind === "recall" && sg.route && rp.t >= sg.t0 - 2 && rp.t <= sg.t1 + 15) drawRoute(sg.route, RP_COLORS[p.slot % 4], .9, sg.t0, "recall");
+    if (!hideRoutes && sg.kind === "recall" && sg.route && rp.t >= sg.t0 - 2 && rp.t <= (sg.jump ?? sg.t1 + 15)) drawRoute(sg.route, RP_COLORS[p.slot % 4], .9, sg.t0, "recall");
   }
   // 이동 경로
   ctx.lineJoin = "round"; ctx.lineCap = "round";
@@ -4715,7 +4715,7 @@ function rpDraw(dt, now, view) {
       const rt = R.plane, dx = rt ? rt.vx : 1, dy = rt ? rt.vy : 0, dl = Math.hypot(dx, dy) || 1, v = 60 / R.size_m, u = (rp.t - st) * v;
       const qx = px + dx / dl * u, qy = py + dy / dl * u, fa = Math.max(0, Math.min(1, (rp.t - st + 5) / 1.2, (st + 7 - rp.t) / 1.2));
       ctx.globalAlpha = fa; { const pid = ["12", "13", "18"][Math.abs(Math.round(st * 7 + px * 1000)) % 3], im = svgImg("sp" + pid, SUPPLY_PLANES[pid]);  // v143 보급 비행기 (EP-12/13/18, 그림자)
-        if (im) drawSprite(ctx, im, X(qx), Y(qy), Math.atan2(dy, dx), (pk ? 15 : 13) * 7, {shadow: true}); else drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, pk ? 15 : 13, now, "heli_5"); } ctx.globalAlpha = 1;
+        if (im) drawSprite(ctx, im, X(qx), Y(qy), Math.atan2(dy, dx), airSz(13, 40, 7, 24) * 5, {shadow: true}); else drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, pk ? 15 : 13, now, "heli_5"); } ctx.globalAlpha = 1;
     }
     const by = by0 && bt >= lt ? by0 : null;  // 착지 전에 '획득'은 있을 수 없음 (예전 리플레이에서 상자가 섞인 경우)
     const ot = ot0 != null && ot0 >= lt ? ot0 : by ? bt : null, opened = ot != null && rp.t >= ot;
@@ -4965,7 +4965,7 @@ function rpDraw(dt, now, view) {
       const dx = P1[0] - P0[1], dy = P1[1] - P0[2], dl = Math.hypot(dx, dy); if (dl < 1e-5) continue;
       const v = dl / Math.max(1, Math.min(sg.t1, sg.t0 + 10) - sg.t0), back = v * (sg.t0 - rp.t);
       const hx = P0[1] - dx / dl * back, hy = P0[2] - dy / dl * back, fa = Math.min(1, (rp.t - (sg.t0 - 25)) / 1.5);
-      ctx.globalAlpha = fa; drawEmPlane(ctx, X(hx), Y(hy), Math.atan2(Y(P1[1]) - Y(P0[2]), X(P1[0]) - X(P0[1])), RP_COLORS[p.slot % 4], 12); ctx.globalAlpha = 1;
+      ctx.globalAlpha = fa; drawEmPlane(ctx, X(hx), Y(hy), Math.atan2(Y(P1[1]) - Y(P0[2]), X(P1[0]) - X(P0[1])), RP_COLORS[p.slot % 4], airSz(12, 40, 6, 26)); ctx.globalAlpha = 1;
       ctx.font = "700 12px Pretendard, 'Malgun Gothic', sans-serif"; const lb = "비상호출", tw = ctx.measureText(lb).width + 12, x = X(hx), y = Y(hy) - 22;
       ctx.fillStyle = "rgba(20,23,15,.85)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y - 9, tw, 18, 9); else ctx.rect(x - tw / 2, y - 9, tw, 18); ctx.fill();
       ctx.fillStyle = "#FFE9A0"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lb, x, y);
@@ -4974,13 +4974,34 @@ function rpDraw(dt, now, view) {
   {  // v143 비상호출 비행기: 다 내려 준 뒤에도 사라지지 않고 같은 방향으로 25초 더 날아가며 흐려짐
     const seen2 = [];
     for (const p of R.players) for (const sg of p.air || []) {
-      if (sg.kind !== "emergency" || sg.jump == null || rp.t < sg.jump || rp.t > sg.jump + 25 || seen2.some(v => Math.abs(v - sg.jump) < 6)) continue;
-      if (R.players.some(o => o !== p && (o.air || []).some(a => a.kind === "emergency" && a.jump != null && Math.abs(a.t0 - sg.t0) < 6 && a.jump > sg.jump && rp.t < a.jump))) continue;  // 아직 타고 있는 팀원이 있으면 그 사람 그림이 비행기
+      if ((sg.kind !== "emergency" && sg.kind !== "recall") || sg.jump == null || rp.t < sg.jump || rp.t > sg.jump + 25 || seen2.some(v => Math.abs(v - sg.jump) < 6)) continue;  // v145 블루칩 헬기도
+      if (R.players.some(o => o !== p && (o.air || []).some(a => a.kind === sg.kind && a.jump != null && Math.abs(a.t0 - sg.t0) < 6 && a.jump > sg.jump && rp.t < a.jump))) continue;  // 아직 타고 있는 팀원이 있으면 그 사람 그림이 비행기
       seen2.push(sg.jump);
-      const A = interp(sg.pts, sg.jump - 4), B = interp(sg.pts, sg.jump); if (!A || !B) continue;
+      let A = interp(sg.pts, sg.jump - 4), B = interp(sg.pts, sg.jump);
+      if (sg.kind === "recall" && sg.route) { const rt = sg.route, k0 = sg.jump - rt.t0; A = [rt.x0 + rt.vx * (k0 - 4), rt.y0 + rt.vy * (k0 - 4)]; B = [rt.x0 + rt.vx * k0, rt.y0 + rt.vy * k0]; }  // 블루칩 헬기는 비행 경로(직선)를 따라
+      if (!A || !B) continue;
       const dx = B[0] - A[0], dy = B[1] - A[1], dl = Math.hypot(dx, dy); if (dl < 1e-6) continue;
       const v = dl / 4, go = v * (rp.t - sg.jump), hx = B[0] + dx / dl * go, hy = B[1] + dy / dl * go;
-      ctx.globalAlpha = Math.max(0, Math.min(1, (sg.jump + 25 - rp.t) / 6)); drawEmPlane(ctx, X(hx), Y(hy), Math.atan2(Y(B[1]) - Y(A[1]), X(B[0]) - X(A[0])), RP_COLORS[p.slot % 4], 12); ctx.globalAlpha = 1;
+      ctx.globalAlpha = Math.max(0, Math.min(1, (sg.jump + 25 - rp.t) / 6)); const hang = Math.atan2(Y(B[1]) - Y(A[1]), X(B[0]) - X(A[0]));
+      if (sg.kind === "recall") drawHeli(ctx, X(hx), Y(hy), hang, RP_COLORS[p.slot % 4], airSz(15, 30, 8, 30), now, "heli_5"); else drawEmPlane(ctx, X(hx), Y(hy), hang, RP_COLORS[p.slot % 4], airSz(12, 40, 6, 26)); ctx.globalAlpha = 1;
+    }
+  }
+  if (rp.foes) {  // v147 적 비상호출 비행기도: 마지막 사람이 내린 뒤 같은 방향으로 25초 더 날아가며 흐려짐
+    if (!R._foeEmOut) {
+      const G = [];
+      for (const en of R.enemies || []) for (const e of en.em || []) {
+        if (e[1] == null || e[1] <= e[0]) continue;
+        let g = G.find(q => q.tm === en.tm && Math.abs(q.lift - e[0]) < 8);
+        if (!g) G.push(g = {tm: en.tm, lift: e[0], j: -1, en: null});
+        if (e[1] > g.j) { g.j = e[1]; g.en = en; }
+      }
+      R._foeEmOut = G.map(g => { const A = interp(g.en.tr, g.j - 4), B = interp(g.en.tr, g.j); return A && B && Math.hypot(B[0] - A[0], B[1] - A[1]) > 1e-6 ? {tm: g.tm, j: g.j, A, B} : null; }).filter(Boolean);
+    }
+    for (const g of R._foeEmOut) {
+      if (rp.t < g.j || rp.t > g.j + 25) continue;
+      const dx = g.B[0] - g.A[0], dy = g.B[1] - g.A[1], dl = Math.hypot(dx, dy), go = dl / 4 * (rp.t - g.j);
+      ctx.globalAlpha = Math.max(0, Math.min(1, (g.j + 25 - rp.t) / 6)) * .95;
+      drawEmPlane(ctx, X(g.B[0] + dx / dl * go), Y(g.B[1] + dy / dl * go), Math.atan2(Y(g.B[1]) - Y(g.A[1]), X(g.B[0]) - X(g.A[0])), teamColor(g.tm || 0), airSz(11, 40, 9, 22)); ctx.globalAlpha = 1;
     }
   }
   for (const en of R._mates || []) {  // v118 3인 판의 랜덤 팀원: 회색 테두리 금색 점 + 이름 (죽으면 X)
@@ -5034,8 +5055,8 @@ function rpDraw(dt, now, view) {
         // 같은 비행기에 탄 팀원은 비행기 하나만: 처음 비행기는 늘 하나, 블루칩·비상호출은 300m 안이면 같은 비행기
         // (팀원마다 위치 기록 시각이 달라 같은 비행기라도 수백 m 어긋나 보일 수 있음)
         if (!planesDrawn.some(o => o.kind === sg.kind && (sg.kind === "start" || Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < (o.route ? 800 : sg.kind === "emergency" ? 1500 : 300)))) {  // v109 비상호출 헬기는 빨라서 팀원마다 위치 기록이 어긋나 2대로 보였음
-          if (sg.kind === "emergency") drawEmPlane(ctx, x, y, ang, col, 12);  // v141 비상호출: EP-01 군용 수송기
-          else if (sg.kind === "recall") drawHeli(ctx, x, y, ang, col, 15, now, "heli_5");  // 블루칩 복귀: 치누크
+          if (sg.kind === "emergency") drawEmPlane(ctx, x, y, ang, col, airSz(12, 40, 6, 26));  // v141 비상호출: EP-01 군용 수송기
+          else if (sg.kind === "recall") drawHeli(ctx, x, y, ang, col, airSz(15, 30, 8, 30), now, "heli_5");  // 블루칩 복귀: 치누크
           else drawPlane(ctx, x, y, ang, col, 10);
         planesDrawn.push({q, kind: sg.kind}); drew = true;
         }
@@ -6327,6 +6348,9 @@ const EP01 = {  // v141 EP-01 군용 수송기 (위에서 본 모양, 100칸 그
   wing: new Path2D("M6 40l38-4h12l38 4v7l-38 1H44L6 47z"),
   eng: [[18, 33, 5, 10], [31, 31, 5, 10], [64, 31, 5, 10], [77, 33, 5, 10]],
 };
+function airSz(base, m, lo, hi) {  // v146 비행기·헬기 크기: 지도와 같이 커지고 작아짐 (실제 크기 m미터, 너무 작거나 크지 않게)
+  const M = rp._M || 0; return M ? Math.max(lo, Math.min(hi, m * M / 5)) : base;
+}
 function drawEmPlane(ctx, x, y, ang, col, size) {  // 비상호출 비행기: 그림자 + 수송기 + 팀 색 띠 (size 12 ≈ 헬기와 비슷한 크기)
   const k = size * 5 / 100;
   ctx.save(); ctx.translate(x, y);
@@ -6543,7 +6567,7 @@ function buggyImg(col) {
 }
 function drawVeh(ctx, x, y, r, col, vid, headFn, now) {  // 일반 차는 핸들, 특수 탈것은 배지 없는 실루엣 (가는 방향으로 돌아감)
   const k = vehKind(vid);
-  if (k === "buggy") { const im = buggyImg(col); if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, sz = r * 3.4; drawSprite(ctx, im, x, y, ang, sz, {outline: "white", ow: 1.6}); return; } return drawWheel(ctx, x, y, r, col); }  // v142 버기: BG-30 (v143 흰 테두리)
+  if (k === "buggy") { const im = buggyImg(col); if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, sz = r * 2.9; drawSprite(ctx, im, x, y, ang, sz, {outline: "white", ow: 1.6}); return; } return drawWheel(ctx, x, y, r, col); }  // v142 버기: BG-30 (v143 흰 테두리)
   if (k === "car") return drawWheel(ctx, x, y, r, col);
   const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, s = r * 1.45;
   if (k !== "boat") { try { return VEH2(ctx, k, x, y, r * 1.2, col, ang, now); } catch (e) { return drawWheel(ctx, x, y, r, col); } }  // v106 자전거·오토바이 크기 줄임 (1.6 → 1.2)  // v97 글라이더 · 자전거 · 오토바이 = VS-04
