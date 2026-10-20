@@ -1940,8 +1940,8 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 #shareCard .sc-sub{display:flex;gap:16px;font-size:16px;color:var(--dust);margin-top:6px;flex-wrap:wrap}#shareCard .sc-sub b{color:var(--bone);font-weight:700;margin-left:3px;font:inherit;font-weight:700;display:inline}
 #shareCard .vc-champ .sc-sub{justify-content:center}
 #shareCard .sc-medals>div,#shareCard .vc-row{border-radius:14px;background:rgba(16,18,13,.5);border-color:var(--line)}
-#shareCard .sc-medals>.r2,#shareCard .vc-row.r2{background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(200,205,211,.16),transparent 70%),rgba(16,18,13,.5);border-color:rgba(200,205,211,.45)}
-#shareCard .sc-medals>.r3,#shareCard .vc-row.r3{background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(196,123,69,.16),transparent 70%),rgba(16,18,13,.5);border-color:rgba(196,123,69,.45)}
+#shareCard .sc-medals>.r2,#shareCard .vc-row.r2{background:radial-gradient(ellipse 85% 85% at 50% 0%,rgba(200,205,211,.34),transparent 75%),linear-gradient(180deg,rgba(200,205,211,.10),rgba(16,18,13,.5));border:1.5px solid rgba(200,205,211,.8)}
+#shareCard .sc-medals>.r3,#shareCard .vc-row.r3{background:radial-gradient(ellipse 85% 85% at 50% 0%,rgba(196,123,69,.36),transparent 75%),linear-gradient(180deg,rgba(196,123,69,.12),rgba(16,18,13,.5));border:1.5px solid rgba(214,140,84,.85)}
 #shareCard .sc-medals>.worst,#shareCard .vc-row.worst{background:linear-gradient(180deg,rgba(224,83,47,.22),rgba(16,18,13,.55));border-color:var(--flare)}
 #shareCard .sc-table{border-radius:12px;overflow:hidden;border-collapse:separate;border-spacing:0;background:rgba(16,18,13,.45)}
 #shareCard .sc-table tr:first-child td{border-top:0}
@@ -4412,16 +4412,12 @@ function rpUpdatePip(now, dt) {
   } else {
     // 지난번 메인·보조와 겹치는 무리를 이어서 씀 (무리가 같으면 순서를 함부로 바꾸지 않음)
     const overlap = (g, list) => g.filter(m => list.includes(m.p.nick)).length;
-    let main = [...G].sort((a, b) => overlap(b, P.main) - overlap(a, P.main) || rpSceneScore(b, rp.t) - rpSceneScore(a, rp.t) || b.length - a.length)[0];
-    if (P.on && P.cam && overlap(main, P.main) === 0 && overlap(main, P.sub) > 0) { const c = {...rp.cam}; rp.cam = {...P.cam}; P.cam = c; P.swapAt = now; rpWipe(); }  // 메인이 바뀌면 화면도 서로 바꿔서 줌이 튀지 않게
-    let sub = G.filter(g => g !== main).sort((a, b) => overlap(b, P.sub) - overlap(a, P.sub) || rpSceneScore(b, rp.t) - rpSceneScore(a, rp.t))[0];
-    if (!P.main.length) {  // 처음: 중요한 장면을 메인으로
-      if (rpSceneScore(sub, rp.t) > rpSceneScore(main, rp.t)) [main, sub] = [sub, main];
-    } else if ((rpSceneTier(sub, rp.t) > rpSceneTier(main, rp.t) && now - P.swapAt > (rpSceneTier(sub, rp.t) >= 2 ? 1500 : 3500))  // 더 높은 등급(킬 > 기절 > 교전)이 생기면 바로 메인으로
-               || (now - P.swapAt > C.pip_swap_s * 1000 && rpSceneTier(sub, rp.t) === rpSceneTier(main, rp.t) && rpSceneScore(sub, rp.t) - rpSceneScore(main, rp.t) > C.pip_swap_margin)) {
-      [main, sub] = [sub, main]; P.swapAt = now;  // 같은 등급이면 보조 쪽이 확실히 더 중요해졌을 때만 바꿈
-      if (P.cam) { const c = {...rp.cam}; rp.cam = {...P.cam}; P.cam = c; rpWipe(); }  // 화면을 서로 바꿔서 끊기지 않게
-    }
+    // v137 인원이 많은 쪽이 메인, 적은 쪽이 PIP(보조)로 고정 — 장면 점수로 이리저리 바꾸지 않음 (같은 인원이면 지난번 배치 유지)
+    const ord = [...G].sort((a, b) => b.length - a.length || overlap(b, P.main) - overlap(a, P.main) || rpSceneScore(b, rp.t) - rpSceneScore(a, rp.t));
+    let main = ord[0];
+    let sub = G.filter(g => g !== main).sort((a, b) => overlap(b, P.sub) - overlap(a, P.sub) || a.length - b.length || rpSceneScore(b, rp.t) - rpSceneScore(a, rp.t))[0];
+    if (P.on && P.cam && P.main.length && overlap(main, P.main) === 0 && overlap(main, P.sub) > 0 && now - P.swapAt > 8000) { const c = {...rp.cam}; rp.cam = {...P.cam}; P.cam = c; P.swapAt = now; rpWipe(); }  // 인원이 바뀌어 메인이 바뀔 때만 (8초에 한 번까지)
+    else if (P.on && P.main.length && overlap(main, P.main) === 0 && overlap(main, P.sub) > 0) { main = G.find(g => overlap(g, P.main) > 0) || main; sub = G.filter(g => g !== main)[0]; }
     const gap = Math.min(...main.flatMap(a => sub.map(b => Math.hypot(a.q[0] - b.q[0], a.q[1] - b.q[1])))) * R.size_m;
     if (!P.on) {
       if (gap > C.pip_split_m) { P.want = P.want || now; if (now - P.want > C.pip_open_s * 1000) { P.on = true; P.since = now; P.swapAt = now; P.cam = null; } } else P.want = 0;
