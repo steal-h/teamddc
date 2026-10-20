@@ -85,9 +85,9 @@ button,input,select{font:inherit;color:inherit}
 .absent{text-align:center;margin-top:10px;color:var(--dust)}
 .share-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:20px 0 6px}
 /* v100 SR-02 한 줄 아이콘 툴바 */
-.share-row.tbar{gap:0;width:fit-content;max-width:100%;margin:20px auto 6px;border:1px solid var(--line);border-radius:10px;background:rgba(0,0,0,.18);padding:4px;flex-wrap:nowrap}
+.share-row.tbar{gap:0;width:fit-content;max-width:100%;margin:22px auto 0;border:1px solid var(--line);border-radius:10px;background:rgba(0,0,0,.18);padding:4px;flex-wrap:nowrap}
 .tbar .tb-g{display:flex;align-items:center;gap:2px;padding:0 4px}.tbar .tb-g+.tb-g{border-left:1px solid var(--line)}
-.tbar .btn{border:0;border-radius:7px;min-height:38px;padding:8px 12px;color:var(--dust);background:none;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;font-size:14px}
+.tbar .btn{border:0;border-radius:7px;min-height:34px;padding:6px 12px;color:var(--dust);background:none;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;font-size:14px}
 .tbar .btn:hover{color:var(--bone);background:rgba(255,255,255,.05)}.tbar .btn.primary{background:var(--accent);color:var(--accent-ink,#2A2208)}
 .tbar .btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .tbar .seg{margin-right:4px}
@@ -1601,7 +1601,7 @@ html,body{overscroll-behavior-y:none}
   .rp-side .rp-mhud .ph{width:auto;flex:none;grid-template-columns:26px minmax(0,1fr);gap:2px 6px;padding:4px 6px;border-radius:7px;background:rgba(30,34,26,.7);backdrop-filter:none}
   .rp-side .rp-mhud .ph .pic{width:26px;height:26px;border-radius:5px;font-size:12px;outline-width:1.5px}
   .rp-side .rp-mhud .ph .nm{font-size:11.5px;gap:4px}
-  .rp-side .rp-mhud .ph .nm em{font-size:11px}.rp-side .rp-mhud .ph .nm em small{display:none}
+  .rp-side .rp-mhud .ph .nm em{font-size:11px}.rp-side .rp-mhud .ph .nm em small{font-size:9.5px;opacity:.85}  /* v130 모바일에도 어시스트 */
   .rp-side .rp-mhud .hp{height:4px}
   .rp-side .rp-mhud .ph .st{display:flex;font-size:10.5px;gap:4px;line-height:1.1}
   .rp-side .rp-mhud .st .sti{width:12px;height:12px}
@@ -1720,6 +1720,7 @@ td.mapc .mapn{color:color-mix(in srgb,var(--mc) 70%,var(--bone));font-weight:700
 @media (prefers-reduced-motion:reduce){.visit .vdot i{animation:none}}
 @media (max-width:620px){.visit{font-size:11px;padding:2px 8px;gap:5px}.visit .uic{display:none}}
 
+.share-row.tbar~.share-msg:empty,.share-row.tbar~.reel-msg:empty{display:none}.share-row.tbar~.sec{margin-top:26px}  /* v130 버튼 줄 위아래 간격 맞춤 */
 /* v78 점수 계산 안내: 표 없이 배점 칸 + 단계 목록 */
 #scoreDlg{width:min(760px,96vw)}
 #scoreDlg .body{display:flex;flex-direction:column;gap:14px;padding:20px 24px 16px}
@@ -2081,7 +2082,7 @@ html.share-mode body::before{display:none}
 <div class="replay hidden" id="replay" role="dialog" aria-modal="true" aria-label="리플레이">
   <div class="rp-top">
     <div><b id="rpTitle">리플레이</b><span id="rpSub"></span></div>
-    <div class="btns"><button class="btn ic" id="rpSnd" type="button" aria-pressed="true" title="효과음 켜기·끄기" aria-label="효과음"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="spk" d="M3 8h3l4-3v10l-4-3H3z"/><path class="on" d="M13 7.5a3.5 3.5 0 0 1 0 5M15.2 5.5a6.4 6.4 0 0 1 0 9"/><path class="off" d="m13 8 4 4m0-4-4 4"/></svg></button><span class="mix-wrap rp-mix"><button class="btn ic mix-btn" id="rpMix" type="button" aria-label="소리 크기" title="소리 크기" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 3v14M10 3v14M16 3v14"/><circle cx="4" cy="12" r="1.8"/><circle cx="10" cy="7" r="1.8"/><circle cx="16" cy="13" r="1.8"/></svg></button><div class="mix-panel" role="dialog" aria-label="소리 크기" hidden>
+    <div class="btns"><button class="btn ic" id="rpSnd" hidden type="button" aria-pressed="true" title="효과음 켜기·끄기" aria-label="효과음"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="spk" d="M3 8h3l4-3v10l-4-3H3z"/><path class="on" d="M13 7.5a3.5 3.5 0 0 1 0 5M15.2 5.5a6.4 6.4 0 0 1 0 9"/><path class="off" d="m13 8 4 4m0-4-4 4"/></svg></button><span class="mix-wrap rp-mix"><button class="btn ic mix-btn" id="rpMix" type="button" aria-label="소리 크기" title="소리 크기 (전체 볼륨 0이면 꺼짐)" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8h3l4-3v10l-4-3H3z"/><path d="M13 7.5a3.5 3.5 0 0 1 0 5M15.2 5.5a6.4 6.4 0 0 1 0 9"/></svg></button><div class="mix-panel" role="dialog" aria-label="소리 크기" hidden>
           <b>소리 크기</b><small>이 기기에만 저장돼요</small>
           <label><span>전체</span><input type="range" min="0" max="100" step="5" data-mix="vol"><em></em></label>
           <label><span>지도 소리</span><input type="range" min="0" max="150" step="5" data-mix="rpVolW"><em></em></label>
@@ -4874,9 +4875,10 @@ function rpDraw(dt, now, view) {
     rpBeam(ctx, X(cx), Y(cy), age, 12, "60,200,90", "140,240,150", `${co ? rpName(cn) : (ctm ?? "") + "팀"} 긴급지원 신호탄`, co ? "#B8F5B0" : teamColor(ctm || 0), now, co ? 1 : .8);
   }
   if (!R._chipBeams) {  // v129 블루칩 보급 호출 빛기둥: 블루칩 사용 기록 + 기록이 없거나 못 맞춘 블루칩 보급은 떨어지기 약 100초 전에 그 자리에서
-    const C = (R.chipcalls || []).filter(c => rpNearTower(R, c[1], c[2]) || (R.packages || []).some(q => q[7] === "c" && Math.hypot(q[2] - c[1], q[3] - c[2]) * R.size_m < 150));
-    for (const q of R.packages || []) if (q[7] === "c" && !C.some(c => c[0] <= q[0] && q[0] - c[0] < 200 && Math.hypot(q[2] - c[1], q[3] - c[2]) * R.size_m < 150)) {
-      const ours = q[8] && R.players.some(p => p.nick === q[8]); C.push([Math.max(0, q[0] - 100), q[2], q[3], q[8] || "", q[9], ours ? 1 : 0]);
+    // v130 블루칩 사용 중 '보급 호출'은 뒤이어 그 송신기 옆에 블루칩 보급이 떨어진 것만 (팀원 부활 송신은 '블루칩 송신'으로 따로 표시됨)
+    const C = (R.chipcalls || []).filter(c => (R.packages || []).some(q => q[7] === "c" && q[0] >= c[0] && q[0] - c[0] < 60 && Math.hypot(q[2] - c[1], q[3] - c[2]) * R.size_m < 150));
+    for (const q of R.packages || []) if (q[7] === "c" && !C.some(c => c[0] <= q[0] && q[0] - c[0] < 60 && Math.hypot(q[2] - c[1], q[3] - c[2]) * R.size_m < 150)) {
+      const ours = q[8] && R.players.some(p => p.nick === q[8]); C.push([Math.max(0, q[0] - 3), q[2], q[3], q[8] || "", q[9], ours ? 1 : 0]);
     }
     R._chipBeams = C;
   }
@@ -4896,6 +4898,21 @@ function rpDraw(dt, now, view) {
   }
 
   { const ts = Math.max(.7, Math.min(1.1, .7 + (S / Math.max(W, H) - 1) * .1)); for (const [tx, ty] of rpTowers(R)) drawTower(ctx, X(tx), Y(ty), ts); }  // v119 블루칩 송신기
+  {  // v130 비상호출 헬기: 태우기 전 25초 동안 날아오는 길을 따라 미리 다가와서 딱 태우는 순간 그 자리에
+    const seen = [];
+    for (const p of R.players) for (const sg of p.air || []) {
+      if (sg.kind !== "emergency" || rp.t >= sg.t0 || rp.t < sg.t0 - 25 || seen.some(v => Math.abs(v - sg.t0) < 4)) continue;
+      seen.push(sg.t0);
+      const P0 = sg.pts[0], P1 = interp(sg.pts, Math.min(sg.t1, sg.t0 + 10)); if (!P0 || !P1) continue;
+      const dx = P1[0] - P0[1], dy = P1[1] - P0[2], dl = Math.hypot(dx, dy); if (dl < 1e-5) continue;
+      const v = dl / Math.max(1, Math.min(sg.t1, sg.t0 + 10) - sg.t0), back = v * (sg.t0 - rp.t);
+      const hx = P0[1] - dx / dl * back, hy = P0[2] - dy / dl * back, fa = Math.min(1, (rp.t - (sg.t0 - 25)) / 1.5);
+      ctx.globalAlpha = fa; drawHeli(ctx, X(hx), Y(hy), Math.atan2(Y(P1[1]) - Y(P0[2]), X(P1[0]) - X(P0[1])), RP_COLORS[p.slot % 4], 12, now); ctx.globalAlpha = 1;
+      ctx.font = "700 12px Pretendard, 'Malgun Gothic', sans-serif"; const lb = "비상호출", tw = ctx.measureText(lb).width + 12, x = X(hx), y = Y(hy) - 22;
+      ctx.fillStyle = "rgba(20,23,15,.85)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y - 9, tw, 18, 9); else ctx.rect(x - tw / 2, y - 9, tw, 18); ctx.fill();
+      ctx.fillStyle = "#FFE9A0"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lb, x, y);
+    }
+  }
   for (const en of R._mates || []) {  // v118 3인 판의 랜덤 팀원: 회색 테두리 금색 점 + 이름 (죽으면 X)
     if (!en.tr.length || rp.t < en.tr[0][0]) continue;
     const dead = en.d != null && rp.t >= en.d, q = interp(en.tr.filter(r => r[1] != null && (!dead || r[0] <= en.d)), dead ? en.d : rp.t); if (!q) continue;
@@ -7459,7 +7476,7 @@ if (Q.get("card")) {
 })();
 
 // v77 리플레이 효과음 켜기·끄기 (기기마다 기억) · 시네마 모드
-rp.sndOn = true; try { rp.sndOn = localStorage.getItem("ddc_rpsnd") !== "0"; } catch {}
+rp.sndOn = true;  // v130 효과음 켜기·끄기 버튼은 소리 크기(전체 볼륨)로 합침
 const paintRpSnd = () => $("#rpSnd").setAttribute("aria-pressed", String(rp.sndOn));
 paintRpSnd();
 $("#rpSnd").onclick = () => { rp.sndOn = !rp.sndOn; try { localStorage.setItem("ddc_rpsnd", rp.sndOn ? "1" : "0"); } catch {} paintRpSnd(); if (rp.sndOn) ensureAudio(); else rpHum(false); };
