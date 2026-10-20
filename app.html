@@ -4714,7 +4714,8 @@ function rpDraw(dt, now, view) {
     if (pk !== "s" && rp.t >= st - 5 && rp.t < st + 7) {  // 보급·플레어 보급·BRDM: 치누크 헬기가 지나가며 떨어뜨림
       const rt = R.plane, dx = rt ? rt.vx : 1, dy = rt ? rt.vy : 0, dl = Math.hypot(dx, dy) || 1, v = 60 / R.size_m, u = (rp.t - st) * v;
       const qx = px + dx / dl * u, qy = py + dy / dl * u, fa = Math.max(0, Math.min(1, (rp.t - st + 5) / 1.2, (st + 7 - rp.t) / 1.2));
-      ctx.globalAlpha = fa; drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, pk ? 15 : 13, now, "heli_5"); ctx.globalAlpha = 1;
+      ctx.globalAlpha = fa; { const pid = ["12", "13", "18"][Math.abs(Math.round(st * 7 + px * 1000)) % 3], im = svgImg("sp" + pid, SUPPLY_PLANES[pid]);  // v143 보급 비행기 (EP-12/13/18, 그림자)
+        if (im) drawSprite(ctx, im, X(qx), Y(qy), Math.atan2(dy, dx), (pk ? 15 : 13) * 7, {shadow: true}); else drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, pk ? 15 : 13, now, "heli_5"); } ctx.globalAlpha = 1;
     }
     const by = by0 && bt >= lt ? by0 : null;  // 착지 전에 '획득'은 있을 수 없음 (예전 리플레이에서 상자가 섞인 경우)
     const ot = ot0 != null && ot0 >= lt ? ot0 : by ? bt : null, opened = ot != null && rp.t >= ot;
@@ -4792,10 +4793,29 @@ function rpDraw(dt, now, view) {
   allThrows.forEach(([[tt, tx, ty, who, kind, ix, iy, est, boomAt, ftm], foe], idx) => {
     const tcol = foe ? teamColor(ftm || 0) : "#F2A900";  // 아이템 테두리 = 던진 팀 색
     const {FLY, fuse} = throwTiming(kind, boomAt);  // 실제로 터진 시각에 맞춰 날아감 (요리한 수류탄은 빨리), C4 타이머
-    const life = {grenade: 6.5, sticky: 6.5, c4: fuse + 6.5, molotov: 10, smoke: 28, flash: 7, bluezone: 7}[kind] || 6;
+    const life = {grenade: 6.5, sticky: 6.5, c4: fuse + 6.5, molotov: 10, smoke: 28, m79: 28, flash: 7, bluezone: 7}[kind] || 6;
     const age = rp.t - tt; if (age < 0 || age > FLY + life) return;
     const x1 = X(tx), y1 = Y(ty), x2 = X(ix), y2 = Y(iy), dist = Math.hypot(x2 - x1, y2 - y1), arc = Math.min(60, dist * .35 + 8);
     const rnd = k => ((Math.sin((idx + 1) * 12.9898 + k * 78.233) * 43758.5453) % 1 + 1) % 1;
+    if (kind === "m79") {  // v143 연막 권총(M79): 낮게 쭉 날아가는 탄 + 하얀 꼬리 → 떨어지면 '퍽' 퍼지는 연막 (던진 연막과 구분되게 청회색 연막 + 'M79 연막' 표시)
+      const F = .7;
+      if (age < F) { const k = age / F, a2 = arc * .35, px = x1 + (x2 - x1) * k, py = y1 + (y2 - y1) * k - Math.sin(Math.PI * k) * a2;
+        ctx.save(); ctx.lineCap = "round";
+        for (let i = 1; i <= 8; i++) { const u = Math.max(0, k - i * .03), qx = x1 + (x2 - x1) * u, qy = y1 + (y2 - y1) * u - Math.sin(Math.PI * u) * a2; ctx.beginPath(); ctx.arc(qx, qy, 2 + i * .5, 0, Math.PI * 2); ctx.fillStyle = `rgba(225,230,235,${.5 - i * .055})`; ctx.fill(); }
+        ctx.beginPath(); ctx.arc(px, py, 3.6, 0, Math.PI * 2); ctx.fillStyle = "#cfd8e0"; ctx.fill(); ctx.lineWidth = 1.6; ctx.strokeStyle = tcol; ctx.stroke(); ctx.restore();
+        if (age < .12) rpMuzzle(ctx, x1, y1, Math.atan2(y2 - y1, x2 - x1), 1 - age / .12, 10, dist);
+        return; }
+      const te = age - F; if (te > life) return;
+      const fade = 1 - Math.max(0, Math.min(1, (te - (life - 3)) / 3)), seed = Math.round(tt * 10) % 997 + idx;
+      // v144 MS-03 탄착 섬광 + 연막: 떨어지는 순간 하얀 섬광 + 사방으로 튀는 파편 줄 → 이어서 하얀 연막
+      const fs = fxS(M, .2, .7), rr = te > .15 ? (fxSmoke(ctx, x2, y2, te - .15, life, fs, seed) || 0) : 0;
+      if (te < .35) { const e = te / .35, R0 = 60 * Math.max(.6, fs), g = ctx.createRadialGradient(x2, y2, 0, x2, y2, R0);
+        g.addColorStop(0, `rgba(255,255,240,${1 - e})`); g.addColorStop(1, "rgba(255,255,240,0)"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x2, y2, R0, 0, Math.PI * 2); ctx.fill();
+        ctx.lineWidth = 2; ctx.strokeStyle = `rgba(255,230,170,${1 - e})`;
+        for (let n = 0; n < 14; n++) { const an = n / 14 * Math.PI * 2, d = (10 + e * 46) * Math.max(.6, fs); ctx.beginPath(); ctx.moveTo(x2 + Math.cos(an) * d * .6, y2 + Math.sin(an) * d * .6); ctx.lineTo(x2 + Math.cos(an) * d, y2 + Math.sin(an) * d); ctx.stroke(); } }
+      if (te < 6) rpLabel(ctx, "M79 연막", x2, y2 - rr - 10, "#E8EEF2", fade * Math.min(1, (6 - te) / 2));
+      return;
+    }
     if (age < FLY) {  // 날아가는 중: 점선 궤적 + 날아가는 투척물
       const k = age / FLY;
       ctx.save(); ctx.setLineDash([3, 4]); ctx.strokeStyle = foe ? "rgba(255,110,90,.85)" : "rgba(238,232,213,.6)"; ctx.lineWidth = 1.5; ctx.beginPath();
@@ -4949,6 +4969,18 @@ function rpDraw(dt, now, view) {
       ctx.font = "700 12px Pretendard, 'Malgun Gothic', sans-serif"; const lb = "비상호출", tw = ctx.measureText(lb).width + 12, x = X(hx), y = Y(hy) - 22;
       ctx.fillStyle = "rgba(20,23,15,.85)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y - 9, tw, 18, 9); else ctx.rect(x - tw / 2, y - 9, tw, 18); ctx.fill();
       ctx.fillStyle = "#FFE9A0"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lb, x, y);
+    }
+  }
+  {  // v143 비상호출 비행기: 다 내려 준 뒤에도 사라지지 않고 같은 방향으로 25초 더 날아가며 흐려짐
+    const seen2 = [];
+    for (const p of R.players) for (const sg of p.air || []) {
+      if (sg.kind !== "emergency" || sg.jump == null || rp.t < sg.jump || rp.t > sg.jump + 25 || seen2.some(v => Math.abs(v - sg.jump) < 6)) continue;
+      if (R.players.some(o => o !== p && (o.air || []).some(a => a.kind === "emergency" && a.jump != null && Math.abs(a.t0 - sg.t0) < 6 && a.jump > sg.jump && rp.t < a.jump))) continue;  // 아직 타고 있는 팀원이 있으면 그 사람 그림이 비행기
+      seen2.push(sg.jump);
+      const A = interp(sg.pts, sg.jump - 4), B = interp(sg.pts, sg.jump); if (!A || !B) continue;
+      const dx = B[0] - A[0], dy = B[1] - A[1], dl = Math.hypot(dx, dy); if (dl < 1e-6) continue;
+      const v = dl / 4, go = v * (rp.t - sg.jump), hx = B[0] + dx / dl * go, hy = B[1] + dy / dl * go;
+      ctx.globalAlpha = Math.max(0, Math.min(1, (sg.jump + 25 - rp.t) / 6)); drawEmPlane(ctx, X(hx), Y(hy), Math.atan2(Y(B[1]) - Y(A[1]), X(B[0]) - X(A[0])), RP_COLORS[p.slot % 4], 12); ctx.globalAlpha = 1;
     }
   }
   for (const en of R._mates || []) {  // v118 3인 판의 랜덤 팀원: 회색 테두리 금색 점 + 이름 (죽으면 X)
@@ -5137,7 +5169,7 @@ function rpDraw(dt, now, view) {
           if (!foePlanes.some(o => o.tm === en.tm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 1500)) {
             const a = interp(en.tr, rp.t - 1) || q, b = interp(en.tr, rp.t + 1) || q;
             const ha = Math.atan2(Y(b[1]) - Y(a[1]), X(b[0]) - X(a[0])), isEm = !guessAir && (en.em || []).includes(em);
-            if (isEm) drawEmPlane(ctx, x, y, ha, col, big ? 10 : 8); else drawHeli(ctx, x, y, ha, col, big ? 10 : 8, now); foePlanes.push({q, tm: en.tm});
+            if (isEm) drawEmPlane(ctx, x, y, ha, col, big ? 10 : 8); else drawHeli(ctx, x, y, ha, col, big ? 12 : 10, now, guessAir ? undefined : "heli_5");  // v143 적 블루칩 복귀도 치누크 foePlanes.push({q, tm: en.tm});
           }
         } else {
           drawChute(ctx, x, y, col, null);
@@ -6488,6 +6520,20 @@ function shadowOf(c, kind, x, y, r, ang, now, dx, dy, a, blur) {  // 같은 모�
     sprite(c, kind, x, y, r, col, ang, now, null, {...NAT, pod: col, pod2: dk, frame: col, frame2: dk, tank: col, tank2: mix(col, "#000000", .6), jacket: col, jacket2: col, noRider: true});
   };
 })();
+const SUPPLY_PLANES = {"12": "<g stroke=\"#0b0d08\" stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"2.2\"><path d=\"M50 4c5 0 6 8 6 16v54l16 11v5H28v-5l16-11V20c0-8 1-16 6-16z\" fill=\"#6a7458\"/><path d=\"M44 34L5 52v7l39-11zM56 34l39 18v7L56 48z\" fill=\"#7f8a6a\"/><g fill=\"#454d3a\"><rect x=\"17\" y=\"40\" width=\"6\" height=\"12\" rx=\"2\" transform=\"rotate(-14 20 46)\"/><rect x=\"31\" y=\"35\" width=\"6\" height=\"12\" rx=\"2\" transform=\"rotate(-14 34 41)\"/><rect x=\"63\" y=\"35\" width=\"6\" height=\"12\" rx=\"2\" transform=\"rotate(14 66 41)\"/><rect x=\"77\" y=\"40\" width=\"6\" height=\"12\" rx=\"2\" transform=\"rotate(14 80 46)\"/></g></g><path d=\"M47 9h6v6h-6z\" fill=\"#b9d3e8\"/><rect x=\"46\" y=\"62\" width=\"8\" height=\"14\" rx=\"2\" fill=\"#9aa08a\"/>", "13": "<g stroke=\"#0b0d08\" stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"2.2\"><path d=\"M50 5c4 0 6 7 6 15v56l14 9v5H30v-5l14-9V20c0-8 2-15 6-15z\" fill=\"#8d949a\"/><path d=\"M5 40l39-4h12l39 4v7l-39 1H44L5 47z\" fill=\"#a0a7ad\"/></g><path d=\"M5 40h9v7H5zM86 40h9v7h-9z\" fill=\"#9aa08a\"/><path d=\"M47 10h6v6h-6z\" fill=\"#cde2f2\"/><g fill=\"#5c6267\"><rect x=\"18\" y=\"34\" width=\"5\" height=\"10\" rx=\"1.5\"/><rect x=\"31\" y=\"32\" width=\"5\" height=\"10\" rx=\"1.5\"/><rect x=\"64\" y=\"32\" width=\"5\" height=\"10\" rx=\"1.5\"/><rect x=\"77\" y=\"34\" width=\"5\" height=\"10\" rx=\"1.5\"/></g>", "18": "<g stroke=\"#0b0d08\" stroke-linejoin=\"round\" stroke-linecap=\"round\" stroke-width=\"2.2\"><path d=\"M50 4c4 0 6 6 6 14v52l12 9v4H32v-4l12-9V18c0-8 2-14 6-14z\" fill=\"#6b7559\"/><path d=\"M8 38l36-4h12l36 4v7l-36 1H44L8 45z\" fill=\"#7c8768\"/><rect x=\"46\" y=\"86\" width=\"8\" height=\"8\" rx=\"1\" fill=\"#c9a96c\"/></g><path d=\"M44 79l-4 6M56 79l4 6\" stroke=\"#b9bfa8\" stroke-width=\"2\"/><rect x=\"45\" y=\"56\" width=\"10\" height=\"16\" rx=\"3\" fill=\"#9aa08a\"/><path d=\"M47 9h6v6h-6z\" fill=\"#b9d3e8\" stroke=\"#0b0d08\" stroke-width=\"1\"/>"};  // v143 일반 보급 비행기: EP-12 · EP-13 · EP-18 중 하나 (보급마다 정해짐)
+const SVGIMG = {};
+function svgImg(key, svg) {
+  let im = SVGIMG[key]; if (!im) { im = SVGIMG[key] = new Image(); im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="240" height="240">${svg}</svg>`); }
+  return im.complete && im.naturalWidth ? im : null;
+}
+function drawSprite(ctx, im, x, y, ang, sz, opt = {}) {  // 위에서 본 그림을 가는 방향으로 돌려서: 그림자(높이) · 테두리(잘 보이게) 선택
+  ctx.save(); ctx.translate(x, y);
+  if (opt.shadow) { ctx.save(); ctx.translate(sz * .14, sz * .2); ctx.rotate(ang + Math.PI / 2); ctx.globalAlpha *= .38; ctx.filter = "brightness(0)"; ctx.drawImage(im, -sz / 2, -sz / 2, sz, sz); ctx.restore(); }
+  ctx.rotate(ang + Math.PI / 2);
+  if (opt.outline) { ctx.save(); ctx.filter = opt.outline === "black" ? "brightness(0)" : "brightness(0) invert(1)"; const o = opt.ow || 1.8;
+    for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; ctx.drawImage(im, -sz / 2 + Math.cos(a) * o, -sz / 2 + Math.sin(a) * o, sz, sz); } ctx.restore(); }
+  ctx.drawImage(im, -sz / 2, -sz / 2, sz, sz); ctx.restore();
+}
 const BUGGY_SVG = "<g transform=\"translate(5 6)\" fill=\"rgba(0,0,0,.33)\"><path d=\"M31 6h38v86H31z\"/><rect x=\"6\" y=\"14\" width=\"20\" height=\"76\" rx=\"5\"/><rect x=\"74\" y=\"14\" width=\"20\" height=\"76\" rx=\"5\"/></g><rect x=\"12\" y=\"14\" width=\"13\" height=\"19\" rx=\"3.9\" fill=\"#1b1b18\" stroke=\"#0b0d08\" stroke-width=\"1.6\"/><path d=\"M13 17 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M13 21 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M13 25 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M13 29 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><rect x=\"75\" y=\"14\" width=\"13\" height=\"19\" rx=\"3.9\" fill=\"#1b1b18\" stroke=\"#0b0d08\" stroke-width=\"1.6\"/><path d=\"M76 17 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 21 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 25 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 29 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><rect x=\"6\" y=\"60\" width=\"19\" height=\"30\" rx=\"5.7\" fill=\"#1b1b18\" stroke=\"#0b0d08\" stroke-width=\"1.6\"/><path d=\"M7 63 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M7 67 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M7 71 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M7 75 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M7 79 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M7 83 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M7 87 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><rect x=\"75\" y=\"60\" width=\"19\" height=\"30\" rx=\"5.7\" fill=\"#1b1b18\" stroke=\"#0b0d08\" stroke-width=\"1.6\"/><path d=\"M76 63 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 67 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 71 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 75 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 79 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 83 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 87 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><g stroke=\"#2b2b27\" stroke-width=\"2.6\" stroke-linecap=\"round\"><path d=\"M25 22h11M64 22h11M25 70h9M66 70h9M25 80h9M66 80h9\"/></g><g fill=\"#E07A2A\" stroke=\"#0b0d08\" stroke-width=\"1\"><rect x=\"27\" y=\"17\" width=\"4\" height=\"9\" rx=\"1.5\"/><rect x=\"69\" y=\"17\" width=\"4\" height=\"9\" rx=\"1.5\"/><rect x=\"28\" y=\"64\" width=\"4\" height=\"10\" rx=\"1.5\"/><rect x=\"68\" y=\"64\" width=\"4\" height=\"10\" rx=\"1.5\"/></g><path d=\"M38 6h24c4 0 7 4 7 9v27H31V15c0-5 3-9 7-9z\" fill=\"__COL__\" stroke=\"#0b0d08\" stroke-width=\"2\"/><path d=\"M46 6l-2 36M54 6l2 36\" stroke=\"#141412\" stroke-width=\"5\" opacity=\".9\"/><g fill=\"#6b4a26\" opacity=\".55\"><circle cx=\"36\" cy=\"30\" r=\"3\"/><circle cx=\"63\" cy=\"16\" r=\"2.4\"/><circle cx=\"60\" cy=\"36\" r=\"2\"/></g><circle cx=\"40\" cy=\"7\" r=\"3.3\" fill=\"#fff6c8\" stroke=\"#0b0d08\" stroke-width=\"1.4\"/><circle cx=\"60\" cy=\"7\" r=\"3.3\" fill=\"#fff6c8\" stroke=\"#0b0d08\" stroke-width=\"1.4\"/><path d=\"M44 3h12\" stroke=\"#7d7d75\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M35 12c4-4 26-4 30 0\" stroke=\"rgba(255,255,255,.45)\" stroke-width=\"2.5\" fill=\"none\"/><g fill=\"#232320\" stroke=\"#0b0d08\" stroke-width=\"1.2\"><rect x=\"37\" y=\"50\" width=\"11\" height=\"15\" rx=\"3\"/><rect x=\"52\" y=\"50\" width=\"11\" height=\"15\" rx=\"3\"/></g><g fill=\"none\" stroke=\"#1f2a33\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M33 42h34v34H33z\"/><path d=\"M33 42l34 34M67 42L33 76\"/><path d=\"M36 76l-4 10h36l-4-10\"/></g><rect x=\"38\" y=\"78\" width=\"24\" height=\"13\" rx=\"2.5\" fill=\"#55554d\" stroke=\"#0b0d08\" stroke-width=\"1.6\"/><g fill=\"#8b8b82\"><circle cx=\"44\" cy=\"84.5\" r=\"2\"/><circle cx=\"50\" cy=\"84.5\" r=\"2\"/><circle cx=\"56\" cy=\"84.5\" r=\"2\"/></g>";  // v142 BG-30 배그 버기 (위에서 본 모양, 앞 = 위, 차체 = 팀 색)
 const BUGGY_IMG = {};
 function buggyImg(col) {
@@ -6497,7 +6543,7 @@ function buggyImg(col) {
 }
 function drawVeh(ctx, x, y, r, col, vid, headFn, now) {  // 일반 차는 핸들, 특수 탈것은 배지 없는 실루엣 (가는 방향으로 돌아감)
   const k = vehKind(vid);
-  if (k === "buggy") { const im = buggyImg(col); if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, sz = r * 3.4; ctx.save(); ctx.translate(x, y); ctx.rotate(ang + Math.PI / 2); ctx.drawImage(im, -sz / 2, -sz / 2, sz, sz); ctx.restore(); return; } return drawWheel(ctx, x, y, r, col); }  // v142 버기: BG-30
+  if (k === "buggy") { const im = buggyImg(col); if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, sz = r * 3.4; drawSprite(ctx, im, x, y, ang, sz, {outline: "white", ow: 1.6}); return; } return drawWheel(ctx, x, y, r, col); }  // v142 버기: BG-30 (v143 흰 테두리)
   if (k === "car") return drawWheel(ctx, x, y, r, col);
   const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, s = r * 1.45;
   if (k !== "boat") { try { return VEH2(ctx, k, x, y, r * 1.2, col, ang, now); } catch (e) { return drawWheel(ctx, x, y, r, col); } }  // v106 자전거·오토바이 크기 줄임 (1.6 → 1.2)  // v97 글라이더 · 자전거 · 오토바이 = VS-04
