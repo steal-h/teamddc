@@ -1721,6 +1721,7 @@ td.mapc .mapn{color:color-mix(in srgb,var(--mc) 70%,var(--bone));font-weight:700
 @media (max-width:620px){.visit{font-size:11px;padding:2px 8px;gap:5px}.visit .uic{display:none}}
 
 .share-row.tbar~.share-msg:empty,.share-row.tbar~.reel-msg:empty{display:none}.share-row.tbar~.sec{margin-top:26px}  /* v130 버튼 줄 위아래 간격 맞춤 */
+.tbl.mapwin td b{display:inline-flex;align-items:center;gap:4px;color:var(--gold)}.tbl.mapwin .chick{width:18px;height:18px}.mwbar{height:8px;border-radius:4px;background:rgba(255,255,255,.07);min-width:80px;overflow:hidden}.mwbar i{display:block;height:100%;background:linear-gradient(90deg,#8C6414,#F2B33D);border-radius:4px}  /* v139 맵별 치킨 */
 /* v78 점수 계산 안내: 표 없이 배점 칸 + 단계 목록 */
 #scoreDlg{width:min(760px,96vw)}
 #scoreDlg .body{display:flex;flex-direction:column;gap:14px;padding:20px 24px 16px}
@@ -1966,9 +1967,9 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 .rank1{font:400 28px/1 var(--num)!important;color:#F2B33D!important;letter-spacing:.06em;text-shadow:0 0 14px rgba(242,179,61,.45);margin-top:2px}
 @media (max-width:620px),(orientation:landscape) and (max-height:500px){.plaque>div{position:relative}.rank1{position:absolute;top:10px;right:12px;font-size:18px;margin:0}}
 .medal-card{background:rgba(16,18,13,.5)!important;backdrop-filter:blur(1px)}
-.medal-card.r2:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(200,205,211,.16),transparent 70%),rgba(16,18,13,.5)!important}
+.medal-card.r2:not(.worst){background:radial-gradient(ellipse 85% 85% at 50% 0%,rgba(200,205,211,.34),transparent 75%),linear-gradient(180deg,rgba(200,205,211,.10),rgba(16,18,13,.5))!important;border:1.5px solid rgba(200,205,211,.8)!important}  /* v138 은빛 진하게 */
 .medal-card.worst{background:linear-gradient(180deg,rgba(224,83,47,.22),rgba(16,18,13,.55))!important}
-.medal-card.r3:not(.worst){background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(196,123,69,.16),transparent 70%),rgba(16,18,13,.5)!important;border-color:rgba(196,123,69,.45)}  /* v90 2·3위 회색 테두리 */
+.medal-card.r3:not(.worst){background:radial-gradient(ellipse 85% 85% at 50% 0%,rgba(196,123,69,.36),transparent 75%),linear-gradient(180deg,rgba(196,123,69,.12),rgba(16,18,13,.5))!important;border:1.5px solid rgba(214,140,84,.85)!important}  /* v138 동빛 진하게 */  /* v90 2·3위 회색 테두리 */
 .medal-card.worst{background:linear-gradient(180deg,rgba(224,83,47,.16),#1c1f17 70%);border-color:rgba(224,83,47,.6)}
 @media (max-width:620px){.spot-st{gap:12px;justify-content:flex-start}.plaque .spot-st b{font-size:40px}.spot-st small{font-size:11px}.spot-sub{justify-content:flex-start;gap:10px;font-size:12px;grid-column:2}.medals::before{left:-10px;right:-10px}}
 @media (orientation:landscape) and (max-height:500px){.spot-st{justify-content:flex-start;gap:18px}.plaque .spot-st b{font-size:36px}.spot-sub{justify-content:flex-start;grid-column:2}}
@@ -4883,6 +4884,28 @@ function rpDraw(dt, now, view) {
     if (e.k === "ftransmit") rpBeam(ctx, X(e.x), Y(e.y), age, 8, "60,140,255", "110,190,255", `${e.tm ?? ""}팀 블루칩 송신`, teamColor(e.tm || 0), now, .8);  // 적 팀의 블루칩 송신
     else rpBeam(ctx, X(e.x), Y(e.y), age, 8, "60,140,255", "110,190,255", `${rpName(e.by)} 블루칩 송신${e.est ? " (추정)" : ""}`, "#9FD4FF", now);
   }
+  for (const [ct, sx, sy, ix, iy, ang, cn, ctm, co] of R.covers || []) {  // v139 긴급 엄폐 수류탄: 날아가서 떨어진 자리에 삼각형 엄폐물 2개 (약 90초)
+    const age = rp.t - ct; if (age < 0 || age > 100) continue;
+    const col = co ? "#F2A900" : teamColor(ctm || 0), Mx = S / R.size_m;
+    if (age < 1.3) { const k = age / 1.3, x = X(sx + (ix - sx) * k), y = Y(sy + (iy - sy) * k) - Math.sin(k * Math.PI) * 18;
+      ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fillStyle = "#FFB347"; ctx.fill(); ctx.strokeStyle = "#000"; ctx.lineWidth = 1; ctx.stroke(); continue; }
+    const a2 = age - 1.3, pop = Math.min(1, a2 / .35), fade = age > 90 ? 1 - (age - 90) / 10 : 1, px = -Math.sin(ang), py = Math.cos(ang);
+    const sz = Math.max(7, 4.5 * Mx) * (0.6 + .4 * pop);
+    ctx.save(); ctx.globalAlpha = fade;
+    for (const sd of [-1, 1]) {
+      const cx = X(ix) + px * sd * Math.max(6, 2.6 * Mx), cy = Y(iy) + py * sd * Math.max(6, 2.6 * Mx);
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(ang + Math.PI / 2 + sd * .25);
+      ctx.beginPath(); ctx.moveTo(0, -sz * .62); ctx.lineTo(sz * .6, sz * .42); ctx.lineTo(-sz * .6, sz * .42); ctx.closePath();
+      ctx.fillStyle = "#9A9C8E"; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = "rgba(0,0,0,.65)"; ctx.stroke(); ctx.lineWidth = 1.6; ctx.strokeStyle = col; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, -sz * .3); ctx.lineTo(sz * .3, sz * .25); ctx.lineTo(-sz * .3, sz * .25); ctx.closePath(); ctx.fillStyle = "rgba(255,255,255,.18)"; ctx.fill();
+      ctx.restore();
+    }
+    if (a2 < .6) { ctx.beginPath(); ctx.arc(X(ix), Y(iy), 6 + a2 * 40, 0, Math.PI * 2); ctx.strokeStyle = `rgba(255,220,150,${1 - a2 / .6})`; ctx.lineWidth = 2; ctx.stroke(); }
+    if (a2 < 6) { const lb = `${co ? rpName(cn) : (ctm ?? "") + "팀"} 긴급 엄폐`; ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText(lb).width + 12, ly = Y(iy) + sz + 10;
+      ctx.fillStyle = "rgba(20,23,15,.85)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(X(ix) - tw / 2, ly, tw, 17, 8); else ctx.rect(X(ix) - tw / 2, ly, tw, 17); ctx.fill();
+      ctx.fillStyle = co ? "#FFE3A0" : col; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lb, X(ix), ly + 9); }
+    ctx.restore();
+  }
   for (const [ct, cx, cy, cn, ctm, co] of R.pkflares || []) {  // v128 긴급지원 신호탄: 던진 자리에 초록 빛기둥 (멀티 보급이 떨어질 곳)
     const age = rp.t - ct; if (age < 0 || age > 12) continue;
     rpBeam(ctx, X(cx), Y(cy), age, 12, "60,200,90", "140,240,150", `${co ? rpName(cn) : (ctm ?? "") + "팀"} 긴급지원 신호탄`, co ? "#B8F5B0" : teamColor(ctm || 0), now, co ? 1 : .8);
@@ -4922,7 +4945,7 @@ function rpDraw(dt, now, view) {
       const dx = P1[0] - P0[1], dy = P1[1] - P0[2], dl = Math.hypot(dx, dy); if (dl < 1e-5) continue;
       const v = dl / Math.max(1, Math.min(sg.t1, sg.t0 + 10) - sg.t0), back = v * (sg.t0 - rp.t);
       const hx = P0[1] - dx / dl * back, hy = P0[2] - dy / dl * back, fa = Math.min(1, (rp.t - (sg.t0 - 25)) / 1.5);
-      ctx.globalAlpha = fa; drawHeli(ctx, X(hx), Y(hy), Math.atan2(Y(P1[1]) - Y(P0[2]), X(P1[0]) - X(P0[1])), RP_COLORS[p.slot % 4], 12, now); ctx.globalAlpha = 1;
+      ctx.globalAlpha = fa; drawEmPlane(ctx, X(hx), Y(hy), Math.atan2(Y(P1[1]) - Y(P0[2]), X(P1[0]) - X(P0[1])), RP_COLORS[p.slot % 4], 12); ctx.globalAlpha = 1;
       ctx.font = "700 12px Pretendard, 'Malgun Gothic', sans-serif"; const lb = "비상호출", tw = ctx.measureText(lb).width + 12, x = X(hx), y = Y(hy) - 22;
       ctx.fillStyle = "rgba(20,23,15,.85)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y - 9, tw, 18, 9); else ctx.rect(x - tw / 2, y - 9, tw, 18); ctx.fill();
       ctx.fillStyle = "#FFE9A0"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lb, x, y);
@@ -4979,7 +5002,7 @@ function rpDraw(dt, now, view) {
         // 같은 비행기에 탄 팀원은 비행기 하나만: 처음 비행기는 늘 하나, 블루칩·비상호출은 300m 안이면 같은 비행기
         // (팀원마다 위치 기록 시각이 달라 같은 비행기라도 수백 m 어긋나 보일 수 있음)
         if (!planesDrawn.some(o => o.kind === sg.kind && (sg.kind === "start" || Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < (o.route ? 800 : sg.kind === "emergency" ? 1500 : 300)))) {  // v109 비상호출 헬기는 빨라서 팀원마다 위치 기록이 어긋나 2대로 보였음
-          if (sg.kind === "emergency") drawHeli(ctx, x, y, ang, col, 12, now);
+          if (sg.kind === "emergency") drawEmPlane(ctx, x, y, ang, col, 12);  // v141 비상호출: EP-01 군용 수송기
           else if (sg.kind === "recall") drawHeli(ctx, x, y, ang, col, 15, now, "heli_5");  // 블루칩 복귀: 치누크
           else drawPlane(ctx, x, y, ang, col, 10);
         planesDrawn.push({q, kind: sg.kind}); drew = true;
@@ -5113,7 +5136,8 @@ function rpDraw(dt, now, view) {
         if (guessAir || rp.t < em[1]) {
           if (!foePlanes.some(o => o.tm === en.tm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 1500)) {
             const a = interp(en.tr, rp.t - 1) || q, b = interp(en.tr, rp.t + 1) || q;
-            drawHeli(ctx, x, y, Math.atan2(Y(b[1]) - Y(a[1]), X(b[0]) - X(a[0])), col, big ? 10 : 8, now); foePlanes.push({q, tm: en.tm});
+            const ha = Math.atan2(Y(b[1]) - Y(a[1]), X(b[0]) - X(a[0])), isEm = !guessAir && (en.em || []).includes(em);
+            if (isEm) drawEmPlane(ctx, x, y, ha, col, big ? 10 : 8); else drawHeli(ctx, x, y, ha, col, big ? 10 : 8, now); foePlanes.push({q, tm: en.tm});
           }
         } else {
           drawChute(ctx, x, y, col, null);
@@ -5239,6 +5263,15 @@ function rpDraw(dt, now, view) {
     const x1 = X(ax), y1 = Y(ay), x2 = X(vx), y2 = Y(vy), dd = Math.hypot(x2 - x1, y2 - y1), r0 = side === 0 ? 16 : foeR + 2;
     if (kind === "m" && R.mortars) continue;  // 박격포는 '박격포 궤적'이 그림 (데미지 숫자는 위에서)
     if (kind === "p" || kind === "m") { rpHeavy(ctx, kind, x1, y1, x2, y2, age, side, dmg, hi); continue; }  // 판처파우스트·박격포
+    if (kind === "h") {  // v138 주먹·근접무기: 총구 화염·탄도선 없이 맞은 자리에 '퍽' 충격 고리 + 짧은 선
+      if (age > .6) continue; const k = age / .6;
+      ctx.globalAlpha = 1 - k; ctx.strokeStyle = side === 0 ? "#FFE3A0" : "#FF9C8A"; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.arc(x2, y2, 6 + k * 12, 0, Math.PI * 2); ctx.stroke();
+      for (let n = 0; n < 6; n++) { const an = n / 6 * Math.PI * 2 + hi; ctx.beginPath(); ctx.moveTo(x2 + Math.cos(an) * (8 + k * 8), y2 + Math.sin(an) * (8 + k * 8)); ctx.lineTo(x2 + Math.cos(an) * (13 + k * 12), y2 + Math.sin(an) * (13 + k * 12)); ctx.stroke(); }
+      ctx.font = "900 13px Pretendard, 'Malgun Gothic', sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineWidth = 3; ctx.strokeStyle = "rgba(0,0,0,.7)";
+      ctx.strokeText("퍽!", x2 + 14, y2 - 16 - k * 6); ctx.fillStyle = side === 0 ? "#FFE3A0" : "#FF9C8A"; ctx.fillText("퍽!", x2 + 14, y2 - 16 - k * 6); ctx.globalAlpha = 1;
+      continue;
+    }
     if (kind !== "g" || age > 1.8) continue;
     if (age < .09) {  // 총구 화염 (우리 팀도, 적도)
       rpMuzzle(ctx, x1, y1, Math.atan2(y2 - y1, x2 - x1), 1 - age / .09, r0, dd);
@@ -5279,7 +5312,7 @@ function rpFightHide() {  // 자동 연출로 교전을 확대해 보는 동안:
 }
 function rpAuto() { return !!(rp.cine && rp.follow && !rp.manual); }  // 자동 카메라: 자동 연출 켜짐 + 카메라를 직접 움직이지 않음
 function rpTargetSpeed() {
-  if (rp.kc) { rp.focus = null; rp.focusHot = false; const d = rp.t - rp.kc.e.t; return d > -1.5 && d < .8 ? .3 : 1; }  // 킬캠: 실제 속도, 쓰러지는 순간만 느리게
+  if (rp.kc) { rp.focus = null; rp.focusHot = false; const d = rp.t - rp.kc.e.t; return d > -1.5 && d < .8 ? .4 : 1.25; }  // 킬캠: 조금 빠르게 (v138 1 → 1.25배, 쓰러지는 순간 0.3 → 0.4배)
   const C = rpCfg(), fs = C.fight_speed;
   let sp = rp.reel ? C.reel_speed : rp.speed;
   if (!rpAuto()) { rp.focus = null; return sp; }  // 직접 볼 때는 고른 배속 그대로 (교전 배속·빨리감기 없음)
@@ -6257,6 +6290,25 @@ const HELI_SPEC = {heli_1: {w: 180, h: 280, rotors: [[118, 84, 4]], bw: 7}, heli
   heli_4: {w: 180, h: 280, rotors: [[122, 86, 4]], bw: 6}, heli_5: {w: 180, h: 280, rotors: [[70, 66, 3], [220, 66, 3]], bw: 7},
   heli_9: {w: 180, h: 280, rotors: [[120, 88, 5]], bw: 6}};
 const HELI_BY_MAP = {Baltic_Main: "heli_1", Erangel_Main: "heli_1", Tiger_Main: "heli_2", Neon_Main: "heli_4", Desert_Main: "heli_9"};  // 비상호출 헬기 (그 외 맵은 1번)
+const EP01 = {  // v141 EP-01 군용 수송기 (위에서 본 모양, 100칸 그림, 앞 = 위)
+  body: new Path2D("M50 6c4 0 6 6 6 14v58l14 10v5H30v-5l14-10V20c0-8 2-14 6-14z"),
+  wing: new Path2D("M6 40l38-4h12l38 4v7l-38 1H44L6 47z"),
+  eng: [[18, 33, 5, 10], [31, 31, 5, 10], [64, 31, 5, 10], [77, 33, 5, 10]],
+};
+function drawEmPlane(ctx, x, y, ang, col, size) {  // 비상호출 비행기: 그림자 + 수송기 + 팀 색 띠 (size 12 ≈ 헬기와 비슷한 크기)
+  const k = size * 5 / 100;
+  ctx.save(); ctx.translate(x, y);
+  ctx.save(); ctx.translate(size * .9, size * 1.2); ctx.rotate(ang + Math.PI / 2); ctx.scale(k, k); ctx.translate(-50, -50);  // 그림자 (높이 떠 있는 느낌)
+  ctx.fillStyle = "rgba(0,0,0,.38)"; ctx.fill(EP01.body); ctx.fill(EP01.wing); ctx.restore();
+  ctx.rotate(ang + Math.PI / 2); ctx.scale(k, k); ctx.translate(-50, -50);
+  ctx.lineJoin = "round"; ctx.lineWidth = 2.5 / Math.max(.3, k) * .4; ctx.strokeStyle = "#0b0d08";
+  ctx.fillStyle = "#6b7559"; ctx.fill(EP01.body); ctx.stroke(EP01.body);
+  ctx.fillStyle = "#7c8768"; ctx.fill(EP01.wing); ctx.stroke(EP01.wing);
+  ctx.fillStyle = "#3a4030"; for (const [ex, ey, ew, eh] of EP01.eng) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(ex, ey, ew, eh, 1.5); else ctx.rect(ex, ey, ew, eh); ctx.fill(); ctx.stroke(); }
+  ctx.fillStyle = col || "#F2A900"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(45, 56, 10, 20, 3); else ctx.rect(45, 56, 10, 20); ctx.fill();
+  ctx.fillStyle = "#b9d3e8"; ctx.fillRect(47, 12, 6, 6);
+  ctx.restore();
+}
 function drawHeli(ctx, x, y, ang, col, size, now, kind) {  // 위에서 본 헬기 (앞 = 가는 방향) + 도는 날개, 테두리 = 탄 사람·팀 색
   kind = kind || HELI_BY_MAP[rp.data?.map] || "heli_1";
   const im = replayImgs[kind], sp = HELI_SPEC[kind], L = size * 5;
@@ -6307,7 +6359,7 @@ function rpVel(p) {  // 지금 속도 (m/초)
 }
 function vehKind(vid) {  // v88 특수 탈것: 글라이더 · 자전거 · 보트 (그 밖은 일반 차 → 핸들)
   const v = String(vid || "").toLowerCase();
-  return /glider/.test(v) ? "glider" : /motorbike|motorcycle|dirtbike|scooter/.test(v) ? "moto" : /bicycle|mountainbike|bike_|_bike/.test(v) ? "bike" : /boat|pg117|aquarail|airboat/.test(v) ? "boat" : "car";
+  return /glider/.test(v) ? "glider" : /buggy/.test(v) ? "buggy" : /motorbike|motorcycle|dirtbike|scooter/.test(v) ? "moto" : /bicycle|mountainbike|bike_|_bike/.test(v) ? "bike" : /boat|pg117|aquarail|airboat/.test(v) ? "boat" : "car";
 }
 const VSHAPE = {  // v90 특수 탈것 V-03 (탈것 시안): 위에서 본 배그 모양. 좌표: 길이 ≈ 2, 위(−y)가 앞쪽
   glider(c) {  // 모터 글라이더: 긴 날개 · 몸통 + 가는 꼬리 막대 · T자 꼬리
@@ -6436,8 +6488,17 @@ function shadowOf(c, kind, x, y, r, ang, now, dx, dy, a, blur) {  // 같은 모�
     sprite(c, kind, x, y, r, col, ang, now, null, {...NAT, pod: col, pod2: dk, frame: col, frame2: dk, tank: col, tank2: mix(col, "#000000", .6), jacket: col, jacket2: col, noRider: true});
   };
 })();
+const BUGGY_SVG = "<g transform=\"translate(5 6)\" fill=\"rgba(0,0,0,.33)\"><path d=\"M31 6h38v86H31z\"/><rect x=\"6\" y=\"14\" width=\"20\" height=\"76\" rx=\"5\"/><rect x=\"74\" y=\"14\" width=\"20\" height=\"76\" rx=\"5\"/></g><rect x=\"12\" y=\"14\" width=\"13\" height=\"19\" rx=\"3.9\" fill=\"#1b1b18\" stroke=\"#0b0d08\" stroke-width=\"1.6\"/><path d=\"M13 17 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M13 21 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M13 25 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M13 29 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><rect x=\"75\" y=\"14\" width=\"13\" height=\"19\" rx=\"3.9\" fill=\"#1b1b18\" stroke=\"#0b0d08\" stroke-width=\"1.6\"/><path d=\"M76 17 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 21 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 25 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 29 h11\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><rect x=\"6\" y=\"60\" width=\"19\" height=\"30\" rx=\"5.7\" fill=\"#1b1b18\" stroke=\"#0b0d08\" stroke-width=\"1.6\"/><path d=\"M7 63 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M7 67 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M7 71 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M7 75 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M7 79 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M7 83 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M7 87 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><rect x=\"75\" y=\"60\" width=\"19\" height=\"30\" rx=\"5.7\" fill=\"#1b1b18\" stroke=\"#0b0d08\" stroke-width=\"1.6\"/><path d=\"M76 63 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 67 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 71 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 75 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 79 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 83 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><path d=\"M76 87 h17\" stroke=\"#3a3a33\" stroke-width=\"1.6\"/><g stroke=\"#2b2b27\" stroke-width=\"2.6\" stroke-linecap=\"round\"><path d=\"M25 22h11M64 22h11M25 70h9M66 70h9M25 80h9M66 80h9\"/></g><g fill=\"#E07A2A\" stroke=\"#0b0d08\" stroke-width=\"1\"><rect x=\"27\" y=\"17\" width=\"4\" height=\"9\" rx=\"1.5\"/><rect x=\"69\" y=\"17\" width=\"4\" height=\"9\" rx=\"1.5\"/><rect x=\"28\" y=\"64\" width=\"4\" height=\"10\" rx=\"1.5\"/><rect x=\"68\" y=\"64\" width=\"4\" height=\"10\" rx=\"1.5\"/></g><path d=\"M38 6h24c4 0 7 4 7 9v27H31V15c0-5 3-9 7-9z\" fill=\"__COL__\" stroke=\"#0b0d08\" stroke-width=\"2\"/><path d=\"M46 6l-2 36M54 6l2 36\" stroke=\"#141412\" stroke-width=\"5\" opacity=\".9\"/><g fill=\"#6b4a26\" opacity=\".55\"><circle cx=\"36\" cy=\"30\" r=\"3\"/><circle cx=\"63\" cy=\"16\" r=\"2.4\"/><circle cx=\"60\" cy=\"36\" r=\"2\"/></g><circle cx=\"40\" cy=\"7\" r=\"3.3\" fill=\"#fff6c8\" stroke=\"#0b0d08\" stroke-width=\"1.4\"/><circle cx=\"60\" cy=\"7\" r=\"3.3\" fill=\"#fff6c8\" stroke=\"#0b0d08\" stroke-width=\"1.4\"/><path d=\"M44 3h12\" stroke=\"#7d7d75\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M35 12c4-4 26-4 30 0\" stroke=\"rgba(255,255,255,.45)\" stroke-width=\"2.5\" fill=\"none\"/><g fill=\"#232320\" stroke=\"#0b0d08\" stroke-width=\"1.2\"><rect x=\"37\" y=\"50\" width=\"11\" height=\"15\" rx=\"3\"/><rect x=\"52\" y=\"50\" width=\"11\" height=\"15\" rx=\"3\"/></g><g fill=\"none\" stroke=\"#1f2a33\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M33 42h34v34H33z\"/><path d=\"M33 42l34 34M67 42L33 76\"/><path d=\"M36 76l-4 10h36l-4-10\"/></g><rect x=\"38\" y=\"78\" width=\"24\" height=\"13\" rx=\"2.5\" fill=\"#55554d\" stroke=\"#0b0d08\" stroke-width=\"1.6\"/><g fill=\"#8b8b82\"><circle cx=\"44\" cy=\"84.5\" r=\"2\"/><circle cx=\"50\" cy=\"84.5\" r=\"2\"/><circle cx=\"56\" cy=\"84.5\" r=\"2\"/></g>";  // v142 BG-30 배그 버기 (위에서 본 모양, 앞 = 위, 차체 = 팀 색)
+const BUGGY_IMG = {};
+function buggyImg(col) {
+  const k = col || "#F2A900"; let im = BUGGY_IMG[k];
+  if (!im) { im = BUGGY_IMG[k] = new Image(); im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="200" height="200">${BUGGY_SVG.split("__COL__").join(k)}</svg>`); }
+  return im.complete && im.naturalWidth ? im : null;
+}
 function drawVeh(ctx, x, y, r, col, vid, headFn, now) {  // 일반 차는 핸들, 특수 탈것은 배지 없는 실루엣 (가는 방향으로 돌아감)
-  const k = vehKind(vid); if (k === "car") return drawWheel(ctx, x, y, r, col);
+  const k = vehKind(vid);
+  if (k === "buggy") { const im = buggyImg(col); if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, sz = r * 3.4; ctx.save(); ctx.translate(x, y); ctx.rotate(ang + Math.PI / 2); ctx.drawImage(im, -sz / 2, -sz / 2, sz, sz); ctx.restore(); return; } return drawWheel(ctx, x, y, r, col); }  // v142 버기: BG-30
+  if (k === "car") return drawWheel(ctx, x, y, r, col);
   const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, s = r * 1.45;
   if (k !== "boat") { try { return VEH2(ctx, k, x, y, r * 1.2, col, ang, now); } catch (e) { return drawWheel(ctx, x, y, r, col); } }  // v106 자전거·오토바이 크기 줄임 (1.6 → 1.2)  // v97 글라이더 · 자전거 · 오토바이 = VS-04
   ctx.save(); ctx.translate(x, y); ctx.rotate(ang + Math.PI / 2); ctx.scale(s, s); ctx.lineJoin = "round";
@@ -7110,6 +7171,16 @@ function renderShareCard(r) {
 
 /* ───── 누적 ───── */
 let histYM = "";
+function cumMaps() {  // v139 맵별 치킨 누적 (판 목록이 있는 날만)
+  const M = {};
+  for (const d of state.days) for (const [k, [n, w, code]] of Object.entries(d.maps || {})) { const o = M[k] || (M[k] = {n: 0, w: 0, code}); o.n += n; o.w += w; o.code = o.code || code; }
+  const L = Object.entries(M).sort((a, b) => b[1].w - a[1].w || b[1].n - a[1].n); if (!L.length) return "";
+  const maxW = Math.max(1, ...L.map(x => x[1].w)), tw = L.reduce((a, x) => a + x[1].w, 0), tn = L.reduce((a, x) => a + x[1].n, 0);
+  return `<div class="sec"><h3>맵별 치킨 (${tn}게임 · 치킨 ${tw}번)</h3></div>
+    <div class="tbl mapwin"><table><thead><tr><th>맵</th><th class="c">치킨</th><th class="c">판 수</th><th class="c">치킨 비율</th><th>치킨</th></tr></thead><tbody>
+    ${L.map(([k, o]) => `<tr><td><span class="mc" style="--c:${mapColor(o.code || k)}"><i></i>${esc(k)}</span></td><td class="c"><b>${o.w ? `<img class="chick" src="${CHICK_IMG}" alt="">${o.w}` : "0"}</b></td><td class="c">${o.n}</td><td class="c">${o.n ? Math.round(o.w / o.n * 100) : 0}%</td>
+      <td><div class="mwbar"><i style="width:${o.w / maxW * 100}%"></i></div></td></tr>`).join("")}</tbody></table></div>`;
+}
 function renderCumulative() {
   const rows = state.cumulative.map(c => {
     const total = c.days || 1;
@@ -7133,6 +7204,7 @@ function renderCumulative() {
     <div class="tbl cum"><table>
       <thead><tr><th>플레이어</th><th class="c">1등</th><th class="c">2등</th><th class="c">3등</th><th class="c">4등</th><th>참여</th><th>평균</th><th>분포</th></tr></thead>
       <tbody>${rows}</tbody></table></div>
+    ${cumMaps()}
     <div class="sec history-sec"><h3>지난 기록</h3></div>
     <div class="hist-mon">
       <button type="button" class="btn" data-hm="1" ${mi < months.length - 1 ? "" : "disabled"} aria-label="이전 달">‹</button>
