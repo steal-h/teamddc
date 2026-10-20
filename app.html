@@ -3600,7 +3600,7 @@ function rpTowers(R) {  // 이 맵의 송신기 자리 + 이번 판에서 블루
 }
 function rpNearTower(R, x, y) {  // 송신기 목록이 있는 맵: 그 근처(80m)인지
   const L = CHIP_TOWERS[R.map] || CHIP_TOWERS[{Erangel_Main: "Baltic_Main"}[R.map]]; if (!L) return true;
-  return L.some(q => Math.hypot(q[0] - x, q[1] - y) * R.size_m < 80);
+  return L.some(q => Math.hypot(q[0] - x, q[1] - y) * R.size_m < 150);
 }
 function drawTower(c, x, y, s) {  // v121 TW-01 철탑: 배경 없이 격자 철탑 + 꼭대기 파란 불빛 (64칸 그림을 약 22px로)
   c.save(); c.translate(x, y); c.scale(s * .42, s * .42); c.translate(-32, -34);
@@ -3837,6 +3837,11 @@ function posAt(p, t) {
   if (a[1] == null) { let j = lo; while (j > 0 && tr[j][1] == null) j--; a = tr[j]; return [a[1], a[2]]; }
   if (b[1] == null) return [a[1], a[2]];  // 다음이 끊김이면 이동하지 않음
   const k = (end - a[0]) / (b[0] - a[0] || 1);
+  if (b[0] - a[0] > 2.5) {  // v129 기록이 드문 구간(자전거·차): 동선 곡선(캣멀-롬)과 같은 길로 움직이게
+    const p0 = lo > 0 && tr[lo - 1][1] != null ? tr[lo - 1] : a, p3 = hi < n && tr[hi + 1][1] != null ? tr[hi + 1] : b;
+    const cr = (q0, q1, q2, q3) => { const k2 = k * k, k3 = k2 * k; return .5 * (2 * q1 + (-q0 + q2) * k + (2 * q0 - 5 * q1 + 4 * q2 - q3) * k2 + (-q0 + 3 * q1 - 3 * q2 + q3) * k3); };
+    return [cr(p0[1], a[1], b[1], p3[1]), cr(p0[2], a[2], b[2], p3[2])];
+  }
   return [a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
 }
 function interp(pts, t) {
@@ -4868,9 +4873,15 @@ function rpDraw(dt, now, view) {
     const age = rp.t - ct; if (age < 0 || age > 12) continue;
     rpBeam(ctx, X(cx), Y(cy), age, 12, "60,200,90", "140,240,150", `${co ? rpName(cn) : (ctm ?? "") + "팀"} 긴급지원 신호탄`, co ? "#B8F5B0" : teamColor(ctm || 0), now, co ? 1 : .8);
   }
-  for (const [ct, cx, cy, cn, ctm, co] of R.chipcalls || []) {  // v126 송신기에서 블루칩으로 보급 부름 → 파란 빛기둥
+  if (!R._chipBeams) {  // v129 블루칩 보급 호출 빛기둥: 블루칩 사용 기록 + 기록이 없거나 못 맞춘 블루칩 보급은 떨어지기 약 100초 전에 그 자리에서
+    const C = (R.chipcalls || []).filter(c => rpNearTower(R, c[1], c[2]) || (R.packages || []).some(q => q[7] === "c" && Math.hypot(q[2] - c[1], q[3] - c[2]) * R.size_m < 150));
+    for (const q of R.packages || []) if (q[7] === "c" && !C.some(c => c[0] <= q[0] && q[0] - c[0] < 200 && Math.hypot(q[2] - c[1], q[3] - c[2]) * R.size_m < 150)) {
+      const ours = q[8] && R.players.some(p => p.nick === q[8]); C.push([Math.max(0, q[0] - 100), q[2], q[3], q[8] || "", q[9], ours ? 1 : 0]);
+    }
+    R._chipBeams = C;
+  }
+  for (const [ct, cx, cy, cn, ctm, co] of R._chipBeams) {  // v126 송신기에서 블루칩으로 보급 부름 → 파란 빛기둥
     const age = rp.t - ct; if (age < 0 || age > 8) continue;
-    if (!rpNearTower(R, cx, cy)) continue;  // v127 송신기 옆에서 쓴 것만 (그냥 버린 블루칩은 빼기)
     rpBeam(ctx, X(cx), Y(cy), age, 8, "60,140,255", "110,190,255", `${co ? rpName(cn) : (ctm ?? "") + "팀"} 블루칩 보급 호출`, co ? "#9FD4FF" : teamColor(ctm || 0), now, co ? 1 : .8);
   }
   for (const [ft, fx, fy] of R.flares || []) {  // 플레어건: 쏜 자리에 빨간 기둥 (보급이 떨어질 곳)
