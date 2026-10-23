@@ -4639,7 +4639,7 @@ function rpDraw(dt, now, view) {
       const kk = Math.max(L.a, k);
       const q = [rt.x0 + rt.vx * kk, rt.y0 + rt.vy * kk];
       if (!planesDrawn.some(o => o.kind === kind && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 800)) {  // 같은 블루칩 비행기는 하나만
-        if (kind === "recall") drawHeli(ctx, X(q[0]), Y(q[1]), Math.atan2(rt.vy, rt.vx), col, airSz(15, 30, 8, 30), now, "heli_5");  // 블루칩 복귀: 치누크 (실제 게임처럼)
+        if (kind === "recall") drawHeli(ctx, X(q[0]), Y(q[1]), Math.atan2(rt.vy, rt.vx), col, airSz(15, 30, 12, 34), now, "heli_5");  // 블루칩 복귀: 치누크 (실제 게임처럼)
         else drawPlane(ctx, X(q[0]), Y(q[1]), Math.atan2(rt.vy, rt.vx), col, 13);
         planesDrawn.push({q, kind, route: true});
       }
@@ -4714,8 +4714,9 @@ function rpDraw(dt, now, view) {
     if (pk !== "s" && rp.t >= st - 5 && rp.t < st + 7) {  // 보급·플레어 보급·BRDM: 치누크 헬기가 지나가며 떨어뜨림
       const rt = R.plane, dx = rt ? rt.vx : 1, dy = rt ? rt.vy : 0, dl = Math.hypot(dx, dy) || 1, v = 60 / R.size_m, u = (rp.t - st) * v;
       const qx = px + dx / dl * u, qy = py + dy / dl * u, fa = Math.max(0, Math.min(1, (rp.t - st + 5) / 1.2, (st + 7 - rp.t) / 1.2));
-      ctx.globalAlpha = fa; { const pid = ["12", "13", "18"][Math.abs(Math.round(st * 7 + px * 1000)) % 3], im = svgImg("sp" + pid, SUPPLY_PLANES[pid]);  // v143 보급 비행기 (EP-12/13/18, 그림자)
-        if (im) drawSprite(ctx, im, X(qx), Y(qy), Math.atan2(dy, dx), airSz(13, 40, 7, 24) * 5, {shadow: true}); else drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, pk ? 15 : 13, now, "heli_5"); } ctx.globalAlpha = 1;
+      ctx.globalAlpha = fa; { const seed = Math.round(st * 7 + px * 1000);  // v149 일반 보급 = 수송기 (AP-02/06), 플레어 보급·BRDM = 보급 헬기 (HE-02/05/08/04)
+        if (pk === "f" || pk === "b") drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, airSz(14, 30, 12, 32), now, "supply:" + seed);
+        else { const im = supplyPlaneSpr(seed); if (im) sprDraw(ctx, im, X(qx), Y(qy), Math.atan2(dy, dx), airSz(13, 40, 7, 24) * 5.2); else drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, 13, now, "heli_5"); } } ctx.globalAlpha = 1;
     }
     const by = by0 && bt >= lt ? by0 : null;  // 착지 전에 '획득'은 있을 수 없음 (예전 리플레이에서 상자가 섞인 경우)
     const ot = ot0 != null && ot0 >= lt ? ot0 : by ? bt : null, opened = ot != null && rp.t >= ot;
@@ -4905,15 +4906,15 @@ function rpDraw(dt, now, view) {
     else rpBeam(ctx, X(e.x), Y(e.y), age, 8, "60,140,255", "110,190,255", `${rpName(e.by)} 블루칩 송신${e.est ? " (추정)" : ""}`, "#9FD4FF", now);
   }
   for (const [ct, sx, sy, ix, iy, ang, cn, ctm, co] of R.covers || []) {  // v139 긴급 엄폐 수류탄: 날아가서 떨어진 자리에 삼각형 엄폐물 2개 (약 90초)
-    const age = rp.t - ct; if (age < 0 || age > 100) continue;
+    const age = rp.t - ct; if (age < 0) continue;  // v153 엄폐물은 판 끝까지 남김
     const col = co ? "#F2A900" : teamColor(ctm || 0), Mx = S / R.size_m;
     if (age < 1.3) { const k = age / 1.3, x = X(sx + (ix - sx) * k), y = Y(sy + (iy - sy) * k) - Math.sin(k * Math.PI) * 18;
       ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fillStyle = "#FFB347"; ctx.fill(); ctx.strokeStyle = "#000"; ctx.lineWidth = 1; ctx.stroke(); continue; }
-    const a2 = age - 1.3, pop = Math.min(1, a2 / .35), fade = age > 90 ? 1 - (age - 90) / 10 : 1, px = -Math.sin(ang), py = Math.cos(ang);
-    const sz = Math.max(7, 4.5 * Mx) * (0.6 + .4 * pop);
+    const a2 = age - 1.3, pop = Math.min(1, a2 / .35), fade = 1, px = -Math.sin(ang), py = Math.cos(ang);
+    const sz = Math.max(11, 6.5 * Mx) * (0.6 + .4 * pop);
     ctx.save(); ctx.globalAlpha = fade;
     for (const sd of [-1, 1]) {
-      const cx = X(ix) + px * sd * Math.max(6, 2.6 * Mx), cy = Y(iy) + py * sd * Math.max(6, 2.6 * Mx);
+      const cx = X(ix) + px * sd * Math.max(9, 3.6 * Mx), cy = Y(iy) + py * sd * Math.max(9, 3.6 * Mx);
       ctx.save(); ctx.translate(cx, cy); ctx.rotate(ang + Math.PI / 2 + sd * .25);
       ctx.beginPath(); ctx.moveTo(0, -sz * .62); ctx.lineTo(sz * .6, sz * .42); ctx.lineTo(-sz * .6, sz * .42); ctx.closePath();
       ctx.fillStyle = "#9A9C8E"; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = "rgba(0,0,0,.65)"; ctx.stroke(); ctx.lineWidth = 1.6; ctx.strokeStyle = col; ctx.stroke();
@@ -4965,7 +4966,7 @@ function rpDraw(dt, now, view) {
       const dx = P1[0] - P0[1], dy = P1[1] - P0[2], dl = Math.hypot(dx, dy); if (dl < 1e-5) continue;
       const v = dl / Math.max(1, Math.min(sg.t1, sg.t0 + 10) - sg.t0), back = v * (sg.t0 - rp.t);
       const hx = P0[1] - dx / dl * back, hy = P0[2] - dy / dl * back, fa = Math.min(1, (rp.t - (sg.t0 - 25)) / 1.5);
-      ctx.globalAlpha = fa; drawEmPlane(ctx, X(hx), Y(hy), Math.atan2(Y(P1[1]) - Y(P0[2]), X(P1[0]) - X(P0[1])), RP_COLORS[p.slot % 4], airSz(12, 40, 6, 26)); ctx.globalAlpha = 1;
+      ctx.globalAlpha = fa; drawEmPlane(ctx, X(hx), Y(hy), Math.atan2(Y(P1[1]) - Y(P0[2]), X(P1[0]) - X(P0[1])), RP_COLORS[p.slot % 4], airSz(12, 40, 6, 26), sg.t0); ctx.globalAlpha = 1;
       ctx.font = "700 12px Pretendard, 'Malgun Gothic', sans-serif"; const lb = "비상호출", tw = ctx.measureText(lb).width + 12, x = X(hx), y = Y(hy) - 22;
       ctx.fillStyle = "rgba(20,23,15,.85)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y - 9, tw, 18, 9); else ctx.rect(x - tw / 2, y - 9, tw, 18); ctx.fill();
       ctx.fillStyle = "#FFE9A0"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lb, x, y);
@@ -4983,25 +4984,26 @@ function rpDraw(dt, now, view) {
       const dx = B[0] - A[0], dy = B[1] - A[1], dl = Math.hypot(dx, dy); if (dl < 1e-6) continue;
       const v = dl / 4, go = v * (rp.t - sg.jump), hx = B[0] + dx / dl * go, hy = B[1] + dy / dl * go;
       ctx.globalAlpha = Math.max(0, Math.min(1, (sg.jump + 25 - rp.t) / 6)); const hang = Math.atan2(Y(B[1]) - Y(A[1]), X(B[0]) - X(A[0]));
-      if (sg.kind === "recall") drawHeli(ctx, X(hx), Y(hy), hang, RP_COLORS[p.slot % 4], airSz(15, 30, 8, 30), now, "heli_5"); else drawEmPlane(ctx, X(hx), Y(hy), hang, RP_COLORS[p.slot % 4], airSz(12, 40, 6, 26)); ctx.globalAlpha = 1;
+      if (sg.kind === "recall") drawHeli(ctx, X(hx), Y(hy), hang, RP_COLORS[p.slot % 4], airSz(15, 30, 12, 34), now, "heli_5"); else drawEmPlane(ctx, X(hx), Y(hy), hang, RP_COLORS[p.slot % 4], airSz(12, 40, 6, 26), sg.t0); ctx.globalAlpha = 1;
     }
   }
   if (rp.foes) {  // v147 적 비상호출 비행기도: 마지막 사람이 내린 뒤 같은 방향으로 25초 더 날아가며 흐려짐
     if (!R._foeEmOut) {
       const G = [];
-      for (const en of R.enemies || []) for (const e of en.em || []) {
+      for (const en of R.enemies || []) for (const [kd, e] of [...(en.em || []).map(e => ["em", e]), ...(en.rc || []).map(e => ["rc", e])]) {  // v148 블루칩 헬기(rc)도
         if (e[1] == null || e[1] <= e[0]) continue;
-        let g = G.find(q => q.tm === en.tm && Math.abs(q.lift - e[0]) < 8);
-        if (!g) G.push(g = {tm: en.tm, lift: e[0], j: -1, en: null});
+        let g = G.find(q => q.kd === kd && q.tm === en.tm && Math.abs(q.lift - e[0]) < (kd === "rc" ? 20 : 8));
+        if (!g) G.push(g = {kd, tm: en.tm, lift: e[0], j: -1, en: null});
         if (e[1] > g.j) { g.j = e[1]; g.en = en; }
       }
-      R._foeEmOut = G.map(g => { const A = interp(g.en.tr, g.j - 4), B = interp(g.en.tr, g.j); return A && B && Math.hypot(B[0] - A[0], B[1] - A[1]) > 1e-6 ? {tm: g.tm, j: g.j, A, B} : null; }).filter(Boolean);
+      R._foeEmOut = G.map(g => { const A = interp(g.en.tr, g.j - 4), B = interp(g.en.tr, g.j); return A && B && Math.hypot(B[0] - A[0], B[1] - A[1]) > 1e-6 ? {kd: g.kd, tm: g.tm, j: g.j, A, B} : null; }).filter(Boolean);
     }
     for (const g of R._foeEmOut) {
       if (rp.t < g.j || rp.t > g.j + 25) continue;
       const dx = g.B[0] - g.A[0], dy = g.B[1] - g.A[1], dl = Math.hypot(dx, dy), go = dl / 4 * (rp.t - g.j);
       ctx.globalAlpha = Math.max(0, Math.min(1, (g.j + 25 - rp.t) / 6)) * .95;
-      drawEmPlane(ctx, X(g.B[0] + dx / dl * go), Y(g.B[1] + dy / dl * go), Math.atan2(Y(g.B[1]) - Y(g.A[1]), X(g.B[0]) - X(g.A[0])), teamColor(g.tm || 0), airSz(11, 40, 9, 22)); ctx.globalAlpha = 1;
+      const hx = X(g.B[0] + dx / dl * go), hy = Y(g.B[1] + dy / dl * go), ha = Math.atan2(Y(g.B[1]) - Y(g.A[1]), X(g.B[0]) - X(g.A[0]));
+      if (g.kd === "rc") drawHeli(ctx, hx, hy, ha, teamColor(g.tm || 0), airSz(12, 30, 12, 34), now, "heli_5"); else drawEmPlane(ctx, hx, hy, ha, teamColor(g.tm || 0), airSz(11, 40, 9, 22), g.lift); ctx.globalAlpha = 1;
     }
   }
   for (const en of R._mates || []) {  // v118 3인 판의 랜덤 팀원: 회색 테두리 금색 점 + 이름 (죽으면 X)
@@ -5045,8 +5047,10 @@ function rpDraw(dt, now, view) {
   for (const p of R.players) {
     const sg = airAt(p, rp.t);
     if (sg) {  // 비행기 또는 낙하산
-      const q = interp(sg.pts, rp.t); if (!q) continue;
-      const x = X(q[0]), y = Y(q[1]), col = RP_COLORS[p.slot % 4], onPlane = sg.jump == null || rp.t < sg.jump;
+      let q = interp(sg.pts, rp.t); if (!q) continue;
+      const onPlane = sg.jump == null || rp.t < sg.jump;
+      if (onPlane && sg.kind === "recall" && sg.route && rp.t >= sg.route.t0) { const rt = sg.route, kk = rp.t - rt.t0; q = [rt.x0 + rt.vx * kk, rt.y0 + rt.vy * kk]; }  // v153 블루칩 헬기는 비행 경로(직선) 위에서 (내리는 순간 튀지 않게)
+      const x = X(q[0]), y = Y(q[1]), col = RP_COLORS[p.slot % 4];
       let drew = !onPlane;
       if (onPlane) {
         let ang = 0;
@@ -5055,8 +5059,8 @@ function rpDraw(dt, now, view) {
         // 같은 비행기에 탄 팀원은 비행기 하나만: 처음 비행기는 늘 하나, 블루칩·비상호출은 300m 안이면 같은 비행기
         // (팀원마다 위치 기록 시각이 달라 같은 비행기라도 수백 m 어긋나 보일 수 있음)
         if (!planesDrawn.some(o => o.kind === sg.kind && (sg.kind === "start" || Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < (o.route ? 800 : sg.kind === "emergency" ? 1500 : 300)))) {  // v109 비상호출 헬기는 빨라서 팀원마다 위치 기록이 어긋나 2대로 보였음
-          if (sg.kind === "emergency") drawEmPlane(ctx, x, y, ang, col, airSz(12, 40, 6, 26));  // v141 비상호출: EP-01 군용 수송기
-          else if (sg.kind === "recall") drawHeli(ctx, x, y, ang, col, airSz(15, 30, 8, 30), now, "heli_5");  // 블루칩 복귀: 치누크
+          if (sg.kind === "emergency") drawEmPlane(ctx, x, y, ang, col, airSz(12, 40, 6, 26), sg.t0);  // v141 비상호출: EP-01 군용 수송기
+          else if (sg.kind === "recall") drawHeli(ctx, x, y, ang, col, airSz(15, 30, 12, 34), now, "heli_5");  // 블루칩 복귀: 치누크
           else drawPlane(ctx, x, y, ang, col, 10);
         planesDrawn.push({q, kind: sg.kind}); drew = true;
         }
@@ -5190,7 +5194,7 @@ function rpDraw(dt, now, view) {
           if (!foePlanes.some(o => o.tm === en.tm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 1500)) {
             const a = interp(en.tr, rp.t - 1) || q, b = interp(en.tr, rp.t + 1) || q;
             const ha = Math.atan2(Y(b[1]) - Y(a[1]), X(b[0]) - X(a[0])), isEm = !guessAir && (en.em || []).includes(em);
-            if (isEm) drawEmPlane(ctx, x, y, ha, col, big ? 10 : 8); else drawHeli(ctx, x, y, ha, col, big ? 12 : 10, now, guessAir ? undefined : "heli_5");  // v143 적 블루칩 복귀도 치누크 foePlanes.push({q, tm: en.tm});
+            if (isEm) drawEmPlane(ctx, x, y, ha, col, big ? 10 : 8, em[0]); else drawHeli(ctx, x, y, ha, col, big ? 12 : 10, now, guessAir ? undefined : "heli_5");  // v143 적 블루칩 복귀도 치누크 foePlanes.push({q, tm: en.tm});
           }
         } else {
           drawChute(ctx, x, y, col, null);
@@ -5249,7 +5253,7 @@ function rpDraw(dt, now, view) {
       const on = Math.floor(now / 110) % 2 === 0, k = (rp.t - burn) / Math.max(.5, tb - burn);
       for (let j = 0; j < 4; j++) rpTongue(ctx, x - 6 + j * 4, y - 2, 10 * big * (.6 + k * .6), 5 * big, now / 70 + j, .9);
       if (brdm) drawBRDM(ctx, x, y, 34, rp.heads?.["car:" + key] ?? -Math.PI / 2, on ? "#FF3B3B" : "#7A1A12", "#FF3B3B", on ? .55 : .15);
-      else drawWheel(ctx, x, y, 11, on ? "#FF3B3B" : "#7A1A12");
+      else { const [vk, vv] = carKindOf(R, key, c); if (!drawWreck(ctx, x, y, rp.heads?.["car:" + key] ?? -Math.PI / 2, vk, vv, "burn", on ? 1 : .7)) drawWheel(ctx, x, y, 11, on ? "#FF3B3B" : "#7A1A12"); }  // v154 탈것 모양대로
       continue;
     }
     const e = rp.t - tb;
@@ -5266,7 +5270,7 @@ function rpDraw(dt, now, view) {
     if (fade > 0) {
       ctx.globalAlpha = fade;
       if (brdm) drawBRDM(ctx, x, y, 34, rp.heads?.["car:" + key] ?? -Math.PI / 2, "#2A2A26", "#141410", .75);
-      else drawWheel(ctx, x, y, 11, "#3A3A34");
+      else { const [vk, vv] = carKindOf(R, key, c); if (!drawWreck(ctx, x, y, rp.heads?.["car:" + key] ?? -Math.PI / 2, vk, vv, "dead", 1)) drawWheel(ctx, x, y, 11, "#3A3A34"); }  // v154 까맣게 탄 탈것
       ctx.globalAlpha = 1;
       if (e < 7) for (let j = 0; j < 3; j++) rpTongue(ctx, x - 4 + j * 4, y - 3, 9 * big * (1 - e / 7), 4 * big, now / 80 + j, fade);
       if (e < 12) rpPuff(ctx, x + 4 + Math.sin(now / 900) * 3, y - 14 - (e % 3) * 6, 7 * big, 60, .35 * fade);
@@ -6272,6 +6276,10 @@ function rpSilhouette(im, col) {  // 그림 모양 그대로 한 가지 색으�
   return (silCache[key] = c);
 }
 function drawBRDM(ctx, x, y, len, ang, col, tint = null, tintA = 0) {  // BRDM 장갑차 (위에서 본 모습, 앞이 가는 방향), 배경 없이 차만 + 테두리는 탄 사람·팀 색
+  if (!tint) {  // v150 BR-21 BRDM-2 기본 (미라마는 BR-24 사막), 팀 색은 테두리
+    const desert = rp.data?.map === "Desert_Main", c = col ? SPR_COL(col) : "", im = sprImg("brdm" + (desert ? "d" : "g") + c, () => SPR.BRDM2(SPR.pal(c || "#F2A900"), {...(desert ? {body: "#b49a66"} : {}), ...(c ? {sticker: 3.4, stickerCol: c} : {})}));
+    if (im) { sprDraw(ctx, im, x, y, ang, len * 1.12); return; }
+  }
   const mk = BRDM_BY_MAP[rp.data?.map], mi = mk && replayImgs[mk];
   const im = mi && mi.complete && mi.naturalWidth ? mi : replayImgs.brdm, w = len * .64;
   ctx.save(); ctx.translate(x, y);
@@ -6351,7 +6359,830 @@ const EP01 = {  // v141 EP-01 군용 수송기 (위에서 본 모양, 100칸 그
 function airSz(base, m, lo, hi) {  // v146 비행기·헬기 크기: 지도와 같이 커지고 작아짐 (실제 크기 m미터, 너무 작거나 크지 않게)
   const M = rp._M || 0; return M ? Math.max(lo, Math.min(hi, m * M / 5)) : base;
 }
-function drawEmPlane(ctx, x, y, ang, col, size) {  // 비상호출 비행기: 그림자 + 수송기 + 팀 색 띠 (size 12 ≈ 헬기와 비슷한 크기)
+/* v149 차량 스프라이트 (고른 시안 그대로: 위에서 본 모양 · 같은 빛·그림자·외곽선 규칙) */
+const SPR = (() => {
+/* TEAM DDC 차량 스프라이트 (위에서 본 모양, 앞 = 위, 100×100)
+   모든 그림이 같은 규칙: 왼쪽 위에서 빛 · 오른쪽 아래 그림자 · 같은 굵기 외곽선 · 고운 질감 */
+const OL = "#11140d";
+const hex = c => { c = c.replace("#", ""); if (c.length === 3) c = c.split("").map(x => x + x).join(""); return [0, 2, 4].map(i => parseInt(c.substr(i, 2), 16)); };
+const mix = (a, b, k) => { const A = hex(a), B = hex(b); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, "0")).join(""); };
+const pal = c => ({c, cl: mix(c, "#ffffff", .38), cd: mix(c, "#000000", .42)});
+const f2 = v => +(+v).toFixed(2);
+const srnd = s => { const x = Math.sin(s * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+function mx(d) {  // 좌우 대칭 경로 (x → 100 − x)
+  const T = d.match(/[MLCQHVZAST]|-?\d*\.?\d+(?:e-?\d+)?/gi), cnt = {M: 2, L: 2, T: 2, C: 6, S: 4, Q: 4, H: 1, V: 1, A: 7, Z: 0};
+  const out = []; let cmd = "", k = 0;
+  for (const t of T) {
+    if (/[a-z]/i.test(t)) { cmd = t.toUpperCase(); k = 0; out.push(cmd); continue; }
+    let v = +t; const n = cnt[cmd], i = k % n;
+    if (cmd === "H") v = 100 - v; else if (cmd === "A") { if (i === 5) v = 100 - v; else if (i === 4) v = 1 - v; } else if (cmd !== "V" && i % 2 === 0) v = 100 - v;
+    out.push(f2(v)); k++;
+  }
+  return out.join(" ");
+}
+const STOPS = `<stop offset="0" stop-color="#000" stop-opacity=".40"/><stop offset=".2" stop-color="#fff" stop-opacity=".32"/><stop offset=".42" stop-color="#fff" stop-opacity=".06"/><stop offset=".7" stop-color="#000" stop-opacity=".08"/><stop offset="1" stop-color="#000" stop-opacity=".46"/>`;
+function DEFS(blur) {
+  return `<defs>
+<linearGradient id="lit" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".36"/><stop offset=".42" stop-color="#fff" stop-opacity="0"/><stop offset=".58" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".36"/></linearGradient>
+<linearGradient id="cyl" x1="0" y1="0" x2="1" y2="0">${STOPS}</linearGradient>
+<linearGradient id="cylv" x1="0" y1="0" x2="0" y2="1">${STOPS}</linearGradient>
+<radialGradient id="dome" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".45" stop-color="#fff" stop-opacity=".06"/><stop offset="1" stop-color="#000" stop-opacity=".40"/></radialGradient>
+<linearGradient id="glass" x1="0" y1="0" x2=".55" y2="1"><stop offset="0" stop-color="#eaf6fd"/><stop offset=".28" stop-color="#9fc6df"/><stop offset=".72" stop-color="#3e6685"/><stop offset="1" stop-color="#1c3145"/></linearGradient>
+<linearGradient id="chrome" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a5f64"/><stop offset=".3" stop-color="#f5f7f8"/><stop offset=".55" stop-color="#a1a7ac"/><stop offset="1" stop-color="#3c4145"/></linearGradient>
+<linearGradient id="chromev" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a5f64"/><stop offset=".3" stop-color="#f5f7f8"/><stop offset=".55" stop-color="#a1a7ac"/><stop offset="1" stop-color="#3c4145"/></linearGradient>
+<radialGradient id="disc"><stop offset="0" stop-color="#eef1ea" stop-opacity=".05"/><stop offset=".7" stop-color="#eef1ea" stop-opacity=".16"/><stop offset=".93" stop-color="#eef1ea" stop-opacity=".34"/><stop offset="1" stop-color="#eef1ea" stop-opacity="0"/></radialGradient>
+<radialGradient id="glw"><stop offset="0" stop-color="#fffbe6" stop-opacity=".95"/><stop offset=".35" stop-color="#ffe9a6" stop-opacity=".5"/><stop offset="1" stop-color="#ffe9a6" stop-opacity="0"/></radialGradient>
+<radialGradient id="glr"><stop offset="0" stop-color="#ff6b5e" stop-opacity="1"/><stop offset="1" stop-color="#ff3b30" stop-opacity="0"/></radialGradient>
+<radialGradient id="glg"><stop offset="0" stop-color="#7dff9a" stop-opacity="1"/><stop offset="1" stop-color="#30d158" stop-opacity="0"/></radialGradient>
+<linearGradient id="beam" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff6c8" stop-opacity=".75"/><stop offset="1" stop-color="#fff6c8" stop-opacity="0"/></linearGradient>
+<filter id="sh" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="${blur}"/></filter>
+<filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.2"/></filter>
+<filter id="gr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.8" numOctaves="1" seed="4" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -.42 .25" result="a"/><feComposite in="a" in2="SourceAlpha" operator="in" result="g"/><feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="g"/></feMerge></filter>
+</defs>`;
+}
+class SB {
+  constructor() { this.p = []; this.s = []; }
+  sh(tag, at, fill, o = {}) {
+    const ov = o.ov === undefined ? "lit" : o.ov, op = o.op ? ` opacity="${o.op}"` : "";
+    let m = `<${tag} ${at} fill="${fill}"${op}/>`;
+    if (ov) m += `<${tag} ${at} fill="url(#${ov})"${op}/>`;
+    if (o.sw !== 0) m += `<${tag} ${at} fill="none" stroke="${o.st || OL}" stroke-width="${o.sw ?? 1.2}" stroke-linejoin="round" stroke-linecap="round"${op}/>`;
+    this.p.push(m); if (o.sil !== false) this.s.push(`<${tag} ${at}/>`); return this;
+  }
+  path(d, fill, o) { return this.sh("path", `d="${d}"`, fill, o); }
+  path2(d, fill, o) { this.path(d, fill, o); return this.path(mx(d), fill, o); }
+  rect(x, y, w, h, r, fill, o) { return this.sh("rect", `x="${f2(x)}" y="${f2(y)}" width="${f2(w)}" height="${f2(h)}" rx="${f2(r)}"`, fill, o); }
+  rect2(x, y, w, h, r, fill, o) { this.rect(x, y, w, h, r, fill, o); return this.rect(100 - x - w, y, w, h, r, fill, o); }
+  circ(cx, cy, r, fill, o) { return this.sh("circle", `cx="${f2(cx)}" cy="${f2(cy)}" r="${f2(r)}"`, fill, o); }
+  ell(cx, cy, rx, ry, fill, o) { return this.sh("ellipse", `cx="${f2(cx)}" cy="${f2(cy)}" rx="${f2(rx)}" ry="${f2(ry)}"`, fill, o); }
+  raw(m, sil) { this.p.push(m); if (sil) this.s.push(sil); return this; }
+  line(d, col, w, op = 1) { return this.raw(`<path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${op}"/>`); }
+  tube(d, col, w) {  // 둥근 쇠파이프 (외곽선 + 색 + 위쪽 반짝임)
+    return this.raw(`<path d="${d}" fill="none" stroke="${OL}" stroke-width="${w + 1.3}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="${w * .32}" stroke-linecap="round" stroke-linejoin="round" transform="translate(-${f2(w * .22)} -${f2(w * .22)})"/>`,
+      `<path d="${d}" fill="none" stroke="#000" stroke-width="${w + 1.3}" stroke-linecap="round" stroke-linejoin="round"/>`);
+  }
+  camo(sil, cols, seed, n = 14, sz = 10, op = .9) {  // 위장 무늬 (몸통 모양 안에만)
+    const id = "cm" + Math.floor(srnd(seed) * 1e6);
+    let g = "";
+    for (let i = 0; i < n; i++) {
+      const x = srnd(seed + i * 3.1) * 100, y = srnd(seed + i * 7.3) * 100, rx = sz * (.5 + srnd(seed + i * 1.7)), ry = sz * (.35 + srnd(seed + i * 2.9) * .6), a = srnd(seed + i * 5.5) * 180;
+      g += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(rx)}" ry="${f2(ry)}" transform="rotate(${f2(a)} ${f2(x)} ${f2(y)})" fill="${cols[i % cols.length]}"/>`;
+    }
+    return this.raw(`<clipPath id="${id}">${sil}</clipPath><g clip-path="url(#${id})" opacity="${op}">${g}</g>`);
+  }
+  out(o = {}) {
+    const off = o.off || [2.2, 3.2], blur = o.blur ?? 1.5, op = o.op ?? .5, sil = this.s.join("");
+    const stk = o.sticker ? `<g fill="${o.stickerCol || "#fff"}" stroke="${o.stickerCol || "#fff"}" stroke-width="${o.sticker}" stroke-linejoin="round" stroke-linecap="round">${sil}</g>` : "";
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="240" height="240">${DEFS(blur)}${o.under || ""}<g transform="translate(${off[0]} ${off[1]})" filter="url(#sh)" opacity="${op}" fill="#000">${sil}</g>${stk}<g filter="url(#gr)">${this.p.join("")}</g>${o.over || ""}</svg>`;
+  }
+}
+/* ── 공통 부품 ── */
+function tire(b, x, y, w, h, o = {}) {
+  b.rect(x, y, w, h, o.r ?? Math.min(w, h) * .3, o.col || "#1d1e1b", {ov: "cyl", sw: 1});
+  let t = ""; const st = o.step || 2.7;
+  for (let yy = y + 1.8, i = 0; yy < y + h - 1.2; yy += st, i++) {
+    if (o.knob) t += `<rect x="${f2(x + (i % 2 ? w * .14 : w * .5))}" y="${f2(yy - .75)}" width="${f2(w * .36)}" height="1.5" rx=".5" fill="#44463f"/>`;
+    else t += `<path d="M${f2(x + .9)} ${f2(yy)} H${f2(x + w - .9)}" stroke="#3b3d37" stroke-width="1.1"/>`;
+  }
+  b.raw(t + `<path d="M${f2(x + w * .24)} ${f2(y + 1.6)} V${f2(y + h - 1.6)}" stroke="#fff" stroke-opacity=".16" stroke-width="${f2(Math.max(.6, w * .12))}" stroke-linecap="round"/>`);
+}
+function rotor(b, cx, cy, r, n, a0, o = {}) {  // 헬기 주 회전날개: 회전 원판 + 날개 + 잔상
+  if (globalThis.__NOROTOR) { b.raw(`<circle cx="${f2(cx)}" cy="${f2(cy)}" r="${f2(o.hub || 2.8)}" fill="#3a3d38" stroke="${OL}" stroke-width=".8"/>`); return; }  // v153 리플레이에선 날개를 따로 돌려서 그림
+  b.raw(`<circle cx="${f2(cx)}" cy="${f2(cy)}" r="${f2(r)}" fill="url(#disc)"/>`);
+  const bw = o.bw || 2.3, col = o.col || "#262924";
+  for (let i = 0; i < n; i++) {
+    const a = a0 + i * 2 * Math.PI / n;
+    for (const [da, op, ww] of [[.32, .14, .7], [.16, .26, .85]]) b.line(`M${f2(cx)} ${f2(cy)} L${f2(cx + Math.cos(a + da) * r * .96)} ${f2(cy + Math.sin(a + da) * r * .96)}`, col, bw * ww, op);
+    const x2 = cx + Math.cos(a) * r * .97, y2 = cy + Math.sin(a) * r * .97;
+    b.raw(`<path d="M${f2(cx)} ${f2(cy)} L${f2(x2)} ${f2(y2)}" stroke="${OL}" stroke-width="${f2(bw + .9)}" stroke-linecap="round"/><path d="M${f2(cx)} ${f2(cy)} L${f2(x2)} ${f2(y2)}" stroke="${col}" stroke-width="${f2(bw)}" stroke-linecap="round"/><path d="M${f2(cx)} ${f2(cy)} L${f2(x2)} ${f2(y2)}" stroke="#fff" stroke-opacity=".22" stroke-width="${f2(bw * .3)}" stroke-linecap="round" transform="translate(-.35 -.35)"/>`);
+    b.line(`M${f2(cx + Math.cos(a) * r * .9)} ${f2(cy + Math.sin(a) * r * .9)} L${f2(x2)} ${f2(y2)}`, o.tip || "#d9c24a", bw * .9, .9);
+  }
+  b.circ(cx, cy, o.hub || 2.8, "#3a3d38", {ov: "dome", sw: .8, sil: false});
+}
+function prop(b, cx, cy, r, n = 4, o = {}) {  // 앞뒤로 도는 프로펠러 (위에서 보면 가로로 납작한 원판)
+  b.raw(`<ellipse cx="${f2(cx)}" cy="${f2(cy)}" rx="${f2(r)}" ry="${f2(r * (o.flat ?? .32))}" fill="url(#disc)"/>`);
+  for (let i = 0; i < n; i++) { const s = i % 2 ? 1 : -1, k = .55 + (i * .37) % .45; b.line(`M${f2(cx)} ${f2(cy)} L${f2(cx + s * r * k)} ${f2(cy + (i < 2 ? -1 : 1) * r * .12)}`, "#2a2c28", 1.1, .5); }
+  b.circ(cx, cy, o.hub || 1.5, o.hc || "#3b3e39", {ov: "dome", sw: .6, sil: false});
+}
+function navLights(b, l, r, extra = []) { let g = ""; for (const [x, y, id] of [[...l, "glr"], [...r, "glg"], ...extra]) g += `<circle cx="${f2(x)}" cy="${f2(y)}" r="3.4" fill="url(#${id})"/><circle cx="${f2(x)}" cy="${f2(y)}" r=".9" fill="#fff"/>`; return g; }
+function glowAt(x, y, r) { return `<circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(r)}" fill="url(#glw)"/>`; }
+function beam(x, y, w, len, ang = 0) { return `<path d="M${f2(x - .8)} ${f2(y)} L${f2(x - w / 2)} ${f2(y - len)} Q${f2(x)} ${f2(y - len - w * .25)} ${f2(x + w / 2)} ${f2(y - len)} L${f2(x + .8)} ${f2(y)} Z" fill="url(#beam)" transform="rotate(${ang} ${x} ${y})"/>`; }
+function speedLines(y0, y1, xs) { return xs.map((x, i) => `<path d="M${x} ${y0 + (i % 2) * 4} V${y1 - (i % 3) * 3}" stroke="#fff" stroke-opacity=".35" stroke-width=".9" stroke-linecap="round"/>`).join(""); }
+const roundel = (b, x, y, c) => b.circ(x, y, 2.6, c, {ov: "dome", sw: .7, sil: false}).circ(x, y, 1.05, "#f4f1e6", {ov: null, sw: 0, sil: false});
+
+/* ───────── 1. 비행기 ───────── */
+function C130(P, o = {}) {
+  const b = new SB(), body = o.body || "#6b7559", wing = o.wing || mix(body, "#ffffff", .07), eng = mix(body, "#000000", .26);
+  b.path("M44 78 L27 81.5 C25 82 24 83 24 84.5 C24 86 25 87 27 87 L44 87.5 L56 87.5 L73 87 C75 87 76 86 76 84.5 C76 83 75 82 73 81.5 L56 78 Z", wing);
+  const F = "M50 5 C54.5 5 56.5 9 56.5 15 L56.5 66 C56.5 74 54 82 50 90 C46 82 43.5 74 43.5 66 L43.5 15 C43.5 9 45.5 5 50 5 Z";
+  b.path(F, body, {ov: "cyl"});
+  if (o.ramp) { b.path("M45.6 79 L54.4 79 L55.6 96 L44.4 96 Z", mix(body, "#000", .45), {ov: "cylv", sw: 1}); b.line("M45.4 84 H54.6 M45 89 H55", "#000", .6, .4); b.rect(47.3, 92.5, 5.4, 4.6, .8, "#a8875a", {sw: .7}); b.line("M47.3 94.8 H52.7 M50 92.5 V97.1", "#5e4a2e", .5); }
+  b.rect(48.9, 70, 2.2, 21, 1.1, eng, {ov: "cyl", sw: .8});
+  const W = "M43.5 33 L10 37 C6 37.5 4 38.5 4 40.5 L4 42 C4 43.5 6 44 9 44 L43.5 46 L56.5 46 L91 44 C94 44 96 43.5 96 42 L96 40.5 C96 38.5 94 37.5 90 37 L56.5 33 Z";
+  b.path(W, wing);
+  if (o.camo) b.camo(`<path d="${F}"/><path d="${W}"/>`, o.camo, 11, 26, 9);
+  b.line("M10 42.6 L43.5 44.4 M56.5 44.4 L90 42.6 M27 39.6 L27.4 44.9 M72.6 44.9 L73 39.6", "#000", .6, .3);
+  b.line("M43.5 22 H56.5 M43.5 52 H56.5 M43.5 63 H56.5 M44 70 H56", "#000", .55, .25);
+  for (const x of [17.5, 30.5, 69.5, 82.5]) { b.rect(x - 2.7, 26, 5.4, 22.5, 2.6, eng, {ov: "cyl", sw: 1}); b.line(`M${x} 44 V47.8`, "#1a1b18", 1.2, .7); }
+  for (const x of [17.5, 30.5, 69.5, 82.5]) prop(b, x, 25.6, 7.6, 4, {flat: o.spin ? .5 : .3});
+  b.path("M45.6 11.6 C47 8.4 53 8.4 54.4 11.6 L54.8 14.6 L45.2 14.6 Z", "url(#glass)", {ov: null, sw: .7});
+  b.line("M50 8.8 V14.6 M47.6 9.6 L47.2 14.6 M52.4 9.6 L52.8 14.6", OL, .45);
+  b.line("M46.2 11 Q48 9.4 49 9.6", "#fff", .7, .7);
+  if (o.band !== false) b.rect(43.7, 56.5, 12.6, 4.6, 0, o.bandCol || P.c, {ov: "cyl", sw: 0, sil: false});
+  if (o.roundel !== false) { roundel(b, 23, 40.8, o.bandCol || P.c); roundel(b, 77, 40.8, o.bandCol || P.c); }
+  return b.out({off: [7, 10], blur: 2.6, op: .32, sticker: o.sticker, stickerCol: o.stickerCol, over: o.night ? navLights(b, [4.6, 41.4], [95.4, 41.4], [[50, 89, "glr"]]) + glowAt(50, 30, 4) : ""});
+}
+function jetPod(b, x, y, col) { b.rect(x - 2.5, y - 6.2, 5, 12.4, 2.5, col, {ov: "cyl", sw: .9}); b.raw(`<ellipse cx="${x}" cy="${f2(y - 5.7)}" rx="1.8" ry=".95" fill="#16180f"/><ellipse cx="${x}" cy="${f2(y + 6)}" rx="1.5" ry=".75" fill="#2a2a26"/>`); }
+function JET(P, o = {}) {  // Il-76 · C-17
+  const b = new SB(), body = o.body || "#9aa1a6", wing = mix(body, "#ffffff", .06), eng = mix(body, "#000000", .3), wide = o.wide ? 1.6 : 0;
+  const F = `M50 4 C${55 + wide} 4 ${57 + wide} 8.5 ${57 + wide} 15 L${57 + wide} 70 C${57 + wide} 78 54 85 50 92 C46 85 ${43 - wide} 78 ${43 - wide} 70 L${43 - wide} 15 C${43 - wide} 8.5 ${45 - wide} 4 50 4 Z`;
+  b.path(F, body, {ov: "cyl"});
+  if (o.glassNose) b.path("M46.4 8.6 C47.6 5.4 52.4 5.4 53.6 8.6 L53.3 10.6 L46.7 10.6 Z", "url(#glass)", {ov: null, sw: .6});
+  b.path("M45.4 14.6 C46.6 12 53.4 12 54.6 14.6 L54.8 17 L45.2 17 Z", "url(#glass)", {ov: null, sw: .6});
+  const W = "M43.4 34 L9 48.5 C6.5 49.5 5 50.5 5.5 52 L6.2 53.2 L43.4 47.5 L56.6 47.5 L93.8 53.2 L94.5 52 C95 50.5 93.5 49.5 91 48.5 L56.6 34 Z";
+  b.path(W, wing);
+  for (const [x, y] of [[22, 44], [33.6, 39.6], [66.4, 39.6], [78, 44]]) jetPod(b, x, y, eng);
+  if (o.winglet) { b.rect(4.6, 47.6, 2.2, 6.2, 1, eng, {sw: .7}); b.rect(93.2, 47.6, 2.2, 6.2, 1, eng, {sw: .7}); }
+  b.line("M12 50.6 L43 46 M57 46 L88 50.6", "#000", .55, .3);
+  b.line("M43.6 24 H56.4 M43.6 58 H56.4", "#000", .5, .25);
+  b.rect(49, 72, 2, 20, 1, eng, {ov: "cyl", sw: .8});
+  b.path("M45 84.5 L31 90.5 C29.5 91.3 29.8 93 31.5 93 L45 91.5 L55 91.5 L68.5 93 C70.2 93 70.5 91.3 69 90.5 L55 84.5 Z", wing);
+  b.rect(43.4 - wide, 60, 13.2 + wide * 2, 4.4, 0, P.c, {ov: "cyl", sw: 0, sil: false});
+  roundel(b, 20, 49.4, P.c); roundel(b, 80, 49.4, P.c);
+  return b.out({off: [7, 10], blur: 2.6, op: .32});
+}
+function A400(P, o = {}) {
+  const b = new SB(), body = o.body || "#7c858b", wing = mix(body, "#fff", .07), eng = mix(body, "#000", .28);
+  b.path("M50 4.6 C55 4.6 57 9 57 15 L57 68 C57 76 54.5 83 50 90 C45.5 83 43 76 43 68 L43 15 C43 9 45 4.6 50 4.6 Z", body, {ov: "cyl"});
+  b.path("M43.5 33 L8 40 C5.5 40.5 4 41.5 4 43 L4.5 44.5 L43.5 45.5 L56.5 45.5 L95.5 44.5 L96 43 C96 41.5 94.5 40.5 92 40 L56.5 33 Z", wing);
+  b.line("M10 43.6 L43.5 44.8 M56.5 44.8 L90 43.6", "#000", .55, .3);
+  for (const x of [18, 31, 69, 82]) { const y = x < 25 || x > 75 ? 30 : 27.4; b.rect(x - 2.7, y, 5.4, 18, 2.6, eng, {ov: "cyl", sw: 1}); prop(b, x, y - .4, 7.8, 8, {flat: .36}); }
+  b.rect(49, 70, 2, 21, 1, eng, {ov: "cyl", sw: .8});
+  b.path("M45 83 L32 88.6 C30.6 89.4 30.9 91 32.4 91 L45 89.8 L55 89.8 L67.6 91 C69.1 91 69.4 89.4 68 88.6 L55 83 Z", wing);
+  b.path("M45.4 11 C46.8 8 53.2 8 54.6 11 L55 14.2 L45 14.2 Z", "url(#glass)", {ov: null, sw: .6});
+  b.rect(43.2, 55, 13.6, 4.4, 0, P.c, {ov: "cyl", sw: 0, sil: false}); roundel(b, 22, 42, P.c); roundel(b, 78, 42, P.c);
+  return b.out({off: [7, 10], blur: 2.6, op: .32});
+}
+function TWIN(P, o = {}) {
+  const b = new SB(), body = o.body || "#b8bdbf", wing = mix(body, "#fff", .1), eng = mix(body, "#000", .3);
+  b.path("M44.5 76 L31 79 C29.6 79.3 29.4 82.6 31 82.8 L44.5 83.6 L55.5 83.6 L69 82.8 C70.6 82.6 70.4 79.3 69 79 L55.5 76 Z", wing);
+  b.path("M50 10 C54.4 10 56 14 56 19 L56 66 C56 74 53.6 80 50 86 C46.4 80 44 74 44 66 L44 19 C44 14 45.6 10 50 10 Z", body, {ov: "cyl"});
+  b.rect(49.1, 68, 1.8, 19, .9, eng, {ov: "cyl", sw: .8});
+  b.path("M44 36 L10 38.6 C7.5 38.8 6 39.6 6 41 L6 42.4 C6 43.4 7.4 44 10 44 L44 45.2 L56 45.2 L90 44 C92.6 44 94 43.4 94 42.4 L94 41 C94 39.6 92.5 38.8 90 38.6 L56 36 Z", wing);
+  for (const x of [29, 71]) { b.rect(x - 3, 28, 6, 22, 2.8, eng, {ov: "cyl", sw: 1}); prop(b, x, 27.6, 9, 6); }
+  b.path("M45.8 15.4 C47 12.6 53 12.6 54.2 15.4 L54.6 18.2 L45.4 18.2 Z", "url(#glass)", {ov: null, sw: .6});
+  b.rect(44.1, 50, 11.8, 3.2, 0, P.c, {ov: "cyl", sw: 0, sil: false}); b.rect(44.1, 54.2, 11.8, 1.6, 0, P.c, {ov: null, sw: 0, sil: false});
+  b.line("M45 24 H55 M45 32 H55", "#5d86a3", 1.6, .9);
+  roundel(b, 18, 41.4, P.c); roundel(b, 82, 41.4, P.c);
+  return b.out({off: [7, 10], blur: 2.6, op: .32});
+}
+function OSPREY(P, o = {}) {
+  const b = new SB(), body = o.body || "#6d7469", wing = mix(body, "#fff", .07), eng = mix(body, "#000", .28);
+  b.path("M36 80 L64 80 L64 86 L36 86 Z", wing, {});
+  b.rect(34.8, 77, 2.6, 12, 1.2, eng, {sw: .8}); b.rect(62.6, 77, 2.6, 12, 1.2, eng, {sw: .8});
+  b.path("M50 8 C55 8 57.4 12 57.4 18 L57.4 72 C57.4 78 54.4 82 50 84 C45.6 82 42.6 78 42.6 72 L42.6 18 C42.6 12 45 8 50 8 Z", body, {ov: "cyl"});
+  b.path("M42.6 39 L26 40 L26 47.4 L42.6 47 L57.4 47 L74 47.4 L74 40 L57.4 39 Z", wing);
+  b.rect2(19.6, 33, 7.6, 20, 3.4, eng, {ov: "cyl", sw: 1});
+  b.path("M44.6 14 C45.8 10.8 54.2 10.8 55.4 14 L55.8 17.6 L44.2 17.6 Z", "url(#glass)", {ov: null, sw: .6});
+  b.rect(42.8, 58, 14.4, 4, 0, P.c, {ov: "cyl", sw: 0, sil: false});
+  rotor(b, 23.4, 39, 18, 3, -.3, {bw: 2.6, hub: 2.4}); rotor(b, 76.6, 39, 18, 3, .7, {bw: 2.6, hub: 2.4});
+  return b.out({off: [7, 10], blur: 2.6, op: .32});
+}
+/* ───────── 6. 헬기 ───────── */
+function CH47(P, o = {}) {
+  const b = new SB(), body = o.body || "#5f6a50", dk = mix(body, "#000", .2);
+  b.rect(38.4, 40, 23.2, 27, 6, mix(body, "#000", .1));
+  b.rect2(35.6, 68, 5.4, 15, 2.6, mix(body, "#000", .3), {ov: "cyl", sw: .9});
+  b.rect(42, 7, 16, 84, 7.6, body, {ov: "cyl"});
+  if (o.camo) b.camo(`<rect x="42" y="7" width="16" height="84" rx="7.6"/><rect x="38.4" y="40" width="23.2" height="27" rx="6"/>`, o.camo, 5, 18, 6);
+  b.path("M44 63 L56 63 L57.4 89 C57.4 92.6 54 94.6 50 94.6 C46 94.6 42.6 92.6 42.6 89 Z", dk, {ov: "cyl"});
+  b.rect(45, 15, 10, 15, 4, dk, {ov: "cyl", sw: .8});
+  b.path("M43.6 12.4 C45 8.8 55 8.8 56.4 12.4 L56.6 15.4 L43.4 15.4 Z", "url(#glass)", {ov: null, sw: .6});
+  let w = ""; for (const y of [33, 39, 45, 51, 57]) w += `<rect x="42.6" y="${y}" width="1.5" height="2.6" rx=".5" fill="#1d2a33"/><rect x="55.9" y="${y}" width="1.5" height="2.6" rx=".5" fill="#1d2a33"/>`; b.raw(w);
+  if (o.mark !== false) b.rect(42.2, 70, 15.6, 3.6, 0, o.markCol || P.c, {ov: "cyl", sw: 0, sil: false});
+  rotor(b, 50, 22.4, 22, 3, .4, {bw: 2.5}); rotor(b, 50, 78, 21, 3, 1.05, {bw: 2.5});
+  return b.out({off: [6, 9], blur: 2.4, op: .34, sticker: o.sticker});
+}
+function UH60(P, o = {}) {  // 블랙호크 (+ 구조·야간 변형)
+  const b = new SB(), body = o.body || "#3b4436", dk = mix(body, "#000", .25);
+  b.path("M50 82.6 L36 84.4 C34.8 84.6 34.5 86.8 36 86.9 L50 86.5 L64 86.9 C65.5 86.8 65.2 84.6 64 84.4 Z", mix(body, "#fff", .06));
+  b.path("M50 14 C56.5 14 59.5 19 59.5 27 L59.5 46 C59.5 52 56.5 56 53 58.5 L51.6 90 L48.4 90 L47 58.5 C43.5 56 40.5 52 40.5 46 L40.5 27 C40.5 19 43.5 14 50 14 Z", body, {ov: "cyl"});
+  if (o.stripe) { b.rect(40.6, 44, 18.8, 4, 0, o.stripe, {ov: "cyl", sw: 0, sil: false}); b.rect(48.2, 60, 3.6, 22, 0, o.stripe, {ov: "cyl", sw: 0, sil: false}); }
+  b.rect2(43.4, 31, 4.8, 15, 2.2, dk, {ov: "cyl", sw: .8});
+  b.path("M43 22.4 C44 16.6 56 16.6 57 22.4 L57 26 L43 26 Z", "url(#glass)", {ov: null, sw: .6}); b.line("M50 17.6 V26", OL, .45);
+  b.raw(`<ellipse cx="53.6" cy="87.6" rx="1.3" ry="6.4" fill="url(#disc)"/>`); b.line("M53.6 82 V93", "#2a2c28", .9, .7);
+  if (o.cross) b.raw(`<path d="M47.8 64 H52.2 V68.6 H56.8 V73 H52.2 V77.6 H47.8 V73 H43.2 V68.6 H47.8 Z" fill="#d23a37" stroke="#fff" stroke-width=".8" transform="translate(0 -30) scale(1 1)"/>`);
+  if (o.mark !== false && !o.stripe) b.rect(40.6, 48, 18.8, 3.4, 0, P.c, {ov: "cyl", sw: 0, sil: false});
+  rotor(b, 50, 38, 34, 4, .3, {bw: 2.4});
+  let ov = ""; if (o.night) ov = navLights(b, [35.2, 85.6], [64.8, 85.6], [[50, 90, "glr"]]) + glowAt(50, 15, 3);
+  return b.out({off: [6, 9], blur: 2.4, op: .34, under: o.night ? beam(50, 14, 22, 14) : "", over: ov});
+}
+function MI8(P, o = {}) {
+  const b = new SB(), body = o.body || "#5d6c5a", dk = mix(body, "#000", .25);
+  b.path("M50 80 L40 82 C39 82.2 38.8 84.6 40 84.7 L50 84.3 L60 84.7 C61.2 84.6 61 82.2 60 82 Z", mix(body, "#fff", .06));
+  b.path("M50 9 C57.5 9 61.5 14 61.5 23 L61.5 54 C61.5 60 57.5 63 53.4 64 L52 90 L48 90 L46.6 64 C42.5 63 38.5 60 38.5 54 L38.5 23 C38.5 14 42.5 9 50 9 Z", body, {ov: "cyl"});
+  if (o.camo) b.camo(`<path d="M50 9 C57.5 9 61.5 14 61.5 23 L61.5 54 C61.5 60 57.5 63 53.4 64 L52 90 L48 90 L46.6 64 C42.5 63 38.5 60 38.5 54 L38.5 23 C38.5 14 42.5 9 50 9 Z"/>`, o.camo, 9, 16, 7);
+  b.rect2(42.6, 24, 6.6, 18, 3, dk, {ov: "cyl", sw: .8});
+  b.raw(`<circle cx="45.9" cy="24.6" r="2.2" fill="#15170f"/><circle cx="54.1" cy="24.6" r="2.2" fill="#15170f"/>`);
+  b.path("M41.4 17.4 C42.6 11.2 57.4 11.2 58.6 17.4 L58.6 21 L41.4 21 Z", "url(#glass)", {ov: null, sw: .6}); b.line("M45 12.6 L44.4 21 M55 12.6 L55.6 21 M50 11.4 V21", OL, .45);
+  b.raw(`<ellipse cx="46.2" cy="86.6" rx="1.3" ry="7" fill="url(#disc)"/>`);
+  b.rect(38.7, 47, 22.6, 3.6, 0, P.c, {ov: "cyl", sw: 0, sil: false});
+  rotor(b, 50, 40, 36, 5, .2, {bw: 2.2});
+  return b.out({off: [6, 9], blur: 2.4, op: .34});
+}
+function MH6(P, o = {}) {
+  const b = new SB(), body = o.body || "#25282a";
+  b.tube("M38.2 30 V62 M61.8 30 V62", "#9aa0a4", 1.4); b.tube("M38.2 36 H43 M38.2 54 H43 M61.8 36 H57 M61.8 54 H57", "#7d8388", 1);
+  b.rect(48.9, 54, 2.2, 32, 1.1, mix(body, "#fff", .1), {ov: "cyl", sw: .8});
+  b.path("M50 82.4 L42 84.6 V87.4 L50 86.8 L58 87.4 V84.6 Z", mix(body, "#fff", .12));
+  b.path("M50 25 C57.4 25 60 31 60 39 C60 49.6 56 56 50 56 C44 56 40 49.6 40 39 C40 31 42.6 25 50 25 Z", body, {ov: "dome"});
+  b.path("M42.8 33.6 C43.6 26.8 56.4 26.8 57.2 33.6 L56.8 38 L43.2 38 Z", "url(#glass)", {ov: null, sw: .6});
+  b.rect(41.4, 44, 17.2, 2.6, 0, P.c, {ov: "cyl", sw: 0, sil: false});
+  rotor(b, 50, 41, 29, 5, .1, {bw: 1.7, hub: 2.2});
+  return b.out({off: [6, 9], blur: 2.4, op: .34});
+}
+function AH64(P, o = {}) {
+  const b = new SB(), body = o.body || "#4b5440", dk = mix(body, "#000", .28);
+  b.path("M50 84 L39.6 85.6 V88.4 L50 87.8 L60.4 88.4 V85.6 Z", mix(body, "#fff", .06));
+  b.path2("M45.4 41.6 L29.6 43 C28.6 43.1 28.4 48.6 29.6 48.8 L45.4 50.2 Z", mix(body, "#fff", .05));
+  for (const x of [32.4, 67.6]) { b.rect(x - 2.4, 39.6, 4.8, 11.4, 2.3, "#3b3f37", {ov: "cyl", sw: .8}); b.raw(`<circle cx="${x}" cy="40.4" r="1.5" fill="#15170f"/>`); }
+  for (const x of [38, 62]) b.rect(x - 1.4, 40.6, 2.8, 9.4, 1.3, "#7d806f", {ov: "cyl", sw: .6});
+  b.rect2(39.4, 31, 5.4, 18, 2.6, dk, {ov: "cyl", sw: .9});
+  b.path("M50 10 C53.6 10 55.2 13 55.2 18 L55.2 52 C55.2 58 53.2 62 51.6 64 L51.2 90 L48.8 90 L48.4 64 C46.8 62 44.8 58 44.8 52 L44.8 18 C44.8 13 46.4 10 50 10 Z", body, {ov: "cyl"});
+  b.path("M46 16.6 C46.6 13.4 53.4 13.4 54 16.6 L54 21.6 L46 21.6 Z", "url(#glass)", {ov: null, sw: .6});
+  b.path("M46 24.4 C46.6 22.4 53.4 22.4 54 24.4 L54 30 L46 30 Z", "url(#glass)", {ov: null, sw: .6});
+  b.rect(45, 54, 10, 3, 0, P.c, {ov: "cyl", sw: 0, sil: false});
+  b.raw(`<ellipse cx="53" cy="87" rx="1.2" ry="6" fill="url(#disc)"/>`);
+  rotor(b, 50, 38, 33, 4, .55, {bw: 2.2});
+  return b.out({off: [6, 9], blur: 2.4, op: .34});
+}
+function UH1(P, o = {}) {
+  const b = new SB(), body = o.body || "#4f5a3c", dk = mix(body, "#000", .25);
+  b.tube("M37.6 28 V64 M62.4 28 V64", "#8e948f", 1.3);
+  b.path("M50 72 L42.6 73.4 V75.6 L50 75.2 L57.4 75.6 V73.4 Z", mix(body, "#fff", .06));
+  b.path("M50 18 C57 18 59.5 23 59.5 31 L59.5 52 C59.5 57 56 60 53 61 L51.4 90 L48.6 90 L47 61 C44 60 40.5 57 40.5 52 L40.5 31 C40.5 23 43 18 50 18 Z", body, {ov: "cyl"});
+  b.rect(44.6, 34, 10.8, 12, 3.4, dk, {ov: "cyl", sw: .8});
+  b.path("M42.6 26.4 C43.6 20.4 56.4 20.4 57.4 26.4 L57.4 30 L42.6 30 Z", "url(#glass)", {ov: null, sw: .6});
+  if (o.cross) { b.rect(40.7, 46, 18.6, 12, 2, "#f2f2ee", {ov: "lit", sw: 0, sil: false}); b.raw(`<path d="M48.4 47.2 H51.6 V50.4 H54.8 V53.6 H51.6 V56.8 H48.4 V53.6 H45.2 V50.4 H48.4 Z" fill="#d23a37"/>`); }
+  else b.rect(40.7, 50, 18.6, 3.4, 0, P.c, {ov: "cyl", sw: 0, sil: false});
+  b.raw(`<ellipse cx="46.6" cy="87" rx="1.2" ry="5.6" fill="url(#disc)"/>`);
+  rotor(b, 50, 38, 38, 2, .35, {bw: 3});
+  return b.out({off: [6, 9], blur: 2.4, op: .34});
+}
+function MI24(P, o = {}) {
+  const b = new SB(), body = o.body || "#6c6a4c", dk = mix(body, "#000", .28);
+  const F = "M50 8 C53.4 8 55.6 11 55.6 17 L55.6 56 C55.6 61 53.4 64 51.8 66 L51.2 90 L48.8 90 L48.2 66 C46.6 64 44.4 61 44.4 56 L44.4 17 C44.4 11 46.6 8 50 8 Z";
+  b.path2("M44.6 44 L28 47.6 C27 47.8 27 52.4 28 52.6 L44.6 53 Z", mix(body, "#fff", .04));
+  for (const x of [31, 69]) b.rect(x - 2.3, 44.6, 4.6, 10.4, 2.2, "#3a3d36", {ov: "cyl", sw: .8});
+  b.rect2(40, 30, 5.6, 17, 2.6, dk, {ov: "cyl", sw: .9});
+  b.path(F, body, {ov: "cyl"});
+  if (o.camo !== false) b.camo(`<path d="${F}"/><path d="M44.6 44 L28 47.6 L28 52.6 L44.6 53 Z"/><path d="${mx("M44.6 44 L28 47.6 L28 52.6 L44.6 53 Z")}"/>`, ["#4d4a33", "#8f8458", "#3a3c2a"], 21, 16, 5);
+  b.ell(50, 15, 4.2, 4, "url(#glass)", {ov: null, sw: .6}); b.ell(50, 24, 4.6, 4.4, "url(#glass)", {ov: null, sw: .6});
+  b.rect(44.6, 58, 10.8, 2.8, 0, P.c, {ov: "cyl", sw: 0, sil: false});
+  b.path("M50 82 L42 84 V86.6 L50 86 L58 86.6 V84 Z", mix(body, "#fff", .05));
+  b.raw(`<ellipse cx="46.8" cy="87.4" rx="1.2" ry="5.8" fill="url(#disc)"/>`);
+  rotor(b, 50, 38, 34, 5, .45, {bw: 2.1});
+  return b.out({off: [6, 9], blur: 2.4, op: .34});
+}
+function KA52(P, o = {}) {
+  const b = new SB(), body = o.body || "#4c5257", dk = mix(body, "#000", .28);
+  b.path2("M44.6 44 L30 45.6 C29 45.8 29 51.4 30 51.6 L44.6 52 Z", mix(body, "#fff", .04));
+  for (const x of [32.6, 67.4]) b.rect(x - 2.3, 42.6, 4.6, 11, 2.2, "#2f3236", {ov: "cyl", sw: .8});
+  b.rect2(40.4, 30, 5.6, 17, 2.6, dk, {ov: "cyl", sw: .9});
+  b.path("M50 10 C55.6 10 57.6 14 57.6 21 L57.6 54 C57.6 60 54.4 64 52 66 L51.4 84 L48.6 84 L48 66 C45.6 64 42.4 60 42.4 54 L42.4 21 C42.4 14 44.4 10 50 10 Z", body, {ov: "cyl"});
+  b.path("M50 80 L38 82.2 V85.6 L50 85 L62 85.6 V82.2 Z", mix(body, "#fff", .06));
+  b.rect2(36.4, 79, 2.6, 10, 1.2, dk, {sw: .7});
+  b.path("M43.8 17 C44.8 12 55.2 12 56.2 17 L56.4 24 L43.6 24 Z", "url(#glass)", {ov: null, sw: .6}); b.line("M50 12.4 V24", OL, .5);
+  b.rect(42.6, 56, 14.8, 3, 0, P.c, {ov: "cyl", sw: 0, sil: false});
+  rotor(b, 50, 38, 33, 3, .2, {bw: 2.3, col: "#1f2124"}); rotor(b, 50, 38, 31, 3, 1.25, {bw: 2.1, hub: 3.2, col: "#33363a"});
+  return b.out({off: [6, 9], blur: 2.4, op: .34});
+}
+/* ───────── 7. 글라이더 (배그 모터 글라이더) ───────── */
+function GLD(P, o = {}) {
+  const b = new SB(), wing = o.wing || "#eceee8", pod = o.pod || P.c, tail = o.tail || mix(wing, "#000", .08);
+  if (o.twin) { b.tube("M38 34 V84 M62 34 V84", mix(wing, "#000", .25), 1.8); b.path("M36.4 80.6 L63.6 80.6 L63.6 86.4 L36.4 86.4 Z", tail); }
+  else { b.rect(49, 46, 2, 40, 1, mix(wing, "#000", .3), {ov: "cyl", sw: .8}); b.path("M50 81 L35 83.5 C33.8 83.7 33.6 86.4 35 86.5 L50 86 L65 86.5 C66.4 86.4 66.2 83.7 65 83.5 Z", tail); b.rect(49.3, 77.6, 1.4, 10.4, .7, mix(tail, "#000", .2), {sw: .6}); }
+  const POD = "M50 12 C55.5 12 58 17 58 24 L58 40 C58 46 54.8 49 50 49 C45.2 49 42 46 42 40 L42 24 C42 17 44.5 12 50 12 Z";
+  b.path(POD, pod, {ov: "dome"});
+  prop(b, 50, 50.6, o.bigProp ? 11 : 9, 3, {flat: o.bigProp ? .42 : .3, hub: 1.6});
+  const W = "M47 25 L7 27 C3.5 27.2 2 28 2 29.6 L2 31 C2 32.6 3.5 33.2 7 33.2 L47 35 L53 35 L93 33.2 C96.5 33.2 98 32.6 98 31 L98 29.6 C98 28 96.5 27.2 93 27 L53 25 Z";
+  b.path(W, wing);
+  if (o.camo) b.camo(`<path d="${W}"/>`, o.camo, 33, 22, 6);
+  if (o.stripe) { b.raw(`<path d="M14 26.7 L14.6 33.4 M18 26.5 L18.6 33.6 M86 26.5 L85.4 33.6 M82 26.7 L81.4 33.4" stroke="${o.stripe}" stroke-width="2.2"/>`); }
+  if (o.tips) { b.raw(`<path d="M2 29.6 C2 28 3.5 27.2 7 27 L11 26.8 L11 33.4 L7 33.2 C3.5 33.2 2 32.6 2 31 Z M98 29.6 C98 28 96.5 27.2 93 27 L89 26.8 L89 33.4 L93 33.2 C96.5 33.2 98 32.6 98 31 Z" fill="${o.tips}"/>`); }
+  if (o.winglet) { b.rect(1.2, 26.4, 1.8, 7.6, .9, mix(wing, "#000", .3), {sw: .6}); b.rect(97, 26.4, 1.8, 7.6, .9, mix(wing, "#000", .3), {sw: .6}); }
+  b.line("M8 32.2 L28 33.2 M72 33.2 L92 32.2 M30 26 L30.4 34 M70 26 L69.6 34", "#000", .5, .28);
+  b.raw(`<path d="${o.bubble ? "M44.2 23.6 C44.2 13.6 55.8 13.6 55.8 23.6 L55.4 25.2 L44.6 25.2 Z" : "M45 22 C45.6 15.2 54.4 15.2 55 22 L55 25 L45 25 Z"}" fill="url(#glass)" stroke="${OL}" stroke-width=".6"/>`); b.line("M46 20 Q47.6 16.8 49.4 16.6", "#fff", .8, .75);
+  b.rect(42.2, 39, 15.6, 2.6, 0, mix(pod, "#000", .3), {ov: null, sw: 0, sil: false});
+  let under = "", over = "";
+  if (o.smoke) for (let i = 0; i < 9; i++) under += `<circle cx="${f2(50 + Math.sin(i * 1.7) * i * .5)}" cy="${f2(56 + i * 5.2)}" r="${f2(2.6 + i * 1.1)}" fill="#fff" opacity="${f2(.38 - i * .035)}" filter="url(#soft)"/>`;
+  if (o.night) over = navLights(b, [2.6, 30.4], [97.4, 30.4], [[50, 87, "glr"]]);
+  return b.out({off: [6, 9], blur: 2.4, op: .32, sticker: o.sticker, stickerCol: o.stickerCol, under, over});
+}
+/* ───────── 2. 자전거 (배그 산악자전거) ───────── */
+function BIKE(P, o = {}) {
+  const b = new SB(), fr = o.frame || P.c, tw = o.tw || 7.2, sm = o.small ? .8 : 1;
+  const ry = o.small ? 62 : 58, rh = o.small ? 26 : 34, fy = o.small ? 12 : 6, fh = o.small ? 25 : 32;
+  if (o.bags) { b.rect(37.6, 66, 7.4, 16, 2.6, o.bagCol || "#4d5a3a", {ov: "lit", sw: 1}); b.rect(55, 66, 7.4, 16, 2.6, o.bagCol || "#4d5a3a", {ov: "lit", sw: 1}); }
+  tire(b, 50 - tw / 2, ry, tw, rh, {knob: o.knob, col: o.whitewall ? "#2a2a26" : undefined});
+  tire(b, 50 - tw * .48, fy, tw * .96, fh, {knob: o.knob});
+  if (o.fender) { b.rect(48.2, fy + 1, 3.6, fh * .7, 1.8, "url(#chromev)", {ov: null, sw: .6}); b.rect(48.2, ry + 4, 3.6, rh * .75, 1.8, "url(#chromev)", {ov: null, sw: .6}); }
+  if (o.rack) { b.rect(45.4, 64, 9.2, 13, 1.6, "#3b3e38", {ov: "lit", sw: .8}); b.line("M45.4 67.6 H54.6 M45.4 71 H54.6 M45.4 74.4 H54.6", "#9aa0a4", .6, .8); if (o.rackBag) b.rect(45, 63, 10, 11, 2.6, o.rackBag, {ov: "lit", sw: .9}); }
+  b.tube(`M47.4 ${56 * sm + (o.small ? 11 : 0)} L46.4 ${ry + 16} M52.6 ${56 * sm + (o.small ? 11 : 0)} L53.6 ${ry + 16}`, fr, 1.3);
+  if (o.shock) { b.rect(48.2, 50.5, 3.6, 8, 1.4, "#e07a2a", {ov: "cyl", sw: .7}); b.line("M48.2 52 H51.8 M48.2 54 H51.8 M48.2 56 H51.8", "#7a3d10", .6); }
+  b.rect(47.6, 28 * sm + (o.small ? 6 : 0), 4.8, 30 * sm, 2.4, fr, {ov: "cyl", sw: 1});
+  const fk = o.dh ? 2.4 : 1.6;
+  b.rect(45.6 - (o.dh ? .6 : 0), fy + 9, fk, 13, fk / 2, o.dh ? "#1f2023" : "url(#chromev)", {ov: o.dh ? "cyl" : null, sw: .7});
+  b.rect(52.8 + (o.dh ? .2 : 0), fy + 9, fk, 13, fk / 2, o.dh ? "#1f2023" : "url(#chromev)", {ov: o.dh ? "cyl" : null, sw: .7});
+  if (o.dh) b.rect(44.6, fy + 8, 10.8, 3, 1.2, "#e07a2a", {ov: "cyl", sw: .7});
+  b.rect(45, fy + 18.6, 10, 3, 1.2, "#3a3d38", {ov: "cyl", sw: .7});
+  if (o.basket) { b.rect(41, 2, 18, 12, 2.4, "#a07a4a", {ov: "lit", sw: 1}); b.line("M41 5 H59 M41 8 H59 M41 11 H59 M45.5 2 V14 M50 2 V14 M54.5 2 V14", "#5e4526", .55, .8); }
+  const cy = o.small ? 50 : 47;
+  b.rect(38.6, cy - 1.6, 5.2, 3.2, 1, "#262824", {sw: .7}); b.rect(56.2, cy - 1.6, 5.2, 3.2, 1, "#262824", {sw: .7});
+  b.line(`M43.6 ${cy} H56.4`, "url(#chrome)", 1.4); b.circ(54.2, cy, o.small ? 2.6 : 3.4, "url(#chrome)", {ov: null, sw: .7, sil: false}); b.circ(54.2, cy, 1, "#3b3e3a", {ov: null, sw: 0, sil: false});
+  if (o.pegs) { b.rect2(43.4, ry + 9, 3, 6, 1.4, "url(#chromev)", {ov: null, sw: .6}); }
+  const sy = o.small ? 56 : 52;
+  b.path(`M47 ${sy + 3} C47 ${sy + .5} 48.5 ${sy - .5} 50 ${sy - .5} C51.5 ${sy - .5} 53 ${sy + .5} 53 ${sy + 3} L52.4 ${sy + 11} C52.2 ${sy + 12.5} 51.2 ${sy + 13} 50 ${sy + 13} C48.8 ${sy + 13} 47.8 ${sy + 12.5} 47.6 ${sy + 11} Z`, o.saddle || "#232421", {ov: "dome", sw: .9});
+  const hy = fy + 20, hw = o.cruiser ? 19 : o.drop ? 12 : o.dh ? 19 : 17;
+  if (o.cruiser) b.tube(`M${50 - hw} ${hy + 5} Q${50 - hw + 2} ${hy - 1} 50 ${hy} Q${50 + hw - 2} ${hy - 1} ${50 + hw} ${hy + 5}`, "#c9ccce", 1.5);
+  else if (o.drop) b.tube(`M${50 - hw} ${hy + 4} Q${50 - hw} ${hy} ${50 - hw + 3} ${hy} H${50 + hw - 3} Q${50 + hw} ${hy} ${50 + hw} ${hy + 4}`, "#2b2d2a", 1.6);
+  else b.tube(`M${50 - hw} ${hy} H${50 + hw}`, "#2b2d2a", 1.7);
+  if (!o.drop) { b.rect(50 - hw - 1.6, hy - 1.7, 5.6, 3.4, 1.6, o.grip || "#1b1c19", {ov: "cyl", sw: .7}); b.rect(50 + hw - 4, hy - 1.7, 5.6, 3.4, 1.6, o.grip || "#1b1c19", {ov: "cyl", sw: .7}); }
+  b.rect(48.6, hy - 3, 2.8, 6, 1, "#3a3d38", {ov: "cyl", sw: .7});
+  if (o.plate) { b.rect(43.4, hy + 1.6, 13.2, 7, 1.8, "#f1efe6", {ov: "lit", sw: .8}); b.raw(`<text x="50" y="${hy + 7}" font-family="Arial Black,Arial" font-weight="900" font-size="5.6" text-anchor="middle" fill="${P.cd}">7</text>`); }
+  if (o.bell) b.circ(50 + hw - 6, hy - 2.6, 1.6, "url(#chrome)", {ov: null, sw: .6, sil: false});
+  if (o.reflect) b.line(`M47.8 ${28} V${56}`, "#b9ff3a", 1, .9);
+  let under = ""; if (o.blur) { under = `<g opacity=".6">${speedLines(64, 98, [40, 44, 56, 60])}</g>`; b.raw(`<rect x="${f2(50 - tw / 2)}" y="${fy}" width="${tw}" height="${fh}" rx="3" fill="#fff" opacity=".1"/>`); }
+  return b.out({off: [2, 3], blur: 1.2, op: .5, sticker: o.sticker, stickerCol: o.stickerCol, under});
+}
+/* ───────── 3. 버기 (배그 버기) ───────── */
+function BUGGY(P, o = {}) {
+  const b = new SB(), body = o.body || P.c, cage = o.cage || "#252b30", dirty = o.rust;
+  b.tube("M31 22 L22 22.6 M31 28 L22 28 M33 66 L22 66 M33 80 L22 80", "#2e302c", 1.7); b.tube(mx("M31 22 L22 22.6 M31 28 L22 28 M33 66 L22 66 M33 80 L22 80"), "#2e302c", 1.7);
+  tire(b, 10.4, 12, 14, 21, {knob: true}); tire(b, 75.6, 12, 14, 21, {knob: true});
+  tire(b, 4.6, 57, 19, 33, {knob: true}); tire(b, 76.4, 57, 19, 33, {knob: true});
+  for (const [x, y, h] of [[26.4, 18, 10], [71, 18, 10], [27.4, 63, 13], [70, 63, 13]]) { b.rect(x, y, 2.8, h, 1.2, "#e07a2a", {ov: "cyl", sw: .6, sil: false}); let s = ""; for (let yy = y + 1.4; yy < y + h - .8; yy += 1.6) s += `M${x} ${f2(yy)} H${f2(x + 2.8)} `; b.line(s, "#7a3a0e", .5, .9); }
+  b.rect(36, 73, 28, 18, 3.4, o.engine || "#4c4d47", {ov: "lit"});
+  b.line("M38 76.6 H62 M38 79.6 H62 M38 82.6 H62 M38 85.6 H62", "#262723", .8, .8);
+  b.circ(43.6, 88.4, 3, "url(#chrome)", {ov: null, sw: .7}); b.tube("M56.6 88 V95.4 M61 88 V95.4", "#a7adb1", 1.5); b.circ(56.6, 95.6, 1.1, "#1a1b18", {ov: null, sw: .5, sil: false}); b.circ(61, 95.6, 1.1, "#1a1b18", {ov: null, sw: .5, sil: false});
+  if (o.spare) { b.ell(50, 81, 8.6, 8.6, "#1d1e1b", {ov: "cyl", sw: 1}); b.circ(50, 81, 4, "#555850", {ov: "dome", sw: .7}); }
+  if (o.jerry) b.rect(37.6, 75, 7.6, 10, 1.4, "#3f6b2c", {ov: "lit", sw: .8});
+  b.rect(32, 40, 36, 36, 3, "#2a2c28", {ov: "lit", sw: 1});
+  for (const x of [37.4, 52.6]) { b.path(`M${x} 49 C${x} 46.6 ${x + 2} 45.6 ${x + 5} 45.6 C${x + 8} 45.6 ${x + 10} 46.6 ${x + 10} 49 L${x + 10} 64 C${x + 10} 66.6 ${x + 8} 67.4 ${x + 5} 67.4 C${x + 2} 67.4 ${x} 66.6 ${x} 64 Z`, o.seat || "#1e1f1c", {ov: "dome", sw: .9}); b.line(`M${x + 2.4} 58 H${x + 7.6}`, "#000", .6, .4); }
+  b.raw(`<circle cx="42.4" cy="44.2" r="4" fill="none" stroke="${OL}" stroke-width="2.2"/><circle cx="42.4" cy="44.2" r="4" fill="none" stroke="#3a3d38" stroke-width="1.3"/><path d="M38.4 44.2 H46.4 M42.4 44.2 V48.2" stroke="#3a3d38" stroke-width="1"/>`);
+  if (!o.open) {
+    const H = "M38 4.6 C42 3 58 3 62 4.6 C66 6.2 69 10 69 15 L69 40.6 L31 40.6 L31 15 C31 10 34 6.2 38 4.6 Z";
+    b.path(H, body, {ov: "lit"});
+    if (o.camo) b.camo(`<path d="${H}"/>`, o.camo, 51, 10, 6);
+    if (o.stripes !== false) b.raw(`<clipPath id="hd"><path d="${H}"/></clipPath><g clip-path="url(#hd)"><path d="M44.4 0 L42.6 42 L46.4 42 L48 0 Z M55.6 0 L57.4 42 L53.6 42 L52 0 Z" fill="${o.stripeCol || "#141412"}" opacity=".92"/></g>`);
+    if (o.number) { b.circ(50, 25, 6.2, "#f2efe4", {ov: "dome", sw: .8, sil: false}); b.raw(`<text x="50" y="27.6" font-family="Arial Black,Arial" font-weight="900" font-size="7.6" text-anchor="middle" fill="#14170f">${o.number}</text>`); }
+    if (dirty) b.raw(`<clipPath id="hd2"><path d="${H}"/></clipPath><g clip-path="url(#hd2)" opacity=".34">${Array.from({length: 16}, (_, i) => { const x = 32 + srnd(i * 2.3) * 36, y = 6 + srnd(i * 4.1) * 34, r = .35 + srnd(i * 6.7) * 1.1; return `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(r * 1.5)}" ry="${f2(r)}" transform="rotate(${f2(srnd(i) * 180)} ${f2(x)} ${f2(y)})" fill="${dirty}"/>`; }).join("")}<path d="M34 34 L40 31 M60 12 L66 15 M58 36 L64 33" stroke="#f3eee0" stroke-opacity=".5" stroke-width=".5"/></g>`);
+    if (o.mud) b.raw(`<clipPath id="hd3"><path d="${H}"/></clipPath><g clip-path="url(#hd3)" fill="#5c4326" opacity=".8">${Array.from({length: 18}, (_, i) => `<circle cx="${f2(31 + srnd(i * 3) * 38)}" cy="${f2(26 + srnd(i * 5) * 16)}" r="${f2(.8 + srnd(i * 7) * 2.6)}"/>`).join("")}</g>`);
+    if (o.gloss) b.line("M36 9 Q50 4.6 64 9", "#fff", 1.6, .5);
+    b.line("M31 22 H69", "#000", .5, .25);
+  } else {
+    b.tube("M35 6 L65 6 L68 40 M35 6 L32 40 M33.6 22 H66.4 M50 6 V40", body, 2.2);
+    b.rect(40, 14, 20, 12, 2, "#3a3c37", {ov: "lit", sw: .8});
+  }
+  for (const x of [37, 63]) { b.circ(x, 7.6, 3.4, "url(#chrome)", {ov: null, sw: .8}); b.circ(x, 7.6, 2.1, "#fff7cf", {ov: "dome", sw: .4, sil: false}); }
+  b.tube("M41 2.6 H59", "#7c8085", 1.5);
+  b.tube("M31.4 40.6 H68.6 V74.6 H31.4 Z M31.4 40.6 L68.6 74.6 M68.6 40.6 L31.4 74.6", cage, 2.6);
+  let under = "", over = ""; if (o.lights) under = beam(37, 5, 16, 28, -4) + beam(63, 5, 16, 28, 4);
+  if (o.dust) over = `<g opacity=".45" filter="url(#soft)">${[[18, 94, 6], [30, 97, 5], [70, 96, 6], [84, 93, 5]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#d8c69c"/>`).join("")}</g>`;
+  return b.out({off: [2.4, 3.4], blur: 1.6, op: .5, sticker: o.sticker, stickerCol: o.stickerCol, under, over});
+}
+/* ───────── 4. 오토바이 (배그 오토바이 계열) ───────── */
+function MOTO(P, o = {}) {
+  const b = new SB(), body = o.body || P.c;
+  if (o.side) {
+    b.tube("M58 42 L70 42 M58 64 L70 64", "#565a5e", 1.6);
+    tire(b, 84, 58, 7, 16, {});
+    b.path("M70 30 C70 26 74 23 79 23 C85 23 89 27 89 33 L89 70 C89 76 85 79 79 79 C74 79 70 76 70 70 Z", o.sideCol || body, {ov: "dome"});
+    b.path("M72.6 36 C72.6 32 75 30.6 79 30.6 C83 30.6 86 32 86 36 L86 60 L72.6 60 Z", "#22231f", {ov: "dome", sw: .8});
+    b.path("M71.6 28.4 C74 25.6 84 25.6 87 28.4 L87 31 L71.6 31 Z", "url(#glass)", {ov: null, sw: .6});
+  }
+  tire(b, 45.4, 62, 9.2, 30, {knob: o.knob});
+  tire(b, 46.4, 7, 7.2, 25, {knob: o.knob});
+  b.rect2(44.4, 15, 1.9, 12.4, .9, "url(#chromev)", {ov: null, sw: .6});
+  if (o.fender !== false) b.path("M46.4 9.4 C46.4 7 48 6 50 6 C52 6 53.6 7 53.6 9.4 L53.6 21 L46.4 21 Z", o.fenderCol || body, {ov: "dome", sw: .8});
+  b.rect(39.6, 45, 20.8, 13, 3.4, "#53575b", {ov: "lit"}); b.line("M41.6 48 H58.4 M41.6 51 H58.4 M41.6 54 H58.4", "#2c2f32", .7, .8);
+  b.rect(57.6, 50, 3.4, 33, 1.7, "url(#chromev)", {ov: null, sw: .7}); b.rect(57, 74, 4.6, 12, 2.2, "url(#chromev)", {ov: null, sw: .7});
+  b.rect2(36.6, 56.4, 4.4, 2.6, 1, "#2a2c28", {sw: .6});
+  const T = "M50 32 C56.6 32 59.2 35.6 59.2 40.4 L58.2 49.6 C57.6 52.8 54.6 54.2 50 54.2 C45.4 54.2 42.4 52.8 41.8 49.6 L40.8 40.4 C40.8 35.6 43.4 32 50 32 Z";
+  b.path(T, body, {ov: "dome"}); b.line("M45 36.6 Q48 34 52 34.4", "#fff", 1.1, .55);
+  if (o.stripe) b.raw(`<clipPath id="tk"><path d="${T}"/></clipPath><path clip-path="url(#tk)" d="M48.4 30 H51.6 V56 H48.4 Z" fill="${o.stripe}"/>`);
+  b.path(`M44.2 54 L55.8 54 L55.4 ${o.longSeat ? 80 : 72} C55 ${o.longSeat ? 83 : 75} 53 ${o.longSeat ? 84 : 76} 50 ${o.longSeat ? 84 : 76} C47 ${o.longSeat ? 84 : 76} 45 ${o.longSeat ? 83 : 75} 44.6 ${o.longSeat ? 80 : 72} Z`, o.seat || "#1f201d", {ov: "dome", sw: .9});
+  if (!o.longSeat) { b.rect(46.4, 75, 7.2, 8, 2, body, {ov: "lit", sw: .8}); b.rect(47.6, 82.4, 4.8, 1.8, .8, "#e8382c", {ov: null, sw: .5}); }
+  if (o.bags) { b.rect2(35.4, 64, 8, 15, 2.6, o.bagCol || "#5a4a32", {ov: "lit", sw: 1}); }
+  if (o.jerry) b.rect(46, 84, 8, 10, 1.4, "#3f6b2c", {ov: "lit", sw: .8});
+  const hw = o.wideBar ? 21 : 19, hy = o.cafe ? 29 : 30.4;
+  if (o.cafe) { b.tube("M41.6 29 H44.6 M55.4 29 H58.4", "#2b2d2a", 1.8); b.rect2(38.8, 27.4, 4.6, 3.2, 1.4, "#1b1c19", {ov: "cyl", sw: .6}); }
+  else { b.tube(`M${50 - hw} ${hy} Q50 ${hy - (o.wideBar ? 3 : 1.4)} ${50 + hw} ${hy}`, "#2b2d2a", 1.8); b.rect(50 - hw - 1.4, hy - 1.7, 5.4, 3.4, 1.6, "#1b1c19", {ov: "cyl", sw: .7}); b.rect(50 + hw - 4, hy - 1.7, 5.4, 3.4, 1.6, "#1b1c19", {ov: "cyl", sw: .7}); }
+  if (o.mirrors !== false && !o.cafe) { b.tube(`M${50 - hw + 5} ${hy} L${50 - hw + 3} ${hy - 4.4} M${50 + hw - 5} ${hy} L${50 + hw - 3} ${hy - 4.4}`, "#6e7378", .9); b.ell(50 - hw + 2.6, hy - 5.2, 2.4, 1.5, "url(#chrome)", {ov: null, sw: .6}); b.ell(50 + hw - 2.6, hy - 5.2, 2.4, 1.5, "url(#chrome)", {ov: null, sw: .6}); }
+  b.ell(50, 27.4, 4.2, 2.6, "url(#chrome)", {ov: null, sw: .7}); b.ell(50, 27, 2.8, 1.6, "#fff4c8", {ov: "dome", sw: .4, sil: false});
+  if (o.plate) { b.rect(44.6, 21, 10.8, 6.4, 1.8, "#f1efe6", {ov: "lit", sw: .8}); b.raw(`<text x="50" y="26" font-family="Arial Black,Arial" font-weight="900" font-size="5.2" text-anchor="middle" fill="${P.cd}">12</text>`); }
+  return b.out({off: [2.2, 3.2], blur: 1.3, op: .5, sticker: o.sticker});
+}
+function SCOOTER(P, o = {}) {
+  const b = new SB(), body = o.body || P.c;
+  tire(b, 46.4, 66, 7.2, 18, {}); tire(b, 46.8, 8, 6.4, 16, {});
+  b.path("M50 13 C58 13 63 17 63 24 L62 33 L38 33 L37 24 C37 17 42 13 50 13 Z", body, {ov: "dome"});
+  b.rect(41.6, 31, 16.8, 20, 3, "#2b2c29", {ov: "lit"}); b.line("M43 35 H57 M43 39 H57 M43 43 H57 M43 47 H57", "#4a4c46", .7, .9);
+  b.path("M39.6 50 L60.4 50 C61.6 60 61.6 74 58 82 C55.8 86.6 44.2 86.6 42 82 C38.4 74 38.4 60 39.6 50 Z", body, {ov: "dome"});
+  b.path("M44 53 L56 53 L55.6 72 C55.2 75.6 53 77 50 77 C47 77 44.8 75.6 44.4 72 Z", "#211f1c", {ov: "dome", sw: .8});
+  b.rect(46.6, 84.6, 6.8, 2.2, 1, "#e8382c", {ov: null, sw: .5});
+  b.tube("M36 24 Q50 20.6 64 24", "#c9ccce", 1.5); b.rect(33.6, 22.4, 4.6, 3.2, 1.4, "#1b1c19", {ov: "cyl", sw: .6}); b.rect(61.8, 22.4, 4.6, 3.2, 1.4, "#1b1c19", {ov: "cyl", sw: .6});
+  b.ell(50, 19.6, 3.8, 2.6, "url(#chrome)", {ov: null, sw: .7}); b.ell(50, 19.4, 2.4, 1.6, "#fff4c8", {ov: "dome", sw: .4, sil: false});
+  b.ell2 = null;
+  b.raw(`<circle cx="38.6" cy="19.6" r="1.6" fill="url(#chrome)" stroke="${OL}" stroke-width=".5"/><circle cx="61.4" cy="19.6" r="1.6" fill="url(#chrome)" stroke="${OL}" stroke-width=".5"/>`);
+  return b.out({off: [2.2, 3.2], blur: 1.3, op: .5});
+}
+function TUK(P, o = {}) {  // 툭샤이 (3륜)
+  const b = new SB(), body = o.body || P.c, roof = o.roof || mix(P.c, "#000", .15);
+  tire(b, 46.2, 4, 7.6, 15, {}); tire(b, 17, 68, 8.4, 19, {}); tire(b, 74.6, 68, 8.4, 19, {});
+  b.path("M50 10 C57 10 62 14 64 20 L72 30 L72 92 L28 92 L28 30 L36 20 C38 14 43 10 50 10 Z", body, {ov: "lit"});
+  b.ell(50, 14.6, 3.6, 2.6, "url(#chrome)", {ov: null, sw: .7}); b.ell(50, 14.4, 2.3, 1.6, "#fff4c8", {ov: "dome", sw: .4, sil: false});
+  b.path("M36 22 L64 22 L66.4 28 L33.6 28 Z", "url(#glass)", {ov: null, sw: .7});
+  b.path("M26 29 C26 27 28 26 30 26 L70 26 C72 26 74 27 74 29 L74 90 C74 93 72 95 69 95 L31 95 C28 95 26 93 26 90 Z", roof, {ov: "lit"});
+  let rib = ""; for (const y of [36, 46, 56, 66, 76, 86]) rib += `<path d="M26.6 ${y} Q50 ${y + 2.6} 73.4 ${y}" fill="none" stroke="#000" stroke-opacity=".28" stroke-width="1"/><path d="M26.6 ${y - 1.2} Q50 ${y + 1.4} 73.4 ${y - 1.2}" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width=".8"/>`;
+  b.raw(rib);
+  b.tube("M27.4 31 V93 M72.6 31 V93", "#3a3d38", 1.1);
+  b.rect(36, 88.6, 28, 4.4, 1.6, "#2a2c2e", {ov: "lit", sw: .7, sil: false}); b.rect(29, 91, 5, 2.4, 1, "#e8382c", {ov: null, sw: .5, sil: false}); b.rect(66, 91, 5, 2.4, 1, "#e8382c", {ov: null, sw: .5, sil: false});
+  if (o.fringe) b.raw(`<path d="M26 29 H74" stroke="#ffd34d" stroke-width="2.2" stroke-dasharray="1.4 1.2"/>`);
+  return b.out({off: [2.4, 3.4], blur: 1.6, op: .5});
+}
+function SNOWBIKE(P, o = {}) {
+  const b = new SB(), body = o.body || P.c;
+  b.rect(46.6, 4, 6.8, 26, 3.4, "#2b2d30", {ov: "cyl"}); b.path("M46.6 7 C46.6 4 53.4 4 53.4 7", "none", {ov: null, sw: .7});
+  b.rect(45, 58, 10, 34, 3, "#1e1f1c", {ov: "cyl"}); let t = ""; for (let y = 60; y < 90; y += 2.4) t += `M45.6 ${y} H54.4 `; b.line(t, "#43453f", .9, .9);
+  b.path("M50 22 C57 22 59.4 27 59.4 33 L58 56 C57.4 60 54.4 62 50 62 C45.6 62 42.6 60 42 56 L40.6 33 C40.6 27 43 22 50 22 Z", body, {ov: "dome"});
+  b.path("M44.4 58 L55.6 58 L55 80 C54.6 83 53 84 50 84 C47 84 45.4 83 45 80 Z", "#1f201d", {ov: "dome", sw: .8});
+  b.tube("M31 30 Q50 27 69 30", "#2b2d2a", 1.8); b.rect(29.4, 28.4, 5, 3.2, 1.4, "#1b1c19", {ov: "cyl", sw: .6}); b.rect(65.6, 28.4, 5, 3.2, 1.4, "#1b1c19", {ov: "cyl", sw: .6});
+  b.path("M44 24.6 C45.4 21 54.6 21 56 24.6 L56.4 27.4 L43.6 27.4 Z", "url(#glass)", {ov: null, sw: .6});
+  return b.out({off: [2.2, 3.2], blur: 1.3, op: .5});
+}
+function SNOWMOBILE(P, o = {}) {
+  const b = new SB(), body = o.body || P.c;
+  b.rect2(29, 3, 5.6, 32, 2.8, "#2b2d30", {ov: "cyl"}); b.tube("M31.8 20 L41 26 M68.2 20 L59 26", "#3a3d40", 1.4);
+  b.rect(40, 60, 20, 34, 3, "#1e1f1c", {ov: "cyl"}); let t = ""; for (let y = 62; y < 92; y += 2.4) t += `M40.6 ${y} H59.4 `; b.line(t, "#43453f", .9, .9);
+  b.path("M50 12 C60 12 64 18 64 28 L64 60 C64 66 60 68 50 68 C40 68 36 66 36 60 L36 28 C36 18 40 12 50 12 Z", body, {ov: "dome"});
+  b.raw(`<path d="M38.6 40 H61.4" stroke="#14170f" stroke-width="2.4" opacity=".55"/>`);
+  b.path("M43.4 60 L56.6 60 L56 86 C55.6 89 53.6 90 50 90 C46.4 90 44.4 89 44 86 Z", "#1f201d", {ov: "dome", sw: .8});
+  b.path("M40.6 28.4 C42.4 22.6 57.6 22.6 59.4 28.4 L59.8 32.4 L40.2 32.4 Z", "url(#glass)", {ov: null, sw: .6});
+  b.tube("M33 36 Q50 33 67 36", "#2b2d2a", 1.8);
+  b.ell(43.4, 16.4, 2.6, 1.6, "#fff4c8", {ov: "dome", sw: .5}); b.ell(56.6, 16.4, 2.6, 1.6, "#fff4c8", {ov: "dome", sw: .5});
+  return b.out({off: [2.2, 3.2], blur: 1.3, op: .5});
+}
+function QUAD(P, o = {}) {
+  const b = new SB(), body = o.body || P.c;
+  tire(b, 22, 12, 11, 17, {knob: true}); tire(b, 67, 12, 11, 17, {knob: true}); tire(b, 19, 66, 13, 21, {knob: true}); tire(b, 68, 66, 13, 21, {knob: true});
+  b.path("M38 12 C42 9 58 9 62 12 L66 32 L64 42 L36 42 L34 32 Z", body, {ov: "lit"});
+  b.rect(38, 6, 24, 6, 1.6, "#3a3d38", {ov: "lit", sw: .8}); b.line("M40 9 H60", "#9aa0a4", .6, .7);
+  b.path("M33 58 L67 58 L68 86 C68 89 66 90 63 90 L37 90 C34 90 32 89 32 86 Z", body, {ov: "lit"});
+  b.rect(41, 76, 18, 12, 1.6, "#3a3d38", {ov: "lit", sw: .8}); b.line("M41 80 H59 M41 84 H59", "#9aa0a4", .6, .7);
+  b.rect(42, 40, 16, 22, 3, "#3e4044", {ov: "lit"});
+  b.path("M44 46 L56 46 L55.6 70 C55.2 73 53 74 50 74 C47 74 44.8 73 44.4 70 Z", "#1f201d", {ov: "dome", sw: .8});
+  b.tube("M30 36 Q50 33 70 36", "#2b2d2a", 1.8); b.rect(28.4, 34.4, 5, 3.2, 1.4, "#1b1c19", {ov: "cyl", sw: .6}); b.rect(66.6, 34.4, 5, 3.2, 1.4, "#1b1c19", {ov: "cyl", sw: .6});
+  b.ell(43, 12, 2.6, 1.6, "#fff4c8", {ov: "dome", sw: .5}); b.ell(57, 12, 2.6, 1.6, "#fff4c8", {ov: "dome", sw: .5});
+  return b.out({off: [2.2, 3.2], blur: 1.4, op: .5});
+}
+/* ───────── 5. BRDM-2 ───────── */
+function BRDM(P, o = {}) {
+  const b = new SB(), body = o.body || "#55603f", dk = mix(body, "#000", .3), lt = mix(body, "#fff", .1);
+  tire(b, 16, 20, 9, 17, {knob: true}); tire(b, 75, 20, 9, 17, {knob: true}); tire(b, 16, 68, 9, 17, {knob: true}); tire(b, 75, 68, 9, 17, {knob: true});
+  const H = "M36 5 L64 5 L74 19 L76.4 30 L76.4 84 C76.4 90 72.4 94 66.4 94 L33.6 94 C27.6 94 23.6 90 23.6 84 L23.6 30 L26 19 Z";
+  b.path(H, body, {ov: "lit", sw: 1.3});
+  if (o.camo) b.camo(`<path d="${H}"/>`, o.camo, o.camoSeed || 7, o.digital ? 0 : 22, 9, .95);
+  if (o.digital) { let g = ""; for (let i = 0; i < 140; i++) { const x = 24 + srnd(i * 3.3) * 52, y = 6 + srnd(i * 7.7) * 87; g += `<rect x="${f2(Math.round(x / 2.4) * 2.4)}" y="${f2(Math.round(y / 2.4) * 2.4)}" width="2.4" height="2.4" fill="${o.digital[i % o.digital.length]}"/>`; } b.raw(`<clipPath id="dg"><path d="${H}"/></clipPath><g clip-path="url(#dg)" opacity=".9">${g}</g>`); }
+  b.path("M36 5 L64 5 L74 19 L26 19 Z", lt, {ov: "cylv", sw: .9, sil: false});
+  b.line("M26 19 H74 M24 30 H76", "#000", .6, .35);
+  b.rect(37.6, 20.4, 8.4, 3.6, .8, "#1d2a33", {ov: null, sw: .6, sil: false}); b.rect(54, 20.4, 8.4, 3.6, .8, "#1d2a33", {ov: null, sw: .6, sil: false});
+  if (o.open) { b.rect(35.6, 26, 11, 9, 1.8, "#121410", {ov: null, sw: .8}); b.rect(53.4, 26, 11, 9, 1.8, "#121410", {ov: null, sw: .8}); b.rect(35.2, 17.4, 11.8, 8.4, 1.8, lt, {ov: "lit", sw: .8}); b.rect(53, 17.4, 11.8, 8.4, 1.8, lt, {ov: "lit", sw: .8}); }
+  else { b.rect(35.6, 26, 11, 9, 1.8, lt, {ov: "lit", sw: .8}); b.rect(53.4, 26, 11, 9, 1.8, lt, {ov: "lit", sw: .8}); b.circ(41.1, 30.5, 1.2, dk, {ov: null, sw: 0, sil: false}); b.circ(58.9, 30.5, 1.2, dk, {ov: null, sw: 0, sil: false}); }
+  if (o.turret) { b.path("M50 38.4 L57.2 41.4 L60 48.4 L57.2 55.4 L50 58.4 L42.8 55.4 L40 48.4 L42.8 41.4 Z", lt, {ov: "dome", sw: 1.1}); b.rect(48.8, 18, 2.4, 22, 1.1, "#2b2d28", {ov: "cyl", sw: .7}); b.rect(48.3, 34, 3.4, 6, 1.2, "#2b2d28", {ov: "cyl", sw: .6}); b.circ(50, 48.4, 2.6, dk, {ov: "dome", sw: .6, sil: false}); }
+  b.rect(32, 64, 36, 25, 3, dk, {ov: "lit", sw: .9});
+  let lv = ""; for (let y = 66.4; y < 87.6; y += 2.4) lv += `M34 ${f2(y)} H66 `; b.line(lv, mix(dk, "#000", .45), 1, .9); b.line(lv.replace(/ (\d+(\.\d+)?) H/g, (m, y) => ` ${f2(+y + .7)} H`), lt, .45, .5);
+  for (const x of [31.4, 68.6]) { b.circ(x, 11, 2.6, "#d8d4bc", {ov: "dome", sw: .7}); b.raw(`<path d="M${x - 3.4} 11 A3.4 3.4 0 0 1 ${x + 3.4} 11" fill="none" stroke="${OL}" stroke-width=".9"/>`); }
+  b.tube("M43 3.6 H57", "#4a4c46", 1.4);
+  b.tube("M70 60 L84 96", "#2b2d28", .55);
+  if (o.mark) { b.rect(24, 52, 52, 4, 0, P.c, {ov: "cylv", sw: 0, sil: false}); b.raw(`<text x="50" y="80.6" font-family="Arial Black,Arial" font-weight="900" font-size="9" text-anchor="middle" fill="#f2efe4" stroke="${OL}" stroke-width=".5">${o.mark}</text>`); }
+  if (o.cargo) { b.rect(27.6, 40, 7.4, 10, 1.4, "#3f6b2c", {ov: "lit", sw: .8}); b.rect(27.6, 51, 7.4, 10, 1.4, "#3f6b2c", {ov: "lit", sw: .8}); b.rect(62, 38, 12, 9, 1.4, "#8a6c45", {ov: "lit", sw: .8}); b.path("M38 60 L62 60 L64 64 L36 64 Z", "#5d6a3e", {ov: "lit", sw: .8}); }
+  if (o.damage) b.raw(`<clipPath id="dmg"><path d="${H}"/></clipPath><g clip-path="url(#dmg)">${[[36, 44, 7], [66, 76, 6], [58, 16, 4], [30, 86, 5]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#151510" opacity=".55" filter="url(#soft)"/>`).join("")}${[[40, 70, 3], [62, 36, 2.4]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#7a4a24" opacity=".7"/>`).join("")}</g>`);
+  let under = "", over = "";
+  if (o.water) under = `<g fill="none" stroke="#e6f3f8" stroke-linecap="round">${[0, 1, 2].map(i => `<path d="M${18 - i * 5} ${30 + i * 18} Q${10 - i * 4} ${62 + i * 10} ${6 - i * 3} ${98}" stroke-width="${1.6 - i * .4}" opacity="${.75 - i * .2}"/><path d="M${82 + i * 5} ${30 + i * 18} Q${90 + i * 4} ${62 + i * 10} ${94 + i * 3} ${98}" stroke-width="${1.6 - i * .4}" opacity="${.75 - i * .2}"/>`).join("")}<path d="M30 96 Q50 100 70 96" stroke-width="2" opacity=".8"/></g>`;
+  if (o.lights) { under += beam(31.4, 8, 18, 26, -6) + beam(68.6, 8, 18, 26, 6); over = glowAt(31.4, 11, 5) + glowAt(68.6, 11, 5); }
+  return b.out({off: [2.6, 3.6], blur: 1.8, op: .52, sticker: o.sticker, stickerCol: o.stickerCol, under, over});
+}
+/* ───────── 8. 보트 ───────── */
+function wake(w = 1, big) { const k = big ? 1.6 : 1; return `<g fill="none" stroke="#f2fbff" stroke-linecap="round">${[0, 1, 2].map(i => `<path d="M${f2(50 - 18 * w - i * 6 * k)} ${f2(70 + i * 9)} Q${f2(50 - 24 * w - i * 8 * k)} ${f2(88 + i * 4)} ${f2(50 - 30 * w - i * 10 * k)} 100" stroke-width="${f2((1.8 - i * .45) * k)}" opacity="${f2(.85 - i * .22)}"/><path d="M${f2(50 + 18 * w + i * 6 * k)} ${f2(70 + i * 9)} Q${f2(50 + 24 * w + i * 8 * k)} ${f2(88 + i * 4)} ${f2(50 + 30 * w + i * 10 * k)} 100" stroke-width="${f2((1.8 - i * .45) * k)}" opacity="${f2(.85 - i * .22)}"/>`).join("")}<path d="M${f2(50 - 8 * w)} 92 Q50 ${big ? 104 : 100} ${f2(50 + 8 * w)} 92" stroke-width="${f2(3 * k)}" opacity=".7"/></g>`; }
+function PG117(P, o = {}) {
+  const b = new SB(), hull = o.hull || "#eceee9", deck = o.deck || "#b9b2a1";
+  const H = "M50 3 C60 10 70 24 72 42 L72 80 C72 84 69 86.6 65 86.6 L35 86.6 C31 86.6 28 84 28 80 L28 42 C30 24 40 10 50 3 Z";
+  b.path(H, hull, {ov: "lit", sw: 1.3});
+  if (o.camo) b.camo(`<path d="${H}"/>`, o.camo, 61, 14, 8);
+  b.path("M50 8 C58 14.6 66 26 68 43 L68 79 C68 81.6 66.4 83 63.6 83 L36.4 83 C33.6 83 32 81.6 32 79 L32 43 C34 26 42 14.6 50 8 Z", deck, {ov: "lit", sw: .8, sil: false});
+  b.line("M33 50 H67 M33 60 H67 M33 70 H67", "#000", .45, .18);
+  b.rect(28.2, 46, 43.6, 3, 0, o.band || P.c, {ov: "cylv", sw: 0, sil: false});
+  b.path("M36 38.6 C42 34.6 58 34.6 64 38.6 L64 42 C58 38.4 42 38.4 36 42 Z", "url(#glass)", {ov: null, sw: .7});
+  b.rect(43.6, 41.6, 12.8, 8.6, 2, "#2e3134", {ov: "lit", sw: .8}); b.raw(`<circle cx="47.4" cy="45.4" r="2.1" fill="none" stroke="#c9ccce" stroke-width=".9"/>`);
+  b.rect(37, 53, 10.4, 8.4, 2.2, o.seat || "#2a2c2e", {ov: "dome", sw: .8}); b.rect(52.6, 53, 10.4, 8.4, 2.2, o.seat || "#2a2c2e", {ov: "dome", sw: .8});
+  b.rect(35.6, 70, 28.8, 7, 2.4, o.seat || "#2a2c2e", {ov: "dome", sw: .8});
+  if (o.lightbar) { b.rect(42, 33.4, 16, 2.6, 1.2, "#22252a", {sw: .6}); b.rect(42.4, 33.8, 7.2, 1.8, .8, "#ff3b30", {ov: null, sw: 0, sil: false}); b.rect(50.4, 33.8, 7.2, 1.8, .8, "#2f7bff", {ov: null, sw: 0, sil: false}); }
+  if (o.gun) { b.circ(50, 22, 4, "#3a3d38", {ov: "dome", sw: .8}); b.rect(49.2, 8, 1.6, 14, .8, "#22241f", {sw: .6}); }
+  b.rect(42.4, 84.6, 15.2, 8.6, 2.4, o.motor || "#1f2124", {ov: "lit", sw: .9}); b.rect(44.4, 86, 11.2, 2.2, 1, o.motorBand || P.c, {ov: null, sw: 0, sil: false});
+  let over = ""; if (o.searchlight) over = glowAt(50, 33, 4);
+  return b.out({off: [2.4, 3.4], blur: 1.7, op: .45, sticker: o.sticker, stickerCol: o.stickerCol, under: (o.noWake ? "" : wake(.62, o.bigWake)) + (o.searchlight ? beam(50, 32, 22, 30) : ""), over});
+}
+function AQUA(P, o = {}) {
+  const b = new SB(), hull = o.hull || "#eceee9", c = o.body || P.c;
+  const H = "M50 8 C56.6 14 61 25 61 40 L61 78 C61 82.6 58 85.4 53.4 85.4 L46.6 85.4 C42 85.4 39 82.6 39 78 L39 40 C39 25 43.4 14 50 8 Z";
+  b.path(H, hull, {ov: "lit", sw: 1.2});
+  b.path("M50 10.6 C55 15.6 58 24 58.4 34 L41.6 34 C42 24 45 15.6 50 10.6 Z", c, {ov: "dome", sw: .9});
+  b.rect(39.2, 50, 3.6, 26, 1.4, "#2a2c2e", {ov: "cyl", sw: .6}); b.rect(57.2, 50, 3.6, 26, 1.4, "#2a2c2e", {ov: "cyl", sw: .6});
+  b.path(`M45 38 L55 38 L54.6 ${o.two ? 78 : 70} C54.4 ${o.two ? 81 : 73} 52.6 ${o.two ? 82 : 74} 50 ${o.two ? 82 : 74} C47.4 ${o.two ? 82 : 74} 45.6 ${o.two ? 81 : 73} 45.4 ${o.two ? 78 : 70} Z`, "#1f201d", {ov: "dome", sw: .8});
+  if (o.two) b.line("M45.6 60 H54.4", "#000", .6, .35);
+  b.tube("M36.4 36 Q50 32.6 63.6 36", "#2b2d2a", 1.7); b.rect(34.4, 34.4, 4.6, 3.2, 1.4, "#1b1c19", {ov: "cyl", sw: .6}); b.rect(61, 34.4, 4.6, 3.2, 1.4, "#1b1c19", {ov: "cyl", sw: .6});
+  b.path("M44.2 30 C45.4 26.6 54.6 26.6 55.8 30 L56 32.6 L44 32.6 Z", "url(#glass)", {ov: null, sw: .6});
+  if (o.stripe) b.raw(`<path d="M39.4 44 L60.6 44" stroke="${o.stripe}" stroke-width="2.2"/>`);
+  return b.out({off: [2.2, 3.2], blur: 1.5, op: .45, under: wake(.42, o.bigWake)});
+}
+function AIRBOAT(P, o = {}) {
+  const b = new SB(), hull = o.hull || "#8d969b";
+  b.path("M38 6 C44 3.6 56 3.6 62 6 C68 8.6 70 13 70 20 L70 76 C70 80 68 82 64 82 L36 82 C32 82 30 80 30 76 L30 20 C30 13 32 8.6 38 6 Z", hull, {ov: "lit", sw: 1.3});
+  b.path("M33.6 14 C33.6 10.6 38 8.4 50 8.4 C62 8.4 66.4 10.6 66.4 14 L66.4 52 L33.6 52 Z", mix(hull, "#000", .25), {ov: "lit", sw: .7, sil: false});
+  b.rect(40, 30, 20, 10, 2.4, "#2a2c2e", {ov: "dome", sw: .8}); b.rect(43, 44, 14, 10, 2.4, P.c, {ov: "dome", sw: .8});
+  b.tube("M50 54 V62", "#3a3d38", 2);
+  b.circ(50, 72, 17, "#1c1e1b", {ov: null, sw: 1.2, op: .35}); prop(b, 50, 72, 15.4, 2, {flat: 1, hub: 2.6});
+  b.raw(`<circle cx="50" cy="72" r="16.6" fill="none" stroke="${OL}" stroke-width="2.6"/><circle cx="50" cy="72" r="16.6" fill="none" stroke="#9aa0a4" stroke-width="1.5"/><path d="M33.4 72 H66.6 M50 55.4 V88.6 M38.3 60.3 L61.7 83.7 M61.7 60.3 L38.3 83.7" stroke="#9aa0a4" stroke-width=".55" opacity=".85"/>`);
+  b.rect2(42.6, 88, 2.2, 9, 1, "#3a3d38", {sw: .6});
+  return b.out({off: [2.4, 3.4], blur: 1.6, op: .45, under: wake(.6)});
+}
+function RIB(P, o = {}) {
+  const b = new SB(), tube = o.tube || "#4a4f54";
+  const T = "M50 4 C62 10 72 24 72 44 L72 82 C72 88 68 92 62 92 L38 92 C32 92 28 88 28 82 L28 44 C28 24 38 10 50 4 Z";
+  b.path(T, tube, {ov: "lit", sw: 1.3});
+  b.path("M50 11 C59 16 65.6 27 65.6 44 L65.6 80 C65.6 84 63.6 86 60 86 L40 86 C36.4 86 34.4 84 34.4 80 L34.4 44 C34.4 27 41 16 50 11 Z", "#b3b6b2", {ov: "lit", sw: .9, sil: false});
+  b.line("M30 40 Q32 30 40 20 M70 40 Q68 30 60 20", "#fff", 1, .3);
+  for (const y of [34, 52, 70]) b.raw(`<path d="M28.6 ${y} H33.6 M66.4 ${y} H71.4" stroke="${P.c}" stroke-width="2.4"/>`);
+  b.rect(43, 40, 14, 12, 2.4, "#2f3235", {ov: "lit", sw: .8}); b.path("M43 39 C45 35.6 55 35.6 57 39 Z", "url(#glass)", {ov: null, sw: .6});
+  b.rect(42, 56, 16, 9, 2.4, "#24262a", {ov: "dome", sw: .8});
+  b.rect(43, 89, 14, 8, 2.4, "#1f2124", {ov: "lit", sw: .9});
+  return b.out({off: [2.4, 3.4], blur: 1.6, op: .45, sticker: o.sticker, stickerCol: o.stickerCol, under: o.noWake ? "" : wake(.62)});
+}
+function FISH(P, o = {}) {
+  const b = new SB(), wood = "#8a6440";
+  const H = "M50 3 C61 10 70 24 71 42 L71 82 C71 86 68 88 64 88 L36 88 C32 88 29 86 29 82 L29 42 C30 24 39 10 50 3 Z";
+  b.path(H, wood, {ov: "lit", sw: 1.3});
+  b.path("M50 8 C58 14 65 26 66 42 L66 80 C66 82.6 64.6 84 62 84 L38 84 C35.4 84 34 82.6 34 80 L34 42 C35 26 42 14 50 8 Z", "#b88e5e", {ov: "lit", sw: .8, sil: false});
+  let pl = ""; for (let x = 36.4; x < 66; x += 3.4) pl += `M${f2(x)} 20 V83 `; b.line(pl, "#6e4c2c", .5, .55);
+  b.rect(38, 48, 24, 20, 2.4, P.c, {ov: "lit", sw: 1}); b.path("M38.6 48.6 L61.4 48.6 L61.4 52 L38.6 52 Z", "url(#glass)", {ov: null, sw: .5, sil: false});
+  b.rect(38, 46, 24, 2.6, 1, "#e8e2cc", {ov: "lit", sw: .6});
+  b.rect(46, 84, 8, 9, 2, "#2a2c2e", {ov: "lit", sw: .8});
+  b.circ(42, 30, 3, "#c9a24a", {ov: "dome", sw: .7}); b.circ(58, 76, 2.6, "#d9d3bd", {ov: "dome", sw: .7});
+  return b.out({off: [2.4, 3.4], blur: 1.6, op: .45, under: wake(.6)});
+}
+function RACER(P, o = {}) {
+  const b = new SB(), hull = o.hull || P.c;
+  const H = "M50 1 C58 10 66 26 68 46 L68 84 C68 88 65.6 90.6 62 90.6 L38 90.6 C34.4 90.6 32 88 32 84 L32 46 C34 26 42 10 50 1 Z";
+  b.path(H, hull, {ov: "lit", sw: 1.3});
+  b.raw(`<clipPath id="rc"><path d="${H}"/></clipPath><g clip-path="url(#rc)"><path d="M46 0 L44 92 L47.4 92 L49 0 Z M54 0 L56 92 L52.6 92 L51 0 Z" fill="#f4f2ea"/></g>`);
+  b.path("M38.6 50 C42 45 58 45 61.4 50 L61.4 54 C58 50.6 42 50.6 38.6 54 Z", "url(#glass)", {ov: null, sw: .7});
+  b.rect(38.6, 56, 22.8, 18, 3, "#202224", {ov: "lit", sw: .8}); b.rect(40.6, 58, 8.6, 7.6, 2, "#2e3134", {ov: "dome", sw: .6}); b.rect(50.8, 58, 8.6, 7.6, 2, "#2e3134", {ov: "dome", sw: .6});
+  b.rect(41, 89, 18, 8, 2.4, "#1f2124", {ov: "lit", sw: .9}); b.line("M43 91.6 H57", P.cl, 1.4, .9);
+  b.line("M38 20 Q44 8 50 4", "#fff", 1.2, .45);
+  return b.out({off: [2.4, 3.4], blur: 1.6, op: .45, under: wake(.55, true)});
+}
+/* ───────── 2차: BRDM-2 · 보트 · 글라이더 새 시안 ───────── */
+function BRDM2(P, o = {}) {  // 경사진 옆판이 보이는 BRDM-2 (위판 + 옆 경사판 명암)
+  const b = new SB(), body = o.body || "#57623f", top = mix(body, "#fff", .08), side = mix(body, "#000", .28), dk = mix(body, "#000", .45);
+  for (const [x, y] of [[15.5, 19], [75.5, 19], [15.5, 69], [75.5, 69]]) tire(b, x, y, 9, 18, {knob: true});
+  const OUT = "M35 4 L65 4 L76 18 L78 30 L78 86 C78 91 74 95 68 95 L32 95 C26 95 22 91 22 86 L22 30 L24 18 Z";
+  const TOP = "M38 9 L62 9 L70 20 L71.6 31 L71.6 84 C71.6 87.6 69 89.6 65 89.6 L35 89.6 C31 89.6 28.4 87.6 28.4 84 L28.4 31 L30 20 Z";
+  b.path(OUT, side, {ov: "cyl", sw: 1.3});
+  b.path(TOP, top, {ov: "lit", sw: .9, sil: false});
+  if (o.camo) b.camo(`<path d="${OUT}"/>`, o.camo, o.seed || 4, 24, 8, .88);
+  b.line("M30 20 H70 M28.6 31 H71.4", "#000", .6, .35);
+  b.raw(`<path d="M35 4 L38 9 M65 4 L62 9 M76 18 L70 20 M24 18 L30 20 M78 30 L71.6 31 M22 30 L28.4 31" stroke="#000" stroke-opacity=".35" stroke-width=".7"/>`);
+  for (const x of [36.6, 53.4]) { b.rect(x, 12.4, 10, 5, 1, dk, {ov: "lit", sw: .7, sil: false}); b.rect(x + 1.4, 13.4, 7.2, 2.6, .6, "#1b2a34", {ov: null, sw: 0, sil: false}); }
+  for (const x of [37, 53]) { if (o.open) { b.rect(x, 22, 10, 9, 1.6, "#0f110d", {ov: null, sw: .8}); b.rect(x - .4, 31.6, 10.8, 7.6, 1.6, top, {ov: "lit", sw: .8}); } else { b.rect(x, 22, 10, 9, 1.6, top, {ov: "lit", sw: .8}); b.circ(x + 5, 26.5, 1.2, dk, {ov: null, sw: 0, sil: false}); b.line(`M${x + 1.4} 23.6 H${x + 8.6}`, "#fff", .5, .3); } }
+  if (o.turret) { const T = "M50 39 L57.6 42 L60.6 49.6 L57.6 57.2 L50 60.2 L42.4 57.2 L39.4 49.6 L42.4 42 Z"; b.path(T, mix(body, "#fff", .14), {ov: "dome", sw: 1.1}); b.path("M50 42.6 L54.6 44.6 L56.4 49.6 L54.6 54.6 L50 56.6 L45.4 54.6 L43.6 49.6 L45.4 44.6 Z", "none", {ov: null, sw: .6, sil: false}); b.rect(48.7, 14, 2.6, 27, 1.2, "#262823", {ov: "cyl", sw: .7}); b.rect(47.8, 13, 4.4, 4, 1.2, "#262823", {ov: "cyl", sw: .6}); b.rect(53.6, 40, 1.6, 12, .8, "#262823", {sw: .5}); }
+  if (o.spare) { b.ell(50, 74, 8.6, 8.6, "#1d1e1b", {ov: "cyl", sw: 1}); b.circ(50, 74, 3.6, "#585b52", {ov: "dome", sw: .7}); }
+  b.rect(33.4, 64, 33.2, 22, 2.6, dk, {ov: "lit", sw: .8, sil: false}); let lv = ""; for (let y = 66.4; y < 84.6; y += 2.3) lv += `M35 ${f2(y)} H65 `; b.line(lv, mix(dk, "#000", .5), 1, .9);
+  if (o.spare) { b.ell(50, 75, 8.4, 8.4, "#1d1e1b", {ov: "cyl", sw: 1}); b.circ(50, 75, 3.4, "#585b52", {ov: "dome", sw: .7}); }
+  for (const x of [30.6, 69.4]) { b.circ(x, 8.4, 2.4, "#e3dfc8", {ov: "dome", sw: .7}); b.raw(`<path d="M${x - 3.2} 7.4 L${x} 5.2 L${x + 3.2} 7.4" fill="none" stroke="${OL}" stroke-width=".9"/>`); }
+  b.tube("M42 2.8 H58", "#4a4c46", 1.3);
+  b.rect2(23.6, 40, 4.2, 18, 1.4, mix(body, "#000", .15), {ov: "cyl", sw: .7});
+  if (o.boxes) { b.rect(22.6, 60, 5.4, 12, 1, "#3f6b2c", {ov: "lit", sw: .7}); b.rect(72, 60, 5.4, 12, 1, "#8a6c45", {ov: "lit", sw: .7}); }
+  if (o.mark) { b.raw(`<text x="50" y="${o.turret ? 37 : 52}" font-family="Arial Black,Arial" font-weight="900" font-size="8" text-anchor="middle" fill="${P.c}" stroke="${OL}" stroke-width=".7">${o.mark}</text>`); }
+  if (o.stripe) { b.rect(28.6, 60, 42.8, 2.6, 0, P.c, {ov: null, sw: 0, sil: false}); b.rect(28.6, 87, 42.8, 2.6, 0, P.c, {ov: null, sw: 0, sil: false}); }
+  if (o.mud) b.raw(`<clipPath id="md"><path d="${OUT}"/></clipPath><g clip-path="url(#md)" fill="#5c4326" opacity=".7">${Array.from({length: 26}, (_, i) => `<circle cx="${f2(22 + srnd(i * 3) * 56)}" cy="${f2(srnd(i * 5) > .5 ? 84 + srnd(i * 9) * 12 : 4 + srnd(i * 9) * 20)}" r="${f2(.8 + srnd(i * 7) * 2.4)}"/>`).join("")}</g>`);
+  if (o.snow) b.raw(`<clipPath id="sn"><path d="${TOP}"/></clipPath><g clip-path="url(#sn)" fill="#fbfdff" opacity=".85">${Array.from({length: 14}, (_, i) => `<ellipse cx="${f2(28 + srnd(i * 3) * 44)}" cy="${f2(9 + srnd(i * 5) * 80)}" rx="${f2(3 + srnd(i * 7) * 6)}" ry="${f2(2 + srnd(i * 4) * 3)}"/>`).join("")}</g>`);
+  b.tube("M73 58 L86 97", "#2b2d28", .5);
+  let under = "", over = "";
+  if (o.water) under = `<g fill="none" stroke="#e6f3f8" stroke-linecap="round">${[0, 1, 2].map(i => `<path d="M${17 - i * 5} ${28 + i * 18} Q${9 - i * 4} ${62 + i * 10} ${5 - i * 3} 99" stroke-width="${1.6 - i * .4}" opacity="${.75 - i * .2}"/><path d="M${83 + i * 5} ${28 + i * 18} Q${91 + i * 4} ${62 + i * 10} ${95 + i * 3} 99" stroke-width="${1.6 - i * .4}" opacity="${.75 - i * .2}"/>`).join("")}</g>`;
+  if (o.lights) { under += beam(30.6, 6, 18, 24, -6) + beam(69.4, 6, 18, 24, 6); over = glowAt(30.6, 8.4, 5) + glowAt(69.4, 8.4, 5); }
+  if (o.dust) over += `<g opacity=".45" filter="url(#soft)">${[[24, 96, 6], [36, 98, 5], [64, 98, 5], [76, 96, 6]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#d8c69c"/>`).join("")}</g>`;
+  return b.out({off: [2.6, 3.6], blur: 1.8, op: .52, sticker: o.sticker, stickerCol: o.stickerCol, under, over});
+}
+function PG2(P, o = {}) {  // PG-117 상세: 지붕 있는 조타실 · 난간 · 엔진 2개
+  const b = new SB(), hull = o.hull || "#eceee9", deck = o.deck || "#c9c2b0", roof = o.roof || P.c;
+  const H = "M50 2 C62 9 72 24 73 44 L73 82 C73 86 70 88.6 66 88.6 L34 88.6 C30 88.6 27 86 27 82 L27 44 C28 24 38 9 50 2 Z";
+  b.path(H, hull, {ov: "lit", sw: 1.3});
+  if (o.stripe) b.raw(`<clipPath id="hs"><path d="${H}"/></clipPath><path clip-path="url(#hs)" d="M27 52 H73 V56 H27 Z M27 58 H73 V59.4 H27 Z" fill="${P.c}"/>`);
+  b.path("M50 7 C59.6 13 67.4 25.6 68.4 44 L68.4 80 C68.4 82.6 66.6 84 64 84 L36 84 C33.4 84 31.6 82.6 31.6 80 L31.6 44 C32.6 25.6 40.4 13 50 7 Z", deck, {ov: "lit", sw: .8, sil: false});
+  let pl = ""; for (let x = 34; x < 67; x += 3) pl += `M${x} 30 V83 `; b.line(pl, "#000", .4, .12);
+  b.tube("M50 6 C59 12 66.6 24 67.6 40 M50 6 C41 12 33.4 24 32.4 40", "#c9ccce", .7);
+  if (o.cabin !== false) { b.path("M36 40 C42 36.6 58 36.6 64 40 L64 58 L36 58 Z", roof, {ov: "lit", sw: 1}); b.path("M36.8 40.6 C42 37.6 58 37.6 63.2 40.6 L63.2 43.4 C58 40.8 42 40.8 36.8 43.4 Z", "url(#glass)", {ov: null, sw: .6, sil: false}); b.rect(46, 47, 8, 6, 1.2, mix(roof, "#000", .3), {ov: "lit", sw: .6, sil: false}); if (o.radar) { b.rect(47, 44.6, 6, 1.8, .8, "#2a2c2e", {sw: .5, sil: false}); } }
+  else { b.path("M37 42 C43 38.4 57 38.4 63 42 L63 45 C57 41.6 43 41.6 37 45 Z", "url(#glass)", {ov: null, sw: .7}); b.rect(44, 45, 12, 8, 2, "#2e3134", {ov: "lit", sw: .8}); }
+  b.rect(36, 62, 28, 8, 2.4, o.seat || "#3a3d40", {ov: "dome", sw: .8}); b.rect(36, 72, 28, 7, 2.4, o.seat || "#3a3d40", {ov: "dome", sw: .8});
+  if (o.gun) { b.circ(50, 22, 4.2, "#3a3d38", {ov: "dome", sw: .8}); b.rect(49.2, 6, 1.6, 16, .8, "#22241f", {sw: .6}); }
+  if (o.lightbar) { b.rect(42, 38.8, 16, 2.4, 1.1, "#22252a", {sw: .5}); b.rect(42.4, 39.2, 7.2, 1.6, .7, "#ff3b30", {ov: null, sw: 0, sil: false}); b.rect(50.4, 39.2, 7.2, 1.6, .7, "#2f7bff", {ov: null, sw: 0, sil: false}); }
+  for (const x of o.twin ? [38, 54] : [43]) { b.rect(x, 85.6, o.twin ? 8 : 14, 8.4, 2.2, o.motor || "#1f2124", {ov: "lit", sw: .9}); b.rect(x + 1.4, 87, (o.twin ? 8 : 14) - 2.8, 2, .9, P.c, {ov: null, sw: 0, sil: false}); }
+  let over = "", under = (o.noWake ? "" : wake(.64, o.bigWake));
+  if (o.searchlight) { under += beam(50, 36, 22, 30); over = glowAt(50, 38, 4); }
+  return b.out({off: [2.4, 3.4], blur: 1.7, op: .45, sticker: o.sticker, stickerCol: o.stickerCol, under, over});
+}
+function PATROL(P, o = {}) {  // 큰 순찰정: 앞 갑판 · 조타실 지붕 · 뒤 갑판
+  const b = new SB(), hull = o.hull || "#8f989e";
+  const H = "M50 1 C61 8 70 22 71 40 L71 88 C71 92 68 94.6 64 94.6 L36 94.6 C32 94.6 29 92 29 88 L29 40 C30 22 39 8 50 1 Z";
+  b.path(H, hull, {ov: "lit", sw: 1.3});
+  b.path("M50 6 C59 12 66 24 67 40 L67 86 C67 88.6 65.4 90 62.6 90 L37.4 90 C34.6 90 33 88.6 33 86 L33 40 C34 24 41 12 50 6 Z", mix(hull, "#fff", .12), {ov: "lit", sw: .8, sil: false});
+  b.rect(35, 36, 30, 30, 3, mix(hull, "#fff", .25), {ov: "lit", sw: 1}); b.rect(37, 38, 26, 4, 1.2, "url(#glass)", {ov: null, sw: .5, sil: false});
+  b.rect(41, 46, 18, 12, 2, P.c, {ov: "lit", sw: .7, sil: false}); b.circ(50, 52, 2.6, "#2a2c2e", {ov: "dome", sw: .5, sil: false});
+  b.circ(50, 20, 3.6, "#3a3d38", {ov: "dome", sw: .7}); b.rect(49.3, 8, 1.4, 12, .7, "#22241f", {sw: .5});
+  b.rect(37, 72, 26, 14, 2, "#5a6166", {ov: "lit", sw: .8}); b.line("M39 76 H61 M39 80 H61", "#2a2c2e", .7, .7);
+  b.rect(41, 92, 18, 6, 2, "#1f2124", {ov: "lit", sw: .8});
+  return b.out({off: [2.4, 3.4], blur: 1.7, op: .45, sticker: o.sticker, stickerCol: o.stickerCol, under: wake(.62), over: o.flash ? glowAt(44, 40, 3) + glowAt(56, 40, 3) : ""});
+}
+function JETSKI2(P, o = {}) {
+  const b = new SB(), hull = o.hull || "#1f2326", c = o.body || P.c;
+  const H = "M50 6 C57.6 12 62 24 62 40 L62 80 C62 84.6 59 87.4 54.4 87.4 L45.6 87.4 C41 87.4 38 84.6 38 80 L38 40 C38 24 42.4 12 50 6 Z";
+  b.path(H, hull, {ov: "lit", sw: 1.2});
+  b.path("M50 8.6 C56 14 59.6 24 60 36 L60 46 L40 46 L40 36 C40.4 24 44 14 50 8.6 Z", c, {ov: "dome", sw: .9});
+  b.raw(`<path d="M44 14 L50 30 L56 14" fill="none" stroke="${mix(c, "#000", .35)}" stroke-width="1.2"/>`);
+  b.rect(38.4, 52, 4, 26, 1.6, c, {ov: "cyl", sw: .6}); b.rect(57.6, 52, 4, 26, 1.6, c, {ov: "cyl", sw: .6});
+  b.path("M44.6 44 L55.4 44 L55 80 C54.8 83 52.8 84 50 84 C47.2 84 45.2 83 45 80 Z", "#1f201d", {ov: "dome", sw: .8}); b.line("M45.4 62 H54.6", "#000", .6, .35);
+  b.tube("M35 40 Q50 36.4 65 40", "#2b2d2a", 1.8); b.rect(33, 38.4, 4.6, 3.2, 1.4, "#1b1c19", {ov: "cyl", sw: .6}); b.rect(62.4, 38.4, 4.6, 3.2, 1.4, "#1b1c19", {ov: "cyl", sw: .6});
+  b.path("M44 33 C45.2 29.4 54.8 29.4 56 33 L56.2 36 L43.8 36 Z", "url(#glass)", {ov: null, sw: .6});
+  return b.out({off: [2.2, 3.2], blur: 1.5, op: .45, under: wake(.42, o.bigWake)});
+}
+function AIR2(P, o = {}) {  // 에어보트 2: 높은 의자 + 철망 팬
+  const b = new SB(), hull = o.hull || "#6f787d";
+  b.path("M36 4 C42 2 58 2 64 4 C70 6.4 72 11 72 18 L72 74 C72 78 69.6 80 66 80 L34 80 C30.4 80 28 78 28 74 L28 18 C28 11 30 6.4 36 4 Z", hull, {ov: "lit", sw: 1.3});
+  b.rect(31, 10, 38, 40, 4, mix(hull, "#000", .3), {ov: "lit", sw: .7, sil: false});
+  b.rect(38, 22, 24, 10, 2.4, "#2a2c2e", {ov: "dome", sw: .8});
+  b.tube("M42 40 L42 52 M58 40 L58 52", "#3a3d38", 1.4); b.rect(41, 38, 18, 8, 2, P.c, {ov: "dome", sw: .8});
+  b.rect(39, 53, 22, 7, 2, "#3e4246", {ov: "lit", sw: .8});
+  prop(b, 50, 75, 18, 2, {flat: 1, hub: 3});
+  b.raw(`<circle cx="50" cy="75" r="19.4" fill="none" stroke="${OL}" stroke-width="2.8"/><circle cx="50" cy="75" r="19.4" fill="none" stroke="#b9bec2" stroke-width="1.6"/><circle cx="50" cy="75" r="13" fill="none" stroke="#b9bec2" stroke-width=".5" opacity=".7"/><path d="M30.6 75 H69.4 M50 55.6 V94.4 M36.3 61.3 L63.7 88.7 M63.7 61.3 L36.3 88.7" stroke="#b9bec2" stroke-width=".55" opacity=".85"/>`, `<circle cx="50" cy="75" r="20"/>`);
+  for (const x of [40, 47, 53, 60]) b.rect(x - .8, 92, 1.6, 7, .6, "#2b2d28", {sw: .4});
+  return b.out({off: [2.4, 3.4], blur: 1.6, op: .45, under: wake(.6)});
+}
+function RIB2(P, o = {}) {  // 군용 고무보트: 검정 튜브 · 팀 색 손잡이줄
+  const b = new SB(), tube = o.tube || "#2b2e30";
+  const T = "M50 3 C63 9 73 24 73 44 L73 84 C73 90 69 94 63 94 L37 94 C31 94 27 90 27 84 L27 44 C27 24 37 9 50 3 Z";
+  b.path(T, tube, {ov: "cyl", sw: 1.3});
+  b.path("M50 11 C59.6 16 66 27 66 44 L66 82 C66 85.6 64 87.6 60.4 87.6 L39.6 87.6 C36 87.6 34 85.6 34 82 L34 44 C34 27 40.4 16 50 11 Z", o.floor || "#5f6a4c", {ov: "lit", sw: .9, sil: false});
+  b.raw(`<path d="M29.6 30 Q28.6 50 29.6 84 M70.4 30 Q71.4 50 70.4 84" fill="none" stroke="${P.c}" stroke-width="1.1" stroke-dasharray="3 2"/>`);
+  b.rect(40, 34, 20, 8, 2, "#3a3d38", {ov: "lit", sw: .7}); b.rect(40, 50, 20, 8, 2, "#3a3d38", {ov: "lit", sw: .7});
+  b.rect(44, 88, 12, 9, 2.4, "#1f2124", {ov: "lit", sw: .9}); b.rect(45.4, 89.6, 9.2, 2, .9, P.c, {ov: null, sw: 0, sil: false});
+  return b.out({off: [2.4, 3.4], blur: 1.6, op: .45, under: wake(.62)});
+}
+function PONTOON(P, o = {}) {
+  const b = new SB();
+  b.rect2(28, 6, 9, 84, 4.4, "url(#chromev)", {ov: "cyl", sw: 1});
+  b.rect(30, 10, 40, 74, 4, "#d9d2bf", {ov: "lit", sw: 1.1});
+  b.tube("M31.6 12 H68.4 V82 H31.6 Z", P.c, 1);
+  b.rect(35, 16, 30, 14, 3, "#3a3d40", {ov: "dome", sw: .8}); b.rect(35, 52, 30, 12, 3, "#3a3d40", {ov: "dome", sw: .8});
+  b.rect(44, 34, 12, 10, 2, "#2e3134", {ov: "lit", sw: .8}); b.path("M44 33 C46 30.6 54 30.6 56 33 Z", "url(#glass)", {ov: null, sw: .5});
+  b.rect(38, 68, 24, 12, 2, P.c, {ov: "lit", sw: .8}); b.raw(`<path d="M38 74 H62 M50 68 V80" stroke="#fff" stroke-opacity=".3" stroke-width=".8"/>`);
+  b.rect(43, 88, 14, 8, 2.4, "#1f2124", {ov: "lit", sw: .9});
+  return b.out({off: [2.4, 3.4], blur: 1.6, op: .45, under: wake(.66)});
+}
+function GLD2(P, o = {}) {  // 모터 글라이더 2차: 날개 모양 · 꼬리 모양 · 동체 모양을 바꾼 새 시안
+  const b = new SB(), wing = o.wing || "#eef0ea", pod = o.pod || P.c, tc = mix(wing, "#000", .1);
+  const tail = o.tail || "T";
+  if (o.twin) { b.tube("M38 34 V82 M62 34 V82", mix(wing, "#000", .3), 1.8); b.path("M36.4 79 L63.6 79 L63.6 85 L36.4 85 Z", tc); b.rect2(35.6, 76, 2.2, 11, 1, mix(tc, "#000", .25), {sw: .6}); }
+  else {
+    b.rect(49, 44, 2, o.longBoom ? 46 : 40, 1, mix(wing, "#000", .35), {ov: "cyl", sw: .8});
+    const ty = o.longBoom ? 86 : 80;
+    if (tail === "V") { b.path(`M50 ${ty} L37 ${ty + 6} L38.4 ${ty + 8} L50 ${ty + 3.4} Z`, tc); b.path(`M50 ${ty} L63 ${ty + 6} L61.6 ${ty + 8} L50 ${ty + 3.4} Z`, tc); }
+    else if (tail === "X") { b.path(`M50 ${ty - 1} L34 ${ty + 3} L34 ${ty + 6} L50 ${ty + 5} L66 ${ty + 6} L66 ${ty + 3} Z`, tc); b.rect(48.6, ty - 6, 2.8, 12, 1.2, P.c, {ov: "cyl", sw: .7}); }
+    else { b.path(`M50 ${ty} L35 ${ty + 2.6} C33.8 ${ty + 2.8} 33.6 ${ty + 5.4} 35 ${ty + 5.5} L50 ${ty + 5} L65 ${ty + 5.5} C66.4 ${ty + 5.4} 66.2 ${ty + 2.8} 65 ${ty + 2.6} Z`, tc); b.rect(49.3, ty - 3.4, 1.4, 10.4, .7, P.c, {sw: .6}); }
+  }
+  const POD = o.slim ? "M50 10 C54 10 56 15 56 22 L56 42 C56 47 53.6 50 50 50 C46.4 50 44 47 44 42 L44 22 C44 15 46 10 50 10 Z"
+    : o.box ? "M44 14 C44 11 47 9 50 9 C53 9 56 11 56 14 L58 26 L58 44 C58 47 56 49 53 49 L47 49 C44 49 42 47 42 44 L42 26 Z"
+    : "M50 11 C56.4 11 59.4 16.4 59.4 24 L59.4 39 C59.4 45.6 55.4 49.4 50 49.4 C44.6 49.4 40.6 45.6 40.6 39 L40.6 24 C40.6 16.4 43.6 11 50 11 Z";
+  b.path(POD, pod, {ov: "dome"});
+  if (o.podStripe) b.raw(`<clipPath id="ps"><path d="${POD}"/></clipPath><path clip-path="url(#ps)" d="M47.6 0 H52.4 V60 H47.6 Z" fill="#f2efe4"/>`);
+  prop(b, 50, 51.4, o.bigProp ? 11.5 : 9.4, 3, {flat: .34, hub: 1.7});
+  const W = o.taper ? "M46 24.6 L6 28.6 C3.6 28.8 2.4 29.6 2.4 30.8 L2.6 32 C2.8 32.8 4 33 6 33 L46 35 L54 35 L94 33 C96 33 97.2 32.8 97.4 32 L97.6 30.8 C97.6 29.6 96.4 28.8 94 28.6 L54 24.6 Z"
+    : o.ellip ? "M46 24 C30 24.6 10 26 4 29 C1.6 30.2 1.6 31.6 4 32.6 C10 34.6 30 35.4 46 35.4 L54 35.4 C70 35.4 90 34.6 96 32.6 C98.4 31.6 98.4 30.2 96 29 C90 26 70 24.6 54 24 Z"
+    : o.swept ? "M46 25 L8 33 C5 33.6 3.4 34.6 3.6 36 L4 37 L46 34.4 L54 34.4 L96 37 L96.4 36 C96.6 34.6 95 33.6 92 33 L54 25 Z"
+    : "M46 25 L7 26.6 C3.6 26.8 2 27.6 2 29.2 L2 30.8 C2 32.4 3.6 33 7 33 L46 35 L54 35 L93 33 C96.4 33 98 32.4 98 30.8 L98 29.2 C98 27.6 96.4 26.8 93 26.6 L54 25 Z";
+  b.path(W, wing);
+  if (o.struts) b.tube("M42 32 L24 31.4 M58 32 L76 31.4", "#9ba0a4", .9);
+  if (o.camo) b.camo(`<path d="${W}"/>`, o.camo, 37, 22, 6);
+  if (o.tipCol) b.raw(`<clipPath id="wt"><path d="${W}"/></clipPath><g clip-path="url(#wt)" fill="${o.tipCol}"><rect x="0" y="20" width="14" height="20"/><rect x="86" y="20" width="14" height="20"/></g>`);
+  if (o.chev) b.raw(`<clipPath id="wc"><path d="${W}"/></clipPath><g clip-path="url(#wc)" fill="${P.c}"><path d="M20 20 L24 20 L30 40 L26 40 Z M80 20 L76 20 L70 40 L74 40 Z"/></g>`);
+  b.line("M10 32 L30 33.4 M70 33.4 L90 32", "#000", .5, .28);
+  const C = o.bubble ? "M43.6 25 C43.6 13 56.4 13 56.4 25 Z" : o.slim ? "M45.6 23 C46 15.6 54 15.6 54.4 23 Z" : "M44.6 23.6 C45.2 15.6 54.8 15.6 55.4 23.6 Z";
+  b.raw(`<path d="${C}" fill="url(#glass)" stroke="${OL}" stroke-width=".6"/>`); b.line("M46.4 20.6 Q48 17.4 49.6 17", "#fff", .8, .75);
+  let under = "", over = "";
+  if (o.smoke) for (let i = 0; i < 9; i++) under += `<circle cx="${f2(50 + Math.sin(i * 1.7) * i * .5)}" cy="${f2(57 + i * 5)}" r="${f2(2.6 + i * 1.1)}" fill="${o.smoke}" opacity="${f2(.42 - i * .04)}" filter="url(#soft)"/>`;
+  if (o.night) over = navLights(b, [3, 30.4], [97, 30.4], [[50, 86, "glr"]]);
+  return b.out({off: [6, 9], blur: 2.4, op: .32, sticker: o.sticker, stickerCol: o.stickerCol, under, over});
+}
+/* ───────── 모터 글라이더 3차: 배그 모터 글라이더 = 행글라이더 날개 + 삼륜 동체(트라이크) ───────── */
+function TRIKE(P, o = {}) {
+  const b = new SB(), wing = o.wing || "#3a3f44", pod = o.pod || "#d8c79a", keel = "#8d9296";
+  const sw = o.sweep ?? 1, span = o.span ?? 49.5, nose = o.nose ?? 16, tipY = nose + 17 * sw, trail = o.trail ?? 7.5, chord = o.chord ?? 18;  // v151 가로로 길고 얇은 행글라이더 날개
+  const W = `M50 ${nose} L${50 - span} ${tipY} L${50 - span + 2} ${tipY + trail} L50 ${nose + chord} L${50 + span - 2} ${tipY + trail} L${50 + span} ${tipY} Z`;
+  // 바퀴 3개 (앞 1 · 뒤 2) + 뒤 바퀴 다리
+  b.tube(`M50 60 L33 70 M50 60 L67 70`, "#6b7074", 1.4);
+  tire(b, 47.2, 44, 5.6, 9, {}); tire(b, 28, 64, 7, 12, {}); tire(b, 65, 64, 7, 12, {});
+  // 동체(삼륜차): 앞 둥근 덮개 · 좌석 2 · 뒤 엔진
+  const POD = "M50 46 C55 46 57 49 57 54 L57 70 C57 75 54 78 50 78 C46 78 43 75 43 70 L43 54 C43 49 45 46 50 46 Z";
+  b.path(POD, pod, {ov: "dome"});
+  if (o.podStripe) b.raw(`<clipPath id="tp"><path d="${POD}"/></clipPath><path clip-path="url(#tp)" d="M47.8 40 H52.2 V80 H47.8 Z" fill="${o.podStripe}"/>`);
+  b.rect(46, 56, 8, 7, 2, "#22231f", {ov: "dome", sw: .7}); b.rect(46, 64.5, 8, 6.5, 2, "#22231f", {ov: "dome", sw: .7});
+  if (o.screen) b.path("M45 49 C46.6 46.6 53.4 46.6 55 49 L55 51.6 L45 51.6 Z", "url(#glass)", {ov: null, sw: .5});
+  b.rect(45, 74, 10, 7, 2, "#3e4246", {ov: "lit", sw: .8});
+  prop(b, 50, 83, o.bigProp ? 12 : 10, 3, {flat: .34, hub: 1.6});
+  // 돛대 · 줄
+  b.tube(`M50 58 L50 ${nose + chord - 1}`, "#9ba0a4", 1.1);
+  b.raw(`<path d="M50 52 L${50 - span * .6} ${nose + 17 * sw * .6 + 3} M50 52 L${50 + span * .6} ${nose + 17 * sw * .6 + 3}" stroke="#d8dcdf" stroke-width=".45" opacity=".8"/>`);
+  // 날개 (뒤로 젖힌 삼각 날개)
+  b.path(W, wing, {ov: "lit", sw: 1.2, op: o.op ?? 1});
+  if (o.panels) { const g = []; for (let i = 1; i < 8; i++) { const k = i / 8, y0 = nose + (tipY - nose) * k, y1 = nose + chord + (tipY + trail - nose - chord) * k; g.push(`M${50 - span * k} ${y0} L${50 - span * k + .6} ${y1}`, `M${50 + span * k} ${y0} L${50 + span * k - .6} ${y1}`); } b.line(g.join(" "), "#000", .45, .25); }
+  if (o.lower) b.raw(`<clipPath id="tl"><path d="${W}"/></clipPath><path clip-path="url(#tl)" d="M${50 - span - 2} ${tipY + trail / 2} L50 ${nose + chord / 2} L${50 + span + 2} ${tipY + trail / 2} L${50 + span + 2} 100 L${50 - span - 2} 100 Z" fill="${o.lower}"/><path d="M${50 - span + 1} ${tipY + trail / 2} L50 ${nose + chord / 2} L${50 + span - 1} ${tipY + trail / 2}" stroke="${OL}" stroke-width=".6" fill="none" opacity=".6"/>`);  // v152 날개 아래(뒤) 절반 팀 색
+  if (o.tipCol) b.raw(`<clipPath id="tw"><path d="${W}"/></clipPath><g clip-path="url(#tw)" fill="${o.tipCol}"><rect x="0" y="0" width="${50 - span + 12}" height="100"/><rect x="${50 + span - 12}" y="0" width="${50 - span + 12}" height="100"/></g>`);
+  if (o.center) b.raw(`<clipPath id="tc"><path d="${W}"/></clipPath><path clip-path="url(#tc)" d="M${50 - (o.center === "wide" ? 9 : 4)} 0 H${50 + (o.center === "wide" ? 9 : 4)} V100 H${50 - (o.center === "wide" ? 9 : 4)} Z" fill="${P.c}"/>`);
+  if (o.chev) b.raw(`<clipPath id="tv"><path d="${W}"/></clipPath><g clip-path="url(#tv)" fill="none" stroke="${P.c}" stroke-width="3"><path d="M${50 - span * .75} ${nose + 17 * sw * .75 + 2.6} L50 ${nose + 4} L${50 + span * .75} ${nose + 17 * sw * .75 + 2.6}"/></g>`);
+  if (o.camo) b.camo(`<path d="${W}"/>`, o.camo, 71, 18, 7);
+  if (o.rainbow) b.raw(`<clipPath id="tr"><path d="${W}"/></clipPath><g clip-path="url(#tr)">${["#e5484d", "#f2a900", "#46c26a", "#3d8bff"].map((c, i) => `<path d="M${50 - span + i * span / 2} 0 h${span / 2} V100 h-${span / 2} Z" fill="${c}" opacity=".9"/>`).join("")}</g>`);
+  b.line(`M${50 - span} ${tipY} L50 ${nose} L${50 + span} ${tipY}`, "#cfd3d6", 1.1, .9);  // 앞전 봉
+  b.tube(`M50 ${nose} L50 ${nose + chord + 2}`, keel, .8);  // 용골
+  
+  let under = "", over = "";
+  if (o.smoke) for (let i = 0; i < 8; i++) under += `<circle cx="${f2(50 + Math.sin(i * 1.7) * i * .5)}" cy="${f2(88 + i * 2.2)}" r="${f2(2 + i * .9)}" fill="${o.smoke}" opacity="${f2(.4 - i * .045)}" filter="url(#soft)"/>`;
+  if (o.night) over = navLights(b, [50 - span + 1, tipY + 1], [50 + span - 1, tipY + 1], [[50, 80, "glr"]]);
+  return b.out({off: [6, 9], blur: 2.4, op: .32, sticker: o.sticker, stickerCol: o.stickerCol, under, over});
+}
+function CAR(P, o = {}) {  // 일반 차 (위에서 본 승용차·지프 공용) — 폭파 그림용
+  const b = new SB(), body = o.body || P.c, jeep = o.jeep;
+  for (const [x, y] of [[23, 16], [70, 16], [23, 68], [70, 68]]) tire(b, x, y, 7, 16, {});
+  const H = jeep ? "M30 8 L70 8 L72 14 L72 90 C72 93 70 95 67 95 L33 95 C30 95 28 93 28 90 L28 14 Z" : "M38 5 C46 3 54 3 62 5 C68 7 72 12 72 20 L72 84 C72 91 68 95 61 95 L39 95 C32 95 28 91 28 84 L28 20 C28 12 32 7 38 5 Z";
+  b.path(H, body, {ov: "lit", sw: 1.3});
+  b.path(jeep ? "M32 26 L68 26 L66 34 L34 34 Z" : "M33 28 C40 24 60 24 67 28 L65 37 L35 37 Z", "url(#glass)", {ov: null, sw: .8, sil: false});
+  b.rect(33, 37, 34, jeep ? 40 : 30, 3, mix(body, "#000", jeep ? .35 : .12), {ov: "lit", sw: .8, sil: false});
+  if (jeep) { b.line("M33 50 H67 M33 63 H67", "#000", .6, .35); } else b.path("M35 67 L65 67 L67 76 C60 79 40 79 33 76 Z", "url(#glass)", {ov: null, sw: .8, sil: false});
+  for (const x of [33, 67]) b.circ(x, 8.4, 2.4, "#fff4c8", {ov: "dome", sw: .6, sil: false});
+  b.rect(40, 92, 20, 3, 1, "#3a3d38", {ov: null, sw: .5, sil: false});
+  return b.out({off: [2.4, 3.4], blur: 1.6, op: .5});
+}
+
+return {pal, C130, CH47, UH60, AH64, KA52, MH6, BIKE, BUGGY, MOTO, BRDM2, PG2, RIB, TRIKE, CAR};
+})();
+const SPRIMG = {};
+function sprImg(key, gen) {  // 그림을 한 번만 만들어 두고 다시 씀
+  let im = SPRIMG[key];
+  if (!im) { im = SPRIMG[key] = new Image(); try { im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(gen()); } catch (e) { console.error(e); } }
+  return im.complete && im.naturalWidth ? im : null;
+}
+function sprDraw(ctx, im, x, y, ang, sz) { ctx.save(); ctx.translate(x, y); ctx.rotate(ang + Math.PI / 2); ctx.drawImage(im, -sz / 2, -sz / 2, sz, sz); ctx.restore(); }
+const SPR_COL = c => { try { return toHex6(c || "#F2A900"); } catch { return "#F2A900"; } };
+function emPlaneSpr(col, seed) {  // 비상호출: AP-01 올리브 · AP-04 위장 (미라마는 AP-03 사막)
+  const c = SPR_COL(col), desert = rp.data?.map === "Desert_Main", pk = (rp.data?.events || []).filter(e => e.k === "empick" && e.t <= (seed || 0) + 1 && (seed || 0) - e.t < 200).pop(), sd = pk ? pk.t : Math.floor(Math.abs(seed || 0) / 30), v = desert ? "03" : (Math.round(sd) % 2 ? "04" : "01");  // v154 같은 비상호출(30초 안)은 같은 비행기 (팀원마다 달라 여러 대로 보이던 것)
+  return sprImg("ap" + v + c, () => SPR.C130(SPR.pal(c), v === "03" ? {body: "#b5a06f"} : v === "04" ? {body: "#6b7559", camo: ["#3b4229", "#a39a66", "#2c3020"]} : {}));
+}
+function supplyPlaneSpr(seed) {  // 일반 보급 비행기: AP-02 공군 회색 · AP-06 어두운 도색 (항법등 없이)
+  const v = Math.abs(Math.round(seed || 0)) % 2 ? "06" : "02";
+  return sprImg("sup" + v, () => SPR.C130(SPR.pal("#F2A900"), v === "02" ? {body: "#8e959b", band: false, roundel: false} : {body: "#3e4448", band: false, roundel: false}));
+}
+function noRotor(f) { globalThis.__NOROTOR = true; try { return f(); } finally { globalThis.__NOROTOR = false; } }
+const HROT = {ch: [[50, 22.4, 22, 3, 1], [50, 78, 21, 3, -1]], sh0: [[50, 38, 34, 4, 1]], sh1: [[50, 38, 33, 4, 1]], sh2: [[50, 38, 33, 3, 1], [50, 38, 31, 3, -1]], sh3: [[50, 41, 29, 5, 1]]};
+function drawRotors(ctx, x, y, ang, sz, list, now) {  // v153 도는 회전날개 (잔상 + 끝 노란 표시)
+  const k = sz / 100; ctx.save(); ctx.translate(x, y); ctx.rotate(ang + Math.PI / 2); ctx.scale(k, k); ctx.translate(-50, -50);
+  for (const [cx, cy, r, n, dir] of list) {
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fillStyle = "rgba(238,241,234,.12)"; ctx.fill(); ctx.strokeStyle = "rgba(238,241,234,.3)"; ctx.lineWidth = .8; ctx.stroke();
+    const rot = (now || 0) / 45 * dir;
+    for (const [off, al, w] of [[-.34, .12, 2.6], [-.18, .22, 2.4], [-.07, .35, 2.2], [0, .95, 2.1]]) {
+      ctx.strokeStyle = `rgba(28,30,26,${al})`; ctx.lineWidth = w; ctx.lineCap = "round";
+      for (let b = 0; b < n; b++) { const a = rot + off * dir + b * Math.PI * 2 / n; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a) * r * .97, cy + Math.sin(a) * r * .97); ctx.stroke(); }
+    }
+    ctx.strokeStyle = "#d9c24a"; ctx.lineWidth = 1.8; for (let b = 0; b < n; b++) { const a = rot + b * Math.PI * 2 / n; ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * r * .88, cy + Math.sin(a) * r * .88); ctx.lineTo(cx + Math.cos(a) * r * .97, cy + Math.sin(a) * r * .97); ctx.stroke(); }
+  }
+  ctx.restore();
+}
+function supplyHeliSpr(seed) {  // 보급 헬기: HE-02 블랙호크 · HE-05 아파치 · HE-08 Ka-52 · HE-04 리틀버드
+  const i = Math.abs(Math.round(seed || 0)) % 4, F = [SPR.UH60, SPR.AH64, SPR.KA52, SPR.MH6][i];
+  return sprImg("sh" + i, () => noRotor(() => F(SPR.pal("#8e959b"), {mark: false})));
+}
+function chinookSpr(col) { const c = SPR_COL(col); return sprImg("chr" + c, () => noRotor(() => SPR.CH47(SPR.pal(c), {}))); }
+function drawEmPlane(ctx, x, y, ang, col, size, seed = 0) {
+  { const im = emPlaneSpr(col, seed); if (im) { sprDraw(ctx, im, x, y, ang, size * 5.2); return; } }  // 비상호출 비행기: 그림자 + 수송기 + 팀 색 띠 (size 12 ≈ 헬기와 비슷한 크기)
   const k = size * 5 / 100;
   ctx.save(); ctx.translate(x, y);
   ctx.save(); ctx.translate(size * .9, size * 1.2); ctx.rotate(ang + Math.PI / 2); ctx.scale(k, k); ctx.translate(-50, -50);  // 그림자 (높이 떠 있는 느낌)
@@ -6366,6 +7197,8 @@ function drawEmPlane(ctx, x, y, ang, col, size) {  // 비상호출 비행기: �
   ctx.restore();
 }
 function drawHeli(ctx, x, y, ang, col, size, now, kind) {  // 위에서 본 헬기 (앞 = 가는 방향) + 도는 날개, 테두리 = 탄 사람·팀 색
+  if (kind === "heli_5") { const im = chinookSpr(col), sz = size * 6.2; if (im) { sprDraw(ctx, im, x, y, ang, sz); drawRotors(ctx, x, y, ang, sz, HROT.ch, now ?? performance.now()); return; } }  // v149 HE-01 치누크 (v153 크게 + 날개 돎)
+  if (typeof kind === "string" && kind.startsWith("supply:")) { const sd = +kind.slice(7), im = supplyHeliSpr(sd), sz = size * 6.2; if (im) { sprDraw(ctx, im, x, y, ang, sz); drawRotors(ctx, x, y, ang, sz, HROT["sh" + Math.abs(Math.round(sd || 0)) % 4], now ?? performance.now()); return; } kind = "heli_5"; }  // v149 보급 헬기
   kind = kind || HELI_BY_MAP[rp.data?.map] || "heli_1";
   const im = replayImgs[kind], sp = HELI_SPEC[kind], L = size * 5;
   ctx.save(); ctx.translate(x, y); ctx.rotate(ang + Math.PI / 2);
@@ -6565,8 +7398,45 @@ function buggyImg(col) {
   if (!im) { im = BUGGY_IMG[k] = new Image(); im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="200" height="200">${BUGGY_SVG.split("__COL__").join(k)}</svg>`); }
   return im.complete && im.naturalWidth ? im : null;
 }
+function wreckSpr(kind, vid) {  // v154 폭파용 탈것 그림 (탈것 종류대로)
+  const c = "#8a8f88", jeep = /uaz|jeep|rony|pickup|mirado|coupe/i.test(vid || "");
+  return sprImg("wr" + kind + (jeep ? "j" : ""), () => kind === "buggy" ? SPR.BUGGY(SPR.pal(c), {}) : kind === "bike" ? SPR.BIKE(SPR.pal(c), {}) : kind === "moto" ? SPR.MOTO(SPR.pal(c), {cafe: 1})
+    : kind === "boat" ? SPR.PG2(SPR.pal(c), {noWake: 1}) : kind === "glider" ? SPR.TRIKE(SPR.pal(c), {}) : SPR.CAR(SPR.pal(c), {jeep, body: "#7d8580"}));
+}
+const WRECK_SZ = {buggy: 34, bike: 22, moto: 26, boat: 40, glider: 44, car: 34};
+function drawWreck(ctx, x, y, ang, kind, vid, mode, a) {  // mode: "burn" 붉게 깜빡 · "dead" 까맣게 탐
+  if (kind === "car") return false;  // v155 일반 차는 예전처럼 핸들 폭발
+  const im = wreckSpr(kind, vid); if (!im) return false;
+  const sz = WRECK_SZ[kind] || 34;
+  ctx.save(); ctx.globalAlpha *= a;
+  ctx.filter = mode === "burn" ? "sepia(1) saturate(4) hue-rotate(-30deg) brightness(.9)" : "grayscale(1) brightness(.28) contrast(1.3)";
+  sprDraw(ctx, im, x, y, ang, sz); ctx.restore(); return true;
+}
+function carKindOf(R, key, c) {
+  if (c.vid) return [vehKind(c.vid), c.vid];
+  for (const p of R.players) for (const v of p.veh || []) if (v[4] === key && v[3]) return [vehKind(v[3]), v[3]];
+  return ["car", ""];
+}
 function drawVeh(ctx, x, y, r, col, vid, headFn, now) {  // 일반 차는 핸들, 특수 탈것은 배지 없는 실루엣 (가는 방향으로 돌아감)
   const k = vehKind(vid);
+  if (k === "boat") {  // v150 PG-117 = BT-32 야간 PG-117, 그 밖의 배 = BT-07 고무보트 (팀 색은 테두리)
+    const c = SPR_COL(col), pg = /pg117|boat_pg|^boat/i.test(String(vid || "")), im = sprImg((pg ? "pg" : "rib") + c, () => pg ? SPR.PG2(SPR.pal(c), {hull: "#3d4448", deck: "#585f63", roof: "#25292c", searchlight: 1, noWake: 1, sticker: 3, stickerCol: c}) : SPR.RIB(SPR.pal("#8e959b"), {sticker: 3, stickerCol: c, noWake: 1}));
+    if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2; sprDraw(ctx, im, x, y, ang, r * 4.2); return; }
+  }
+  if (k === "glider") {  // v152 MG-05 모터 글라이더: 팀 색 동체 + 날개 뒤 절반 팀 색 + 팀 색 연기
+    const c = SPR_COL(col), im = sprImg("gl2" + c, () => SPR.TRIKE(SPR.pal(c), {panels: 1, pod: c, screen: 1, lower: c}));
+    if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, sz = r * 5.2, bx = -Math.cos(ang), by = -Math.sin(ang), t = (now ?? performance.now()) / 1000;
+      const [cr, cg, cb] = [1, 3, 5].map(i => parseInt(c.substr(i, 2), 16));
+      for (let i = 0; i < 14; i++) {  // v153 뒤로 길게 흐르는 팀 색 연기
+        const ph = (t * .9 + i / 14) % 1, d = sz * (.36 + ph * 1.5), wob = Math.sin(t * 2 + i * 1.7) * sz * .04 * ph;
+        ctx.beginPath(); ctx.arc(x + bx * d - by * wob, y + by * d + bx * wob, sz * (.035 + ph * .1), 0, Math.PI * 2); ctx.fillStyle = `rgba(${cr},${cg},${cb},${(1 - ph) * .5})`; ctx.fill();
+      }
+      sprDraw(ctx, im, x, y, ang, sz); return; }
+  }
+  if (k === "buggy" || k === "bike" || k === "moto") {  // v149 BG-38 야간 버기 · BK-01 산악자전거 · MB-10 카페 레이서
+    const c = SPR_COL(col), im = sprImg("n" + k + c, () => k === "buggy" ? SPR.BUGGY(SPR.pal(c), {lights: 1}) : k === "bike" ? SPR.BIKE(SPR.pal(c), {knob: 1}) : SPR.MOTO(SPR.pal(c), {cafe: 1, stripe: "#f2efe4"}));  // v154 흰 테두리 없이 (글라이더처럼)
+    if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2; sprDraw(ctx, im, x, y, ang, r * (k === "buggy" ? 3.7 : k === "bike" ? 3.6 : 5.4)); return; }
+  }
   if (k === "buggy") { const im = buggyImg(col); if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, sz = r * 2.9; drawSprite(ctx, im, x, y, ang, sz, {outline: "white", ow: 1.6}); return; } return drawWheel(ctx, x, y, r, col); }  // v142 버기: BG-30 (v143 흰 테두리)
   if (k === "car") return drawWheel(ctx, x, y, r, col);
   const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, s = r * 1.45;
