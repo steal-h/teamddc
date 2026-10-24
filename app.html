@@ -3642,7 +3642,7 @@ function mapRow(o, code, z, y, now) {
   }
   return row;
 }
-const MAP_SHIFT = {Baltic_Main: [.00289, .00184], Erangel_Main: [.00289, .00184]};  // v159 왼쪽으로 3m 더  // v124 아래로 15m  // v118 위로 2m  // v115 위로 5m (10m 올렸다가 5m 내림)  // v112 에란겔 지도 그림이 살짝 왼쪽에 있어서 오른쪽으로 (맵 크기 비율, +면 오른쪽/아래)
+const MAP_SHIFT = {Baltic_Main: [.0024, .00184], Erangel_Main: [.0024, .00184]};  // v161 왼쪽으로 4m 더  // v159 왼쪽으로 3m 더  // v124 아래로 15m  // v118 위로 2m  // v115 위로 5m (10m 올렸다가 5m 내림)  // v112 에란겔 지도 그림이 살짝 왼쪽에 있어서 오른쪽으로 (맵 크기 비율, +면 오른쪽/아래)
 function mapShift(code) { return MAP_SHIFT[code] || [0, 0]; }
 const CHIP_TOWERS = {"Tiger_Main":[[0.1999,0.186],[0.204,0.3956],[0.2303,0.7116],[0.2946,0.2992],[0.3325,0.3902],[0.3625,0.2001],[0.3744,0.4473],[0.4183,0.6343],[0.5524,0.3071],[0.5648,0.4486],[0.6125,0.6183],[0.7762,0.553],[0.781,0.2728],[0.8868,0.3809]],"Neon_Main":[[0.1272,0.6793],[0.262,0.6241],[0.3289,0.872],[0.3466,0.2983],[0.3603,0.5495],[0.3786,0.4228],[0.4247,0.7029],[0.4566,0.7902],[0.517,0.5422],[0.567,0.7791],[0.5914,0.46],[0.6116,0.581],[0.8008,0.8773]],"Desert_Main":[[0.2305,0.3645],[0.3026,0.1792],[0.3417,0.6663],[0.3471,0.5874],[0.3573,0.3807],[0.465,0.3761],[0.4678,0.54],[0.4719,0.7368],[0.4786,0.1709],[0.4939,0.4286],[0.5324,0.225],[0.5358,0.3366],[0.5653,0.6854],[0.5747,0.5603],[0.6146,0.2355],[0.6302,0.4584],[0.7214,0.674],[0.7834,0.5844],[0.793,0.3232]],"Baltic_Main":[[0.2032,0.6465],[0.217,0.2584],[0.2212,0.3453],[0.3253,0.7076],[0.3267,0.4095],[0.4177,0.3802],[0.4274,0.4869],[0.4523,0.6324],[0.4639,0.8649],[0.484,0.2093],[0.4988,0.3777],[0.6219,0.4407],[0.6679,0.2825],[0.7171,0.5924],[0.7547,0.7285],[0.7615,0.3717],[0.8694,0.4127],[0.8836,0.5312]]};  // v119 블루칩 송신기 자리 (지금까지 리플레이에서 블루칩을 쓴 곳을 모아 만든 목록 + 이번 판에서 쓴 곳)
 function rpTowers(R) {  // 이 맵의 송신기 자리 + 이번 판에서 블루칩을 쓴 자리 (가까운 것은 하나로)
@@ -4786,7 +4786,7 @@ function rpDraw(dt, now, view) {
         if (opened && age > 60) continue;
         drawAmmoBox(ctx, x, y, 18, opened);
         const cl = caller ? (R.players.some(p => p.nick === caller) ? rpName(caller) + " " : (cteam != null ? cteam + "팀 " : "")) : "";
-        const lb = by && rp.t >= bt ? rpName(by) + " 획득" : age < 20 ? cl + "멀티 보급" : "";  // v128 긴급지원 신호탄으로 부른 사람
+        const lb = !caller ? "" : by && rp.t >= bt ? rpName(by) + " 획득" : age < 20 ? cl + "멀티 보급" : "";  // v160 비행기가 떨어뜨린 멀티 보급은 이름 없이  // v128 긴급지원 신호탄으로 부른 사람
         if (lb && (age < 20 || rp.t < bt + 25)) { ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText(lb).width + 12;
           ctx.fillStyle = "rgba(20,23,15,.88)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y + 12, tw, 17, 8); else ctx.rect(x - tw / 2, y + 12, tw, 17); ctx.fill();
           ctx.fillStyle = by && rp.t >= bt ? rpCol(by) : "#C9E07A"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lb, x, y + 21); }
@@ -5109,7 +5109,8 @@ function rpDraw(dt, now, view) {
   for (const g of ground) {
     const near = Math.min(Infinity, ...ground.filter(o => o !== g).map(o => Math.hypot(o.x - g.x, o.y - g.y)));
     const full = g.hasAv || g.inCar ? C.avatar_r : 7, small = Math.max(5, full * C.crowd_scale);
-    g.r = near >= C.crowd_dist ? full : small + (full - small) * Math.max(0, (near - C.crowd_dist * .5) / (C.crowd_dist * .5));  // 가까울수록 작게 (부드럽게)
+    g.r = near >= C.crowd_dist ? full : small + (full - small) * Math.max(0, (near - C.crowd_dist * .5) / (C.crowd_dist * .5));
+    if (g.inCar && /brdm/i.test(g.inCar[3] || "")) g.r = full;  // v160 BRDM은 붙어 있어도 원래 크기  // 가까울수록 작게 (부드럽게)
     if (!isFinite(g.r)) g.r = full;
     rp.dispPos[g.p.nick] = [g.x, g.y]; rp.dispR[g.p.nick] = g.r;
   }
@@ -5234,11 +5235,12 @@ function rpDraw(dt, now, view) {
       const down = (en.kn || []).some(([a, b]) => rp.t >= a && rp.t < b);  // 기절 중
       if (rpFoeInCar(en, rp.t) && !(down && !(en.vh || []).some(v => rp.t >= v[0] && rp.t <= v[1]))) {  // v101 차 안에서 기절해도 차는 그대로 (예전엔 차가 사라졌다 나타남)  // 차에 타면 핸들 (같은 차의 같은 팀은 하나만), BRDM은 장갑차
         const vh = (en.vh || []).find(v => rp.t >= v[0] && rp.t <= (v[1] ?? Infinity));
-        if (!foeCars.some(o => o.tm === en.tm && ((o.key && vh && vh[3] && o.key === vh[3]) || Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 30))) {  // v159 30m (기록 시각이 달라 잠깐 벌어져도 한 대로)  // v158 열쇠가 달라도 같은 팀이 18m 안이면 같은 차  // v101 다른 차에 탄 같은 팀원이 90m 안에 있다고 통째로 숨기지 않게
+        const cA = interp(en.tr, rp.t - 1), cB = interp(en.tr, rp.t + 1), cSp = cA && cB ? Math.hypot(cB[0] - cA[0], cB[1] - cA[1]) * R.size_m / 2 : 0;  // v161 빠르게 달릴 땐 같은 차 판정 거리를 속도만큼 넓힘 (팀원마다 위치 기록 시각이 달라 수십 m 벌어짐)
+        if (!foeCars.some(o => o.tm === en.tm && ((o.key && vh && vh[3] && o.key === vh[3]) || Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 30 + Math.max(cSp, o.sp || 0) * 4))) {  // v159 30m (기록 시각이 달라 잠깐 벌어져도 한 대로)  // v158 열쇠가 달라도 같은 팀이 18m 안이면 같은 차  // v101 다른 차에 탄 같은 팀원이 90m 안에 있다고 통째로 숨기지 않게
           if (vh && vh[2] === 2) drawMortarSeat(ctx, x, y, big ? 9 : 7, teamColor(en.tm || 0), rp.t, en.n);
           else if (vh && vh[2]) { drawBRDM(ctx, x, y, big ? 28 : 20, rpHeading("e:" + en.n, t => interp(en.tr, t)), teamColor(en.tm || 0)); drawTeamTag(ctx, x + (big ? 12 : 9), y - (big ? 11 : 8), en.tm, teamColor(en.tm || 0)); drawSeats(ctx, x - 14.5, y + (big ? 26 : 21), Math.max(1, rpBrdmCount(R, vh[3], en.tm)), teamColor(en.tm || 0)); rpHpBar(ctx, rpCarHp(vh[3]), x, y + (big ? 18 : 14), big ? 26 : 20, 3, true); }
           else drawVeh(ctx, x, y, big ? 9 : 6, teamColor(en.tm || 0), vh && vh[4], () => rpHeading("e:" + en.n, t => interp(en.tr, t)), now);
-          foeCars.push({q, tm: en.tm, key: vh && vh[3]});
+          foeCars.push({q, tm: en.tm, key: vh && vh[3], sp: cSp});
         }
         rpHpBar(ctx, en.hp, x, y + (big ? 13 : 10), big ? 20 : 14, 3);
         continue;
@@ -6304,7 +6306,7 @@ function rpSilhouette(im, col) {  // 그림 모양 그대로 한 가지 색으�
 }
 function drawBRDM(ctx, x, y, len, ang, col, tint = null, tintA = 0) {  // BRDM 장갑차 (위에서 본 모습, 앞이 가는 방향), 배경 없이 차만 + 테두리는 탄 사람·팀 색
   if (!tint) {  // v150 BR-21 BRDM-2 기본 (미라마는 BR-24 사막), 팀 색은 테두리
-    const desert = rp.data?.map === "Desert_Main", c = col ? SPR_COL(col) : "", im = sprImg("brdm2" + (desert ? "d" : "g") + c, () => SPR.BRDM2(SPR.pal(c || "#F2A900"), {...(desert ? {body: "#b49a66"} : {}), ...(c ? {sticker: 5.2, stickerCol: c} : {})}));
+    const desert = rp.data?.map === "Desert_Main", c = col ? SPR_COL(col) : "", im = sprImg("brdm3" + (desert ? "d" : "g") + c, () => SPR.BRDM2(SPR.pal(c || "#F2A900"), {...(desert ? {body: "#b49a66"} : {}), ...(c ? {sticker: 10, stickerCol: c} : {})}));
     if (im) { sprDraw(ctx, im, x, y, ang, len * 1.12); return; }
   }
   const mk = BRDM_BY_MAP[rp.data?.map], mi = mk && replayImgs[mk];
@@ -7451,7 +7453,7 @@ function carKindOf(R, key, c) {
 function drawVeh(ctx, x, y, r, col, vid, headFn, now) {  // 일반 차는 핸들, 특수 탈것은 배지 없는 실루엣 (가는 방향으로 돌아감)
   const k = vehKind(vid);
   if (k === "boat") {  // v150 PG-117 = BT-32 야간 PG-117, 그 밖의 배 = BT-07 고무보트 (팀 색은 테두리)
-    const c = SPR_COL(col), pg = /pg117|boat_pg|^boat/i.test(String(vid || "")), im = sprImg((pg ? "pg2" : "rib2") + c, () => pg ? SPR.PG2(SPR.pal(c), {hull: "#3d4448", deck: "#585f63", roof: "#25292c", searchlight: 1, noWake: 1, sticker: 5, stickerCol: c}) : SPR.RIB(SPR.pal("#8e959b"), {sticker: 5, stickerCol: c, noWake: 1}));
+    const c = SPR_COL(col), pg = /pg117|boat_pg|^boat/i.test(String(vid || "")), im = sprImg((pg ? "pg3" : "rib3") + c, () => pg ? SPR.PG2(SPR.pal(c), {hull: "#3d4448", deck: "#585f63", roof: "#25292c", searchlight: 1, noWake: 1, sticker: 10, stickerCol: c}) : SPR.RIB(SPR.pal("#8e959b"), {sticker: 10, stickerCol: c, noWake: 1}));
     if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2; sprDraw(ctx, im, x, y, ang, r * 4.2); return; }
   }
   if (k === "glider") {  // v152 MG-05 모터 글라이더: 팀 색 동체 + 날개 뒤 절반 팀 색 + 팀 색 연기
@@ -7459,14 +7461,14 @@ function drawVeh(ctx, x, y, r, col, vid, headFn, now) {  // 일반 차는 핸들
     if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, sz = r * 5.2, bx = -Math.cos(ang), by = -Math.sin(ang), t = (now ?? performance.now()) / 1000;
       const [cr, cg, cb] = [1, 3, 5].map(i => parseInt(c.substr(i, 2), 16));
       for (let i = 0; i < 14; i++) {  // v153 뒤로 길게 흐르는 팀 색 연기
-        const ph = (t * .9 + i / 14) % 1, d = sz * (.36 + ph * 1.5), wob = Math.sin(t * 2 + i * 1.7) * sz * .04 * ph;
-        ctx.beginPath(); ctx.arc(x + bx * d - by * wob, y + by * d + bx * wob, sz * (.035 + ph * .1), 0, Math.PI * 2); ctx.fillStyle = `rgba(${cr},${cg},${cb},${(1 - ph) * .5})`; ctx.fill();
+        const ph = (t * 1.1 + i / 14) % 1, d = sz * (.34 + ph * .55), wob = Math.sin(t * 2 + i * 1.7) * sz * .03 * ph;  // v160 짧게
+        ctx.beginPath(); ctx.arc(x + bx * d - by * wob, y + by * d + bx * wob, sz * (.03 + ph * .06), 0, Math.PI * 2); ctx.fillStyle = `rgba(${cr},${cg},${cb},${(1 - ph) * .45})`; ctx.fill();
       }
       sprDrawAir(ctx, im, x, y, ang, sz); return; }
   }
   if (k === "buggy" || k === "bike" || k === "moto") {  // v149 BG-38 야간 버기 · BK-01 산악자전거 · MB-10 카페 레이서
     const c = SPR_COL(col), im = sprImg("d" + k + c, () => k === "buggy" ? SPR.BUGGY(SPR.pal(c), {lights: 1, sticker: 2.4, stickerCol: "#0b0d08"}) : k === "bike" ? SPR.BIKE(SPR.pal(c), {knob: 1, sticker: 2.4, stickerCol: "#0b0d08"}) : SPR.MOTO(SPR.pal(c), {cafe: 1, stripe: "#14170f", sticker: 3, stickerCol: "#0b0d08"}).replace(/url\(#chromev?\)/g, "#4a4f54").replace(/#fff4c8/g, "#d9c98a"));  // v156 검은 테두리  // v154 흰 테두리 없이 (글라이더처럼)
-    if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2; sprDraw(ctx, im, x, y, ang, r * (k === "buggy" ? 3.7 : k === "bike" ? 3.6 : 5.4)); return; }
+    if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2; sprDraw(ctx, im, x, y, ang, r * (k === "buggy" ? 2.6 : k === "bike" ? 3 : 3.2)); return;  /* v160 핸들과 같은 크기 */ }
   }
   if (k === "buggy") { const im = buggyImg(col); if (im) { const ang = (headFn ? headFn() : null) ?? -Math.PI / 2, sz = r * 2.9; drawSprite(ctx, im, x, y, ang, sz, {outline: "white", ow: 1.6}); return; } return drawWheel(ctx, x, y, r, col); }  // v142 버기: BG-30 (v143 흰 테두리)
   if (k === "car") return drawWheel(ctx, x, y, r, col);
