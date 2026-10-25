@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<script>(()=>{const V='0f9ad95f';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -6191,7 +6192,7 @@ function rpAmb(map) {  // 매 장면마다 부름: map = 지금 들려줄 맵 (�
 function throwTiming(kind, boomAt) {  // 투척물 비행 시간 · C4 타이머 · 떨어져서 터지기까지 (그림과 흔들림이 같은 시각을 쓰게)
   const wait = {grenade: .5, sticky: .3}[kind] || 0;
   const FLY = boomAt == null || kind === "c4" ? 1.1 : kind === "molotov" ? Math.max(.5, Math.min(1.1, boomAt)) : Math.max(.5, Math.min(2.5, boomAt - wait));
-  const fuse = boomAt != null ? Math.max(.5, boomAt - FLY) : 4;
+  const fuse = kind === "c4" ? (boomAt != null && boomAt >= 13 && boomAt <= 19 ? boomAt : 16) - FLY : boomAt != null ? Math.max(.5, boomAt - FLY) : 4;  /* v167 C4는 던지고 16초 뒤 폭발 */
   return {FLY, fuse, wait};
 }
 function rpBlinded(R, tb, ix, iy, foe) {  // 실명 표시는 확실한 경우만: 터진 자리 6m 안 + 터진 뒤 4초 안에 실제로 총에 맞은 상대편
@@ -7254,6 +7255,7 @@ function supplyHeliSpr(seed) {  // 보급 헬기: HE-02 블랙호크 · HE-05 �
 }
 function chinookSpr(col) { const c = SPR_COL(col); return sprImg("chr" + c, () => noRotor(() => SPR.CH47(SPR.pal(c), {}))); }
 function drawEmPlane(ctx, x, y, ang, col, size, seed = 0) {
+  { const im = chinookSpr(col), sz = airSz(12, 30, 12, 34) * 6.2; if (im) { sprDrawAir(ctx, im, x, y, ang, sz); drawRotors(ctx, x, y, ang, sz, HROT.ch, performance.now()); return; } }  /* v167 비상호출도 치누크 헬기 (블루칩 헬기와 같은 크기) */
   { const im = emPlaneSpr(col, seed); if (im) { sprDrawAir(ctx, im, x, y, ang, airSz(14, 40, 9, 28) * 6); return; } }  // v162 보급 비행기와 같은 크기  // 비상호출 비행기: 그림자 + 수송기 + 팀 색 띠 (size 12 ≈ 헬기와 비슷한 크기)
   const k = size * 5 / 100;
   ctx.save(); ctx.translate(x, y);
