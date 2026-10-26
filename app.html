@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='1e44e6d1';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='aa6e3493';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2059,6 +2059,11 @@ html.share-mode body::before{display:none}
 .ach.fresh{animation:achBlink 1.2s ease-in-out infinite}  /* v177 새 업적 노란 테두리 깜빡임 */
 @keyframes achBlink{0%,100%{border-color:#F2C230;box-shadow:0 0 0 1px #F2C230,0 0 12px rgba(242,194,48,.55)}50%{border-color:rgba(242,194,48,.25);box-shadow:0 0 0 1px rgba(242,194,48,.1),0 0 0 rgba(242,194,48,0)}}
 @media (prefers-reduced-motion:reduce){.ach.fresh{animation:none}}
+
+@media (min-width:621px){.cards{display:flex;flex-wrap:wrap;justify-content:center}.cards>*{flex:0 0 calc(25% - 9px);min-width:0}}  /* v178 수상자가 적을 때도 가운데 */
+@media (min-width:621px) and (max-width:900px){.cards>*{flex-basis:calc(50% - 6px)}}
+.pbx{display:flex;flex-wrap:wrap;justify-content:center}.pbx>.pb{flex:0 1 330px;min-width:250px}  /* v178 기록 갱신 가운데 */
+.duo-c{position:relative}.duo-crown{position:absolute;top:-15px;left:-12px;width:34px;height:26px;transform:rotate(-18deg);filter:drop-shadow(0 2px 3px rgba(0,0,0,.6));z-index:2}  .duo{padding-top:10px;padding-left:8px}  /* v178 최고의 듀오 왕관 */
 </style>
 </head>
 <body class="viewer">
@@ -8345,7 +8350,7 @@ function cumDuo() {  /* v175 듀오 궁합: 4명이 늘 같이 하니까 판 수
   const best = L[0], worst = L.length > 2 ? L[L.length - 1] : null;
   const st = (lbl, v, tip) => `<span title="${tip}">${lbl}<b>${v}</b></span>`;
   return `<div class="sec"><h3>듀오 궁합</h3></div><p class="who duo-note">리플레이로 두 사람 사이에서만 생긴 일을 셌어요 (${best.g}판). 같이 다님 = 둘 다 살아 있을 때 60m 안에 붙어 있던 비율 · 살림 = 서로 기절에서 일으켜 세움 · 블루칩 = 죽은 짝을 블루칩으로 불러옴 · 합작 킬 = 한 명이 기절시키거나 거든 적을 다른 한 명이 처치 · 복수 = 짝을 쓰러뜨린 적을 1분 안에 잡음.</p>
-    <div class="duo">${L.map(o => `<div class="duo-c ${o === best ? "duo-best" : o === worst ? "duo-worst" : ""}">
+    <div class="duo">${L.map(o => `<div class="duo-c ${o === best ? "duo-best" : o === worst ? "duo-worst" : ""}">${o === best ? `<svg class="duo-crown" viewBox="0 0 24 18" aria-label="최고의 듀오"><path d="M2 15 L4 4 L9 9 L12 2 L15 9 L20 4 L22 15 Z" fill="#F2B33D" stroke="#8C6414" stroke-width="1.2" stroke-linejoin="round"/><rect x="2" y="15" width="20" height="2.6" rx="1" fill="#D99A22"/></svg>` : ""}
       <div class="duo-h"><b>${esc(nameOf(o.a))} <i>×</i> ${esc(nameOf(o.b))}</b>${o === best ? `<span class="duo-tag">최고의 듀오</span>` : o === worst ? `<span class="duo-tag bad">환장의 듀오</span>` : ""}</div>
       <div class="duo-sc"><em>${o.score}</em><small>점</small><i><span style="width:${o.score}%"></span></i></div>
       <div class="duo-st">${st("같이 다님", Math.round(o.tog * 100) + "%", "둘 다 살아 있을 때 60m 안에 있던 시간 비율")}${st("살림", o.rv + "번", "서로 기절에서 일으켜 세운 횟수")}${st("블루칩", o.bc + "번", "죽은 짝을 블루칩으로 불러온 횟수")}${st("합작 킬", o.co + "번", "한 명이 기절시키거나 거든 적을 다른 한 명이 처치")}${st("복수", o.rg + "번", "짝을 쓰러뜨린 적을 1분 안에 기절·처치")}</div></div>`).join("")}</div>`;
