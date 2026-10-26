@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='2f8bb9b7';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='d0b2eeb9';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -260,7 +260,8 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .duo-tag{font:700 11.5px var(--body);color:#14170f;background:var(--gold);border-radius:999px;padding:3px 9px;white-space:nowrap}.duo-tag.bad{background:var(--flare);color:#fff}
 .duo-sc{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:4px 8px}.duo-sc em{font:400 28px/1 var(--num);font-style:normal;color:var(--bone)}.duo-c.duo-best .duo-sc em{color:var(--gold)}.duo-sc small{color:var(--dust);font-size:12px}
 .duo-sc i{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}.duo-sc i span{display:block;height:100%;background:linear-gradient(90deg,#8C6414,var(--gold))}.duo-c.duo-worst .duo-sc i span{background:var(--flare)}
-.duo-st{display:flex;flex-wrap:wrap;gap:4px 12px;color:var(--dust);font-size:12.5px}.duo-st b{color:var(--bone);font-weight:600}
+.duo-st{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;color:var(--dust);font-size:11.5px;text-align:center}  /* v176 다섯 항목 한 줄 */
+.duo-st span{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;background:var(--panel-2);border-radius:6px;white-space:nowrap}.duo-st b{color:var(--bone);font:600 16px/1 var(--num)}
 .pmap td,.pmap th{vertical-align:middle;white-space:nowrap}.pmap tr.pm-best td{background:rgba(242,169,0,.08)}.pmap .ck{display:inline-flex;align-items:center;gap:3px;color:var(--gold)}.pmap .chick{width:16px;height:16px}  /* v172 맵별 · 숙련도 */
 @media (max-width:620px){.pmap th,.pmap td{padding:7px 4px;font-size:12.5px}}
 .wm{display:grid;gap:10px}.wm-r{display:grid;grid-template-columns:minmax(0,1fr) 150px;grid-template-areas:"n l" "s s";gap:4px 14px;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--line)}.wm-r:last-child{border-bottom:0}
@@ -779,9 +780,9 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 /* 그래프 점에 마우스를 대면 그날 점수 */
 .chart{position:relative}
 .lc-hit{cursor:pointer;outline:none}
-.lc-tip{position:absolute;transform:translate(-50%,calc(-100% - 10px));background:#15180F;border:1px solid var(--accent);color:var(--bone);font-size:12.5px;font-weight:700;padding:4px 9px;border-radius:6px;white-space:nowrap;pointer-events:none;z-index:5;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.lc-tip{position:absolute;transform:translate(-50%,calc(-100% - 10px));background:#F3EEDB;border:0;color:#1d2117;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:8px;white-space:nowrap;pointer-events:none;z-index:20;box-shadow:0 6px 18px rgba(0,0,0,.35)}  /* v176 밝은 말풍선 */
 .lc-tip.below{transform:translate(-50%,12px)}.lc-tip.below::after{bottom:auto;top:-5px;transform:translateX(-50%) rotate(225deg)}
-.lc-tip::after{content:"";position:absolute;left:calc(50% + var(--ax,0px));bottom:-5px;width:8px;height:8px;background:#15180F;border-right:1px solid var(--accent);border-bottom:1px solid var(--accent);transform:translateX(-50%) rotate(45deg)}
+.lc-tip::after{content:"";position:absolute;left:calc(50% + var(--ax,0px));bottom:-5px;width:10px;height:10px;background:#F3EEDB;transform:translateX(-50%) rotate(45deg);border-radius:2px}
 /* 무기별 성적 */
 .wst{display:flex;flex-direction:column;gap:7px}
 .wst>div{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:baseline}
@@ -1836,7 +1837,7 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .pb-v span{font-size:11.5px;color:var(--dust)}
 .hlx .tkx>span small{color:var(--dust);font-weight:500;margin-left:4px}
 .hlx .tkx .tk1{display:flex;align-items:baseline;justify-content:flex-start;gap:14px;min-height:34px;color:var(--bone)}  /* v175 이름·횟수 글자 아래 끝 맞춤 */
-.hlx .tkx .tk1 b{font:700 19px/1 var(--body);color:var(--bone);min-width:0}
+.hlx .tkx .tk1 b{font:700 24px/1 var(--body);color:var(--bone);min-width:0}
 .hlx .tkx .tk1 em{display:inline-flex;align-items:baseline;gap:2px;font-size:28px;line-height:1;color:var(--flare)}.hlx .tkx .tk1 em small{margin:0;line-height:1}
 @media (min-width:901px){.hlx>div:last-child:nth-child(5n+1){grid-column:span 5}.hlx>div:last-child:nth-child(5n+2){grid-column:span 4}.hlx>div:last-child:nth-child(5n+3){grid-column:span 3}.hlx>div:last-child:nth-child(5n+4){grid-column:span 2}}
 @media (min-width:621px) and (max-width:900px){.hlx>div:last-child:nth-child(3n+1){grid-column:span 3}.hlx>div:last-child:nth-child(3n+2){grid-column:span 2}}
@@ -8334,7 +8335,7 @@ function cumDuo() {  /* v175 듀오 궁합: 4명이 늘 같이 하니까 판 수
   if (!L.length) return "";
   L.sort((x, y) => y.score - x.score);
   const best = L[0], worst = L.length > 2 ? L[L.length - 1] : null;
-  const st = (lbl, v, tip) => `<span title="${tip}">${lbl} <b>${v}</b></span>`;
+  const st = (lbl, v, tip) => `<span title="${tip}">${lbl}<b>${v}</b></span>`;
   return `<div class="sec"><h3>듀오 궁합</h3></div><p class="who duo-note">리플레이로 두 사람 사이에서만 생긴 일을 셌어요 (${best.g}판). 같이 다님 = 둘 다 살아 있을 때 60m 안에 붙어 있던 비율 · 살림 = 서로 기절에서 일으켜 세움 · 블루칩 = 죽은 짝을 블루칩으로 불러옴 · 합작 킬 = 한 명이 기절시키거나 거든 적을 다른 한 명이 처치 · 복수 = 짝을 쓰러뜨린 적을 1분 안에 잡음.</p>
     <div class="duo">${L.map(o => `<div class="duo-c ${o === best ? "duo-best" : o === worst ? "duo-worst" : ""}">
       <div class="duo-h"><b>${esc(nameOf(o.a))} <i>×</i> ${esc(nameOf(o.b))}</b>${o === best ? `<span class="duo-tag">최고의 듀오</span>` : o === worst ? `<span class="duo-tag bad">환장의 듀오</span>` : ""}</div>
