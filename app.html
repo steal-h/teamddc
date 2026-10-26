@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='aa6e3493';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='03b43547';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -16,7 +16,7 @@
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
 <style>
 :root{
-  --field:#2B3022; --panel:#353B2A; --panel-2:#3D4431; --line:#5A6248;
+  --field:#232819; --panel:#2C3123; --panel-2:#343A2A; --line:#4F5640;
   --accent:#F2A900; --accent-ink:#2A2208; --bone:#EEE8D5; --dust:#B7B39C; --flare:#E0532F;
   --gold:#F2B33D; --gold-dark:#8C6414; --silver:#C8CDD3; --silver-dark:#6C737C; --bronze:#C47B45; --bronze-dark:#6E3E1C;
   --display:"Black Han Sans","Malgun Gothic",sans-serif;
@@ -264,6 +264,15 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .duo-st span{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;background:var(--panel-2);border-radius:6px;white-space:nowrap}.duo-st b{color:var(--bone);font:600 16px/1 var(--num)}
 .pmap td,.pmap th{vertical-align:middle;white-space:nowrap}.pmap tr.pm-best td{background:rgba(242,169,0,.08)}.pmap .ck{display:inline-flex;align-items:center;gap:3px;color:var(--gold)}.pmap .chick{width:16px;height:16px}  /* v172 맵별 · 숙련도 */
 @media (max-width:620px){.pmap th,.pmap td{padding:7px 4px;font-size:12.5px}}
+.pmx{overflow-x:auto}  /* v188 맵별 성적 */
+.pmx table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.pmx th{font-size:11.5px;font-weight:500;color:var(--dust);text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.pmx td{padding:10px;border-bottom:1px solid color-mix(in srgb,var(--line) 55%,transparent);white-space:nowrap}
+.pmx tbody tr:last-child td{border-bottom:0}
+.pmx .pm-n{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:color-mix(in srgb,var(--c) 70%,var(--bone))}
+.pmx .pm-n i{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
+.pmx tr.pm-best td{background:rgba(242,179,61,.07)}
+@media (max-width:620px){.pmx th,.pmx td{padding:8px 5px;font-size:12.5px}.pmx th{font-size:11px}.pmx .pm-n{gap:6px}}
 .wm{display:grid;gap:10px}.wm-r{display:grid;grid-template-columns:minmax(0,1fr) 150px;grid-template-areas:"n l" "s s";gap:4px 14px;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--line)}.wm-r:last-child{border-bottom:0}
 .wm-n{grid-area:n;display:flex;align-items:center;gap:8px;min-width:0}.wm-n b{font-size:15px}.wm-t{font:700 11px var(--body);padding:2px 7px;border-radius:999px;border:1px solid currentColor}
 .wm-t.t1{color:#C47B45}.wm-t.t2{color:#C8CDD3}.wm-t.t3{color:#F2B33D}.wm-t.t4{color:#7FD6D0}.wm-t.t5{color:#8FB8FF}.wm-t.t6{color:#E08CFF}
@@ -310,10 +319,10 @@ dialog h3{margin:0 0 4px;font:400 24px/1.2 var(--display)}
 .three label,.set-dlg .two label{display:grid;gap:5px;font-size:13px;color:var(--dust);min-width:0}
 .three input{background:var(--field);border:1px solid var(--line);border-radius:3px;padding:7px 9px;width:100%;color:var(--bone)}
 .set-btns{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
-[data-pane="deco"] .field{grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-[data-pane="deco"] .field:last-child{border-bottom:0}
-[data-pane="deco"] .field>span,[data-pane="deco"] .vol-row{grid-column:1/-1}
-[data-pane="deco"] .set-btns{margin:0;grid-column:2;grid-row:2/4;align-self:center}
+:is([data-pane="deco"],[data-pane="sound"]) .field{grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+:is([data-pane="deco"],[data-pane="sound"]) .field:last-child{border-bottom:0}
+[data-pane="deco"] .field>span,[data-pane="deco"] .vol-row,[data-pane="sound"] .field>span,[data-pane="sound"] .vol-row{grid-column:1/-1}
+:is([data-pane="deco"],[data-pane="sound"]) .set-btns{margin:0;grid-column:2;grid-row:2/4;align-self:center}
 .check.big{margin-bottom:12px;color:var(--bone)}
 .vol-row{display:flex;align-items:center;gap:10px}.vol-row .vl{width:9.5em;flex:none;display:flex;flex-direction:column;line-height:1.3}.vol-row .vl small{font-size:11.5px;color:var(--dust)}.vol-row input{flex:1;accent-color:var(--accent)}.vol-row b{width:44px;text-align:right}
 .set-dlg .dlg-actions{margin:0;padding:12px 24px;border-top:1px solid var(--line);background:var(--panel)}
@@ -623,7 +632,7 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 .rp-teams .tm.out{opacity:.35}
 .rp-teams .tn{width:28px;height:28px;border-radius:50%;background:var(--tc);color:#14170F;display:grid;place-items:center;font:900 12px/1 Arial,sans-serif;box-shadow:inset 0 0 0 1px rgba(0,0,0,.28);margin-right:2px}
 .rp-teams .tm.ours{border-color:#F2A900;background:linear-gradient(90deg,rgba(242,169,0,.22),rgba(14,16,11,.88) 55%);box-shadow:0 0 16px rgba(242,169,0,.35);padding-left:3px}
-.rp-teams .logo{width:32px;height:32px;border-radius:50%;display:block;box-shadow:0 0 0 2px #F2A900,0 0 12px rgba(242,169,0,.7);background:#2B3022}
+.rp-teams .logo{width:32px;height:32px;border-radius:50%;display:block;box-shadow:0 0 0 2px #F2A900,0 0 12px rgba(242,169,0,.7);background:#232819}
 .rp-teams .tm.ours{padding-left:12px}
 .rp-teams .tm.ours .tag{font:900 16px/28px Arial,sans-serif;letter-spacing:.1em;color:#FFE08A;margin-right:4px;text-shadow:0 0 6px rgba(255,200,60,.9),0 0 14px rgba(242,169,0,.75),0 0 26px rgba(242,169,0,.45);animation:ddcglow 2.4s ease-in-out infinite alternate}
 @keyframes ddcglow{from{text-shadow:0 0 5px rgba(255,200,60,.8),0 0 12px rgba(242,169,0,.6)}to{text-shadow:0 0 8px rgba(255,220,90,1),0 0 18px rgba(242,169,0,.9),0 0 32px rgba(242,169,0,.55)}}
@@ -824,7 +833,7 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 .ti-item small{color:var(--dust);font-size:13px}
 
 .pcgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
-.pc{--tc:#C47B45;position:relative;background:linear-gradient(170deg,color-mix(in srgb,var(--tc) 26%,#2F3427) 0%,#2B3022 46%,#22261B 100%);border:2px solid var(--tc);border-radius:14px 14px 22px 22px;padding:16px 16px 14px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s;color:var(--bone);font:inherit;width:100%}
+.pc{--tc:#C47B45;position:relative;background:linear-gradient(170deg,color-mix(in srgb,var(--tc) 26%,#282d20) 0%,#232819 46%,#1b1f14 100%);border:2px solid var(--tc);border-radius:14px 14px 22px 22px;padding:16px 16px 14px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s;color:var(--bone);font:inherit;width:100%}
 .pc{overflow:hidden;isolation:isolate;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px));transition:transform .18s ease-out,box-shadow .2s}
 .pc:hover{--ty:-3px;box-shadow:0 12px 28px rgba(0,0,0,.4)}
 .pc>*{position:relative;z-index:1}
@@ -842,7 +851,7 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 .pc.tier-common{--tc:#9A6B4A;--tc2:#D2B49C;--rc:154,107,74}
 .pc-slot.slot-legend{--rc:255,64,64}.pc-slot.slot-special{--rc:242,179,61}.pc-slot.slot-unique{--rc:255,138,43}
 .pc-slot.slot-epic{--rc:180,140,242}.pc-slot.slot-rare{--rc:127,178,229}.pc-slot.slot-uncommon{--rc:95,191,106}
-.pc{background:var(--pcbg,linear-gradient(170deg,color-mix(in srgb,var(--tc) 26%,#2F3427) 0%,#2B3022 46%,#22261B 100%))}
+.pc{background:var(--pcbg,linear-gradient(170deg,color-mix(in srgb,var(--tc) 26%,#282d20) 0%,#232819 46%,#1b1f14 100%))}
 .pc-photo-wrap{position:relative;display:flex;justify-content:center;align-items:center;isolation:isolate}
 
 /* 등장: 한 장씩 뒤집히며 깔림 */
@@ -861,7 +870,7 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 .pc.bd-spin{border-color:transparent}
 .pc .spin{position:absolute;left:50%;top:50%;width:170%;aspect-ratio:1;margin:-85% 0 0 -85%;z-index:-1;pointer-events:none;will-change:transform;animation:spin 3.4s linear infinite;
   background:conic-gradient(color-mix(in srgb,var(--tc) 40%,#000),var(--tc),var(--tc2),#fff,var(--tc),color-mix(in srgb,var(--tc) 40%,#000) 40%,var(--tc) 70%,var(--tc2) 80%,color-mix(in srgb,var(--tc) 40%,#000))}
-.pc .edge{position:absolute;inset:2px;z-index:0;border-radius:12px 12px 20px 20px;pointer-events:none;background:var(--pcbg,#2B3022)}
+.pc .edge{position:absolute;inset:2px;z-index:0;border-radius:12px 12px 20px 20px;pointer-events:none;background:var(--pcbg,#232819)}
 .pc .neon{position:absolute;inset:0;z-index:2;border-radius:inherit;pointer-events:none;will-change:opacity;animation:neon 2.6s linear infinite;
   box-shadow:inset 0 0 0 2px var(--tc),inset 0 0 16px rgba(var(--rc),.6)}
 @keyframes neon{0%,100%{opacity:1}6%{opacity:.35}9%{opacity:1}48%{opacity:.85}52%{opacity:.4}55%{opacity:1}}
@@ -1037,14 +1046,18 @@ html.share-mode .pc .beam,html.share-mode .pc .meteor,html.share-mode .pc .ldot{
 .ach .pip{font-style:normal;font-size:10.5px;font-weight:600;border-radius:999px;padding:1px 7px;border:1px solid currentColor;flex:none;color:var(--lc)}
 .ach.on{border-color:color-mix(in srgb,var(--lc) 75%,transparent);background:color-mix(in srgb,var(--lc) 9%,var(--field))}
 .ach.on b{color:color-mix(in srgb,var(--lc) 65%,#EEE8D5)}
-.tier-sum{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
-.ts{font-size:12.5px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--dust)}
-.ts b{font-family:var(--num);font-weight:400;font-size:14px;color:var(--bone);margin-right:1px}
+.tier-tabs{display:flex;border-bottom:1px solid var(--line);margin:0 0 10px;overflow-x:auto;scrollbar-width:none}  /* v187 밑줄 탭 */
+.tier-tabs::-webkit-scrollbar{display:none}
+.ts{flex:1 0 auto;appearance:none;background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:6px 8px 8px;text-align:center;cursor:pointer;font:inherit;color:var(--lc);min-height:44px}
+.ts b{display:block;font:400 18px/1.1 var(--num);color:var(--bone)}.ts b small{font:500 11px var(--body);color:var(--dust);margin-left:1px}
+.ts span{display:block;font-size:12px;font-weight:700;white-space:nowrap}
+.ts.z b{color:var(--dust);opacity:.7}
+.ts:hover{background:color-mix(in srgb,var(--lc) 8%,transparent)}
+.ts[aria-pressed="true"]{border-bottom-color:var(--lc);background:linear-gradient(0deg,color-mix(in srgb,var(--lc) 18%,transparent),transparent)}
 /* 업적 등급 색 (차분하게): 동 · 은 · 금 · 플래티넘 · 다이아 · 마스터 · 서바이버 */
 .ach,.ts{--lc:#9A8F78}
 .ach.t0,.ts.t0{--lc:#B08260}.ach.t1,.ts.t1{--lc:#A9AEB2}.ach.t2,.ts.t2{--lc:#C9A75A}.ach.t3,.ts.t3{--lc:#86B3A9}
 .ach.t4,.ts.t4{--lc:#8EA9C8}.ach.t5,.ts.t5{--lc:#A893C2}.ach.t6,.ts.t6{--lc:#C99482}
-.ts{border-color:color-mix(in srgb,var(--lc) 70%,transparent);color:var(--lc)}
 .ach.on.tease{border-color:var(--flare);background:color-mix(in srgb,var(--flare) 10%,var(--field))}
 .ach.on.tease b{color:#F08A70}
 .ach-cat span{color:var(--dust);font-weight:400;margin-left:4px}
@@ -1979,7 +1992,7 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 .hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(242,169,0,.07) 0 1px,transparent 1px 80px),repeating-linear-gradient(90deg,rgba(242,169,0,.07) 0 1px,transparent 1px 80px);}  /* v104 지도·격자가 아래 2~4위 쪽으로 자연스럽게 사라지게 */
 .hero::after{background:radial-gradient(ellipse at 50% 38%,rgba(38,43,30,.35),rgba(43,48,34,.86) 78%)}
 /* v134 공유 이미지도 오늘의 어워즈 화면처럼: 국방색 무대 + 스포트라이트, 금빛 이름, 1위·KDA 줄, 둥근 반투명 카드, 2·3위 은·동빛 */
-#shareCard{background:radial-gradient(ellipse 40% 30% at 50% 0%,rgba(255,236,180,.16),transparent 72%),linear-gradient(180deg,#252a1d 0%,#2B3022 100%)!important}
+#shareCard{background:radial-gradient(ellipse 40% 30% at 50% 0%,rgba(255,236,180,.16),transparent 72%),linear-gradient(180deg,#1d2115 0%,#232819 100%)!important}
 #shareCard .sc-bg{opacity:.2}
 #shareCard .sc-hd{text-align:center;font:400 30px/1.2 var(--display);color:var(--gold);margin:-6px 0 16px;text-shadow:0 2px 14px rgba(242,179,61,.3)}
 #shareCard .sc-champ,#shareCard .vc-champ{border:2px solid var(--gold);border-radius:18px;background:radial-gradient(ellipse 55% 85% at 50% 0%,rgba(255,236,180,.14),transparent 75%),rgba(16,18,13,.45);box-shadow:inset 0 0 0 5px rgba(16,18,13,.35),inset 0 0 0 6px rgba(242,179,61,.45)}
@@ -1996,7 +2009,7 @@ body.viewer .controls.v86 .ctl-go{grid-auto-columns:auto}
 #shareCard .sc-table{border-radius:12px;overflow:hidden;border-collapse:separate;border-spacing:0;background:rgba(16,18,13,.45)}
 #shareCard .sc-table tr:first-child td{border-top:0}
 /* v105 검정 무대 → 국방색 무대: 페이지 바탕(올리브)과 자연스럽게 이어지게, 스포트라이트는 그대로 */
-.hero{background:radial-gradient(ellipse 36% 62% at 50% 0%,rgba(255,236,180,.22),transparent 72%),radial-gradient(ellipse 60% 26% at 50% 64%,rgba(242,169,0,.08),transparent 70%),linear-gradient(180deg,#252a1d 0%,#2B3022 100%)!important;border-color:#3B4230!important}
+.hero{background:radial-gradient(ellipse 36% 62% at 50% 0%,rgba(255,236,180,.22),transparent 72%),radial-gradient(ellipse 60% 26% at 50% 64%,rgba(242,169,0,.08),transparent 70%),linear-gradient(180deg,#1d2115 0%,#232819 100%)!important;border-color:#3B4230!important}
 .plaque{background:none}  /* v90 1위 두 줄 노란 테두리는 예전처럼 */
 .plaque>div{background:radial-gradient(ellipse 55% 85% at 50% 0%,rgba(255,236,180,.14),transparent 75%);box-shadow:none}
 .plaque .av-lg{filter:drop-shadow(0 0 22px rgba(242,179,61,.45))}
@@ -2032,7 +2045,7 @@ html.share-mode body::before{display:none}
 .rp-penbar{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:7;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 10px;max-width:calc(100% - 16px);padding:6px 8px;background:rgba(20,23,15,.9);border:1px solid #5A6248;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.45)}
 .rp-penbar[hidden],.rp-penpad[hidden]{display:none}
 .rp-penbar .pen-g{display:flex;align-items:center;gap:4px}
-.rp-penbar button{appearance:none;border:1px solid #5A6248;background:#2B3022;color:var(--bone);border-radius:6px;min-height:32px;padding:0 9px;font:700 12.5px var(--body);cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.rp-penbar button{appearance:none;border:1px solid #5A6248;background:#232819;color:var(--bone);border-radius:6px;min-height:32px;padding:0 9px;font:700 12.5px var(--body);cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
 .rp-penbar button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .rp-penbar button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#2A2208}
 .rp-penbar button:disabled{opacity:.4;cursor:default}
@@ -2064,6 +2077,96 @@ html.share-mode body::before{display:none}
 @media (min-width:621px) and (max-width:900px){.cards>*{flex-basis:calc(50% - 6px)}}
 .pbx{display:flex;flex-wrap:wrap;justify-content:center}.pbx>.pb{flex:0 1 330px;min-width:250px}  /* v178 기록 갱신 가운데 */
 .duo-c{position:relative}.duo-crown{position:absolute;top:-15px;left:-12px;width:34px;height:26px;transform:rotate(-18deg);filter:drop-shadow(0 2px 3px rgba(0,0,0,.6));z-index:2}  .duo{padding-top:10px;padding-left:8px}  /* v178 최고의 듀오 왕관 */
+.hlx .tkps{display:flex;flex-wrap:wrap;gap:2px 26px}.hlx .tkp{display:flex;flex-direction:column;gap:2px;min-width:0}  /* v179 팀킬범 */
+
+/* ═══ v181 블랙 골드 (오늘의 어워즈 · 오늘의 맵 · 오늘의 리플레이) ═══ */
+:root{--bx-bg:#21261a;--bx-bg2:#282e21;--bx-line:#4f5640;--bx-gold:#F2B33D;--bx-hi:#FFF1B8;--bx-lo:#A8720E;--bx-c1:#21261a;--bx-c2:#272d20;--bx-c3:#313828;--bx-edge:#4a5239;--bx-silver:#D3D8DE;--bx-bronze:#D08A52}
+.bgx{position:relative;background:radial-gradient(ellipse 55% 45% at 50% 22%,rgba(242,179,61,.10),transparent 70%),linear-gradient(180deg,var(--bx-bg2),var(--bx-bg));border:1px solid var(--bx-line);padding:26px 26px 24px;border-radius:4px}
+.bgx::before{content:"";position:absolute;inset:6px;border:1px solid rgba(242,179,61,.26);pointer-events:none;border-radius:2px}
+.bgx>*{position:relative}
+.bgx-head{text-align:center;display:flex;flex-direction:column;gap:2px}
+.bgx-d{color:var(--dust);font-size:12px;letter-spacing:.14em}
+.bgx-head h2{margin:2px 0 0;font:400 26px/1.25 var(--display);color:var(--bx-gold);text-wrap:balance}
+.bgx-rule{display:flex;align-items:center;gap:12px;color:var(--bx-gold);font:700 11px var(--body);letter-spacing:.42em;margin:18px 0 12px}
+.bgx-rule::before,.bgx-rule::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(242,179,61,.6),transparent)}
+.bgx-mvp{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.bgx-avw{position:relative;display:grid;place-items:center;flex:none;margin:22px 0 6px}
+.bgx-avw.sm{margin:0}
+.bgx-halo{position:absolute;inset:-30px;border-radius:50%;background:radial-gradient(circle,rgba(255,214,102,.5) 0,rgba(242,179,61,.2) 42%,rgba(242,179,61,0) 70%);pointer-events:none}
+.bgx-halo::after{content:"";position:absolute;inset:16px;border-radius:50%;background:conic-gradient(rgba(255,236,170,0),rgba(255,236,170,.35) 10%,rgba(255,236,170,0) 20%,rgba(255,236,170,.3) 35%,rgba(255,236,170,0) 45%,rgba(255,236,170,.35) 60%,rgba(255,236,170,0) 70%,rgba(255,236,170,.3) 85%,rgba(255,236,170,0));animation:bgxSpin 24s linear infinite;-webkit-mask:radial-gradient(circle,transparent 46%,#000 47%,#000 70%,transparent 71%);mask:radial-gradient(circle,transparent 46%,#000 47%,#000 70%,transparent 71%)}
+@keyframes bgxSpin{to{transform:rotate(1turn)}}
+.bgx-av{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;overflow:hidden;background:var(--panel2);position:relative;font:400 22px var(--display)}
+.bgx-av img{width:100%;height:100%;object-fit:cover}
+.bgx-av.a1{width:118px;height:118px;border:3px solid var(--bx-gold);box-shadow:0 0 0 3px rgba(0,0,0,.4),0 0 26px rgba(242,179,61,.55);font-size:46px}
+.bgx-tr{position:absolute;right:-16px;bottom:-8px;width:46px;height:46px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.6))}
+.bgx-md{position:absolute;right:-9px;bottom:-8px;width:26px;height:32px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.55))}
+.bgx-role{color:var(--bx-gold);font-size:12.5px;font-weight:700;letter-spacing:.1em}
+.bgx-name{font:400 clamp(48px,8vw,78px)/1.05 var(--display);background:linear-gradient(180deg,var(--bx-hi) 0%,var(--bx-gold) 48%,var(--bx-lo) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(242,179,61,.35)) drop-shadow(0 2px 0 rgba(0,0,0,.5));padding:0 6px}
+.bgx-score{display:flex;flex-direction:column;align-items:center;margin-top:4px}
+.bgx-score b{font:400 64px/1 var(--num);color:var(--bone)}.bgx-score small{color:var(--dust);font-size:12px}
+.bgx-st{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 22px;color:var(--dust);font-size:15px}.bgx-st b{color:var(--bone);font-weight:700;margin-left:5px;font-size:17px;font-variant-numeric:tabular-nums}
+.bgx-mvp .badges{justify-content:center}
+.bgx-pod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.bgx-mini{--rc:var(--bx-gold);display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;padding:12px 14px;background:linear-gradient(160deg,var(--bx-c3),var(--bx-c1) 75%);border:1px solid var(--bx-edge);box-shadow:inset 3px 0 0 var(--rc);position:relative}
+.bgx-mini::after{content:"";position:absolute;inset:4px;border:1px solid rgba(242,179,61,.12);pointer-events:none}
+.bgx-mini.r3{--rc:var(--bx-silver)}.bgx-mini.r4{--rc:var(--bx-bronze)}
+.bgx-mini .bgx-av{border:2px solid var(--rc)}
+.bgx-mi{display:flex;flex-direction:column;min-width:0}
+.bgx-r{font-size:12px;color:var(--dust)}
+.bgx-n{font:400 23px/1.15 var(--display);color:var(--rc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bgx-mi .badges{justify-content:flex-start;margin-top:4px}.bgx-mi .bdg{font-size:11px;padding:1px 7px}
+.bgx-s{display:flex;align-items:baseline;gap:2px}.bgx-s b{font:400 26px var(--num);color:var(--bone)}.bgx-s small{color:var(--dust);font-size:12px}
+.reveal .bgx-mini{animation:rise .55s cubic-bezier(.2,.8,.2,1) both}.reveal .bgx-mini:nth-child(3){animation-delay:.05s}.reveal .bgx-mini:nth-child(2){animation-delay:.3s}.reveal .bgx-mini:nth-child(1){animation-delay:.55s}.reveal .bgx-mvp{animation:rise .55s cubic-bezier(.2,.8,.2,1) .9s both}
+.bgx-maps{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:12px}
+.bgx-map{background:var(--bx-bg);border:1px solid #66704f;position:relative;min-width:0}
+.bgx-map.most{border-color:#8a956c}  /* v186 오늘의 맵 테두리 올리브 */
+.bgx-mimg{aspect-ratio:21/8;max-width:100%;background:#20241A center/cover;position:relative}
+.bgx-ck{position:absolute;left:10px;top:10px;display:inline-flex;align-items:center;gap:5px;background:rgba(14,14,13,.85);border:1px solid rgba(242,179,61,.6);color:var(--bx-gold);font-size:12.5px;font-weight:700;padding:3px 9px}
+.bgx-ck img{width:16px;height:16px;image-rendering:pixelated}
+.bgx-mb{padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:2px 10px}
+.bgx-mn{font:400 26px/1.1 var(--display);color:color-mix(in srgb,var(--c) 65%,var(--bone))}
+.bgx-mk{grid-row:1/3;grid-column:2;font:400 40px/1 var(--num);color:#fff}  /* v186 판수 흰색 */
+.bgx-mk small{font:500 13px var(--body);color:var(--dust);-webkit-text-fill-color:var(--dust);margin-left:2px}
+.bgx-ms{font-size:13px;color:var(--dust)}.bgx-ms b{color:var(--bone)}
+.bgx-rp{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:22px;background:linear-gradient(180deg,var(--bx-bg2),var(--bx-bg));border:1px solid var(--bx-line);padding:20px 26px;margin-bottom:6px}
+.bgx-rp::before{content:"";position:absolute;inset:6px;border:1px solid rgba(242,179,61,.26);pointer-events:none}
+.bgx-rp>*{position:relative}
+.bgx-rk{display:flex;flex-direction:column;align-items:center;background:linear-gradient(180deg,#FFD66B,#F2B33D);color:#14110a;padding:8px 18px 6px;border-radius:3px}  /* v186 PLACE 노란 바탕 검정 글씨 */
+.bgx-rk small{font:800 12px var(--body);letter-spacing:.18em;color:#14110a}
+.bgx-rk b{font:400 56px/1 var(--num);color:#14110a}
+.bgx-rm{display:flex;flex-direction:column;gap:2px;min-width:0}
+.bgx-rm small{font:700 12px var(--body);letter-spacing:.16em;color:var(--bx-gold)}
+.bgx-rm>b{font:400 32px/1.15 var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bgx-rs{display:flex;flex-wrap:wrap;gap:4px 18px;font:700 13px var(--body);letter-spacing:.06em;color:var(--dust)}.bgx-rs em{font:400 20px var(--num);font-style:normal;color:var(--bone);margin-right:4px}
+.bgx-rb{display:flex;flex-direction:column;gap:8px}
+.bgx-rb .btn{min-height:40px;white-space:nowrap;border-color:rgba(242,179,61,.45);background:transparent;color:var(--bx-gold)}
+.bgx-rb .btn.primary{background:linear-gradient(180deg,#ffe28f,#d79a18);color:#1a1205;border:0}
+@media (max-width:900px){.bgx-pod{grid-template-columns:1fr}.bgx-maps{grid-template-columns:repeat(min(var(--n),2),minmax(0,1fr))}}
+@media (max-width:620px){
+  .bgx-mimg{aspect-ratio:5/2}
+  .bgx{padding:20px 16px 18px}.bgx-head h2{font-size:21px}.bgx-av.a1{width:92px;height:92px}.bgx-name{font-size:46px}.bgx-score b{font-size:50px}
+  .bgx-st{flex-direction:column;align-items:center;gap:0;font-size:14px}
+  .bgx-maps{grid-template-columns:1fr}
+  .bgx-rp{grid-template-columns:auto minmax(0,1fr);gap:14px;padding:16px}.bgx-rb{grid-column:1/-1;flex-direction:row}.bgx-rb .btn{flex:1}.bgx-rk b{font-size:42px}.bgx-rk{padding:6px 14px 4px}.bgx-rm>b{font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){.bgx-halo::after{animation:none}.reveal .bgx-mini,.reveal .bgx-mvp{animation:none}}
+
+
+.u-corner{position:absolute;inset:0;display:block;pointer-events:none;z-index:5}  /* v184 유니크 모서리 불꽃 */
+.u-corner i{position:absolute;width:26px;height:26px;border:3px solid #ff9a3c;filter:drop-shadow(0 0 6px rgba(255,120,30,.9));animation:uC 1.8s ease-in-out infinite}
+.u-corner i:nth-child(1){left:6px;top:6px;border-right:0;border-bottom:0;border-radius:10px 0 0 0}.u-corner i:nth-child(2){right:6px;top:6px;border-left:0;border-bottom:0;border-radius:0 10px 0 0;animation-delay:.45s}
+.u-corner i:nth-child(3){right:6px;bottom:6px;border-left:0;border-top:0;border-radius:0 0 10px 0;animation-delay:.9s}.u-corner i:nth-child(4){left:6px;bottom:6px;border-right:0;border-top:0;border-radius:0 0 0 10px;animation-delay:1.35s}
+@keyframes uC{0%,100%{opacity:.35}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.u-corner i{animation:none;opacity:.8}}
+
+/* v184 디스코드 공유 이미지도 블랙 골드 카드 모양 (올리브 테마) */
+#shareCard .sc-champ,#shareCard .vc-champ{border:1px solid var(--bx-line)!important;border-radius:4px!important;background:radial-gradient(ellipse 55% 85% at 50% 0%,rgba(255,214,102,.16),transparent 72%),var(--bx-bg)!important;box-shadow:inset 0 0 0 5px var(--bx-bg),inset 0 0 0 6px rgba(242,179,61,.45)!important}
+#shareCard .sc-champ .name,#shareCard .vc-champ .name{background:linear-gradient(180deg,#FFF1B8 0%,#F2B33D 48%,#A8720E 100%)!important;-webkit-background-clip:text!important;background-clip:text!important}
+#shareCard .sc-champ .av,#shareCard .vc-champ .av{filter:drop-shadow(0 0 24px rgba(242,179,61,.6))}
+#shareCard .sc-medals>div,#shareCard .vc-row{--rc:#F2B33D;border-radius:4px!important;border:1px solid var(--bx-edge)!important;background:linear-gradient(160deg,var(--bx-c3),var(--bx-c1) 75%)!important;box-shadow:inset 4px 0 0 var(--rc)}
+#shareCard .sc-medals>.r3,#shareCard .vc-row.r3{--rc:#D3D8DE}#shareCard .sc-medals>.r4,#shareCard .vc-row.r4,#shareCard .sc-medals>.worst,#shareCard .vc-row.worst{--rc:#D08A52}
+#shareCard .sc-medals b,#shareCard .vc-row b{color:var(--rc)}
+#shareCard .sc-medals small,#shareCard .vc-row small{color:var(--dust)!important}
 </style>
 </head>
 <body class="viewer">
@@ -2233,7 +2336,7 @@ html.share-mode body::before{display:none}
     <div class="set-head"><h3>설정</h3>
       <nav class="set-tabs" role="tablist">
         <button type="button" data-tab="basic" class="on">기본</button><button type="button" data-tab="score">점수</button>
-        <button type="button" data-tab="web">웹 공유</button><button type="button" data-tab="replay">리플레이</button><button type="button" data-tab="deco">꾸미기</button>
+        <button type="button" data-tab="web">웹 공유</button><button type="button" data-tab="replay">리플레이</button><button type="button" data-tab="deco">꾸미기</button><button type="button" data-tab="sound">사운드</button>
       </nav></div>
     <div class="set-body">
     <section class="set-pane on" data-pane="basic">
@@ -2304,6 +2407,11 @@ html.share-mode body::before{display:none}
       <div class="field"><span>리플레이 그림 <small>images/replay 에 수류탄·연막탄·보급·박격포 등 이름으로</small></span>
         <p class="help status" id="rpImgStatus"></p>
         <div class="set-btns"><button class="btn" type="button" id="btnOpenReplayImgs">그림 폴더 열기</button></div></div>
+      <div class="field"><span>트로피·메달 <small>images 에 trophy · gold · silver · bronze</small></span>
+        <p class="help status" id="imgStatus"></p>
+        <div class="set-btns"><button class="btn" type="button" id="btnOpenImages">images 폴더 열기</button></div></div>
+    </section>
+    <section class="set-pane" data-pane="sound">  <!-- v184 사운드 탭 -->
       <div class="field"><span>효과음과 음악 <small>sounds 에 bgm · reveal · tick · stop · fanfare · kill</small></span>
         <label class="vol-row"><span class="vl">전체 크기<small>시상식·음악·모든 효과음</small></span><input type="range" id="vol" min="0" max="100" step="5"><b id="volTxt"></b></label>
         <label class="vol-row"><span class="vl">리플레이 지도 소리<small>총성·폭발·엔진</small></span><input type="range" id="rpVolW" min="0" max="150" step="5"><b id="rpVolWTxt"></b></label>
@@ -2311,9 +2419,6 @@ html.share-mode body::before{display:none}
         <label class="vol-row"><span class="vl">리플레이 배경 소리<small>맵마다 바람·벌레·파도·풍경</small></span><input type="range" id="rpVolB" min="0" max="150" step="5"><b id="rpVolBTxt"></b></label>
         <p class="help status" id="sndStatus"></p>
         <div class="set-btns"><button class="btn" type="button" id="btnOpenSounds">sounds 폴더 열기</button></div></div>
-      <div class="field"><span>트로피·메달 <small>images 에 trophy · gold · silver · bronze</small></span>
-        <p class="help status" id="imgStatus"></p>
-        <div class="set-btns"><button class="btn" type="button" id="btnOpenImages">images 폴더 열기</button></div></div>
     </section>
     </div>
     <div class="dlg-actions">
@@ -2380,7 +2485,7 @@ function countUpRun(el) {
 }
 function numRollIn(root) {
   if (!root || matchMedia("(prefers-reduced-motion: reduce)").matches || !countUpIO) return;
-  root.querySelectorAll(".plaque .line b, .medal-card .score b, .plaque .score b, .pc-key b, .pc-stats b, .pc-ovr b").forEach(el => {
+  root.querySelectorAll(".bgx-score b, .bgx-s b, .plaque .line b, .medal-card .score b, .plaque .score b, .pc-key b, .pc-stats b, .pc-ovr b").forEach(el => {
     if (el.dataset.cuTo || el.children.length) return;
     const txt = el.textContent.trim(); if (!/\d/.test(txt) || txt.length > 12) return;
     el.dataset.cuTo = txt; el.style.fontVariantNumeric = "tabular-nums";
@@ -2533,6 +2638,7 @@ function tierFx(tier) {  // 등급 → 카드 클래스, 카드 위 효과, 사�
   else if (tier === "epic") { F.cls = ["bd-glow"]; F.over = dust(14); F.photo = glow + ring; }      // 빛 테두리 + 입자 많이 + 후광 + 고리
   else if (tier === "unique") {                                                                      // 시안 06 불씨 기둥 (불티 빼고 물결·고리)
     F.cls = ["badge-shine"]; F.top = beams(5); F.photo = glow + ring + rip; F.halo = "h1";
+    F.over += `<span class="u-corner" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`;  /* v184 모서리 불꽃 */
   } else if (tier === "special") {  // 골드 네온에서 카본 배경·스캔선 빼고 유성·별밭·은은한 후광·홀로그램 추가
     F.cls = ["badge-shine", "ovr-shine"];
     F.top = stars;
@@ -2645,11 +2751,11 @@ function achTile(a) {
     <small>${a.date ? esc(a.date) + " 달성" : `${fmt(Math.round(a.progress))} / ${fmt(a.target)}${u}`}</small>
     ${a.date ? "" : `<div class="prog"><em style="width:${Math.min(100, a.progress / a.target * 100)}%"></em></div>`}</div>`;
 }
-function profMaps(p) {  /* v172 맵별 개인 성적 */
+function profMaps(p) {  /* v180 맵별 개인 성적: 판·판당 킬·판당 딜·KDA·평균 생존 (치킨·순위는 팀 공통이라 뺌) */
   const L = p.maps || []; if (!L.length) return "";
   const best = [...L].filter(m => m[2] >= 2).sort((a, b) => b[4] - a[4])[0];
-  return `<div class="prof-sec"><h4>맵별 성적 ${best ? `<span class="who">${esc(best[0])}에서 가장 잘해요</span>` : ""}</h4><div class="tbl pmap"><table><thead><tr><th>맵</th><th class="c">판</th><th class="c">판당 킬</th><th class="c">판당 딜</th><th class="c">평균 순위</th><th class="c">치킨</th></tr></thead><tbody>
-    ${L.map(m => `<tr class="${m === best ? "pm-best" : ""}"><td><span class="mc" style="--c:${mapColor(m[1] || m[0])}"><i></i>${esc(m[0])}</span></td><td class="c">${m[2]}</td><td class="c">${m[3]}</td><td class="c">${fmt(m[4])}</td><td class="c">${m[5]}등</td><td class="c">${m[6] ? `<b class="ck"><img class="chick" src="${CHICK_IMG}" alt="">${m[6]}</b>` : "0"}</td></tr>`).join("")}</tbody></table></div></div>`;
+  return `<div class="prof-sec"><h4>맵별 성적 ${best ? `<span class="who">${esc(best[0])}에서 가장 잘해요</span>` : ""}</h4><div class="pmx"><table><thead><tr><th>맵</th><th>판</th><th>판당 킬</th><th>판당 딜</th><th>KDA</th><th>평균 생존</th></tr></thead><tbody>  <!-- v188 깔끔한 표 (시안 03, 막대 없이) -->
+    ${L.map(m => `<tr class="${m === best ? "pm-best" : ""}" style="--c:${mapColor(m[1] || m[0])}"><td><span class="pm-n"><i></i>${esc(m[0])}</span></td><td>${m[2]}</td><td>${m[3]}</td><td>${fmt(m[4])}</td><td>${m[5] ?? "-"}</td><td>${m[6] != null ? m[6] + "분" : "-"}</td></tr>`).join("")}</tbody></table></div></div>`;
 }
 const MASTERY_TIER = ["", "브론즈", "실버", "골드", "플래티넘", "다이아몬드", "마스터"];
 function profMastery(p) {  /* v172 무기 숙련도 (PUBG 공식, 하루 한 번 받아 옴): [이름, 레벨, 티어, 경험치, 킬, 피해, 헤드샷, 최장 거리, 메달] */
@@ -2686,20 +2792,33 @@ function openProfile(nick) {
       ${p.wstats?.length ? `<div class="prof-sec"><h4>무기별 성적 <span class="who">누적, 적에게 준 피해 순</span></h4>${wstatsHtml(p.wstats, 6)}</div>` : p.weapons.length ? `<div class="prof-sec"><h4>주무기 순위</h4><div class="wlist">${p.weapons.map(([w, k, n]) => `<div><div><b>${esc(w)}</b><span class="who">${k}킬 ${n}기절</span><i><em style="width:${(k + n) / maxW * 100}%"></em></i></div></div>`).join("")}</div></div>` : ""}
       ${profMaps(p)}
       <div class="prof-sec"><h4>업적 <span class="who">${p.achievements.filter(a => a.date).length} / ${p.achievements.length}</span></h4>
-        <div class="tier-sum">${[6, 5, 4, 3, 2, 1, 0].map(tr => { const all = p.achievements.filter(a => !a.tease && tierOf(a) === tr);
-          return `<span class="ts t${tr}"><b>${all.filter(a => a.date).length}</b>/${all.length} ${TIER_NAMES[tr]}</span>`; }).join("")}</div>
+        <div class="tier-tabs" role="group" aria-label="등급으로 거르기">${[6, 5, 4, 3, 2, 1, 0].map(tr => { const all = p.achievements.filter(a => !a.tease && tierOf(a) === tr), n = all.filter(a => a.date).length;  /* v187 밑줄 탭 (누르면 그 등급만, 다시 누르면 전체) */
+          return `<button type="button" class="ts t${tr} ${n ? "" : "z"}" data-tf="${tr}" aria-pressed="false"><b>${n}<small>/${all.length}</small></b><span>${TIER_NAMES[tr]}</span></button>`; }).join("")}</div>
         <div class="seg" role="group" aria-label="업적 보기" style="margin-bottom:6px"><button data-af="all" aria-pressed="false">전체</button><button data-af="on" aria-pressed="true">달성</button><button data-af="off" aria-pressed="false">진행 중</button></div>
         <div id="achWrap">${[...new Set(p.achievements.map(a => a.cat))].map(cat => { const list = p.achievements.map((a, i) => [a, i]).filter(([a]) => a.cat === cat)
             .sort((x, y) => tierOf(x[0]) - tierOf(y[0]) || x[1] - y[1]).map(([a]) => a);  // 등급 낮은 것부터, 같은 등급은 원래 순서
           return `<details class="ach-group" ${cat === "왕좌" || cat === "전투" ? "open" : ""}><summary class="ach-cat">${esc(cat)} <span>${list.filter(a => a.date).length}/${list.length}</span></summary>
           <div class="achs">${list.map(achTile).join("")}</div></details>`; }).join("")}</div></div>
     </div></div>`;
+  let achF = "on", achT = null;  /* v187 달성/진행 중 필터 + 등급 탭 필터를 함께 적용 */
+  const applyAch = () => {
+    document.querySelectorAll("#achWrap .ach").forEach(el => el.classList.toggle("hidden",
+      (achF !== "all" && (achF === "on") !== (el.dataset.on === "1")) || (achT != null && (!el.classList.contains("t" + achT) || el.classList.contains("tease")))));
+    if (achF !== "all" || achT != null) document.querySelectorAll("#achWrap details").forEach(d => d.open = true);
+    document.querySelectorAll("#achWrap details").forEach(d => d.classList.toggle("hidden", !d.querySelector(".ach:not(.hidden)")));  /* v172 보여 줄 게 없는 묶음은 숨김 */
+    const box = $("#achWrap"); let em = box.querySelector(".ach-empty");
+    const none = !box.querySelector(".ach:not(.hidden)");
+    if (none && !em) { em = document.createElement("p"); em.className = "who ach-empty"; box.prepend(em); }
+    if (em) { em.hidden = !none; em.textContent = none ? `${achT != null ? TIER_NAMES[achT] + " 등급에 " : ""}${achF === "on" ? "아직 달성한 업적이 없어요." : achF === "off" ? "진행 중인 업적이 없어요." : "업적이 없어요."}` : ""; }
+  };
   document.querySelectorAll("[data-af]").forEach(btn => btn.onclick = () => {
     document.querySelectorAll("[data-af]").forEach(x => x.setAttribute("aria-pressed", String(x === btn)));
-    const f = btn.dataset.af;
-    document.querySelectorAll("#achWrap .ach").forEach(el => el.classList.toggle("hidden", f !== "all" && (f === "on") !== (el.dataset.on === "1")));
-    if (f !== "all") document.querySelectorAll("#achWrap details").forEach(d => d.open = true);
-    document.querySelectorAll("#achWrap details").forEach(d => d.classList.toggle("hidden", !d.querySelector(".ach:not(.hidden)")));  /* v172 보여 줄 게 없는 묶음은 숨김 */
+    achF = btn.dataset.af; applyAch();
+  });
+  document.querySelectorAll("[data-tf]").forEach(btn => btn.onclick = () => {
+    const t = +btn.dataset.tf; achT = achT === t ? null : t;
+    document.querySelectorAll("[data-tf]").forEach(x => x.setAttribute("aria-pressed", String(+x.dataset.tf === achT)));
+    applyAch();
   });
   document.querySelector('[data-af="on"]')?.click();  /* v172 열면 달성한 업적부터 */
   $("#btnCardSave").onclick = async () => {
@@ -2844,10 +2963,9 @@ function mapsHtml(r) {  // v78 오늘의 맵 (MC-01 지도 타일)
   const codeOf = name => (r.games || []).find(g => g.map === name && g.map_code)?.map_code || state?.map_codes?.[name];
   const killsOf = name => (r.games || []).filter(g => g.map === name).reduce((a, g) => a + g.players.reduce((b, p) => b + p.kills, 0), 0);
   return `<div class="sec"><h3>오늘의 맵</h3></div>
-    <div class="mct" style="--n:${Math.min(maps.length, 4)}">${maps.map(m => { const code = codeOf(m.map);
-      return `<div class="mct-t ${m.count === max ? "most" : ""}" style="--c:${mapColor(code || m.map)}${code ? `;--img:url('api/map?code=${encodeURIComponent(code)}')` : ""}">
-        ${m.chickens ? `<span class="mct-ck"><img src="${CHICK_IMG}" alt="">치킨 ${m.chickens}</span>` : ""}<span class="mct-big">${m.count}<small>판</small></span>
-        <span class="mct-n">${esc(m.map)}</span><span class="mct-s">평균 <b>${m.avg_rank}등</b> · 팀 ${killsOf(m.map)}킬</span></div>`; }).join("")}</div>`;
+    <div class="bgx-maps" style="--n:${Math.min(maps.length, 4)}">${maps.map(m => { const code = codeOf(m.map);  /* v181 블랙 골드 */
+      return `<div class="bgx-map ${m.count === max ? "most" : ""}" style="--c:${mapColor(code || m.map)}"><div class="bgx-mimg" style="${code ? `background-image:url('api/map?code=${encodeURIComponent(code)}')` : ""}">${m.chickens ? `<span class="bgx-ck"><img src="${CHICK_IMG}" alt="">치킨 ${m.chickens}</span>` : ""}</div>
+        <div class="bgx-mb"><span class="bgx-mn">${esc(m.map)}</span><span class="bgx-mk">${m.count}<small>판</small></span><span class="bgx-ms">평균 <b>${m.avg_rank}등</b> · 팀 <b>${killsOf(m.map)}킬</b></span></div></div>`; }).join("")}</div>`;
 }
 function dayHeadline(r) {  // 오늘의 어워즈 제목: 그날 성적에 맞는 멘트 (같은 날은 늘 같은 문구)
   const G = r.games || [], ranks = G.map(g => g.rank).filter(x => x > 0);
@@ -2883,11 +3001,16 @@ function replayCard(r) {  // v78 오늘의 리플레이 (RC-08 중계 화면 하
   const k = g.players.reduce((a, p) => a + p.kills, 0), dmg = g.players.reduce((a, p) => a + (p.damage || 0), 0);
   const no = (r.games || []).indexOf(g) + 1, md = g.mode || "", eng = /솔로/.test(md) ? "SOLO" : /듀오/.test(md) ? "DUO" : "SQUAD";
   return `<div class="sec"><h3>오늘의 리플레이</h3></div>
-    <div class="rcb" style="--mc:${mapColor(g.map_code || g.map)}"><div class="rcb-bd"><div class="rcb-rk"><span>PLACE</span><b>#${g.rank}</b></div>
-      <div class="rcb-mid"><small>${no ? `MATCH ${no} · ` : ""}${esc(g.time)} · ${eng}</small><b>${esc(g.map)} ${g.rank === 1 ? "치킨" : g.rank + "등"}</b>
-        <div class="rcb-st"><span><em>${k}</em>KILLS</span><span><em>${fmt(Math.round(dmg))}</em>DMG</span><span><em>${g.teams || "-"}</em>TEAMS</span></div></div>
-      <div class="rcb-side"><button class="btn primary" id="btnReel" type="button">오늘의 명장면</button><button class="btn" data-rp="${esc(g.id)}" type="button">이 판 리플레이</button></div></div></div>
+    <div class="bgx-rp"><div class="bgx-rk"><small>PLACE</small><b>#${g.rank}</b></div>  <!-- v181 블랙 골드 -->
+      <div class="bgx-rm"><small>${no ? `MATCH ${no} · ` : ""}${esc(g.time)} · ${eng}</small><b>${esc(g.map)} ${g.rank === 1 ? "치킨" : g.rank + "등"}</b>
+        <div class="bgx-rs"><span><em>${k}</em>KILLS</span><span><em>${fmt(Math.round(dmg))}</em>DMG</span><span><em>${g.teams || "-"}</em>TEAMS</span></div></div>
+      <div class="bgx-rb"><button class="btn primary" id="btnReel" type="button">오늘의 명장면</button><button class="btn" data-rp="${esc(g.id)}" type="button">이 판 리플레이</button></div></div>
 `;
+}
+function bgxAv(p, first) {  /* v181 1위: 금빛 후광 + 트로피 · 2~4위: 금·은·동 메달 */
+  const src = pimg(p), face = src ? `<img src="${src}" alt="${esc(p.name)} 사진">` : `<b>${esc(String(p.name).slice(0, 1))}</b>`;
+  return first ? `<span class="bgx-avw"><span class="bgx-halo" aria-hidden="true"></span><span class="bgx-av a1">${face}</span>${trophy("bgx-tr")}</span>`
+    : `<span class="bgx-avw sm"><span class="bgx-av">${face}</span>${medal(p.rank, "bgx-md")}</span>`;
 }
 function kdaOf(t) {  // (킬 + 어시) ÷ 죽은 횟수 (예전 기록엔 죽은 횟수가 없어서 판 수 − 치킨으로 짐작)
   const d = t.deaths ?? Math.max(0, (t.games || 0) - (t.wins || 0));
@@ -2943,8 +3066,8 @@ function renderDay(r, report, reveal) {
   const hl = r.highlights.map(h => {  // v78 HL-09 큰 숫자 계기판: 기록 숫자를 가장 크게
     const m = String(h.value || "").match(/([\d,.]+)\s*([^\d\s,.]*)/), bad = h.label === "팀킬범" || h.tone === "bad";
     if (h.label === "팀킬범") {  /* v170 팀킬범: 이름과 횟수를 크게 (팀원 기절 포함) */
-      const L = [...String(h.name || "").matchAll(/\s*([^,]+?)\s+(\d+)회/g)].map(q => `<span class="tk1"><b>${esc(q[1])}</b><em>${q[2]}<small>회</small></em></span>`).join("");
-      return `<div class="bad tkx"><span>팀킬범 <small>팀킬·팀원 기절</small></span>${L || `<b>${esc(h.name)}</b>`}</div>`;
+      const L = [...String(h.name || "").matchAll(/\s*([^,]+?)\s+(\d+)회/g)].map(q => `<div class="tkp"><em>${q[2]}<small>회</small></em><b>${esc(q[1])}</b></div>`).join("");  /* v179 다른 하이라이트처럼 위 횟수 · 아래 이름 */
+      return `<div class="bad tkx"><span>팀킬범 <small>팀킬·팀원 기절</small></span>${L ? `<div class="tkps">${L}</div>` : `<b>${esc(h.name)}</b>`}</div>`;
     }
     return `<div class="${bad ? "bad" : ""}"><span>${esc(h.label)}</span><em>${m ? `${esc(m[1])}<small>${esc(m[2])}</small>` : `<small>${esc(h.value || "")}</small>`}</em><b>${esc(h.name)}</b></div>`; }).join("");
   const dmgMax = Math.max(1, ...r.games.flatMap(g => g.players.map(p => p.damage)));
@@ -2963,20 +3086,20 @@ function renderDay(r, report, reveal) {
 
   const bg = mapUrl(r);
   $("#awards").innerHTML = `
-    <div class="hero">${bg ? `<img class="hero-bg" src="${bg}" alt="" onerror="this.remove()">` : ""}
-    <div class="ceremony-head"><p><span class="ch-d">${dateLabel}</span><span class="ch-g">같이 한 판 ${r.games_count}게임${r.solo_included ? " (솔로 판 포함)" : [r.four_only ? "4인 판만" : "", r.ranked_only ? "랭크만" : ""].filter(Boolean).map(x => ` (${x})`).join("")}</span></p>
+    <div class="bgx">  <!-- v181 블랙 골드 (1위) + 블랙 크레이트 (2~4위) -->
+    <div class="bgx-head"><span class="bgx-d">${dateLabel} · 같이 한 판 ${r.games_count}게임${r.solo_included ? " (솔로 판 포함)" : [r.four_only ? "4인 판만" : "", r.ranked_only ? "랭크만" : ""].filter(Boolean).map(x => ` (${x})`).join("")}</span>
       <h2>${esc(dayHeadline(r))}</h2></div>
     <div class="${reveal ? "reveal" : ""}">
-      <div class="plaque"><div>
-        ${avatar(first, "lg") || trophy()}
-        <div class="rank1">1위</div>
-        <div class="award">최우수 플레이어</div>
-        <div class="name">${esc(first.name)}</div>
-        <div class="line spot-st"><span><b>${sc(first.total)}</b><small>총점</small></span></div>
-        <div class="spot-sub"><span>KDA <b>${kdaOf(first.totals)}</b></span><span>판당 킬 <b>${first.metrics.kills}</b></span><span>판당 딜 <b>${fmt(first.metrics.damage)}</b></span></div>
+      <div class="bgx-rule">MOST VALUABLE PLAYER</div>
+      <div class="bgx-mvp">
+        ${bgxAv(first, true)}
+        <span class="bgx-role">최우수 플레이어 · 1위</span>
+        <div class="bgx-name">${esc(first.name)}</div>
         ${badgesHtml(first)}
-      </div></div>
-      <div class="medals">${medals}</div>
+        <div class="bgx-score"><b>${sc(first.total)}</b><small>총점</small></div>
+        <div class="bgx-st"><span>KDA<b>${kdaOf(first.totals)}</b></span><span>판당 킬<b>${first.metrics.kills}</b></span><span>판당 딜<b>${fmt(first.metrics.damage)}</b></span></div>
+      </div>
+      ${rest.length ? `<div class="bgx-rule">PODIUM</div><div class="bgx-pod">${rest.map(p => `<div class="bgx-mini r${p.rank}">${bgxAv(p)}<div class="bgx-mi"><span class="bgx-r">${p.rank}위 · ${esc(p.award)}</span><b class="bgx-n">${esc(p.name)}</b>${badgesHtml(p)}</div><div class="bgx-s"><b>${sc(p.total)}</b><small>점</small></div></div>`).join("")}</div>` : ""}
     </div></div>
     ${r.absent.length ? `<p class="absent">불참: ${r.absent.map(esc).join(", ")}</p>` : ""}
     <div class="share-row tbar">  <!-- v100 SR-02 한 줄 아이콘 툴바: 공유 | 명장면 영상 | 보기 -->
@@ -3548,12 +3671,14 @@ function closeShow() {
   const c = $("#confetti"); c.getContext("2d").clearRect(0, 0, c.width, c.height);
 }
 $("#showSkip").onclick = closeShow;
-$("#showClose").onclick = () => { closeShow(); setTimeout(() => $(".plaque")?.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block: "start"}), 50); };
+$("#showClose").onclick = () => { closeShow(); setTimeout(() => $(".bgx-mvp, .plaque")?.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block: "start"}), 50); };
 addEventListener("keydown", e => {  // E = 맨 위로, D = 맨 아래로 (글자 입력 중·창이 열려 있을 땐 무시, 한글 자판이어도 됨)
   if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
   if (e.code !== "KeyE" && e.code !== "KeyD") return;
   const t = e.target, tag = (t && t.tagName) || "";
   if (/INPUT|TEXTAREA|SELECT/.test(tag) || (t && t.isContentEditable)) return;
+  const prof = $("#profDlg")?.open ? $("#profDlg").querySelector(".body") : null;  /* v184 선수 프로필 안에서도 E 위 · D 아래 */
+  if (prof) { e.preventDefault(); const sc = [prof, $("#profDlg")].find(x => x.scrollHeight > x.clientHeight + 4) || prof; sc.scrollTo({top: e.code === "KeyE" ? 0 : sc.scrollHeight, behavior: reduceMotion ? "auto" : "smooth"}); return; }
   if (document.querySelector("dialog[open]") || !$("#replay").classList.contains("hidden") || !$("#show").classList.contains("hidden")) return;
   e.preventDefault();
   scrollTo({top: e.code === "KeyE" ? 0 : document.documentElement.scrollHeight, behavior: reduceMotion ? "auto" : "smooth"});
@@ -4138,14 +4263,10 @@ function rpEvents(now) {
 /* ───── 팀 아이콘: 설정 › 꾸미기에서 골라 쓰기 (브라우저 탭·사이트 로고·웹 공유에 같이 적용) ───── */
 const TI_F = "font-family=\"Oswald,'Arial Narrow',Arial,sans-serif\" font-weight=\"700\"";
 const TEAM_ICONS = [
-  ["01", "방패 엠블럼", `<path d="M32 3 L57 11 V30 C57 46 46 56 32 61 C18 56 7 46 7 30 V11 Z" fill="#2c3519" stroke="#f2a900" stroke-width="3" stroke-linejoin="round"/><path d="M32 9 L51 15 V30 C51 42 43 50 32 54.5 C21 50 13 42 13 30 V15 Z" fill="none" stroke="#f2a900" stroke-opacity=".35"/><path d="M32 12 l2.2 4.4 4.8.7-3.5 3.4.8 4.8-4.3-2.3-4.3 2.3.8-4.8-3.5-3.4 4.8-.7z" fill="#f2a900"/><text x="32" y="44" text-anchor="middle" ${TI_F} font-size="17" fill="#eee8d5">DDC</text>`],
-  ["03", "군번표", `<defs><linearGradient id="ti3g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8e7df"/><stop offset="1" stop-color="#8d8c84"/></linearGradient></defs><path d="M15 12 Q20 3 33 3" fill="none" stroke="#a5a49a" stroke-width="1.8" stroke-dasharray="2.2 1.6"/><g transform="rotate(-8 32 34)"><rect x="8" y="14" width="48" height="38" rx="12" fill="url(#ti3g)" stroke="#5b5a52" stroke-width="1.5"/><circle cx="15.5" cy="33" r="2.8" fill="#171a13"/><text x="35" y="39" text-anchor="middle" ${TI_F} font-size="17" fill="#2a2a24">DDC</text><text x="35" y="47" text-anchor="middle" ${TI_F} font-size="5.5" letter-spacing="1.4" fill="#4a4942">TEAM</text></g>`],
   ["04", "스텐실 탄약 상자", `<rect x="3" y="3" width="58" height="58" rx="9" fill="#4b5a2a"/><rect x="7" y="7" width="50" height="50" rx="6" fill="none" stroke="#eee8d5" stroke-opacity=".3" stroke-dasharray="3 2"/><text x="32" y="42" text-anchor="middle" ${TI_F} font-size="26" fill="#eee8d5">DDC</text><rect x="8" y="28.4" width="48" height="2" fill="#4b5a2a"/><rect x="18.6" y="16" width="1.8" height="8" fill="#4b5a2a"/><rect x="31.6" y="16" width="1.8" height="8" fill="#4b5a2a"/>`],
   ["07", "네온 육각", `<defs><filter id="ti7f" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.8"/></filter></defs><polygon points="32,4 56.2,18 56.2,46 32,60 7.8,46 7.8,18" fill="#0d1018"/><polygon points="32,4 56.2,18 56.2,46 32,60 7.8,46 7.8,18" fill="none" stroke="#3ff0ff" stroke-width="4" filter="url(#ti7f)" opacity=".8"/><polygon points="32,4 56.2,18 56.2,46 32,60 7.8,46 7.8,18" fill="none" stroke="#3ff0ff" stroke-width="2.2"/><path d="M13 44 L20 48 M44 16 L51 20" stroke="#ff3fd2" stroke-width="2.2" stroke-linecap="round"/><text x="32" y="39" text-anchor="middle" ${TI_F} font-size="18" fill="#3ff0ff" filter="url(#ti7f)">DDC</text><text x="32" y="39" text-anchor="middle" ${TI_F} font-size="18" fill="#fff">DDC</text>`],
   ["15", "글리치", `<rect x="3" y="3" width="58" height="58" rx="8" fill="#0b0c10"/><text x="30" y="40.5" text-anchor="middle" ${TI_F} font-size="22" fill="#ff2e4d" opacity=".9">DDC</text><text x="34" y="39.5" text-anchor="middle" ${TI_F} font-size="22" fill="#22e6ff" opacity=".9">DDC</text><text x="32" y="40" text-anchor="middle" ${TI_F} font-size="22" fill="#fff">DDC</text><rect x="6" y="27" width="52" height="2" fill="#0b0c10"/><rect x="16" y="33.5" width="26" height="1.6" fill="#22e6ff" opacity=".85"/><rect x="40" y="22" width="12" height="1.4" fill="#ff2e4d"/>`],
-  ["30", "야간투시경", `<defs><filter id="ti30f" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.8"/></filter></defs><rect x="3" y="3" width="58" height="58" rx="10" fill="#071a0a"/><path d="M4 9H60M4 14H60M4 19H60M4 24H60M4 29H60M4 34H60M4 39H60M4 44H60M4 49H60M4 54H60" stroke="#3fff6a" stroke-opacity=".12" stroke-width="1.2"/><circle cx="32" cy="32" r="26" fill="none" stroke="#3fff6a" stroke-opacity=".35" stroke-width="2"/><text x="32" y="40" text-anchor="middle" ${TI_F} font-size="21" fill="#3fff6a" filter="url(#ti30f)">DDC</text><text x="32" y="40" text-anchor="middle" ${TI_F} font-size="21" fill="#b9ffc4">DDC</text>`],
   ["37", "장갑판", `<defs><linearGradient id="ti37g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c8077"/><stop offset="1" stop-color="#4a4d46"/></linearGradient></defs><rect x="3" y="5" width="58" height="54" rx="6" fill="url(#ti37g)" stroke="#2f312c" stroke-width="2"/><path d="M8 12 L18 18 M44 48 L56 52" stroke="#a7aba1" stroke-opacity=".5"/><circle cx="9" cy="11" r="2" fill="#2f312c"/><circle cx="55" cy="11" r="2" fill="#2f312c"/><circle cx="9" cy="53" r="2" fill="#2f312c"/><circle cx="55" cy="53" r="2" fill="#2f312c"/><text x="33" y="42" text-anchor="middle" ${TI_F} font-size="22" fill="#2a2c27">DDC</text><text x="32" y="41" text-anchor="middle" ${TI_F} font-size="22" fill="#d6d9cf">DDC</text>`],
-  ["41", "프라이팬", `<rect x="42" y="28" width="20" height="8" rx="3" fill="#8a5a2a"/><circle cx="26" cy="32" r="22" fill="#2b2b28" stroke="#6a6a62" stroke-width="3"/><circle cx="26" cy="32" r="16" fill="#3a3a36"/><path d="M14 22 Q20 14 30 13" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="2" stroke-linecap="round"/><text x="26" y="37" text-anchor="middle" ${TI_F} font-size="14" fill="#f2a900">DDC</text>`],
   ["46", "HUD 조준 틀", `<rect x="3" y="3" width="58" height="58" rx="6" fill="#0d1018"/><path d="M7 20 V7 H20 M44 7 H57 V20 M57 44 V57 H44 M20 57 H7 V44" fill="none" stroke="#3ff0ff" stroke-width="3"/><circle cx="13" cy="13" r="2" fill="#ff3b3b"/><path d="M24 48 H40" stroke="#3ff0ff" stroke-opacity=".5" stroke-width="1.4"/><text x="32" y="40" text-anchor="middle" ${TI_F} font-size="19" fill="#eee8d5">DDC</text>`],
   ["64", "한글 디디씨", `<rect x="3" y="3" width="58" height="58" rx="10" fill="#14170f" stroke="#3a402f" stroke-width="1.5"/><text x="32" y="22" text-anchor="middle" ${TI_F} font-size="7" letter-spacing="2.5" fill="#a9a68f">TEAM</text><text x="32" y="45" text-anchor="middle" font-family="'Black Han Sans','Malgun Gothic',sans-serif" font-weight="900" font-size="20" fill="#f2a900">디디씨</text>`],
 ];
@@ -4157,7 +4278,7 @@ function foeDead(en, t, incl) {  // 적이 지금 죽어 있나: 마지막 죽�
 const teamIconSvg = id => { const t = TEAM_ICONS.find(x => x[0] === id); return t ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">${t[2]}</svg>` : ""; };
 function teamIconId() {  // 설정값: "" = 예전 아이콘, "daily" = 날마다 자동으로 바뀜, 그 밖 = 고른 번호
   const v = state?.team_icon || "";
-  if (v !== "daily") return v;
+  if (v !== "daily") return TEAM_ICONS.some(x => x[0] === v) ? v : "04";  /* v184 예전 아이콘·지운 아이콘이면 04번 */
   const d = new Date(), n = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5);
   return TEAM_ICONS[n % TEAM_ICONS.length][0];
 }
@@ -4172,9 +4293,9 @@ function applyTeamIcon() {
 }
 function renderIconPicker() {
   const el = document.getElementById("iconPick"); if (!el) return;
-  const cur = state?.team_icon || "";
+  const cur = state?.team_icon === "daily" ? "daily" : teamIconId();
   const opt = (v, label, inner) => `<label class="ic-opt"><input type="radio" name="teamIcon" value="${v}" ${cur === v ? "checked" : ""}><span class="ic-box">${inner}</span><small>${label}</small></label>`;
-  el.innerHTML = opt("", "예전 아이콘", `<img src="favicon.ico" alt="">`) + opt("daily", "날마다 바뀜", `<b>?</b>`)
+  el.innerHTML = opt("daily", "날마다 바뀜", `<b>?</b>`)
     + TEAM_ICONS.map(([id, name]) => opt(id, `${id} ${name}`, teamIconSvg(id))).join("");
 }
 const ddcLogo = () => teamIconUrl() || state?.replay_images?.ddc_logo || "favicon.ico";  // 팀 로고 (웹 공유에서도 같은 그림)
@@ -8317,7 +8438,7 @@ function cumMaps(days) {  // v139 맵별 치킨 누적 (판 목록이 있는 날
   return `<div class="sec"><h3>맵별 치킨 (${tn}게임 · 치킨 ${tw}번)</h3></div>
     <div class="tbl mapwin"><table><thead><tr><th>맵</th><th class="c">치킨</th><th class="c">판 수</th><th class="c">치킨 비율</th><th>치킨</th></tr></thead><tbody>
     ${L.map(([k, o]) => `<tr><td><span class="mc" style="--c:${mapColor(o.code || k)}"><i></i>${esc(k)}</span></td><td class="c"><b>${o.w ? `<img class="chick" src="${CHICK_IMG}" alt="">${o.w}` : "0"}</b></td><td class="c">${o.n}</td><td class="c">${o.n ? Math.round(o.w / o.n * 100) : 0}%</td>
-      <td><div class="mwbar"><i style="width:${o.w / maxW * 100}%"></i></div></td></tr>`).join("")}</tbody></table></div>`;
+      <td><div class="mwbar" title="치킨 ${o.w} / ${o.n}판"><i style="width:${o.n ? Math.min(100, o.w / o.n * 100) : 0}%"></i></div></td></tr>`).join("")}</tbody></table></div>`;
 }
 const PCOL = ["#F2A900", "#7FB2E5", "#6FCF7F", "#E07A5F", "#C49BE8", "#5FD0C8"];
 function cumHall(days) {  /* 명예의 전당: 고른 기간의 날별 순위로 다시 셈 */
@@ -8350,7 +8471,7 @@ function cumDuo() {  /* v175 듀오 궁합: 4명이 늘 같이 하니까 판 수
   const best = L[0], worst = L.length > 2 ? L[L.length - 1] : null;
   const st = (lbl, v, tip) => `<span title="${tip}">${lbl}<b>${v}</b></span>`;
   return `<div class="sec"><h3>듀오 궁합</h3></div><p class="who duo-note">리플레이로 두 사람 사이에서만 생긴 일을 셌어요 (${best.g}판). 같이 다님 = 둘 다 살아 있을 때 60m 안에 붙어 있던 비율 · 살림 = 서로 기절에서 일으켜 세움 · 블루칩 = 죽은 짝을 블루칩으로 불러옴 · 합작 킬 = 한 명이 기절시키거나 거든 적을 다른 한 명이 처치 · 복수 = 짝을 쓰러뜨린 적을 1분 안에 잡음.</p>
-    <div class="duo">${L.map(o => `<div class="duo-c ${o === best ? "duo-best" : o === worst ? "duo-worst" : ""}">${o === best ? `<svg class="duo-crown" viewBox="0 0 24 18" aria-label="최고의 듀오"><path d="M2 15 L4 4 L9 9 L12 2 L15 9 L20 4 L22 15 Z" fill="#F2B33D" stroke="#8C6414" stroke-width="1.2" stroke-linejoin="round"/><rect x="2" y="15" width="20" height="2.6" rx="1" fill="#D99A22"/></svg>` : ""}
+    <div class="duo">${L.map(o => `<div class="duo-c ${o === best ? "duo-best" : o === worst ? "duo-worst" : ""}">
       <div class="duo-h"><b>${esc(nameOf(o.a))} <i>×</i> ${esc(nameOf(o.b))}</b>${o === best ? `<span class="duo-tag">최고의 듀오</span>` : o === worst ? `<span class="duo-tag bad">환장의 듀오</span>` : ""}</div>
       <div class="duo-sc"><em>${o.score}</em><small>점</small><i><span style="width:${o.score}%"></span></i></div>
       <div class="duo-st">${st("같이 다님", Math.round(o.tog * 100) + "%", "둘 다 살아 있을 때 60m 안에 있던 시간 비율")}${st("살림", o.rv + "번", "서로 기절에서 일으켜 세운 횟수")}${st("블루칩", o.bc + "번", "죽은 짝을 블루칩으로 불러온 횟수")}${st("합작 킬", o.co + "번", "한 명이 기절시키거나 거든 적을 다른 한 명이 처치")}${st("복수", o.rg + "번", "짝을 쓰러뜨린 적을 1분 안에 기절·처치")}</div></div>`).join("")}</div>`;
