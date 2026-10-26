@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='6cf9f19b';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='a795e81a';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -243,15 +243,35 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .history td button{background:none;border:0;color:var(--accent);cursor:pointer;padding:0;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 .history td .del{color:var(--dust);text-decoration:none;font-weight:400}
 .order{color:var(--dust)}
+.sea-bar{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 14px}  /* v172 시즌 · 듀오 */
+.sea-bar button{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--dust);font:600 13.5px var(--body);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.sea-bar button small{font-size:11px;color:var(--accent);font-weight:700}.sea-bar button[aria-pressed=true]{border-color:var(--accent);color:var(--bone);background:rgba(242,169,0,.12)}
+.smvp{display:grid;grid-template-columns:72px minmax(0,1fr) auto;align-items:center;gap:16px;padding:16px 18px;border-radius:10px;border:1px solid color-mix(in srgb,var(--gold) 50%,var(--line));background:linear-gradient(110deg,rgba(242,179,61,.18),var(--panel) 60%);margin-bottom:6px}
+.smvp-av{width:72px;height:72px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);display:grid;place-items:center;background:var(--panel-2);font:700 26px var(--body)}.smvp-av img{width:100%;height:100%;object-fit:cover}
+.smvp-t{display:flex;flex-direction:column;gap:3px;min-width:0}.smvp-t small{color:var(--gold);font:700 12.5px var(--body);letter-spacing:.04em}.smvp-t b{font:400 30px/1.05 var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.smvp-t span{color:var(--dust);font-size:13px}
+.smvp-s{display:flex;gap:18px}.smvp-s div{display:flex;flex-direction:column;align-items:center;gap:2px}.smvp-s em{font:400 26px/1 var(--num);font-style:normal}.smvp-s small{color:var(--dust);font-size:12px}
+.smvp-d{grid-column:1/-1;margin:0;color:var(--dust);font-size:12px}
+@media (max-width:620px){.smvp{grid-template-columns:56px minmax(0,1fr);gap:12px}.smvp-av{width:56px;height:56px}.smvp-t b{font-size:24px}.smvp-s{grid-column:1/-1;justify-content:space-around}}
+.duo-note{margin:-6px 0 8px;font-size:12.5px}
+.duo{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.duo-c{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.duo-c.best{border-color:color-mix(in srgb,var(--gold) 60%,var(--line));background:linear-gradient(120deg,rgba(242,179,61,.12),var(--panel) 60%)}.duo-c.worst{border-color:color-mix(in srgb,var(--flare) 50%,var(--line))}
+.duo-h{display:flex;align-items:center;justify-content:space-between;gap:8px}.duo-h b{font-size:16px}.duo-h b i{font-style:normal;color:var(--dust);margin:0 4px}
+.duo-tag{font:700 11.5px var(--body);color:#14170f;background:var(--gold);border-radius:999px;padding:3px 9px;white-space:nowrap}.duo-tag.bad{background:var(--flare);color:#fff}
+.duo-sc{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:4px 8px}.duo-sc em{font:400 28px/1 var(--num);font-style:normal;color:var(--bone)}.duo-c.best .duo-sc em{color:var(--gold)}.duo-sc small{color:var(--dust);font-size:12px}
+.duo-sc i{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}.duo-sc i span{display:block;height:100%;background:linear-gradient(90deg,#8C6414,var(--gold))}.duo-c.worst .duo-sc i span{background:var(--flare)}
+.duo-st{display:flex;flex-wrap:wrap;gap:4px 12px;color:var(--dust);font-size:12.5px}.duo-st b{color:var(--bone);font-weight:600}
+.pmap td,.pmap th{vertical-align:middle;white-space:nowrap}.pmap tr.pm-best td{background:rgba(242,169,0,.08)}.pmap .ck{display:inline-flex;align-items:center;gap:3px;color:var(--gold)}.pmap .chick{width:16px;height:16px}  /* v172 맵별 · 숙련도 */
+@media (max-width:620px){.pmap th,.pmap td{padding:7px 4px;font-size:12.5px}}
+.wm{display:grid;gap:10px}.wm-r{display:grid;grid-template-columns:minmax(0,1fr) 150px;grid-template-areas:"n l" "s s";gap:4px 14px;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--line)}.wm-r:last-child{border-bottom:0}
+.wm-n{grid-area:n;display:flex;align-items:center;gap:8px;min-width:0}.wm-n b{font-size:15px}.wm-t{font:700 11px var(--body);padding:2px 7px;border-radius:999px;border:1px solid currentColor}
+.wm-t.t1{color:#C47B45}.wm-t.t2{color:#C8CDD3}.wm-t.t3{color:#F2B33D}.wm-t.t4{color:#7FD6D0}.wm-t.t5{color:#8FB8FF}.wm-t.t6{color:#E08CFF}
+.wm-l{grid-area:l;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px}.wm-l em{font:400 17px/1 var(--num);font-style:normal}.wm-l i{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}.wm-l i span{display:block;height:100%;background:var(--accent)}
+.wm-s{grid-area:s;display:flex;flex-wrap:wrap;gap:2px 14px;color:var(--dust);font-size:12.5px}.wm-s b{color:var(--bone);font-weight:600;margin-right:2px}
+.sea-rows{display:grid;gap:6px}.sea-row{display:flex;align-items:center;gap:12px}.sea-row span{min-width:70px;font-weight:600}.sea-row input{max-width:200px}
 .trend{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}.trend svg{width:100%;height:auto;display:block}  /* v171 점수 추이 · 라이벌 */
 .tr-leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:6px}.tr-leg button{display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--bone);font:600 13px var(--body);cursor:pointer;padding:4px 0}
 .tr-leg button i{width:14px;height:4px;border-radius:2px}.tr-leg button[aria-pressed=false]{opacity:.4}.tr-l{transition:opacity .2s}.tr-l.off{opacity:.06}
-.rv-note{margin:-6px 0 8px;font-size:12.5px}
-.rvt th{color:var(--bone);font-weight:600;white-space:nowrap}.rvt td,.rvt th{vertical-align:middle}.rvt thead th{color:var(--dust)}
-.rvt td.rv{position:relative;text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}.rvt td.rv b{font:400 19px var(--num)}.rvt td.rv small{color:var(--dust);font-size:11px;margin-left:1px}
-.rvt td.rv i{position:absolute;left:12%;right:12%;bottom:5px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--accent) calc(var(--k)*100%),rgba(224,83,47,.55) 0)}
-.rvt td.rv.up b:first-child{color:var(--accent)}.rvt td.rv.dn b:nth-of-type(2){color:var(--flare)}.rvt td.rv-x{text-align:center;color:var(--line)}.rvt .rv-sep{display:none;color:var(--dust);margin:0 2px}.rvt td.rv small{margin-right:6px}
-@media (max-width:620px){.rvt td.rv b{font-size:16px}.rvt th,.rvt td{padding:8px 4px}.rvt td.rv small{display:none}.rvt td.rv .rv-sep{display:inline}}
 .cum td,.history td,.tbl.mapwin td{vertical-align:middle}  /* v171 표 줄: 이름(두 줄)과 숫자·막대를 세로 가운데로 */
 .order b{color:var(--bone)}
 
@@ -682,8 +702,12 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 .rp-ctl .btn{min-height:40px}
 .rp-time{flex:1 1 260px;position:relative;height:40px;display:flex;align-items:center}
 .rp-time input{width:100%;accent-color:var(--accent);position:relative;z-index:2;background:transparent}
-.rp-ticks{position:absolute;left:8px;right:8px;top:4px;bottom:4px;pointer-events:none}
-.rp-ticks i{position:absolute;top:2px;width:2px;height:9px;border-radius:1px}
+.rp-ticks{position:absolute;left:8px;right:8px;top:0;height:14px;pointer-events:none;z-index:3}
+.rp-ticks i{position:absolute;top:2px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--c);border:1.5px solid #0b0d08;pointer-events:auto;cursor:pointer;transition:transform .12s}  /* v172 킬 점 */
+.rp-ticks i:hover{transform:scale(1.5);z-index:2}
+.rp-ticks i.tk-knock{width:8px;height:8px;margin-left:-4px;top:3px;background:transparent;border:2px solid var(--c)}
+.rp-ticks i.tk-downed{width:7px;height:7px;margin-left:-3.5px;top:3.5px;opacity:.75}
+.rp-ticks i.tk-died{border-radius:2px;transform:rotate(45deg)}.rp-ticks i.tk-died:hover{transform:rotate(45deg) scale(1.5)}
 .rp-speed{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
 .rp-speed button{background:transparent;border:0;color:var(--dust);min-height:40px;padding:0 10px;cursor:pointer;font-family:var(--num)}
 .rp-speed button[aria-pressed=true]{background:var(--panel-2);color:var(--accent)}
@@ -2213,6 +2237,7 @@ html.share-mode body::before{display:none}
       </div>
       <div class="field"><span>무기 이름 고치기 <small>한 줄에 '공식 이름 = 보여줄 이름'</small></span>
         <textarea id="wnames" spellcheck="false" placeholder="AUG A3 = AUG"></textarea></div>
+      <div class="field"><span>경쟁전 시즌 시작일 <small>분석할 때 새 시즌을 처음 본 날로 자동 기록돼요. 실제 시작일과 다르면 고쳐 주세요.</small></span><div id="seasonRows" class="sea-rows"></div></div>
     </section>
     <section class="set-pane" data-pane="score">
       <div class="field"><span>점수 배점</span><div class="wgrid" id="wgrid"></div><p class="help" id="wsum"></p></div>
@@ -2557,7 +2582,7 @@ async function loadCards() {
     card.addEventListener("pointerleave", () => { card.style.setProperty("--rx", "0deg"); card.style.setProperty("--ry", "0deg"); });
   });
 }
-/* v171 기록 갱신: 그날 개인 최고 기록을 넘은 것 (점수·판당 딜·하루 킬) + 연속 1위 */
+/* v171 기록 갱신: 그날 개인 최고 기록을 넘은 것 (점수·한 판 딜·한 판 킬) + 연속 1위 */
 async function renderRecordsBroken(r) {
   const box = $("#pbWrap"); if (!box) return;
   try { if (!playersData.length) playersData = (await api("api/players")).players || []; } catch { return; }
@@ -2570,8 +2595,8 @@ async function renderRecordsBroken(r) {
     const best = k => Math.max(...prev.map(h => h[k] ?? -1));
     const push = (k, label, v, old, unit) => { if (v != null && old >= 0 && v > old) out.push({p, k, label, v, old, unit}); };
     push("total", "개인 최고 점수", cur.total, best("total"), "점");
-    push("dmg", "판당 딜 최고", cur.dmg, best("dmg"), "");
-    push("k", "하루 최다 킬", cur.k, best("k"), "킬");
+    push("gd", "한 판 최고 딜", cur.gd, best("gd"), "");  /* v172 판 수가 많으면 저절로 늘어나는 하루 합계 대신 한 판 기준 */
+    push("gk", "한 판 최다 킬", cur.gk, best("gk"), "킬");
     let st = 0; for (let i = H.length - 1; i >= 0 && H[i].rank === 1; i--) st++;
     if (st >= 2) out.push({p, k: "streak", label: "연속 1위", v: st, unit: "일 연속", streak: true});
   }
@@ -2607,6 +2632,21 @@ function achTile(a) {
     <small>${a.date ? esc(a.date) + " 달성" : `${fmt(Math.round(a.progress))} / ${fmt(a.target)}${u}`}</small>
     ${a.date ? "" : `<div class="prog"><em style="width:${Math.min(100, a.progress / a.target * 100)}%"></em></div>`}</div>`;
 }
+function profMaps(p) {  /* v172 맵별 개인 성적 */
+  const L = p.maps || []; if (!L.length) return "";
+  const best = [...L].filter(m => m[2] >= 2).sort((a, b) => b[4] - a[4])[0];
+  return `<div class="prof-sec"><h4>맵별 성적 ${best ? `<span class="who">${esc(best[0])}에서 가장 잘해요</span>` : ""}</h4><div class="tbl pmap"><table><thead><tr><th>맵</th><th class="c">판</th><th class="c">판당 킬</th><th class="c">판당 딜</th><th class="c">평균 순위</th><th class="c">치킨</th></tr></thead><tbody>
+    ${L.map(m => `<tr class="${m === best ? "pm-best" : ""}"><td><span class="mc" style="--c:${mapColor(m[1] || m[0])}"><i></i>${esc(m[0])}</span></td><td class="c">${m[2]}</td><td class="c">${m[3]}</td><td class="c">${fmt(m[4])}</td><td class="c">${m[5]}등</td><td class="c">${m[6] ? `<b class="ck"><img class="chick" src="${CHICK_IMG}" alt="">${m[6]}</b>` : "0"}</td></tr>`).join("")}</tbody></table></div></div>`;
+}
+const MASTERY_TIER = ["", "브론즈", "실버", "골드", "플래티넘", "다이아몬드", "마스터"];
+function profMastery(p) {  /* v172 무기 숙련도 (PUBG 공식, 하루 한 번 받아 옴): [이름, 레벨, 티어, 경험치, 킬, 피해, 헤드샷, 최장 거리, 메달] */
+  const L = (p.mastery || []).slice(0, 8); if (!L.length) return `<div class="prof-sec"><h4>무기 숙련도</h4><p class="who">다음 분석 때 PUBG에서 받아 와요.</p></div>`;
+  const maxL = Math.max(1, ...L.map(w => w[1]));
+  return `<div class="prof-sec"><h4>무기 숙련도 <span class="who">PUBG 공식 · 전체 기간</span></h4><div class="wm">${L.map(w => `<div class="wm-r">
+    <div class="wm-n"><b>${esc(w[0])}</b><span class="wm-t t${Math.min(6, w[2])}">${MASTERY_TIER[Math.min(6, w[2])] || ""}</span></div>
+    <div class="wm-l"><em>Lv.${w[1]}</em><i><span style="width:${w[1] / maxL * 100}%"></span></i></div>
+    <div class="wm-s"><span><b>${fmt(w[4])}</b>킬</span><span><b>${fmt(w[5])}</b>피해</span><span>헤드샷 <b>${fmt(w[6])}</b></span>${w[7] ? `<span>최장 <b>${fmt(w[7])}</b>m</span>` : ""}</div></div>`).join("")}</div></div>`;
+}
 function openProfile(nick) {
   const p = playersData.find(x => x.nick === nick); if (!p) return;
   const H = p.history.slice(-30), t = p.totals;
@@ -2631,10 +2671,12 @@ function openProfile(nick) {
           tips: H.map(h => `${h.date.slice(5).replace("-", "/")} · ${sc(h.total)}점 · ${h.rank}위`), xlabels: H.map(h => h.date.slice(5).replace("-", "/"))}); })()}</div></div>
       ${p.best_day ? `<div class="prof-sec"><h4>개인 최고의 날</h4><p style="margin:0">${esc(p.best_day.date)}, ${p.best_day.total}점, 판당 딜량 ${fmt(p.best_day.damage)}, ${p.best_day.kills}킬</p></div>` : ""}
       ${p.wstats?.length ? `<div class="prof-sec"><h4>무기별 성적 <span class="who">누적, 적에게 준 피해 순</span></h4>${wstatsHtml(p.wstats, 6)}</div>` : p.weapons.length ? `<div class="prof-sec"><h4>주무기 순위</h4><div class="wlist">${p.weapons.map(([w, k, n]) => `<div><div><b>${esc(w)}</b><span class="who">${k}킬 ${n}기절</span><i><em style="width:${(k + n) / maxW * 100}%"></em></i></div></div>`).join("")}</div></div>` : ""}
+      ${profMaps(p)}
+      ${profMastery(p)}
       <div class="prof-sec"><h4>업적 <span class="who">${p.achievements.filter(a => a.date).length} / ${p.achievements.length}</span></h4>
         <div class="tier-sum">${[6, 5, 4, 3, 2, 1, 0].map(tr => { const all = p.achievements.filter(a => !a.tease && tierOf(a) === tr);
           return `<span class="ts t${tr}"><b>${all.filter(a => a.date).length}</b>/${all.length} ${TIER_NAMES[tr]}</span>`; }).join("")}</div>
-        <div class="seg" role="group" aria-label="업적 보기" style="margin-bottom:6px"><button data-af="all" aria-pressed="true">전체</button><button data-af="on" aria-pressed="false">달성</button><button data-af="off" aria-pressed="false">진행 중</button></div>
+        <div class="seg" role="group" aria-label="업적 보기" style="margin-bottom:6px"><button data-af="on" aria-pressed="true">달성</button><button data-af="all" aria-pressed="false">전체</button><button data-af="off" aria-pressed="false">진행 중</button></div>
         <div id="achWrap">${[...new Set(p.achievements.map(a => a.cat))].map(cat => { const list = p.achievements.map((a, i) => [a, i]).filter(([a]) => a.cat === cat)
             .sort((x, y) => tierOf(x[0]) - tierOf(y[0]) || x[1] - y[1]).map(([a]) => a);  // 등급 낮은 것부터, 같은 등급은 원래 순서
           return `<details class="ach-group" ${cat === "왕좌" || cat === "전투" ? "open" : ""}><summary class="ach-cat">${esc(cat)} <span>${list.filter(a => a.date).length}/${list.length}</span></summary>
@@ -2645,7 +2687,9 @@ function openProfile(nick) {
     const f = btn.dataset.af;
     document.querySelectorAll("#achWrap .ach").forEach(el => el.classList.toggle("hidden", f !== "all" && (f === "on") !== (el.dataset.on === "1")));
     if (f !== "all") document.querySelectorAll("#achWrap details").forEach(d => d.open = true);
+    document.querySelectorAll("#achWrap details").forEach(d => d.classList.toggle("hidden", !d.querySelector(".ach:not(.hidden)")));  /* v172 보여 줄 게 없는 묶음은 숨김 */
   });
+  document.querySelector('[data-af="on"]')?.click();  /* v172 열면 달성한 업적부터 */
   $("#btnCardSave").onclick = async () => {
     const m = $("#cardMsg"); m.classList.remove("err"); m.textContent = "카드 이미지를 만드는 중...";
     try { const j = await api("api/card_png", {nick}); const a = document.createElement("a"); a.href = j.image; a.download = `TEAM_DDC_card_${nick}.png`; a.click(); m.textContent = "저장했어요. reports 폴더에도 있어요."; }
@@ -3790,8 +3834,11 @@ function rpSetup(R) {
   $("#rpSub").textContent = `${R.time} 시작, ${R.mode}, 최종 ${R.rank === 1 ? "치킨" : R.rank + "등"} (${R.teams}팀)`;
   $("#rpSeek").max = R.duration;
   rp.graphKey = null; requestAnimationFrame(rpDrawGraph);
-  $("#rpTicks").innerHTML = R.events.filter(e => e.k === "kill" || e.k === "died").map(e =>
-    `<i style="left:${e.t / R.duration * 100}%;background:${e.k === "died" ? "#E0532F" : rpCol(e.by)}"></i>`).join("");
+  /* v172 타임라인 킬 점: 우리 킬(팀원 색 점) · 기절시킴(작은 고리) · 우리가 쓰러짐/죽음(붉은 점) — 누르면 그 장면 3초 전으로 */
+  $("#rpTicks").innerHTML = R.events.filter(e => ["kill", "knock", "died", "downed"].includes(e.k)).map(e => {
+    const bad = e.k === "died" || e.k === "downed", tip = bad ? `${rpName(e.who)} ${e.k === "died" ? "사망" : "기절"}${e.by ? " ← " + e.by : ""}` : `${rpName(e.by)} ${e.k === "kill" ? "처치" : "기절시킴"} → ${e.who || "?"}`;
+    return `<i class="tk-${e.k}" data-tt="${e.t}" title="${esc(String(Math.floor(e.t / 60)).padStart(2, "0") + ":" + String(Math.floor(e.t % 60)).padStart(2, "0") + " " + tip)}" style="left:${e.t / R.duration * 100}%;--c:${bad ? "#E0532F" : rpCol(e.by)}"></i>`; }).join("");
+  $("#rpTicks").onclick = ev => { const i = ev.target.closest("[data-tt]"); if (!i || !rp.data) return; rp.t = Math.max(0, +i.dataset.tt - 3); rp.flashes = []; if (!rp.playing) { rp.playing = true; paintRpButtons(); } };
   rp.flashes = []; rp.focus = null; rp.reel = null; rp.curSpeed = rp.speed; rp.manual = false;
   rp.seed = R.id;
 
@@ -8236,9 +8283,23 @@ function renderShareCard(r) {
 
 /* ───── 누적 ───── */
 let histYM = "";
-function cumMaps() {  // v139 맵별 치킨 누적 (판 목록이 있는 날만)
+/* v172 누적 기록: 경쟁전 시즌으로 나눠 보기 (설정의 시즌 시작일 기준) */
+let cumSeason = null;  // null = 지금 시즌, "all" = 전체, 그 밖에는 시즌 id
+function seasonRanges() {
+  const L = (state.seasons || []).filter(s => s.start).sort((a, b) => a.start.localeCompare(b.start));
+  return L.map((s, i) => ({...s, end: L[i + 1]?.start || "9999-12-31"}));
+}
+function cumRange() {
+  const R = seasonRanges(); if (!R.length) return {key: "all", from: "0000", to: "9999", label: "전체"};
+  const want = cumSeason ?? R[R.length - 1].id;
+  if (want === "all") return {key: "all", from: "0000", to: "9999", label: "전체"};
+  const s = R.find(x => x.id === want) || R[R.length - 1];
+  return {key: s.id, from: s.start, to: s.end, label: s.name, season: s, current: s === R[R.length - 1]};
+}
+const inRange = (d, rg) => d >= rg.from && d < rg.to;
+function cumMaps(days) {  // v139 맵별 치킨 누적 (판 목록이 있는 날만)
   const M = {};
-  for (const d of state.days) for (const [k, [n, w, code]] of Object.entries(d.maps || {})) { const o = M[k] || (M[k] = {n: 0, w: 0, code}); o.n += n; o.w += w; o.code = o.code || code; }
+  for (const d of days) for (const [k, [n, w, code]] of Object.entries(d.maps || {})) { const o = M[k] || (M[k] = {n: 0, w: 0, code}); o.n += n; o.w += w; o.code = o.code || code; }
   const L = Object.entries(M).sort((a, b) => b[1].w - a[1].w || b[1].n - a[1].n); if (!L.length) return "";
   const maxW = Math.max(1, ...L.map(x => x[1].w)), tw = L.reduce((a, x) => a + x[1].w, 0), tn = L.reduce((a, x) => a + x[1].n, 0);
   return `<div class="sec"><h3>맵별 치킨 (${tn}게임 · 치킨 ${tw}번)</h3></div>
@@ -8247,23 +8308,51 @@ function cumMaps() {  // v139 맵별 치킨 누적 (판 목록이 있는 날만)
       <td><div class="mwbar"><i style="width:${o.w / maxW * 100}%"></i></div></td></tr>`).join("")}</tbody></table></div>`;
 }
 const PCOL = ["#F2A900", "#7FB2E5", "#6FCF7F", "#E07A5F", "#C49BE8", "#5FD0C8"];
-function cumRivals() {  /* v171 라이벌 전적: 같은 날 순위에서 누가 더 위였나 (날 수) */
-  const names = (state.cumulative || []).map(c => c.name); if (names.length < 2) return "";
-  const W = {}; for (const a of names) { W[a] = {}; for (const b of names) W[a][b] = 0; }
-  for (const d of state.days) d.ranking.forEach((a, i) => d.ranking.slice(i + 1).forEach(b => { if (W[a] && W[a][b] != null) W[a][b]++; }));
-  const cell = (a, b) => { if (a === b) return `<td class="rv-x">—</td>`; const w = W[a][b], l = W[b][a], n = w + l, k = n ? w / n : .5;
-    return `<td class="rv ${k > .5 ? "up" : k < .5 ? "dn" : ""}" style="--k:${k}"><b>${w}</b><small>승</small><span class="rv-sep">:</span><b>${l}</b><small>패</small><i></i></td>`; };
-  return `<div class="sec"><h3>라이벌 전적</h3></div><p class="who rv-note">같은 날 순위로 비교해요. 가로줄 선수가 세로줄 선수보다 위였던 날이 '승'이에요.</p>
-    <div class="tbl rvt"><table><thead><tr><th></th>${names.map(n => `<th class="c">${esc(n)}</th>`).join("")}</tr></thead>
-    <tbody>${names.map(a => `<tr><th>${esc(a)}</th>${names.map(b => cell(a, b)).join("")}</tr>`).join("")}</tbody></table></div>`;
+function cumHall(days) {  /* 명예의 전당: 고른 기간의 날별 순위로 다시 셈 */
+  return (state.cumulative || []).map(c => {
+    const counts = [0, 0, 0, 0];
+    for (const d of days) { const i = d.ranking.indexOf(c.name); if (i >= 0) counts[Math.min(i, 3)]++; }
+    const n = counts.reduce((a, b) => a + b, 0), avg = n ? counts.reduce((a, x, i) => a + (i + 1) * x, 0) / n : null;
+    return {...c, counts, days: n, avg: avg ? Math.round(avg * 100) / 100 : null};
+  }).sort((a, b) => b.counts[0] - a.counts[0] || (a.avg ?? 9) - (b.avg ?? 9) || b.days - a.days);
 }
-async function cumTrend() {  /* v171 팀원 점수 추이 비교 (최근 20일) */
+function cumMvp(hall, days, rg) {  /* 시즌 MVP: 1등을 가장 많이 한 사람 (같으면 평균 순위) */
+  const top = hall.find(h => h.days); if (!top || !days.length) return "";
+  const games = days.reduce((a, d) => a + (d.games || 0), 0), wins = days.reduce((a, d) => a + (d.wins || 0), 0);
+  const p = (state.players || []).find(x => x.nickname === top.nick) || {nick: top.nick, name: top.name}, src = pimg({nick: top.nick, name: top.name});
+  const sub = rg.season ? `${rg.season.start.slice(5).replace("-", "/")}부터${rg.current ? " · 진행 중" : ` · ${rg.season.end.slice(5).replace("-", "/")} 종료`}` : "전체 기간";
+  return `<div class="smvp"><div class="smvp-av">${src ? `<img src="${src}" alt="">` : esc(top.name.slice(0, 1))}</div>
+    <div class="smvp-t"><small>${esc(rg.label)} ${rg.current ? "선두" : "MVP"}</small><b>${esc(top.name)}</b><span>1등 ${top.counts[0]}번 · 평균 ${top.avg}등</span></div>
+    <div class="smvp-s"><div><em>${days.length}</em><small>일</small></div><div><em>${games}</em><small>게임</small></div><div><em>${wins}</em><small>치킨</small></div></div>
+    <p class="smvp-d">${esc(sub)}</p></div>`;
+}
+function cumDuo(days) {  /* v172 듀오 궁합: 두 사람이 같이 한 판의 평균 순위·치킨·서로 살린 횟수 */
+  const P = (state.cumulative || []).map(c => c.nick), nameOf = n => (state.cumulative.find(c => c.nick.toLowerCase() === String(n).toLowerCase()) || {}).name || n;
+  const key = (a, b) => [a, b].sort().join("|"), D = {};
+  for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++) D[key(P[i], P[j])] = {a: P[i], b: P[j], n: 0, r: 0, w: 0, t10: 0, rv: 0};
+  for (const d of days) {
+    for (const [rank, ps] of d.gp || []) { const L = (ps || []).map(x => P.find(y => y.toLowerCase() === String(x).toLowerCase())).filter(Boolean);
+      for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) { const o = D[key(L[i], L[j])]; if (!o) continue; o.n++; o.r += rank || 0; if (rank === 1) o.w++; if (rank && rank <= 10) o.t10++; } }
+    for (const [who, m] of Object.entries(d.rv || {})) for (const [to, c] of Object.entries(m || {})) { const a = P.find(y => y.toLowerCase() === who.toLowerCase()), b = P.find(y => y.toLowerCase() === to.toLowerCase()); const o = a && b && a !== b && D[key(a, b)]; if (o) o.rv += c; }
+  }
+  const L = Object.values(D).filter(o => o.n >= 2).map(o => ({...o, avg: o.r / o.n, wr: o.w / o.n, tr: o.t10 / o.n, rvg: o.rv / o.n}));
+  if (!L.length) return "";
+  for (const o of L) o.score = Math.round(Math.max(0, Math.min(100, o.wr * 120 + o.tr * 35 + Math.max(0, 16 - o.avg) * 2.2 + Math.min(1, o.rvg) * 12)));
+  L.sort((a, b) => b.score - a.score || b.n - a.n);
+  const best = L[0], worst = L.length > 2 ? L[L.length - 1] : null;
+  return `<div class="sec"><h3>듀오 궁합</h3></div><p class="who duo-note">두 사람이 같이 한 판만 모아서 봐요. 궁합 점수 = 치킨·탑10 비율, 평균 순위, 서로 살린 횟수를 합친 100점 만점.</p>
+    <div class="duo">${L.map(o => `<div class="duo-c ${o === best ? "best" : o === worst ? "worst" : ""}">
+      <div class="duo-h"><b>${esc(nameOf(o.a))} <i>×</i> ${esc(nameOf(o.b))}</b>${o === best ? `<span class="duo-tag">최고의 듀오</span>` : o === worst ? `<span class="duo-tag bad">환장의 듀오</span>` : ""}</div>
+      <div class="duo-sc"><em>${o.score}</em><small>점</small><i><span style="width:${o.score}%"></span></i></div>
+      <div class="duo-st"><span><b>${o.n}</b>판</span><span>평균 <b>${o.avg.toFixed(1)}</b>등</span><span>치킨 <b>${o.w}</b></span><span>서로 살림 <b>${o.rv}</b>번</span></div></div>`).join("")}</div>`;
+}
+async function cumTrend(rg) {  /* v171 팀원 점수 추이 비교 (고른 기간의 최근 20일) */
   const box = $("#cumTrend"); if (!box) return;
   try { if (!playersData.length) playersData = (await api("api/players")).players || []; } catch { return; }
   if ($("#cumTrend") !== box) return;
-  const dates = [...new Set(playersData.flatMap(p => (p.history || []).map(h => h.date)))].sort().slice(-20); if (dates.length < 2) return;
+  const dates = [...new Set(playersData.flatMap(p => (p.history || []).map(h => h.date)))].filter(d => inRange(d, rg)).sort().slice(-20); if (dates.length < 2) { box.innerHTML = ""; return; }
   const all = playersData.flatMap(p => (p.history || []).filter(h => dates.includes(h.date)).map(h => h.total));
-  const lo = Math.floor(Math.min(...all) / 10) * 10, hi = Math.ceil(Math.max(...all) / 10) * 10 || 100, Wd = Math.max(300, Math.min(900, (box.clientWidth || 760) - 30)), H = Wd < 500 ? 200 : 230,  /* 화면 폭 그대로 그려서 글자가 작아지지 않게 */ pl = 40, pr = 16, pt = 12, pb = 26;
+  const lo = Math.floor(Math.min(...all) / 10) * 10, hi = Math.ceil(Math.max(...all) / 10) * 10 || 100, Wd = Math.max(300, Math.min(900, (box.clientWidth || 760) - 30)), H = Wd < 500 ? 200 : 230, pl = 40, pr = 16, pt = 12, pb = 26;  /* 화면 폭 그대로 그려서 글자가 작아지지 않게 */
   const X = i => pl + i * (Wd - pl - pr) / (dates.length - 1), Y = v => pt + (hi - v) / Math.max(1, hi - lo) * (H - pt - pb);
   const ticks = [lo, (lo + hi) / 2, hi].map(v => `<line x1="${pl}" x2="${Wd - pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(183,179,156,.14)"/><text x="${pl - 6}" y="${Y(v) + 4}" font-size="11" fill="#8f8b76" text-anchor="end">${Math.round(v)}</text>`).join("");
   const xl = [...new Set([0, Math.floor((dates.length - 1) / 2), dates.length - 1])].map(i => `<text x="${X(i)}" y="${H - 6}" font-size="11" fill="#8f8b76" text-anchor="${i === 0 ? "start" : i === dates.length - 1 ? "end" : "middle"}">${dates[i].slice(5).replace("-", "/")}</text>`).join("");
@@ -8274,7 +8363,10 @@ async function cumTrend() {  /* v171 팀원 점수 추이 비교 (최근 20일) 
   box.querySelectorAll("[data-tr]").forEach(b => b.onclick = () => { const on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", String(on)); box.querySelector(`.tr-l[data-i="${b.dataset.tr}"]`)?.classList.toggle("off", !on); });
 }
 function renderCumulative() {
-  const rows = state.cumulative.map(c => {
+  const rg = cumRange(), R = seasonRanges(), days = state.days.filter(d => inRange(d.date, rg));
+  const seasonBar = R.length ? `<div class="sea-bar" role="group" aria-label="기간">${[...R].reverse().map((s, i) => `<button type="button" data-sea="${esc(s.id)}" aria-pressed="${rg.key === s.id}">${esc(s.name)}${i === 0 ? " <small>지금</small>" : ""}</button>`).join("")}<button type="button" data-sea="all" aria-pressed="${rg.key === "all"}">전체</button></div>` : "";
+  const hall = cumHall(days);
+  const rows = hall.map(c => {
     const total = c.days || 1;
     return `<tr><td><b>${esc(c.name)}</b><div class="who">${esc(c.nick)}</div></td>
       ${c.counts.map((n, i) => `<td class="c ${i === 0 ? "first" : i === 3 ? "last" : ""}">${n}</td>`).join("")}
@@ -8292,13 +8384,15 @@ function renderCumulative() {
       <td class="order">${d.ranking.map((n, i) => i === 0 ? `<b>${esc(n)}</b>` : esc(n)).join(" › ")}</td>
       <td class="n"><button class="del" data-del="${d.date}" aria-label="${d.date} 기록 삭제">삭제</button></td></tr>`).join("");
   $("#cum").innerHTML = state.days.length ? `
-    <div class="sec"><h3>명예의 전당 (${state.days.length}일)</h3></div>
-    <div class="tbl cum"><table>
+    ${seasonBar}
+    ${cumMvp(hall, days, rg)}
+    <div class="sec"><h3>명예의 전당 (${rg.key === "all" ? "" : esc(rg.label) + " · "}${days.length}일)</h3></div>
+    ${days.length ? `<div class="tbl cum"><table>
       <thead><tr><th>플레이어</th><th class="c">1등</th><th class="c">2등</th><th class="c">3등</th><th class="c">4등</th><th>참여</th><th>평균</th><th>분포</th></tr></thead>
-      <tbody>${rows}</tbody></table></div>
-    ${cumMaps()}
+      <tbody>${rows}</tbody></table></div>` : `<p class="pc-none">이 시즌에는 아직 기록이 없어요.</p>`}
     <div id="cumTrend"></div>
-    ${cumRivals()}
+    ${cumMaps(days)}
+    ${cumDuo(days)}
     <div class="sec history-sec"><h3>지난 기록</h3></div>
     <div class="hist-mon">
       <button type="button" class="btn" data-hm="1" ${mi < months.length - 1 ? "" : "disabled"} aria-label="이전 달">‹</button>
@@ -8309,7 +8403,8 @@ function renderCumulative() {
       <tbody>${hist}</tbody></table></div>`
     : `<div class="notice"><strong>아직 누적 기록이 없어요</strong>
        어워즈 탭에서 분석하거나 '최근 14일 한 번에 분석'을 누르면 여기에 쌓여요.</div>`;
-  cumTrend();
+  cumTrend(rg);
+  document.querySelectorAll("[data-sea]").forEach(b => b.onclick = () => { cumSeason = b.dataset.sea; renderCumulative(); });
   document.querySelectorAll("[data-open]").forEach(b => b.onclick = () => openDay(b.dataset.open));
   document.querySelectorAll("[data-hm]").forEach(b => b.onclick = () => { const i = months.indexOf(histYM) + +b.dataset.hm; if (months[i]) { histYM = months[i]; renderCumulative(); } });
   document.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
@@ -8411,6 +8506,8 @@ function openSettings() {
     $("#wsum").innerHTML = `총점 <span class="wsum">${["damage", "kills", "dbnos", "assists", "revives", "survival"].reduce((a, k) => a + v(k), 0)}점</span> (블루칩은 이 위에 더해지는 보너스). 100점이 아니어도 괜찮아요.`; };
   document.querySelectorAll("[data-w]").forEach(i => i.oninput = sumW); sumW();
   $("#wnames").value = Object.entries(state.weapon_names || {}).map(([a, b]) => `${a} = ${b}`).join("\n");
+  $("#seasonRows").innerHTML = (state.seasons || []).length ? [...state.seasons].reverse().map(x => `<label class="sea-row"><span>${esc(x.name)}</span><input type="date" data-season="${esc(x.id)}" value="${esc(x.start)}"></label>`).join("")
+    : `<p class="help">아직 받아 온 시즌이 없어요. 다음 분석 때 PUBG에서 지금 시즌을 받아 와요.</p>`;  /* v172 */
   const rs = state.replay_img_scan || {}, RN = {grenade: "수류탄", molotov: "화염병", smoke: "연막탄", flash: "섬광탄", sticky: "점착 폭탄", c4: "C4",
     bluezone: "블루존 수류탄", carepackage: "보급", carepackage_open: "열린 보급", carepackage_flying: "낙하 보급", flare: "신호탄",
     panzerfaust: "판처파우스트", mortar: "박격포", jerrycan: "연료통"};
@@ -8537,6 +8634,7 @@ $("#settingsForm").addEventListener("submit", async e => {
   body.weights = Object.fromEntries([...document.querySelectorAll("[data-w]")].map(i => [i.dataset.w, +i.value || 0]));
   body.fair = {shrink_games: 0};  // 판 수 보정은 없앰 (항상 끔)
   body.abs_full = Object.fromEntries([...document.querySelectorAll("[data-abs]")].map(i => [i.dataset.abs, +i.value || 0]));
+  body.season_starts = Object.fromEntries([...document.querySelectorAll("[data-season]")].map(i => [i.dataset.season, i.value]));  /* v172 */
   body.weapon_names = Object.fromEntries($("#wnames").value.split("\n").map(l => l.split("=").map(x => x.trim())).filter(x => x.length === 2 && x[0] && x[1]));
   const changedScore = JSON.stringify(body.weights) !== JSON.stringify(Object.fromEntries(Object.keys(body.weights).map(k => [k, +state.weights[k] || 0])))
     || body.fair.shrink_games !== +(state.fair?.shrink_games ?? 2)
