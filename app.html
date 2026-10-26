@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='d0b2eeb9';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='1e44e6d1';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2051,6 +2051,14 @@ html.share-mode body::before{display:none}
 #rpPen.has:not([aria-pressed="true"])::after{content:"";position:absolute;right:5px;top:5px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
 #rpPen{position:relative}
 @media (max-width:620px){.rp-penbar{gap:5px 6px;padding:5px 6px;top:6px}.rp-penbar button{min-height:30px;padding:0 7px;font-size:12px}.rp-penbar .pen-cols button{width:24px;height:24px;min-height:24px}.rp-penbar .pen-w input{width:80px}.rp-penbar .pen-lbl{display:none}}
+
+.spot-sub{font-size:15px}.spot-sub b{font-size:17px}  /* v177 1등 KDA·판당 킬·딜 조금 크게 */
+@media (max-width:620px){.spot-sub{flex-direction:column;align-items:flex-start;gap:3px;font-size:14px}.spot-sub b{font-size:16px}}
+.hlx .tkx .tk1 b{font:500 13.5px/1.2 var(--body)!important;color:var(--dust)!important}.hlx .tkx .tk1 em{font-size:24px!important}  /* v177 팀킬범 이름은 다른 하이라이트처럼, 횟수만 크게 */
+.duo-st b{font-weight:400!important}.duo-st span{color:#c9c5ae}  /* v177 덜 굵게 */
+.ach.fresh{animation:achBlink 1.2s ease-in-out infinite}  /* v177 새 업적 노란 테두리 깜빡임 */
+@keyframes achBlink{0%,100%{border-color:#F2C230;box-shadow:0 0 0 1px #F2C230,0 0 12px rgba(242,194,48,.55)}50%{border-color:rgba(242,194,48,.25);box-shadow:0 0 0 1px rgba(242,194,48,.1),0 0 0 rgba(242,194,48,0)}}
+@media (prefers-reduced-motion:reduce){.ach.fresh{animation:none}}
 </style>
 </head>
 <body class="viewer">
