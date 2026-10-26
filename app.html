@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='1404585f';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='2f8bb9b7';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -255,11 +255,11 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .duo-note{margin:-6px 0 8px;font-size:12.5px}
 .duo{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
 .duo-c{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
-.duo-c.best{border-color:color-mix(in srgb,var(--gold) 60%,var(--line));background:linear-gradient(120deg,rgba(242,179,61,.12),var(--panel) 60%)}.duo-c.worst{border-color:color-mix(in srgb,var(--flare) 50%,var(--line))}
+.duo-c.duo-best{border-color:color-mix(in srgb,var(--gold) 60%,var(--line));background:linear-gradient(120deg,rgba(242,179,61,.12),var(--panel) 60%)}.duo-c.duo-worst{border-color:color-mix(in srgb,var(--flare) 50%,var(--line))}
 .duo-h{display:flex;align-items:center;justify-content:space-between;gap:8px}.duo-h b{font-size:16px}.duo-h b i{font-style:normal;color:var(--dust);margin:0 4px}
 .duo-tag{font:700 11.5px var(--body);color:#14170f;background:var(--gold);border-radius:999px;padding:3px 9px;white-space:nowrap}.duo-tag.bad{background:var(--flare);color:#fff}
-.duo-sc{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:4px 8px}.duo-sc em{font:400 28px/1 var(--num);font-style:normal;color:var(--bone)}.duo-c.best .duo-sc em{color:var(--gold)}.duo-sc small{color:var(--dust);font-size:12px}
-.duo-sc i{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}.duo-sc i span{display:block;height:100%;background:linear-gradient(90deg,#8C6414,var(--gold))}.duo-c.worst .duo-sc i span{background:var(--flare)}
+.duo-sc{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:4px 8px}.duo-sc em{font:400 28px/1 var(--num);font-style:normal;color:var(--bone)}.duo-c.duo-best .duo-sc em{color:var(--gold)}.duo-sc small{color:var(--dust);font-size:12px}
+.duo-sc i{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}.duo-sc i span{display:block;height:100%;background:linear-gradient(90deg,#8C6414,var(--gold))}.duo-c.duo-worst .duo-sc i span{background:var(--flare)}
 .duo-st{display:flex;flex-wrap:wrap;gap:4px 12px;color:var(--dust);font-size:12.5px}.duo-st b{color:var(--bone);font-weight:600}
 .pmap td,.pmap th{vertical-align:middle;white-space:nowrap}.pmap tr.pm-best td{background:rgba(242,169,0,.08)}.pmap .ck{display:inline-flex;align-items:center;gap:3px;color:var(--gold)}.pmap .chick{width:16px;height:16px}  /* v172 맵별 · 숙련도 */
 @media (max-width:620px){.pmap th,.pmap td{padding:7px 4px;font-size:12.5px}}
@@ -269,7 +269,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .wm-l{grid-area:l;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px}.wm-l em{font:400 17px/1 var(--num);font-style:normal}.wm-l i{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}.wm-l i span{display:block;height:100%;background:var(--accent)}
 .wm-s{grid-area:s;display:flex;flex-wrap:wrap;gap:2px 14px;color:var(--dust);font-size:12.5px}.wm-s b{color:var(--bone);font-weight:600;margin-right:2px}
 .sea-rows{display:grid;gap:6px}.sea-row{display:flex;align-items:center;gap:12px}.sea-row span{min-width:70px;font-weight:600}.sea-row input{max-width:200px}
-.trend{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}.trend svg{width:100%;height:auto;display:block}  /* v171 점수 추이 · 라이벌 */
+.trend{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}.trend svg{width:100%;height:auto;display:block}  /* v171 점수 추이 · 라이벌 */
 .tr-leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:6px}.tr-leg button{display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--bone);font:600 13px var(--body);cursor:pointer;padding:4px 0}
 .tr-leg button i{width:14px;height:4px;border-radius:2px}.tr-leg button[aria-pressed=false]{opacity:.4}.tr-l{transition:opacity .2s}.tr-l.off{opacity:.06}
 .cum td,.history td,.tbl.mapwin td{vertical-align:middle}  /* v171 표 줄: 이름(두 줄)과 숫자·막대를 세로 가운데로 */
@@ -781,7 +781,7 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 .lc-hit{cursor:pointer;outline:none}
 .lc-tip{position:absolute;transform:translate(-50%,calc(-100% - 10px));background:#15180F;border:1px solid var(--accent);color:var(--bone);font-size:12.5px;font-weight:700;padding:4px 9px;border-radius:6px;white-space:nowrap;pointer-events:none;z-index:5;box-shadow:0 4px 12px rgba(0,0,0,.4)}
 .lc-tip.below{transform:translate(-50%,12px)}.lc-tip.below::after{bottom:auto;top:-5px;transform:translateX(-50%) rotate(225deg)}
-.lc-tip::after{content:"";position:absolute;left:50%;bottom:-5px;width:8px;height:8px;background:#15180F;border-right:1px solid var(--accent);border-bottom:1px solid var(--accent);transform:translateX(-50%) rotate(45deg)}
+.lc-tip::after{content:"";position:absolute;left:calc(50% + var(--ax,0px));bottom:-5px;width:8px;height:8px;background:#15180F;border-right:1px solid var(--accent);border-bottom:1px solid var(--accent);transform:translateX(-50%) rotate(45deg)}
 /* 무기별 성적 */
 .wst{display:flex;flex-direction:column;gap:7px}
 .wst>div{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:baseline}
@@ -1835,9 +1835,9 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .pb-v{display:flex;flex-direction:column;align-items:flex-end;gap:2px}.pb-v em{font:400 26px/1 var(--num);font-style:normal;color:var(--bone);white-space:nowrap}.pb-v em small{font:500 12px var(--body);color:var(--dust);margin-left:2px}
 .pb-v span{font-size:11.5px;color:var(--dust)}
 .hlx .tkx>span small{color:var(--dust);font-weight:500;margin-left:4px}
-.hlx .tkx .tk1{display:flex;align-items:center;justify-content:flex-start;gap:14px;min-height:34px;color:var(--bone)}  /* v171 이름·횟수 세로 가운데 */
-.hlx .tkx .tk1 b{font:700 19px/1 var(--body);color:var(--bone);min-width:0;overflow:hidden;text-overflow:ellipsis}
-.hlx .tkx .tk1 em{display:inline-flex;align-items:center;gap:2px;font-size:28px;line-height:1;color:var(--flare)}.hlx .tkx .tk1 em small{margin:0;line-height:1}
+.hlx .tkx .tk1{display:flex;align-items:baseline;justify-content:flex-start;gap:14px;min-height:34px;color:var(--bone)}  /* v175 이름·횟수 글자 아래 끝 맞춤 */
+.hlx .tkx .tk1 b{font:700 19px/1 var(--body);color:var(--bone);min-width:0}
+.hlx .tkx .tk1 em{display:inline-flex;align-items:baseline;gap:2px;font-size:28px;line-height:1;color:var(--flare)}.hlx .tkx .tk1 em small{margin:0;line-height:1}
 @media (min-width:901px){.hlx>div:last-child:nth-child(5n+1){grid-column:span 5}.hlx>div:last-child:nth-child(5n+2){grid-column:span 4}.hlx>div:last-child:nth-child(5n+3){grid-column:span 3}.hlx>div:last-child:nth-child(5n+4){grid-column:span 2}}
 @media (min-width:621px) and (max-width:900px){.hlx>div:last-child:nth-child(3n+1){grid-column:span 3}.hlx>div:last-child:nth-child(3n+2){grid-column:span 2}}
 @media (max-width:620px){.hlx>div:last-child:nth-child(odd){grid-column:span 2}}
@@ -8324,25 +8324,22 @@ function cumMvp(hall, days, rg) {  /* 시즌 MVP: 1등을 가장 많이 한 사�
     <div class="smvp-s"><div><em>${days.length}</em><small>일</small></div><div><em>${games}</em><small>게임</small></div><div><em>${wins}</em><small>치킨</small></div></div>
     <p class="smvp-d">${esc(sub)}</p></div>`;
 }
-function cumDuo(days) {  /* v172 듀오 궁합: 두 사람이 같이 한 판의 평균 순위·치킨·서로 살린 횟수 */
-  const P = (state.cumulative || []).map(c => c.nick), nameOf = n => (state.cumulative.find(c => c.nick.toLowerCase() === String(n).toLowerCase()) || {}).name || n;
-  const key = (a, b) => [a, b].sort().join("|"), D = {};
-  for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++) D[key(P[i], P[j])] = {a: P[i], b: P[j], n: 0, r: 0, w: 0, t10: 0, rv: 0};
-  for (const d of days) {
-    for (const [rank, ps] of d.gp || []) { const L = (ps || []).map(x => P.find(y => y.toLowerCase() === String(x).toLowerCase())).filter(Boolean);
-      for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) { const o = D[key(L[i], L[j])]; if (!o) continue; o.n++; o.r += rank || 0; if (rank === 1) o.w++; if (rank && rank <= 10) o.t10++; } }
-    for (const [who, m] of Object.entries(d.rv || {})) for (const [to, c] of Object.entries(m || {})) { const a = P.find(y => y.toLowerCase() === who.toLowerCase()), b = P.find(y => y.toLowerCase() === to.toLowerCase()); const o = a && b && a !== b && D[key(a, b)]; if (o) o.rv += c; }
-  }
-  const L = Object.values(D).filter(o => o.n >= 2).map(o => ({...o, avg: o.r / o.n, wr: o.w / o.n, tr: o.t10 / o.n, rvg: o.rv / o.n}));
+function cumDuo() {  /* v175 듀오 궁합: 4명이 늘 같이 하니까 판 수·순위 대신 두 사람 사이에만 생기는 기록으로 */
+  const nameOf = n => ((state.cumulative || []).find(c => c.nick.toLowerCase() === String(n).toLowerCase()) || {}).name || n;
+  const L = (state.duo || []).filter(r => r[8] > 0).map(([a, b, near, alive, rv, bc, co, rg, g]) => {
+    const tog = alive ? near / alive : 0, per = x => x / g;
+    const score = Math.round(Math.min(100, tog * 40 + Math.min(20, per(rv + bc * 2) * 40) + Math.min(20, per(co) * 40) + Math.min(20, per(rg) * 40)));
+    return {a, b, tog, rv, bc, co, rg, g, score};
+  });
   if (!L.length) return "";
-  for (const o of L) o.score = Math.round(Math.max(0, Math.min(100, o.wr * 120 + o.tr * 35 + Math.max(0, 16 - o.avg) * 2.2 + Math.min(1, o.rvg) * 12)));
-  L.sort((a, b) => b.score - a.score || b.n - a.n);
+  L.sort((x, y) => y.score - x.score);
   const best = L[0], worst = L.length > 2 ? L[L.length - 1] : null;
-  return `<div class="sec"><h3>듀오 궁합</h3></div><p class="who duo-note">두 사람이 같이 한 판만 모아서 봐요. 궁합 점수 = 치킨·탑10 비율, 평균 순위, 서로 살린 횟수를 합친 100점 만점.</p>
-    <div class="duo">${L.map(o => `<div class="duo-c ${o === best ? "best" : o === worst ? "worst" : ""}">
+  const st = (lbl, v, tip) => `<span title="${tip}">${lbl} <b>${v}</b></span>`;
+  return `<div class="sec"><h3>듀오 궁합</h3></div><p class="who duo-note">리플레이로 두 사람 사이에서만 생긴 일을 셌어요 (${best.g}판). 같이 다님 = 둘 다 살아 있을 때 60m 안에 붙어 있던 비율 · 살림 = 서로 기절에서 일으켜 세움 · 블루칩 = 죽은 짝을 블루칩으로 불러옴 · 합작 킬 = 한 명이 기절시키거나 거든 적을 다른 한 명이 처치 · 복수 = 짝을 쓰러뜨린 적을 1분 안에 잡음.</p>
+    <div class="duo">${L.map(o => `<div class="duo-c ${o === best ? "duo-best" : o === worst ? "duo-worst" : ""}">
       <div class="duo-h"><b>${esc(nameOf(o.a))} <i>×</i> ${esc(nameOf(o.b))}</b>${o === best ? `<span class="duo-tag">최고의 듀오</span>` : o === worst ? `<span class="duo-tag bad">환장의 듀오</span>` : ""}</div>
       <div class="duo-sc"><em>${o.score}</em><small>점</small><i><span style="width:${o.score}%"></span></i></div>
-      <div class="duo-st"><span><b>${o.n}</b>판</span><span>평균 <b>${o.avg.toFixed(1)}</b>등</span><span>치킨 <b>${o.w}</b></span><span>서로 살림 <b>${o.rv}</b>번</span></div></div>`).join("")}</div>`;
+      <div class="duo-st">${st("같이 다님", Math.round(o.tog * 100) + "%", "둘 다 살아 있을 때 60m 안에 있던 시간 비율")}${st("살림", o.rv + "번", "서로 기절에서 일으켜 세운 횟수")}${st("블루칩", o.bc + "번", "죽은 짝을 블루칩으로 불러온 횟수")}${st("합작 킬", o.co + "번", "한 명이 기절시키거나 거든 적을 다른 한 명이 처치")}${st("복수", o.rg + "번", "짝을 쓰러뜨린 적을 1분 안에 기절·처치")}</div></div>`).join("")}</div>`;
 }
 async function cumTrend(rg) {  /* v171 팀원 점수 추이 비교 (고른 기간의 최근 20일) */
   const box = $("#cumTrend"); if (!box) return;
@@ -8350,12 +8347,12 @@ async function cumTrend(rg) {  /* v171 팀원 점수 추이 비교 (고른 기�
   if ($("#cumTrend") !== box) return;
   const dates = [...new Set(playersData.flatMap(p => (p.history || []).map(h => h.date)))].filter(d => inRange(d, rg)).sort().slice(-20); if (dates.length < 2) { box.innerHTML = ""; return; }
   const all = playersData.flatMap(p => (p.history || []).filter(h => dates.includes(h.date)).map(h => h.total));
-  const lo = Math.floor(Math.min(...all) / 10) * 10, hi = Math.ceil(Math.max(...all) / 10) * 10 || 100, Wd = Math.max(300, Math.min(900, (box.clientWidth || 760) - 30)), H = Wd < 500 ? 200 : 230, pl = 40, pr = 16, pt = 12, pb = 26;  /* 화면 폭 그대로 그려서 글자가 작아지지 않게 */
+  const lo = Math.floor(Math.min(...all) / 10) * 10, hi = Math.ceil(Math.max(...all) / 10) * 10 || 100, Wd = Math.max(300, Math.min(900, (box.clientWidth || Math.min(1180, document.documentElement.clientWidth - 32)) - 30)), H = Wd < 500 ? 200 : 230, pl = 40, pr = 16, pt = 12, pb = 26;  /* 화면 폭 그대로 그려서 글자가 작아지지 않게 */
   const X = i => pl + i * (Wd - pl - pr) / (dates.length - 1), Y = v => pt + (hi - v) / Math.max(1, hi - lo) * (H - pt - pb);
   const ticks = [lo, (lo + hi) / 2, hi].map(v => `<line x1="${pl}" x2="${Wd - pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(183,179,156,.14)"/><text x="${pl - 6}" y="${Y(v) + 4}" font-size="11" fill="#8f8b76" text-anchor="end">${Math.round(v)}</text>`).join("");
   const xl = [...new Set([0, Math.floor((dates.length - 1) / 2), dates.length - 1])].map(i => `<text x="${X(i)}" y="${H - 6}" font-size="11" fill="#8f8b76" text-anchor="${i === 0 ? "start" : i === dates.length - 1 ? "end" : "middle"}">${dates[i].slice(5).replace("-", "/")}</text>`).join("");
   const lines = playersData.map((p, pi) => { const col = PCOL[pi % PCOL.length], pts = dates.map((d, i) => { const h = (p.history || []).find(q => q.date === d); return h ? [X(i), Y(h.total), h] : null; }).filter(Boolean);
-    return `<g class="tr-l" data-i="${pi}"><polyline points="${pts.map(q => q[0] + "," + q[1]).join(" ")}" fill="none" stroke="${col}" stroke-width="2.4" stroke-linejoin="round"/>${pts.map(q => `<circle cx="${q[0]}" cy="${q[1]}" r="3.2" fill="${col}"><title>${esc(p.name)} ${q[2].date.slice(5).replace("-", "/")} · ${sc(q[2].total)}점 · ${q[2].rank}위</title></circle>`).join("")}</g>`; }).join("");
+    return `<g class="tr-l" data-i="${pi}"><polyline points="${pts.map(q => q[0] + "," + q[1]).join(" ")}" fill="none" stroke="${col}" stroke-width="2.4" stroke-linejoin="round"/>${pts.map(q => `<circle cx="${q[0]}" cy="${q[1]}" r="3.2" fill="${col}"/><circle class="lc-hit" cx="${q[0]}" cy="${q[1]}" r="10" fill="transparent" tabindex="0" data-tip="${esc(p.name)} · ${q[2].date.slice(5).replace("-", "/")} · ${sc(q[2].total)}점 · ${q[2].rank}위"/>`).join("")}</g>`; }).join("");
   box.innerHTML = `<div class="sec"><h3>점수 추이 (최근 ${dates.length}일)</h3></div><div class="trend"><div class="tr-leg">${playersData.map((p, pi) => `<button type="button" data-tr="${pi}" aria-pressed="true"><i style="background:${PCOL[pi % PCOL.length]}"></i>${esc(p.name)}</button>`).join("")}</div>
     <svg viewBox="0 0 ${Wd} ${H}" role="img" aria-label="팀원 점수 추이">${ticks}${xl}${lines}</svg></div>`;
   box.querySelectorAll("[data-tr]").forEach(b => b.onclick = () => { const on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", String(on)); box.querySelector(`.tr-l[data-i="${b.dataset.tr}"]`)?.classList.toggle("off", !on); });
@@ -8387,7 +8384,7 @@ function renderCumulative() {
       <tbody>${rows}</tbody></table></div>` : `<p class="pc-none">이 시즌에는 아직 기록이 없어요.</p>`}
     <div id="cumTrend"></div>
     ${cumMaps(days)}
-    ${cumDuo(days)}
+    ${cumDuo()}
     <div class="sec history-sec"><h3>지난 기록</h3></div>
     <div class="hist-mon">
       <button type="button" class="btn" data-hm="1" ${mi < months.length - 1 ? "" : "disabled"} aria-label="이전 달">‹</button>
@@ -8658,12 +8655,13 @@ $("#btnQuit").onclick = async () => {
 
 /* 그래프 점 말풍선 */
 function lcTip(dot) {
-  const box = dot.closest(".chart"); if (!box) return;
+  const box = dot.closest(".chart, .trend"); if (!box) return;
   let tip = box.querySelector(".lc-tip"); if (!tip) { tip = document.createElement("div"); tip.className = "lc-tip"; box.appendChild(tip); }
   const r = dot.getBoundingClientRect(), b = box.getBoundingClientRect();
-  tip.textContent = dot.dataset.tip; tip.style.left = (r.left + r.width / 2 - b.left) + "px"; tip.style.top = (r.top + r.height / 2 - b.top) + "px"; tip.classList.toggle("below", r.top - b.top < 36); tip.hidden = false;
+  tip.textContent = dot.dataset.tip; tip.style.left = (r.left + r.width / 2 - b.left) + "px"; tip.style.top = (r.top + r.height / 2 - b.top) + "px"; tip.classList.toggle("below", r.top - b.top < 36); tip.hidden = false; tip.style.marginLeft = "0px"; tip.style.setProperty("--ax", "0px");
+  { const t = tip.getBoundingClientRect(), vw = document.documentElement.clientWidth, pad = 6; const dx = t.right > vw - pad ? vw - pad - t.right : t.left < pad ? pad - t.left : 0; if (dx) { tip.style.marginLeft = dx + "px"; tip.style.setProperty("--ax", -dx + "px"); } }  /* v175 화면 끝에서 잘리지 않게 */
 }
-const lcHide = el => { const t = el.closest(".chart")?.querySelector(".lc-tip"); if (t) t.hidden = true; };
+const lcHide = el => { const t = el.closest(".chart, .trend")?.querySelector(".lc-tip"); if (t) t.hidden = true; };
 document.addEventListener("mouseover", e => { const d = e.target.closest?.(".lc-hit"); if (d) lcTip(d); });
 document.addEventListener("mouseout", e => { const d = e.target.closest?.(".lc-hit"); if (d) lcHide(d); });
 document.addEventListener("focusin", e => { if (e.target.classList?.contains("lc-hit")) lcTip(e.target); });
