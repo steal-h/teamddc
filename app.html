@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='a795e81a';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='1404585f';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2237,7 +2237,6 @@ html.share-mode body::before{display:none}
       </div>
       <div class="field"><span>무기 이름 고치기 <small>한 줄에 '공식 이름 = 보여줄 이름'</small></span>
         <textarea id="wnames" spellcheck="false" placeholder="AUG A3 = AUG"></textarea></div>
-      <div class="field"><span>경쟁전 시즌 시작일 <small>분석할 때 새 시즌을 처음 본 날로 자동 기록돼요. 실제 시작일과 다르면 고쳐 주세요.</small></span><div id="seasonRows" class="sea-rows"></div></div>
     </section>
     <section class="set-pane" data-pane="score">
       <div class="field"><span>점수 배점</span><div class="wgrid" id="wgrid"></div><p class="help" id="wsum"></p></div>
@@ -2672,11 +2671,10 @@ function openProfile(nick) {
       ${p.best_day ? `<div class="prof-sec"><h4>개인 최고의 날</h4><p style="margin:0">${esc(p.best_day.date)}, ${p.best_day.total}점, 판당 딜량 ${fmt(p.best_day.damage)}, ${p.best_day.kills}킬</p></div>` : ""}
       ${p.wstats?.length ? `<div class="prof-sec"><h4>무기별 성적 <span class="who">누적, 적에게 준 피해 순</span></h4>${wstatsHtml(p.wstats, 6)}</div>` : p.weapons.length ? `<div class="prof-sec"><h4>주무기 순위</h4><div class="wlist">${p.weapons.map(([w, k, n]) => `<div><div><b>${esc(w)}</b><span class="who">${k}킬 ${n}기절</span><i><em style="width:${(k + n) / maxW * 100}%"></em></i></div></div>`).join("")}</div></div>` : ""}
       ${profMaps(p)}
-      ${profMastery(p)}
       <div class="prof-sec"><h4>업적 <span class="who">${p.achievements.filter(a => a.date).length} / ${p.achievements.length}</span></h4>
         <div class="tier-sum">${[6, 5, 4, 3, 2, 1, 0].map(tr => { const all = p.achievements.filter(a => !a.tease && tierOf(a) === tr);
           return `<span class="ts t${tr}"><b>${all.filter(a => a.date).length}</b>/${all.length} ${TIER_NAMES[tr]}</span>`; }).join("")}</div>
-        <div class="seg" role="group" aria-label="업적 보기" style="margin-bottom:6px"><button data-af="on" aria-pressed="true">달성</button><button data-af="all" aria-pressed="false">전체</button><button data-af="off" aria-pressed="false">진행 중</button></div>
+        <div class="seg" role="group" aria-label="업적 보기" style="margin-bottom:6px"><button data-af="all" aria-pressed="false">전체</button><button data-af="on" aria-pressed="true">달성</button><button data-af="off" aria-pressed="false">진행 중</button></div>
         <div id="achWrap">${[...new Set(p.achievements.map(a => a.cat))].map(cat => { const list = p.achievements.map((a, i) => [a, i]).filter(([a]) => a.cat === cat)
             .sort((x, y) => tierOf(x[0]) - tierOf(y[0]) || x[1] - y[1]).map(([a]) => a);  // 등급 낮은 것부터, 같은 등급은 원래 순서
           return `<details class="ach-group" ${cat === "왕좌" || cat === "전투" ? "open" : ""}><summary class="ach-cat">${esc(cat)} <span>${list.filter(a => a.date).length}/${list.length}</span></summary>
@@ -8363,8 +8361,7 @@ async function cumTrend(rg) {  /* v171 팀원 점수 추이 비교 (고른 기�
   box.querySelectorAll("[data-tr]").forEach(b => b.onclick = () => { const on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", String(on)); box.querySelector(`.tr-l[data-i="${b.dataset.tr}"]`)?.classList.toggle("off", !on); });
 }
 function renderCumulative() {
-  const rg = cumRange(), R = seasonRanges(), days = state.days.filter(d => inRange(d.date, rg));
-  const seasonBar = R.length ? `<div class="sea-bar" role="group" aria-label="기간">${[...R].reverse().map((s, i) => `<button type="button" data-sea="${esc(s.id)}" aria-pressed="${rg.key === s.id}">${esc(s.name)}${i === 0 ? " <small>지금</small>" : ""}</button>`).join("")}<button type="button" data-sea="all" aria-pressed="${rg.key === "all"}">전체</button></div>` : "";
+  const rg = {key: "all", from: "0000", to: "9999", label: "전체"}, days = state.days;  /* v173 시즌 나눠 보기 뺌 */
   const hall = cumHall(days);
   const rows = hall.map(c => {
     const total = c.days || 1;
@@ -8384,8 +8381,6 @@ function renderCumulative() {
       <td class="order">${d.ranking.map((n, i) => i === 0 ? `<b>${esc(n)}</b>` : esc(n)).join(" › ")}</td>
       <td class="n"><button class="del" data-del="${d.date}" aria-label="${d.date} 기록 삭제">삭제</button></td></tr>`).join("");
   $("#cum").innerHTML = state.days.length ? `
-    ${seasonBar}
-    ${cumMvp(hall, days, rg)}
     <div class="sec"><h3>명예의 전당 (${rg.key === "all" ? "" : esc(rg.label) + " · "}${days.length}일)</h3></div>
     ${days.length ? `<div class="tbl cum"><table>
       <thead><tr><th>플레이어</th><th class="c">1등</th><th class="c">2등</th><th class="c">3등</th><th class="c">4등</th><th>참여</th><th>평균</th><th>분포</th></tr></thead>
@@ -8404,7 +8399,6 @@ function renderCumulative() {
     : `<div class="notice"><strong>아직 누적 기록이 없어요</strong>
        어워즈 탭에서 분석하거나 '최근 14일 한 번에 분석'을 누르면 여기에 쌓여요.</div>`;
   cumTrend(rg);
-  document.querySelectorAll("[data-sea]").forEach(b => b.onclick = () => { cumSeason = b.dataset.sea; renderCumulative(); });
   document.querySelectorAll("[data-open]").forEach(b => b.onclick = () => openDay(b.dataset.open));
   document.querySelectorAll("[data-hm]").forEach(b => b.onclick = () => { const i = months.indexOf(histYM) + +b.dataset.hm; if (months[i]) { histYM = months[i]; renderCumulative(); } });
   document.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
@@ -8506,8 +8500,6 @@ function openSettings() {
     $("#wsum").innerHTML = `총점 <span class="wsum">${["damage", "kills", "dbnos", "assists", "revives", "survival"].reduce((a, k) => a + v(k), 0)}점</span> (블루칩은 이 위에 더해지는 보너스). 100점이 아니어도 괜찮아요.`; };
   document.querySelectorAll("[data-w]").forEach(i => i.oninput = sumW); sumW();
   $("#wnames").value = Object.entries(state.weapon_names || {}).map(([a, b]) => `${a} = ${b}`).join("\n");
-  $("#seasonRows").innerHTML = (state.seasons || []).length ? [...state.seasons].reverse().map(x => `<label class="sea-row"><span>${esc(x.name)}</span><input type="date" data-season="${esc(x.id)}" value="${esc(x.start)}"></label>`).join("")
-    : `<p class="help">아직 받아 온 시즌이 없어요. 다음 분석 때 PUBG에서 지금 시즌을 받아 와요.</p>`;  /* v172 */
   const rs = state.replay_img_scan || {}, RN = {grenade: "수류탄", molotov: "화염병", smoke: "연막탄", flash: "섬광탄", sticky: "점착 폭탄", c4: "C4",
     bluezone: "블루존 수류탄", carepackage: "보급", carepackage_open: "열린 보급", carepackage_flying: "낙하 보급", flare: "신호탄",
     panzerfaust: "판처파우스트", mortar: "박격포", jerrycan: "연료통"};
@@ -8634,7 +8626,6 @@ $("#settingsForm").addEventListener("submit", async e => {
   body.weights = Object.fromEntries([...document.querySelectorAll("[data-w]")].map(i => [i.dataset.w, +i.value || 0]));
   body.fair = {shrink_games: 0};  // 판 수 보정은 없앰 (항상 끔)
   body.abs_full = Object.fromEntries([...document.querySelectorAll("[data-abs]")].map(i => [i.dataset.abs, +i.value || 0]));
-  body.season_starts = Object.fromEntries([...document.querySelectorAll("[data-season]")].map(i => [i.dataset.season, i.value]));  /* v172 */
   body.weapon_names = Object.fromEntries($("#wnames").value.split("\n").map(l => l.split("=").map(x => x.trim())).filter(x => x.length === 2 && x[0] && x[1]));
   const changedScore = JSON.stringify(body.weights) !== JSON.stringify(Object.fromEntries(Object.keys(body.weights).map(k => [k, +state.weights[k] || 0])))
     || body.fair.shrink_games !== +(state.fair?.shrink_games ?? 2)
