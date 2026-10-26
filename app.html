@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='03b43547';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='e8eb8608';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -877,9 +877,9 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 @keyframes spin{to{transform:rotate(360deg)}}
 /* 입자: 떠오르는 입자 / 불티 */
 .pc .dust{position:absolute;bottom:-8px;z-index:2;width:calc(9px * var(--ds,1));height:calc(9px * var(--ds,1));border-radius:50%;pointer-events:none;opacity:0;
-  background:radial-gradient(circle,#fff 0 20%,var(--tc2) 45%,transparent 72%);will-change:transform,opacity;animation:rise var(--dd,6s) linear infinite}
+  background:radial-gradient(circle,#fff 0 20%,var(--tc2) 45%,transparent 72%);will-change:transform,opacity;animation:ember-rise var(--dd,6s) linear infinite}  /* v189 이름 겹침 수정 (시상 등장 애니메이션 rise 를 덮어써서 카드가 사라졌음) */
 .pc .dust:nth-child(3n){background:radial-gradient(circle,#fff 0 20%,var(--tc) 45%,transparent 72%)}
-@keyframes rise{0%{opacity:0;transform:translate(0,0) scale(.5)}12%{opacity:.95}75%{opacity:.7}100%{opacity:0;transform:translate(var(--dx,10px),-460px) scale(1.15)}}
+@keyframes ember-rise{0%{opacity:0;transform:translate(0,0) scale(.5)}12%{opacity:.95}75%{opacity:.7}100%{opacity:0;transform:translate(var(--dx,10px),-460px) scale(1.15)}}
 .pc .ember{position:absolute;bottom:-8px;z-index:2;width:7px;height:7px;border-radius:50%;pointer-events:none;opacity:0;
   background:radial-gradient(circle,#FFF2C0 0 25%,var(--tc) 50%,transparent 75%);will-change:transform,opacity;animation:ember var(--dd,5s) ease-in infinite}
 @keyframes ember{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}40%{transform:translate(calc(var(--dx) * .5),-180px)}70%{transform:translate(calc(var(--dx) * -.4),-320px);opacity:.8}100%{opacity:0;transform:translate(var(--dx),-470px)}}
@@ -2076,6 +2076,8 @@ html.share-mode body::before{display:none}
 @media (min-width:621px){.cards{display:flex;flex-wrap:wrap;justify-content:center}.cards>*{flex:0 0 calc(25% - 9px);min-width:0}}  /* v178 수상자가 적을 때도 가운데 */
 @media (min-width:621px) and (max-width:900px){.cards>*{flex-basis:calc(50% - 6px)}}
 .pbx{display:flex;flex-wrap:wrap;justify-content:center}.pbx>.pb{flex:0 1 330px;min-width:250px}  /* v178 기록 갱신 가운데 */
+.pbx.n4{display:grid;grid-template-columns:repeat(2,minmax(0,330px));justify-content:center}.pbx.n4>.pb{min-width:0}  /* v189 4개면 2×2 */
+@media (max-width:600px){.pbx.n4{grid-template-columns:minmax(0,1fr)}}
 .duo-c{position:relative}.duo-crown{position:absolute;top:-15px;left:-12px;width:34px;height:26px;transform:rotate(-18deg);filter:drop-shadow(0 2px 3px rgba(0,0,0,.6));z-index:2}  .duo{padding-top:10px;padding-left:8px}  /* v178 최고의 듀오 왕관 */
 .hlx .tkps{display:flex;flex-wrap:wrap;gap:2px 26px}.hlx .tkp{display:flex;flex-direction:column;gap:2px;min-width:0}  /* v179 팀킬범 */
 
@@ -2721,7 +2723,7 @@ async function renderRecordsBroken(r) {
   }
   if (!out.length) { box.innerHTML = ""; return; }
   const f = v => typeof v === "number" ? fmt(Math.round(v * 10) / 10) : v;
-  box.innerHTML = `<div class="sec"><h3>기록 갱신</h3></div><div class="pbx">${out.map(o => `<div class="pb ${o.streak ? "st" : ""}">
+  box.innerHTML = `<div class="sec"><h3>기록 갱신</h3></div><div class="pbx n${out.length}">${out.map(o => `<div class="pb ${o.streak ? "st" : ""}">
     <span class="pb-av">${pimg(o.p) ? `<img src="${pimg(o.p)}" alt="">` : esc(o.p.name.slice(0, 1))}</span>
     <div class="pb-t"><small>${esc(o.label)}</small><b>${esc(o.p.name)}</b></div>
     <div class="pb-v"><em>${f(o.v)}<small>${o.unit}</small></em>${o.streak ? "" : `<span>이전 ${f(o.old)}</span>`}</div></div>`).join("")}</div>`;
