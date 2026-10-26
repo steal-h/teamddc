@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='0f9ad95f';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='8381b747';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -1791,6 +1791,8 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .hlx em{font-style:normal;font:400 30px/1.05 var(--num);color:var(--bone);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}.hlx em small{font:500 12.5px var(--body);color:var(--dust);margin-left:2px}
 .hlx b{font-size:13.5px;font-weight:500;color:var(--dust);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hlx .bad span{color:var(--flare)}
+.hlx .tkx>span small{color:var(--dust);font-weight:500;margin-left:4px}.hlx .tkx .tk1{display:flex;align-items:baseline;gap:8px;color:var(--bone)}
+.hlx .tkx .tk1 b{font:700 20px/1.15 var(--body);color:var(--bone);min-width:0}.hlx .tkx .tk1 em{font-size:30px;color:var(--flare)}
 @media (min-width:901px){.hlx>div:last-child:nth-child(5n+1){grid-column:span 5}.hlx>div:last-child:nth-child(5n+2){grid-column:span 4}.hlx>div:last-child:nth-child(5n+3){grid-column:span 3}.hlx>div:last-child:nth-child(5n+4){grid-column:span 2}}
 @media (min-width:621px) and (max-width:900px){.hlx>div:last-child:nth-child(3n+1){grid-column:span 3}.hlx>div:last-child:nth-child(3n+2){grid-column:span 2}}
 @media (max-width:620px){.hlx>div:last-child:nth-child(odd){grid-column:span 2}}
@@ -2837,6 +2839,10 @@ function renderDay(r, report, reveal) {
   }).join("");
   const hl = r.highlights.map(h => {  // v78 HL-09 큰 숫자 계기판: 기록 숫자를 가장 크게
     const m = String(h.value || "").match(/([\d,.]+)\s*([^\d\s,.]*)/), bad = h.label === "팀킬범" || h.tone === "bad";
+    if (h.label === "팀킬범") {  /* v170 팀킬범: 이름과 횟수를 크게 (팀원 기절 포함) */
+      const L = [...String(h.name || "").matchAll(/\s*([^,]+?)\s+(\d+)회/g)].map(q => `<span class="tk1"><b>${esc(q[1])}</b><em>${q[2]}<small>회</small></em></span>`).join("");
+      return `<div class="bad tkx"><span>팀킬범 <small>팀킬·팀원 기절</small></span>${L || `<b>${esc(h.name)}</b>`}</div>`;
+    }
     return `<div class="${bad ? "bad" : ""}"><span>${esc(h.label)}</span><em>${m ? `${esc(m[1])}<small>${esc(m[2])}</small>` : `<small>${esc(h.value || "")}</small>`}</em><b>${esc(h.name)}</b></div>`; }).join("");
   const dmgMax = Math.max(1, ...r.games.flatMap(g => g.players.map(p => p.damage)));
   const CROWN = `<svg class="crown" viewBox="0 0 24 18" aria-label="이 판 MVP"><path d="M2 15 L4 4 L9 9 L12 2 L15 9 L20 4 L22 15 Z" fill="#F2B33D" stroke="#8C6414" stroke-width="1.2" stroke-linejoin="round"/><rect x="2" y="15" width="20" height="2.6" rx="1" fill="#D99A22"/></svg>`;
@@ -3830,7 +3836,7 @@ async function openReel(date, rec = false) {
     if (tk !== reelToken) return;
     let R; try { R = await getReplayData(m.id); } catch { continue; }
     rpSetup(R);
-    const size = 1600 / R.size_m;
+    const size = 1100 / R.size_m;  /* v170 명장면은 조금 더 확대 */
     rp.t = m.t0; rp.cam = {x: m.fx, y: m.fy, s: Math.min(1, size)}; rp.follow = true;
     rp.seen = R.events.filter(e => e.t <= rp.t).length; renderFeed();
     rp.reel = {end: m.t1}; rp.playing = false; rpStartLoop();
@@ -3969,8 +3975,8 @@ function feedLine(e) {
   if (e.k === "emlift") return `<div><time>${mmss(e.t)}</time><b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b> 비상호출 비행기 탑승</div>`;
   if (e.k === "ftransmit") return `<div><time>${mmss(e.t)}</time>${foeTn(e.by)}${esc(e.by)} 블루칩 송신 → ${esc(e.who)} 복귀</div>`;
   if (e.k === "transmit") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 블루칩 송신${e.est ? " (추정)" : ""} → <b style="color:${rpCol(e.who)}">${esc(rpName(e.who))}</b></div>`;
-  const kcb = e.x != null ? `<button class="kc-btn" type="button" data-kc="${rp.data.events.indexOf(e)}" title="죽기 직전 8초를 그 자리에서 다시 보기">킬캠</button>` : "";
-  const kcw = e.x != null ? `<button class="kc-btn win" type="button" data-kc="${rp.data.events.indexOf(e)}" title="처치 직전 8초를 그 자리에서 다시 보기">킬캠</button>` : "";  // 우리가 잡은 장면
+  const kcb = e.x != null ? `<button class="kc-btn" type="button" data-kc="${rp.data.events.indexOf(e)}" title="죽기 직전 4초를 그 자리에서 다시 보기">킬캠</button>` : "";
+  const kcw = e.x != null ? `<button class="kc-btn win" type="button" data-kc="${rp.data.events.indexOf(e)}" title="처치 직전 4초를 그 자리에서 다시 보기">킬캠</button>` : "";  // 우리가 잡은 장면
   if (e.k === "kill") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 처치 ${foeTn(e.who)}${esc(e.who)} <small>${esc(wd)}</small>${kcw}</div>`;
   if (e.k === "knock") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 기절시킴 ${foeTn(e.who)}${esc(e.who)} <small>${esc(wd)}</small>${kcw}</div>`;
   if (e.k === "died") return `<div class="bad"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 사망, ${foeTn(e.by)}${esc(e.by)} <small>${esc(wd)}</small>${kcb}</div>`;
@@ -4604,6 +4610,7 @@ function rpCamera(dt) {
     setTimeout(() => { if (!rp.manual) { rp.cam = {...target}; rpClampCam(); } }, 150);
   }
   const k = Math.min(1, dt * 2.4), ks = Math.min(1, dt * (fz ? 2.4 : 1.1));  // 따라가기 줌은 더 부드럽게
+  if (rp.reel) ts *= .72;  /* v170 오늘의 명장면은 기본으로 조금 더 확대 */
   rp.cam.s += (ts - rp.cam.s) * ks; rp.cam.x += (tx - rp.cam.x) * k; rp.cam.y += (ty - rp.cam.y) * k;
   rpClampCam();
 }
@@ -4716,7 +4723,7 @@ function rpDraw(dt, now, view) {
         ctx.bezierCurveTo(p1[0] + (p2[0] - p0[0]) * tns, p1[1] + (p2[1] - p0[1]) * tns, p2[0] - (p3[0] - p1[0]) * tns, p2[1] - (p3[1] - p1[1]) * tns, p2[0], p2[1]);
       }
     }
-    ctx.save(); ctx.globalAlpha = .45;  // 동선은 반투명하게 (지도·아이콘이 가려지지 않게)
+    ctx.save(); ctx.globalAlpha = .3;  /* v170 더 투명하게 (.45 → .3) */  // 동선은 반투명하게 (지도·아이콘이 가려지지 않게)
     ctx.strokeStyle = "rgba(0,0,0,.4)"; ctx.lineWidth = 4; ctx.stroke();
     ctx.strokeStyle = RP_COLORS[p.slot % 4]; ctx.lineWidth = 2.2; ctx.stroke(); ctx.restore();
   }
@@ -5205,9 +5212,6 @@ function rpDraw(dt, now, view) {
     const big = cam.s < .3;
     ctx.font = "700 10px Pretendard, 'Malgun Gothic', sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     const foeCars = [], foePlanes = [];
-    const carOcc = {};  /* v166 같은 차(열쇠)에 탄 같은 팀 사람들 → 그 사람들 위치 평균에 핸들 하나 (사람마다 기록 시각이 달라 둘로 나뉘거나 순간이동하던 것) */
-    for (const en of R.enemies) for (const v of en.vh || []) if (v[3] && rp.t >= v[0] - 1 && rp.t <= (v[1] ?? Infinity) + 1) (carOcc[en.tm + ":" + v[3]] ||= []).push([en, v]);
-    const carMean = (k, t) => { let sx = 0, sy = 0, n = 0; for (const [e, v] of carOcc[k] || []) { if (t < v[0] || t > (v[1] ?? Infinity)) continue; const p = interp(e.tr, t); if (p) { sx += p[0]; sy += p[1]; n++; } } return n ? [sx / n, sy / n] : null; };
     for (const en of R.enemies) {
       if (!en.tr.length || rp.t < en.tr[0][0]) continue;
       if (foeDead(en, rp.t)) {  // 죽은 뒤 몇 초: 쓰러지는 효과 + 흐려지는 X 표시 (바로 사라지지 않게)
@@ -5244,13 +5248,11 @@ function rpDraw(dt, now, view) {
       const down = (en.kn || []).some(([a, b]) => rp.t >= a && rp.t < b);  // 기절 중
       if (rpFoeInCar(en, rp.t) && !(down && !(en.vh || []).some(v => rp.t >= v[0] && rp.t <= v[1]))) {  // v101 차 안에서 기절해도 차는 그대로 (예전엔 차가 사라졌다 나타남)  // 차에 타면 핸들 (같은 차의 같은 팀은 하나만), BRDM은 장갑차
         const vh = (en.vh || []).find(v => rp.t >= v[0] && rp.t <= (v[1] ?? Infinity));
-        const ck = vh && vh[3] ? en.tm + ":" + vh[3] : null, cm = ck && carMean(ck, rp.t);
-        if (cm) { q = cm; x = X(q[0]); y = Y(q[1]); }
         const cA = interp(en.tr, rp.t - 1), cB = interp(en.tr, rp.t + 1), cSp = cA && cB ? Math.hypot(cB[0] - cA[0], cB[1] - cA[1]) * R.size_m / 2 : 0;  // v161 빠르게 달릴 땐 같은 차 판정 거리를 속도만큼 넓힘 (팀원마다 위치 기록 시각이 달라 수십 m 벌어짐)
-        if (!foeCars.some(o => o.tm === en.tm && ((o.key && vh && vh[3] && o.key === vh[3]) || Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 30 + Math.max(cSp, o.sp || 0) * 4))) {  // v159 30m (기록 시각이 달라 잠깐 벌어져도 한 대로)  // v158 열쇠가 달라도 같은 팀이 18m 안이면 같은 차  // v101 다른 차에 탄 같은 팀원이 90m 안에 있다고 통째로 숨기지 않게
+        if (!foeCars.some(o => o.tm === en.tm && (o.key && vh && vh[3] ? o.key === vh[3] : Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 18))) {  /* v169 맨 처음 방식: 탑승 기록의 차 번호가 같을 때만 한 대 (번호가 없을 때만 18m) */  // v159 30m (기록 시각이 달라 잠깐 벌어져도 한 대로)  // v158 열쇠가 달라도 같은 팀이 18m 안이면 같은 차  // v101 다른 차에 탄 같은 팀원이 90m 안에 있다고 통째로 숨기지 않게
           if (vh && vh[2] === 2) drawMortarSeat(ctx, x, y, big ? 9 : 7, teamColor(en.tm || 0), rp.t, en.n);
           else if (vh && vh[2]) { drawBRDM(ctx, x, y, big ? 28 : 20, rpHeading("e:" + en.n, t => interp(en.tr, t)), teamColor(en.tm || 0)); drawTeamTag(ctx, x + (big ? 12 : 9), y - (big ? 11 : 8), en.tm, teamColor(en.tm || 0)); drawSeats(ctx, x - 14.5, y + (big ? 26 : 21), Math.max(1, rpBrdmCount(R, vh[3], en.tm)), teamColor(en.tm || 0)); rpHpBar(ctx, rpCarHp(vh[3]), x, y + (big ? 18 : 14), big ? 26 : 20, 3, true); }
-          else drawVeh(ctx, x, y, big ? 9 : 6, teamColor(en.tm || 0), vh && vh[4], () => ck ? rpHeading("k:" + ck, t => carMean(ck, t) || interp(en.tr, t)) : rpHeading("e:" + en.n, t => interp(en.tr, t)), now);
+          else drawVeh(ctx, x, y, big ? 9 : 6, teamColor(en.tm || 0), vh && vh[4], () => rpHeading("e:" + en.n, t => interp(en.tr, t)), now);
           foeCars.push({q, tm: en.tm, key: vh && vh[3], sp: cSp});
         }
         rpHpBar(ctx, en.hp, x, y + (big ? 13 : 10), big ? 20 : 14, 3);
@@ -5409,10 +5411,10 @@ function rpFightHide() {  // 자동 연출로 교전을 확대해 보는 동안:
 }
 function rpAuto() { return !!(rp.cine && rp.follow && !rp.manual); }  // 자동 카메라: 자동 연출 켜짐 + 카메라를 직접 움직이지 않음
 function rpTargetSpeed() {
-  if (rp.kc) { rp.focus = null; rp.focusHot = false; const d = rp.t - rp.kc.e.t; return d > -1.5 && d < .8 ? .4 : 1.25; }  // 킬캠: 조금 빠르게 (v138 1 → 1.25배, 쓰러지는 순간 0.3 → 0.4배)
+  if (rp.kc) { rp.focus = null; rp.focusHot = false; const d = rp.t - rp.kc.e.t; return d > -1.5 && d < .8 ? .4 : 1.5; }  /* v168 기다리는 시간 줄임: 8초 전 → 4초 전, 1.5배 */  // 킬캠: 조금 빠르게 (v138 1 → 1.25배, 쓰러지는 순간 0.3 → 0.4배)
   const C = rpCfg(), fs = C.fight_speed;
   let sp = rp.reel ? C.reel_speed : rp.speed;
-  if (!rpAuto()) { rp.focus = null; return sp; }  // 직접 볼 때는 고른 배속 그대로 (교전 배속·빨리감기 없음)
+  if (!rpAuto()) { rp.focus = null; return rp.reel ? C.fight_speed : sp; }  /* v170 명장면을 직접 확대해서 볼 땐 교전 배속으로 */  // 직접 볼 때는 고른 배속 그대로 (교전 배속·빨리감기 없음)
   const f = rpFightAt(rp.t), hot = rpFightHot(f, rp.t);
   rp.focus = f; rp.focusHot = hot; if (f) rp.focusUntil = f.t1;
   if (hot) return fs;  // 총소리가 나는 동안만 교전 배속
@@ -7838,7 +7840,7 @@ function rpKillcam(e) {
   const R = rp.data; if (!R || !e || e.x == null) return;
   if (rp.kc) rpKillcamEnd(false);
   rp.kc = {e, saved: {t: rp.t, playing: rp.playing, manual: rp.manual, follow: rp.follow, cam: {...rp.cam}}};
-  rp.manual = false; rp.follow = true; rp.t = Math.max(0, e.t - 8); rp.flashes = []; rp.playing = true;
+  rp.manual = false; rp.follow = true; rp.t = Math.max(0, e.t - 4); rp.flashes = []; rp.playing = true;
   const wd = [e.w, e.d ? e.d + "m" : ""].filter(Boolean).join(" · ");
   const ours = e.k === "kill" || e.k === "knock";
   $("#rpKcText").textContent = ours ? `${rpName(e.by)} ${e.k === "kill" ? "처치" : "기절시킴"} → ${e.who || "?"}${wd ? " (" + wd + ")" : ""}`
@@ -8081,7 +8083,7 @@ $("#rpSeek").addEventListener("input", e => { if (!rp.data) return; rp.dragging 
 $("#rpSeek").addEventListener("change", () => { rp.dragging = false; });
 addEventListener("keydown", e => {
   if ($("#replay").classList.contains("hidden") || !rp.data) return;
-  if (e.key === "Escape") { if (PEN.on) rpPen(false); else if (rp.cinema) rpCinema(false); else closeReplay(); }
+  if (e.key === "Escape") { if (PEN.on) rpPen(false); else if (rp.kc) rpKillcamEnd(); /* v170 킬캠만 나감 */ else if (rp.cinema) rpCinema(false); else closeReplay(); }
   else if (e.key === " " && e.target.tagName !== "BUTTON") { e.preventDefault(); $("#rpPlay").click(); }
   else if (e.key === "ArrowLeft" && e.target.tagName !== "INPUT") { rp.t = Math.max(0, rp.t - 10); rp.flashes = []; }
   else if (e.key === "ArrowRight" && e.target.tagName !== "INPUT") { rp.t = Math.min(rp.data.duration, rp.t + 10); rp.flashes = []; }
