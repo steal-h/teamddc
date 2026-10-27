@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='153ee25a';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='8ccae027';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2185,6 +2185,45 @@ html.share-mode body::before{display:none}
   .bgx-mk{position:absolute;right:14px;top:10px;text-shadow:0 2px 10px rgba(0,0,0,.7);font-size:38px}
   .bgx-ms{display:block}
 }
+
+/* v196 NG 모음집 */
+.ng-sub{margin:-4px 0 10px;text-align:center;color:var(--dust);font-size:13px}.ng-sub b{color:var(--bone)}
+.ngx{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:8px}
+.ng{appearance:none;font:inherit;color:var(--bone);text-align:left;cursor:pointer;display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px 10px;border:0;border-left:3px solid var(--c);border-radius:0 6px 6px 0;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 13%,transparent),rgba(0,0,0,.12) 85%)}
+.ng:hover,.ng:focus-visible{background:linear-gradient(90deg,color-mix(in srgb,var(--c) 24%,transparent),rgba(0,0,0,.16) 90%);outline:none}
+.ngl{display:grid}
+.ngr{appearance:none;font:inherit;color:var(--bone);text-align:left;cursor:pointer;background:none;border:0;border-bottom:1px solid color-mix(in srgb,var(--bx-line) 60%,transparent);display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:12px;align-items:center;padding:9px 6px}
+.ngr:last-child{border-bottom:0}
+.ngr:hover,.ngr:focus-visible{background:linear-gradient(90deg,color-mix(in srgb,var(--c) 10%,transparent),transparent 80%);outline:none}
+.ngr .ng-t small{display:block;color:var(--mute,#8a876f);font-size:11.5px;font-weight:400;margin-top:1px}
+.ngr:hover .ng-go{color:var(--bone);border-color:var(--dust)}
+.ng-ic{display:grid;place-items:center;color:var(--c)}.ng-ic svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ng-panel{position:relative;background:radial-gradient(ellipse 55% 45% at 50% 0%,rgba(242,179,61,.08),transparent 70%),linear-gradient(180deg,var(--bx-bg2),var(--bx-bg));border:1px solid var(--bx-line);padding:16px;margin-bottom:8px}
+.ng-panel::before{content:"";position:absolute;inset:5px;border:1px solid rgba(242,179,61,.22);pointer-events:none}
+.ng-panel>*{position:relative}.ng-panel .ngx{margin-bottom:0}
+.ng-hex{position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0L56 16v32L28 64 0 48V16zM28 64v33M0 97V80M56 97V80' fill='none' stroke='%23F2B33D' stroke-width='1'/%3E%3C/svg%3E") 0 0/56px 97px;opacity:.07;-webkit-mask:radial-gradient(ellipse 70% 70% at 50% 40%,#000 20%,transparent 85%);mask:radial-gradient(ellipse 70% 70% at 50% 40%,#000 20%,transparent 85%)}
+.ng-t{min-width:0;font-size:13.5px;line-height:1.35}.ng-t small{display:block;color:var(--c);font-size:11px;font-weight:700}.ng-t b{font-weight:900}
+.ng-go{font-size:11.5px;white-space:nowrap;border:1px solid var(--line);padding:3px 9px;color:var(--dust)}.ng-go::before{content:"▶ ";color:var(--c)}
+.ng:hover .ng-go{color:var(--bone);border-color:var(--dust)}
+@media (max-width:620px){.ngx{grid-template-columns:minmax(0,1fr)}.ng-panel{padding:12px 10px}}
+@media (max-width:520px){.ng-go{font-size:0;padding:5px 7px}.ng-go::before{font-size:12px;content:"▶"}}
+/* v196 결과에 따라 바뀌는 분위기 */
+.bgfx .mood{position:absolute;inset:0}
+.mood-win .bgfx .light{background:radial-gradient(ellipse 60% 50% at 50% 22%,rgba(255,200,90,.20),transparent 72%)}
+.bgfx .cf i{position:absolute;top:-20px;width:7px;height:11px;border-radius:1px;background:var(--c);opacity:.85;animation:bgCf linear infinite}
+@keyframes bgCf{0%{transform:translate(0,-20px) rotate(0)}100%{transform:translate(var(--dx),760px) rotate(720deg)}}
+.mood-rain .bgfx .light{background:radial-gradient(ellipse 55% 45% at 50% 22%,rgba(150,180,200,.08),transparent 70%)}
+.mood-rain .bgfx .dust{opacity:.35}
+.mood-rain .bgfx .pat{opacity:.06}
+.bgfx .rn i{position:absolute;top:-80px;width:1px;height:70px;background:linear-gradient(180deg,transparent,rgba(190,215,235,.35));transform:rotate(12deg);animation:bgRn linear infinite}
+@keyframes bgRn{to{translate:-160px 900px}}
+.bgfx .rn::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(40,55,70,.18),rgba(20,26,30,.25))}
+@media (prefers-reduced-motion:reduce){.bgfx .cf i,.bgfx .rn i{animation:none}.bgfx .cf,.bgfx .rn{display:none}}
+/* v195 오늘의 어워즈 배경: 육각 + 금빛 입자 */
+.bgx>.bgfx{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:inherit}
+.bgfx .dust i{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,230,160,1),rgba(242,179,61,0) 70%);opacity:var(--o);animation:bgDust linear infinite}
+@keyframes bgDust{0%{transform:translate(0,0)}50%{transform:translate(14px,-40px)}100%{transform:translate(0,-80px);opacity:0}}.bgfx .pat{position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0L56 16v32L28 64 0 48V16zM28 64v33M0 97V80M56 97V80' fill='none' stroke='%23F2B33D' stroke-width='1'/%3E%3C/svg%3E") 0 0/56px 97px;opacity:.10;-webkit-mask:radial-gradient(ellipse 65% 60% at 50% 35%,#000 20%,transparent 80%);mask:radial-gradient(ellipse 65% 60% at 50% 35%,#000 20%,transparent 80%)}.bgfx .light{position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 50% 25%,rgba(242,179,61,.12),transparent 70%)}
+@media (prefers-reduced-motion:reduce){.bgfx .dust i{animation:none}}
 @media (prefers-reduced-motion:reduce){.bgx-halo::after{animation:none}.reveal .bgx-mini,.reveal .bgx-mvp{animation:none}}
 
 
@@ -3138,7 +3177,8 @@ function renderDay(r, report, reveal) {
 
   const bg = mapUrl(r);
   $("#awards").innerHTML = `
-    <div class="bgx">  <!-- v181 블랙 골드 (1위) + 블랙 크레이트 (2~4위) -->
+    <div class="bgx ${moodOf(r) ? "mood-" + moodOf(r) : ""}">  <!-- v181 블랙 골드 (1위) + 블랙 크레이트 (2~4위) -->
+      <div class="bgfx" aria-hidden="true"><div class="pat"></div><div class="light"></div><div class="dust"><i style="left:16.5%;top:69.0%;width:4.1px;height:4.1px;--o:0.64;animation-duration:11.4s;animation-delay:-15.9s"></i><i style="left:80.8%;top:51.2%;width:3.8px;height:3.8px;--o:0.52;animation-duration:9.0s;animation-delay:-7.4s"></i><i style="left:58.5%;top:6.9%;width:4.5px;height:4.5px;--o:0.52;animation-duration:11.6s;animation-delay:-0.8s"></i><i style="left:99.8%;top:73.9%;width:4.7px;height:4.7px;--o:0.71;animation-duration:9.4s;animation-delay:-6.6s"></i><i style="left:49.8%;top:11.6%;width:4.9px;height:4.9px;--o:0.58;animation-duration:10.7s;animation-delay:-16.4s"></i><i style="left:12.5%;top:92.8%;width:3.6px;height:3.6px;--o:0.68;animation-duration:12.8s;animation-delay:-9.7s"></i><i style="left:18.7%;top:3.7%;width:4.7px;height:4.7px;--o:0.52;animation-duration:17.6s;animation-delay:-4.2s"></i><i style="left:96.9%;top:89.4%;width:4.4px;height:4.4px;--o:0.78;animation-duration:15.4s;animation-delay:-14.6s"></i><i style="left:12.2%;top:47.6%;width:4.6px;height:4.6px;--o:0.50;animation-duration:19.2s;animation-delay:-17.8s"></i><i style="left:41.0%;top:36.5%;width:3.6px;height:3.6px;--o:0.59;animation-duration:19.9s;animation-delay:-7.7s"></i><i style="left:2.7%;top:9.3%;width:4.3px;height:4.3px;--o:0.90;animation-duration:14.5s;animation-delay:-9.8s"></i><i style="left:55.0%;top:74.8%;width:3.1px;height:3.1px;--o:0.70;animation-duration:15.1s;animation-delay:-12.5s"></i><i style="left:18.1%;top:17.0%;width:3.4px;height:3.4px;--o:0.86;animation-duration:12.8s;animation-delay:-11.9s"></i><i style="left:30.7%;top:10.3%;width:2.7px;height:2.7px;--o:0.81;animation-duration:17.5s;animation-delay:-7.5s"></i><i style="left:68.3%;top:67.6%;width:4.7px;height:4.7px;--o:0.88;animation-duration:13.5s;animation-delay:-19.8s"></i><i style="left:96.1%;top:59.1%;width:4.7px;height:4.7px;--o:0.65;animation-duration:13.1s;animation-delay:-4.9s"></i><i style="left:87.6%;top:16.2%;width:2.7px;height:2.7px;--o:0.80;animation-duration:17.5s;animation-delay:-9.7s"></i><i style="left:83.7%;top:5.2%;width:3.1px;height:3.1px;--o:0.54;animation-duration:13.6s;animation-delay:-3.4s"></i><i style="left:6.9%;top:33.8%;width:4.7px;height:4.7px;--o:0.89;animation-duration:17.2s;animation-delay:-9.6s"></i><i style="left:25.2%;top:95.9%;width:3.8px;height:3.8px;--o:0.76;animation-duration:9.3s;animation-delay:-4.2s"></i><i style="left:83.8%;top:79.5%;width:4.7px;height:4.7px;--o:0.70;animation-duration:13.7s;animation-delay:-11.6s"></i><i style="left:84.9%;top:30.8%;width:3.8px;height:3.8px;--o:0.54;animation-duration:17.5s;animation-delay:-0.2s"></i><i style="left:68.5%;top:95.4%;width:2.6px;height:2.6px;--o:0.70;animation-duration:16.1s;animation-delay:-17.0s"></i><i style="left:58.4%;top:25.7%;width:3.5px;height:3.5px;--o:0.88;animation-duration:19.0s;animation-delay:-2.7s"></i><i style="left:9.5%;top:9.4%;width:2.6px;height:2.6px;--o:0.62;animation-duration:10.5s;animation-delay:-17.3s"></i><i style="left:65.5%;top:12.7%;width:3.8px;height:3.8px;--o:0.56;animation-duration:14.4s;animation-delay:-4.4s"></i><i style="left:16.6%;top:18.4%;width:3.4px;height:3.4px;--o:0.75;animation-duration:15.1s;animation-delay:-0.9s"></i><i style="left:71.1%;top:87.4%;width:4.4px;height:4.4px;--o:0.80;animation-duration:9.1s;animation-delay:-9.3s"></i><i style="left:6.3%;top:76.4%;width:2.9px;height:2.9px;--o:0.76;animation-duration:11.8s;animation-delay:-13.9s"></i><i style="left:31.4%;top:4.2%;width:3.5px;height:3.5px;--o:0.55;animation-duration:18.9s;animation-delay:-5.9s"></i><i style="left:50.3%;top:54.9%;width:4.9px;height:4.9px;--o:0.45;animation-duration:15.6s;animation-delay:-10.2s"></i><i style="left:73.5%;top:96.7%;width:3.3px;height:3.3px;--o:0.75;animation-duration:14.8s;animation-delay:-11.2s"></i><i style="left:6.4%;top:81.5%;width:4.9px;height:4.9px;--o:0.58;animation-duration:12.5s;animation-delay:-19.9s"></i><i style="left:10.8%;top:7.6%;width:2.7px;height:2.7px;--o:0.81;animation-duration:17.4s;animation-delay:-9.0s"></i><i style="left:62.1%;top:2.0%;width:4.1px;height:4.1px;--o:0.62;animation-duration:14.7s;animation-delay:-7.8s"></i><i style="left:40.2%;top:22.5%;width:2.6px;height:2.6px;--o:0.62;animation-duration:11.7s;animation-delay:-14.1s"></i><i style="left:81.7%;top:72.4%;width:3.6px;height:3.6px;--o:0.52;animation-duration:13.2s;animation-delay:-9.7s"></i><i style="left:63.2%;top:96.3%;width:2.7px;height:2.7px;--o:0.64;animation-duration:14.4s;animation-delay:-14.3s"></i><i style="left:89.0%;top:78.0%;width:4.1px;height:4.1px;--o:0.78;animation-duration:16.3s;animation-delay:-17.2s"></i><i style="left:69.9%;top:68.3%;width:3.1px;height:3.1px;--o:0.86;animation-duration:13.2s;animation-delay:-12.3s"></i></div>${moodLayer(r)}</div>  <!-- v195 배경: 육각 + 금빛 입자 · v196 그날 결과에 따라 축제/비 -->
     <div class="bgx-head"><span class="bgx-d">${dateLabel} · 같이 한 판 ${r.games_count}게임${r.solo_included ? " (솔로 판 포함)" : [r.four_only ? "4인 판만" : "", r.ranked_only ? "랭크만" : ""].filter(Boolean).map(x => ` (${x})`).join("")}</span>
       <h2>${esc(dayHeadline(r))}</h2></div>
     <div class="${reveal ? "reveal" : ""}">
@@ -3164,6 +3204,7 @@ function renderDay(r, report, reveal) {
     <p class="reel-msg" id="reelMsg" aria-live="polite"></p>
     ${mapsHtml(r)}
     ${replayCard(r)}
+    ${ngHtml(r)}  <!-- v197 NG 모음집: 오늘의 리플레이 바로 아래 -->
     <div class="sec"><h3>수상자 상세 기록</h3></div>
     <div class="cards">${cards}</div>
     <div id="pbWrap"></div>
@@ -3174,6 +3215,7 @@ function renderDay(r, report, reveal) {
         <tbody>${games}</tbody></table></div></div>
     </div>`;
   bindShare(r.date, report);
+  document.querySelectorAll("[data-ng]").forEach(b => b.onclick = () => playNg((r.ng || [])[+b.dataset.ng]));
   renderRecordsBroken(r);
   alignPcards(); setTimeout(alignPcards, 600);  /* v194 카드끼리 칸 높이 맞춤 */
   const aw = $("#awards"); aw.classList.remove("page-in"); void aw.offsetWidth; aw.classList.add("page-in");
@@ -4039,6 +4081,53 @@ function rpStartLoop() {
 }
 async function getReplayData(id) {
   return rpCache[id] || (rpCache[id] = await api("api/replay?id=" + encodeURIComponent(id)));
+}
+/* v196 NG 모음집: 자폭 · 아군 사격 · 자기장 · 익사 · 낙사 · 차량 사고 */
+const NG_SVG = {  /* v199 골드 라인 아이콘 (시안 02) */
+  "자폭": '<circle cx="11" cy="14" r="6"/><path d="M11 8V5.5h3.5"/><path d="M14.5 5.5l2.5-2"/><path d="M18.5 7.5l2-1M19 10.5h2.5M17.5 4l.5-2"/>',
+  "아군 사격": '<circle cx="12" cy="12" r="7.5"/><path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4"/><path d="M9.5 9.5l5 5M14.5 9.5l-5 5"/>',
+  "자기장": '<circle cx="12" cy="12" r="9" stroke-dasharray="3 2.6"/><path d="M13 6l-4 6.5h4L11 18"/>',
+  "익사": '<path d="M3 9c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M3 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M3 19c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>',
+  "낙사": '<path d="M12 3v11"/><path d="M7.5 9.5L12 14l4.5-4.5"/><path d="M3.5 20h17"/><path d="M6 20l-1.5 2M18 20l1.5 2"/>',
+  "차량 사고": '<path d="M3.5 15.5l1.6-5.2A2 2 0 0 1 7 9h7.5a2 2 0 0 1 1.8 1.1l2.2 5.4"/><path d="M3 15.5h16v3H3z"/><circle cx="7" cy="19" r="1.4"/><circle cx="15.5" cy="19" r="1.4"/><path d="M19.5 5.5l1.5-1.5M20 9h2M17 4V2"/>',
+  "레드존": '<circle cx="12" cy="13" r="7"/><circle cx="12" cy="13" r="3"/><path d="M12 2v3M5 4l1.7 2M19 4l-1.7 2"/>'};
+const NG_KIND = {"자폭": ["", "#F08A70"], "아군 사격": ["", "#E8A23A"], "자기장": ["", "#7FB2E5"], "익사": ["", "#5FB7D6"], "낙사": ["", "#C8CDD3"], "차량 사고": ["", "#D9A066"], "레드존": ["", "#E0532F"]};
+function moodOf(r) {  /* v196 치킨 먹은 날 = 축제, 10등 안에 한 번도 못 든 날 = 비 */
+  const ranks = (r.games || []).map(g => g.rank).filter(x => x > 0); if (!ranks.length) return "";
+  if (ranks.includes(1)) return "win";
+  if (Math.min(...ranks) > 10) return "rain";
+  return "";
+}
+function moodLayer(r) {
+  const m = moodOf(r), H = i => ((i * 2654435761) >>> 0) / 4294967296;
+  if (m === "win") { const C = ["#F2B33D", "#FFE08A", "#EEE8D5", "#9CCB6B", "#E8A23A"], n = 16 + 8 * Math.min(3, (r.games || []).filter(g => g.rank === 1).length);
+    return `<div class="mood cf">${Array.from({length: n}, (_, i) => `<i style="left:${(H(i + 1) * 100).toFixed(1)}%;--c:${C[i % C.length]};--dx:${Math.round(H(i + 50) * 80 - 40)}px;animation-duration:${(7 + H(i + 9) * 7).toFixed(1)}s;animation-delay:${(-H(i + 3) * 14).toFixed(1)}s;transform:rotate(${Math.round(H(i + 7) * 360)}deg)"></i>`).join("")}</div>`; }
+  if (m === "rain") return `<div class="mood rn">${Array.from({length: 46}, (_, i) => `<i style="left:${(H(i + 1) * 115).toFixed(1)}%;animation-duration:${(.9 + H(i + 9) * .7).toFixed(2)}s;animation-delay:${(-H(i + 3) * 2).toFixed(2)}s;opacity:${(.4 + H(i + 5) * .6).toFixed(2)}"></i>`).join("")}</div>`;
+  return "";
+}
+function ngText(n) {
+  const act = n.k === "died" ? "사망" : "기절";
+  if (n.kind === "자폭") return n.w && n.w !== "Player" ? `자기 ${n.w}에 ${act}` : `스스로 ${act}`;
+  if (n.kind === "아군 사격") return `${n.byname}의 ${n.w || "공격"}에 ${act}`;
+  if (n.kind === "차량 사고") return `차량 사고로 ${act}`;
+  return `${n.kind}에 ${act}`;
+}
+function ngHtml(r) {
+  const L = r.ng || []; if (!L.length) return "";
+  const cnt = {}; L.forEach(n => cnt[n.name] = (cnt[n.name] || 0) + 1);
+  const king = Object.entries(cnt).sort((a, b) => b[1] - a[1])[0];
+  return `<div class="sec"><h3>NG 모음집</h3></div>
+    <div class="ng-panel"><div class="ng-hex"></div>  <!-- v199 블랙골드 패널 (시안 01) -->
+    <p class="ng-sub">오늘의 실수 ${L.length}개${king && king[1] >= 2 ? ` · NG왕 <b>${esc(king[0])}</b> ${king[1]}회` : ""}</p>
+    <div class="ngl">${L.map((n, i) => [n, i]).sort((a, b) => (a[0].time || "").localeCompare(b[0].time || "") || a[0].t - b[0].t).map(([n, i]) => { const col = (NG_KIND[n.kind] || ["", "#B7B39C"])[1];  /* v200 담백한 시간순 목록 (시안 03, 링 그래프 없이) */
+      return `<button type="button" class="ngr" data-ng="${i}" style="--c:${col}"><span class="ng-ic"><svg viewBox="0 0 24 24" aria-hidden="true">${NG_SVG[n.kind] || '<circle cx="12" cy="12" r="8"/>'}</svg></span><span class="ng-t"><b>${esc(n.name)}</b>, ${esc(ngText(n))}<small>${esc(n.kind)} · ${esc(n.map || "")} ${esc(n.time || "")} · ${mmss(n.t)}</small></span><span class="ng-go">장면 보기</span></button>`; }).join("")}</div></div>`;
+}
+async function playNg(n) {
+  if (!n) return;
+  await openReplay(n.gid);
+  const R = rp.data; if (!R) return;
+  const e = R.events.find(x => x.k === n.k && x.who === n.who && Math.abs(x.t - n.t) < 1);
+  if (e) rpKillcam(e); else { rp.t = Math.max(0, n.t - 4); rpWipe?.(); }
 }
 async function openReplay(id) {
   { const sm = document.getElementById("rpSum"); if (sm) sm.hidden = true; }
