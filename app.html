@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='dbfca038';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='153ee25a';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -184,7 +184,7 @@ body.viewer .tbar .tb-share,body.viewer .tbar .tb-reel{display:none}body.viewer 
 .pcard .penalty,.pcard .best{font-size:12.5px;line-height:1.45;margin:6px 0 0;padding:6px 9px;border-radius:4px;background:var(--panel-2)}
 .pcard .penalty{background:rgba(224,83,47,.1)}
 .pc-earned .badges,.pc-earn .badges{display:flex!important;flex-direction:row!important;flex-wrap:wrap;gap:6px;justify-content:flex-start;margin:0}
-.cards .pcard{display:grid;grid-template-rows:subgrid;grid-row:span 9;row-gap:0;align-content:start}
+.cards .pcard{display:flex;flex-direction:column}  /* v194 높이는 alignPcards 가 맞춤 */
 .pcard>header,.pcard>.pc-key{align-self:stretch}
 .pc-notes{display:flex;flex-direction:column;gap:6px;padding:4px 0 10px}.pc-notes .penalty,.pc-notes .best{margin:0!important}
 .pc-earn{align-self:stretch}.pc-earn .badges .bdg{margin:0;padding:5px 9px}
@@ -1854,6 +1854,8 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .pb-t{min-width:0;display:flex;flex-direction:column;gap:2px}.pb-t small{font-size:12px;font-weight:700;color:var(--accent)}.pb.st .pb-t small{color:var(--flare)}
 .pb-t b{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pb-v{display:flex;flex-direction:column;align-items:flex-end;gap:2px}.pb-v em{font:400 26px/1 var(--num);font-style:normal;color:var(--bone);white-space:nowrap}.pb-v em small{font:500 12px var(--body);color:var(--dust);margin-left:2px}
+.pb{background:linear-gradient(120deg,rgba(201,155,58,.09),var(--panel) 60%);border-color:color-mix(in srgb,#C99B3A 28%,var(--line))}  /* v194 기록 갱신: 노란색을 차분한 황동빛으로 */
+.pb-av{border-color:#C99B3A}.pb-t small{color:#D4A84A}
 .pb-v span{font-size:11.5px;color:var(--dust)}
 .hlx .tkx>span small{color:var(--dust);font-weight:500;margin-left:4px}
 .hlx .tkx .tk1{display:flex;align-items:baseline;justify-content:flex-start;gap:14px;min-height:34px;color:var(--bone)}  /* v175 이름·횟수 글자 아래 끝 맞춤 */
@@ -2736,6 +2738,16 @@ async function loadCards() {
   });
 }
 /* v171 기록 갱신: 그날 개인 최고 기록을 넘은 것 (점수·한 판 딜·한 판 킬) + 연속 1위 */
+function alignPcards() {  /* v194 수상자 상세 기록: 같은 줄 카드의 칸(무기별 성적·감점·최고의 판·칭호·새 업적)을 같은 높이로 */
+  const cards = [...document.querySelectorAll(".cards .pcard")]; if (!cards.length) return;
+  const kids = c => [...c.children].filter(e => getComputedStyle(e).position !== "absolute");
+  cards.forEach(c => kids(c).forEach(e => e.style.minHeight = ""));
+  const rows = new Map(); cards.forEach(c => { const k = Math.round(c.getBoundingClientRect().top); (rows.get(k) || rows.set(k, []).get(k)).push(c); });
+  for (const g of rows.values()) { if (g.length < 2) continue;
+    const K = g.map(kids), n = Math.max(...K.map(x => x.length));
+    for (let i = 0; i < n; i++) { const h = Math.max(...K.map(x => x[i] ? x[i].getBoundingClientRect().height : 0)); K.forEach(x => { if (x[i]) x[i].style.minHeight = h + "px"; }); } }
+}
+addEventListener("resize", () => { clearTimeout(alignPcards._t); alignPcards._t = setTimeout(alignPcards, 150); });
 async function renderRecordsBroken(r) {
   const box = $("#pbWrap"); if (!box) return;
   try { if (!playersData.length) playersData = (await api("api/players")).players || []; } catch { return; }
@@ -3072,7 +3084,7 @@ function renderDay(r, report, reveal) {
         row("기절→킬 마무리", tl.convert_pct == null ? "-" : tl.convert_pct + "%"),
         row("최장거리 기절", tl.longest_knock + "m"),
         row("첫 교전 선공", tl.first_blood + "회"),
-        row("블루칩 살림 · 복귀", `${tl.bluechip ?? 0}명 · ${tl.recalled ?? 0}회`)]).replace(/<\/section>$/, wsec + "</section>") : "";
+        row("블루칩 살림 · 복귀", `${tl.bluechip ?? 0}명 · ${tl.recalled ?? 0}회`)]) : "";  /* v194 무기별 성적은 따로 한 칸 (카드끼리 높이 맞춤) */
     const bars = LABELS.map(([k, l]) => {
       const w = state.weights[k] || 1, v = p.parts[k] ?? 0, pct = Math.max(0, Math.min(100, v / w * 100));
       return `<div class="bar"><span>${l}</span><i><em style="width:${pct}%"></em></i><span>${v}</span></div>`;
@@ -3089,12 +3101,13 @@ function renderDay(r, report, reveal) {
       ${group("전투", [row("판당 기절", m.dbnos), row("판당 어시", m.assists), row("헤드샷 비율", m.headshot_pct + "%"), row("최장거리 킬", t.longest + "m")])}
       ${group("생존 · 팀", [row("평균 생존", m.survival_min + "분"), row("판당 소생", m.revives), row("기절당함", (t.downed ?? 0) + "회"), ...(tl ? [row("판당 받은 피해", fmt(tl.taken_pg))] : []), row("팀킬", t.teamkills + "회")])}
       ${telRows || "<div></div>"}
+      ${wsec || "<div></div>"}
       <section class="pc-grp"><h4>점수 구성</h4><div class="bars">${bars}</div></section>
       <div class="pc-notes">${p.penalty ? `<div class="penalty">감점 −${p.penalty}점: ${[
         (t.teamkills || t.teamknocks) ? `팀킬·팀원 기절 ${(t.teamkills || 0) + (t.teamknocks || 0)}회` : "",
         t.suicides ? `자살 ${t.suicides}회` : "",
         t.downed ? `기절당함 ${t.downed}회` : ""].filter(Boolean).join(", ")}</div>` : ""}
-      ${p.best ? `<div class="best">최고의 판: ${esc(p.best.map)}에서 딜 ${fmt(p.best.damage)}, ${p.best.kills}킬, ${p.best.rank}등</div>` : ""}</div>
+      </div><div class="pc-notes">${p.best ? `<div class="best">최고의 판: ${esc(p.best.map)}에서 딜 ${fmt(p.best.damage)}, ${p.best.kills}킬, ${p.best.rank}등</div>` : ""}</div>
       <section class="pc-grp pc-earn"><h4>칭호</h4>${(p.badges || []).length ? `<div class="pc-rows">${p.badges.map(x => `<div class="pc-row" style="--c:${BADGE_COL[x.tone] || "#B7B39C"}">${esc(x.text)}</div>`).join("")}</div>` : `<p class="pc-none">없음</p>`}</section>  <!-- v190 왼쪽 색 띠 행 (시안 05) -->
       <section class="pc-grp pc-earn"><h4 class="newh">새 업적</h4>${(r.new_achievements?.[p.nick] || []).length ? `<div class="pc-rows">${r.new_achievements[p.nick].map((a, i) => [a, i, typeof a === "string" ? 0 : (a.lv ?? 0)]).sort((x, y) => y[2] - x[2] || x[1] - y[1]).map(([a, , lv]) => { const t = typeof a === "string" ? a : a.t;  /* v190 등급 높은 것부터 */
           const ref = playersData.find(x => x.nick === p.nick)?.achievements?.find(x => x.title === t);  // 예전 결과에는 설명이 없어서 선수 업적 목록에서 찾음
@@ -3162,6 +3175,7 @@ function renderDay(r, report, reveal) {
     </div>`;
   bindShare(r.date, report);
   renderRecordsBroken(r);
+  alignPcards(); setTimeout(alignPcards, 600);  /* v194 카드끼리 칸 높이 맞춤 */
   const aw = $("#awards"); aw.classList.remove("page-in"); void aw.offsetWidth; aw.classList.add("page-in");
   numRollIn(aw);
   document.querySelectorAll("[data-rp]").forEach(b => b.onclick = () => openReplay(b.dataset.rp));
@@ -8595,7 +8609,7 @@ function dpRender() {
   let cells = "";
   for (let i = 0; i < lead; i++) cells += "<i></i>";
   for (let d = 1; d <= n; d++) {
-    const k = `${ym}-${pad(d)}`, rec = days.get(k), ok = viewer ? !!(rec && rec.has_detail !== false) : (k <= today && k >= min);
+    const k = `${ym}-${pad(d)}`, rec = days.get(k), ok = viewer ? !!(rec && rec.has_detail !== false) : (!!rec || (k <= today && k >= min));  /* v194 저장된 날은 14일이 지나도 볼 수 있게 */
     cells += `<button type="button" data-d="${k}" class="${rec ? "rec" : ""}${k === cur ? " on" : ""}${k === today ? " today" : ""}" ${ok ? "" : "disabled"} title="${rec ? `${rec.games}게임 · 1등 ${esc(rec.ranking?.[0] || "")}` : viewer ? "기록 없음" : "기록 없음 (분석하기로 새로 볼 수 있어요)"}">${d}</button>`;
   }
   const recs = [...days.keys()].sort(), prevOk = recs.some(k => k < ym) || (!viewer && `${ym}-01` > min), nextOk = recs.some(k => k > ym + "-31") || (!viewer && `${ym}-31` < today);
