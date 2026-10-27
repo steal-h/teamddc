@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='8ccae027';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='7e8187b2';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2209,16 +2209,27 @@ html.share-mode body::before{display:none}
 @media (max-width:520px){.ng-go{font-size:0;padding:5px 7px}.ng-go::before{font-size:12px;content:"▶"}}
 /* v196 결과에 따라 바뀌는 분위기 */
 .bgfx .mood{position:absolute;inset:0}
+/* v202 연속 치킨 불꽃: 아래에서 솟구친 뒤 사방으로 퍼지며 사그라듦 */
+.bgfx .fw{position:absolute;inset:0;pointer-events:none}
+.bgfx .fwb{position:absolute;width:0;height:0;animation:fwCyc linear infinite}
+.bgfx .fwb>*{animation-duration:inherit;animation-delay:inherit;animation-iteration-count:infinite;animation-timing-function:ease-out}
+.bgfx .fwt{position:absolute;left:-1.5px;top:0;width:3px;height:26px;border-radius:2px;background:linear-gradient(to top,transparent,var(--c));animation-name:fwTrail}
+.bgfx .fwb i{position:absolute;left:-2.5px;top:-2.5px;width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 6px 1px var(--c);animation-name:fwSpark}
+@keyframes fwCyc{from{opacity:1}to{opacity:1}}
+@keyframes fwTrail{0%{translate:0 240px;opacity:0}5%{opacity:.9}24%{translate:0 0;opacity:.9}27%,100%{translate:0 0;opacity:0}}
+@keyframes fwSpark{0%,25%{transform:rotate(var(--a)) translateX(0) scale(.4);opacity:0}27%{opacity:1;transform:rotate(var(--a)) translateX(4px) scale(1.2)}55%{opacity:.85}80%{transform:rotate(var(--a)) translateX(var(--r)) scale(.6);opacity:0}100%{transform:rotate(var(--a)) translateX(var(--r)) scale(.4);opacity:0}}
+.mood-multi .bgfx .light{background:radial-gradient(ellipse 65% 55% at 50% 22%,rgba(255,200,90,.26),transparent 74%)}
 .mood-win .bgfx .light{background:radial-gradient(ellipse 60% 50% at 50% 22%,rgba(255,200,90,.20),transparent 72%)}
-.bgfx .cf i{position:absolute;top:-20px;width:7px;height:11px;border-radius:1px;background:var(--c);opacity:.85;animation:bgCf linear infinite}
-@keyframes bgCf{0%{transform:translate(0,-20px) rotate(0)}100%{transform:translate(var(--dx),760px) rotate(720deg)}}
+.bgfx .cf i{position:absolute;top:-20px;width:var(--w,7px);height:var(--h,11px);border-radius:1px;background:var(--c);opacity:.85;animation:bgCf linear infinite,bgCfFlip ease-in-out infinite alternate}  /* v201 좌우로 팔랑이며 뒤집힘 */
+@keyframes bgCf{0%{translate:0 -20px;rotate:var(--rz)}25%{translate:var(--sw) 260px}50%{translate:calc(var(--sw) * -.6 + var(--dr)) 530px}75%{translate:calc(var(--sw) * .8 + var(--dr)) 800px}100%{translate:var(--dr) 1100px;rotate:calc(var(--rz) + 720deg)}}
+@keyframes bgCfFlip{from{transform:rotateX(0) scaleX(1)}to{transform:rotateX(75deg) scaleX(.35)}}
 .mood-rain .bgfx .light{background:radial-gradient(ellipse 55% 45% at 50% 22%,rgba(150,180,200,.08),transparent 70%)}
 .mood-rain .bgfx .dust{opacity:.35}
 .mood-rain .bgfx .pat{opacity:.06}
 .bgfx .rn i{position:absolute;top:-80px;width:1px;height:70px;background:linear-gradient(180deg,transparent,rgba(190,215,235,.35));transform:rotate(12deg);animation:bgRn linear infinite}
-@keyframes bgRn{to{translate:-160px 900px}}
+@keyframes bgRn{to{translate:-220px 1200px}}
 .bgfx .rn::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(40,55,70,.18),rgba(20,26,30,.25))}
-@media (prefers-reduced-motion:reduce){.bgfx .cf i,.bgfx .rn i{animation:none}.bgfx .cf,.bgfx .rn{display:none}}
+@media (prefers-reduced-motion:reduce){.bgfx .cf i,.bgfx .rn i,.bgfx .fw *{animation:none}.bgfx .cf,.bgfx .rn,.bgfx .fw{display:none}}
 /* v195 오늘의 어워즈 배경: 육각 + 금빛 입자 */
 .bgx>.bgfx{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:inherit}
 .bgfx .dust i{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,230,160,1),rgba(242,179,61,0) 70%);opacity:var(--o);animation:bgDust linear infinite}
@@ -2560,7 +2571,7 @@ function countUpRun(el) {
 }
 function numRollIn(root) {
   if (!root || matchMedia("(prefers-reduced-motion: reduce)").matches || !countUpIO) return;
-  root.querySelectorAll(".bgx-score b, .bgx-s b, .plaque .line b, .medal-card .score b, .plaque .score b, .pc-key b, .pc-stats b, .pc-ovr b").forEach(el => {
+  root.querySelectorAll(".bgx-score b, .bgx-s b, .bgx-st b, .plaque .line b, .medal-card .score b, .plaque .score b, .pc-key b, .pc-stats b, .pc-ovr b").forEach(el => {
     if (el.dataset.cuTo || el.children.length) return;
     const txt = el.textContent.trim(); if (!/\d/.test(txt) || txt.length > 12) return;
     el.dataset.cuTo = txt; el.style.fontVariantNumeric = "tabular-nums";
@@ -2747,7 +2758,7 @@ function cardHtml(p, tag = "button") {
     <div class="pc-name">${esc(p.name)}</div>
     ${radar(c.stats)}
     <div class="pc-stats">${STATS.map(([k, l]) => `<div><span>${l}</span><b>${c.stats[k]}</b></div>`).join("")}</div>
-    <div class="pc-foot">${c.as_of ? `${+c.as_of.slice(5, 7)}월 ${+c.as_of.slice(8)}일까지 14일` : "최근 14일"}, ${c.days}일 ${c.games}게임</div></${tag}>`;  /* v171 오래 안 했으면 마지막 날 기준 */
+    <div class="pc-foot">최근 기록 ${c.days}일 · ${c.games}게임</div></${tag}>`;  /* v171 오래 안 했으면 마지막 날 기준 */
 }
 function wstatsHtml(list, n = 3, col) {  // 무기별 성적: [이름, 킬, 기절, 피해, 맞힘, 머리, 쏜 횟수, 맞힌 횟수] — 피해 막대 + 킬·기절·명중률·헤드샷 비율
   const L = (list || []).slice(0, n); if (!L.length) return "";
@@ -2875,9 +2886,10 @@ function openProfile(nick) {
         <div><small>4등</small><b>${counts[3]}회</b></div><div><small>누적 킬</small><b>${fmt(t.kills)}</b></div>
         <div><small>누적 딜량</small><b>${fmt(Math.round(t.damage))}</b></div><div><small>치킨</small><b>${t.chickens}번</b></div>
       </div></div>
-      <div class="prof-sec"><h4>점수 변화</h4><div class="chart">${(() => { const v = H.map(h => h.total), lo = Math.floor(Math.min(...v)), hi = Math.ceil(Math.max(...v));
+      <div class="prof-sec"><h4>카드 점수 변화 <small style="font-size:12px;font-weight:400;color:var(--dust);margin-left:6px">최근 기록 14일 기준</small></h4><div class="chart">${(() => { const CH = (p.card_hist || []).slice(-30); if (!CH.length) return `<p class="who">기록이 쌓이면 나와요.</p>`;  /* v202 게임 점수 대신 카드 점수 */
+        const v = CH.map(h => h.ovr), lo = Math.floor(Math.min(...v)) - 1, hi = Math.ceil(Math.max(...v)) + 1;
         return lineChart(v, {color: "#7FB2E5", min: lo, max: hi, labels: [[hi, hi + "점"], [lo, lo + "점"]],
-          tips: H.map(h => `${h.date.slice(5).replace("-", "/")} · ${sc(h.total)}점 · ${h.rank}위`), xlabels: H.map(h => h.date.slice(5).replace("-", "/"))}); })()}</div></div>
+          tips: CH.map(h => `${h.date.slice(5).replace("-", "/")} · 카드 ${h.ovr}점 · ${TIER[h.tier] || ""}`), xlabels: CH.map(h => h.date.slice(5).replace("-", "/"))}); })()}</div></div>
       ${p.best_day ? `<div class="prof-sec"><h4>개인 최고의 날</h4><p style="margin:0">${esc(p.best_day.date)}, ${p.best_day.total}점, 판당 딜량 ${fmt(p.best_day.damage)}, ${p.best_day.kills}킬</p></div>` : ""}
       ${p.wstats?.length ? `<div class="prof-sec"><h4>무기별 성적 <span class="who">누적, 적에게 준 피해 순</span></h4>${wstatsHtml(p.wstats, 6)}</div>` : p.weapons.length ? `<div class="prof-sec"><h4>주무기 순위</h4><div class="wlist">${p.weapons.map(([w, k, n]) => `<div><div><b>${esc(w)}</b><span class="who">${k}킬 ${n}기절</span><i><em style="width:${(k + n) / maxW * 100}%"></em></i></div></div>`).join("")}</div></div>` : ""}
       ${profMaps(p)}
@@ -4092,16 +4104,24 @@ const NG_SVG = {  /* v199 골드 라인 아이콘 (시안 02) */
   "차량 사고": '<path d="M3.5 15.5l1.6-5.2A2 2 0 0 1 7 9h7.5a2 2 0 0 1 1.8 1.1l2.2 5.4"/><path d="M3 15.5h16v3H3z"/><circle cx="7" cy="19" r="1.4"/><circle cx="15.5" cy="19" r="1.4"/><path d="M19.5 5.5l1.5-1.5M20 9h2M17 4V2"/>',
   "레드존": '<circle cx="12" cy="13" r="7"/><circle cx="12" cy="13" r="3"/><path d="M12 2v3M5 4l1.7 2M19 4l-1.7 2"/>'};
 const NG_KIND = {"자폭": ["", "#F08A70"], "아군 사격": ["", "#E8A23A"], "자기장": ["", "#7FB2E5"], "익사": ["", "#5FB7D6"], "낙사": ["", "#C8CDD3"], "차량 사고": ["", "#D9A066"], "레드존": ["", "#E0532F"]};
-function moodOf(r) {  /* v196 치킨 먹은 날 = 축제, 10등 안에 한 번도 못 든 날 = 비 */
+function moodOf(r) {  /* v196 치킨 먹은 날 = 축제 · v201 치킨 없이 평균 8등 이하 = 비 */
   const ranks = (r.games || []).map(g => g.rank).filter(x => x > 0); if (!ranks.length) return "";
-  if (ranks.includes(1)) return "win";
-  if (Math.min(...ranks) > 10) return "rain";
+  const ck = ranks.filter(x => x === 1).length;
+  if (ck >= 2) return "multi";  /* v202 하루 치킨 2번 이상 = 불꽃놀이 + 색종이 */
+  if (ck) return "win";
+  if (ranks.reduce((a, b) => a + b, 0) / ranks.length >= 8) return "rain";  /* v201 평균 8등 이하면 비 */
   return "";
 }
 function moodLayer(r) {
-  const m = moodOf(r), H = i => ((i * 2654435761) >>> 0) / 4294967296;
-  if (m === "win") { const C = ["#F2B33D", "#FFE08A", "#EEE8D5", "#9CCB6B", "#E8A23A"], n = 16 + 8 * Math.min(3, (r.games || []).filter(g => g.rank === 1).length);
-    return `<div class="mood cf">${Array.from({length: n}, (_, i) => `<i style="left:${(H(i + 1) * 100).toFixed(1)}%;--c:${C[i % C.length]};--dx:${Math.round(H(i + 50) * 80 - 40)}px;animation-duration:${(7 + H(i + 9) * 7).toFixed(1)}s;animation-delay:${(-H(i + 3) * 14).toFixed(1)}s;transform:rotate(${Math.round(H(i + 7) * 360)}deg)"></i>`).join("")}</div>`; }
+  /* v203 위치·시작 시점이 서로 엇갈리게 섞는 해시 (예전 곱셈 해시는 위치와 시작 시점이 같이 움직여 처음에 한 줄로 늘어섰음) */
+  const m = moodOf(r), H = i => { let x = (i * 374761393 + 668265263) | 0; x = Math.imul(x ^ (x >>> 13), 1274126177); x ^= x >>> 16; return (x >>> 0) / 4294967296; };
+  let fw = "";
+  if (m === "multi") { const C = ["#FFD36A", "#F2B33D", "#FFF1C4", "#E07B6A", "#9CCB6B", "#8FC3F0"], ck = (r.games || []).filter(g => g.rank === 1).length, nb = Math.min(8, 3 + ck * 2);  /* v202 연속 치킨: 하늘에서 터지는 불꽃 */
+    fw = `<div class="mood fw">${Array.from({length: nb}, (_, b) => { const c = C[b % C.length], c2 = C[(b + 2) % C.length], dur = 3.2 + H(b + 300) * 1.8, R = Math.round(85 + H(b + 310) * 65);
+      return `<div class="fwb" style="left:${(8 + H(b + 320) * 84).toFixed(1)}%;top:${(8 + H(b + 330) * 38).toFixed(1)}%;--r:${R}px;animation-duration:${dur.toFixed(2)}s;animation-delay:${(-H(b + 340) * dur).toFixed(2)}s"><span class="fwt" style="--c:${c}"></span>${Array.from({length: 16}, (_, k) => `<i style="--a:${(k * 22.5 + H(b * 16 + k) * 8).toFixed(1)}deg;--c:${k % 3 ? c : c2}"></i>`).join("")}</div>`; }).join("")}</div>`; }
+  if (m === "win" || m === "multi") { const C = ["#F2B33D", "#FFE08A", "#EEE8D5", "#9CCB6B", "#E8A23A", "#E07B6A"], n = 18 + 8 * Math.min(3, (r.games || []).filter(g => g.rank === 1).length);  /* v201 처음부터 흩어져 팔랑이며 떨어지게 */
+    return fw + `<div class="mood cf">${Array.from({length: n}, (_, i) => { const d = 9 + H(i + 9) * 8;
+      return `<i style="left:${(H(i + 1) * 100).toFixed(1)}%;--c:${C[i % C.length]};--sw:${Math.round(14 + H(i + 50) * 26)}px;--dr:${Math.round(H(i + 70) * 60 - 30)}px;--rz:${Math.round(H(i + 7) * 360)}deg;--w:${(5 + H(i + 21) * 4).toFixed(1)}px;--h:${(8 + H(i + 33) * 6).toFixed(1)}px;animation-duration:${d.toFixed(1)}s,${(1.4 + H(i + 40) * 1.4).toFixed(2)}s;animation-delay:${(-H(i + 3) * d).toFixed(2)}s,${(-H(i + 44) * 2).toFixed(2)}s"></i>`; }).join("")}</div>`; }
   if (m === "rain") return `<div class="mood rn">${Array.from({length: 46}, (_, i) => `<i style="left:${(H(i + 1) * 115).toFixed(1)}%;animation-duration:${(.9 + H(i + 9) * .7).toFixed(2)}s;animation-delay:${(-H(i + 3) * 2).toFixed(2)}s;opacity:${(.4 + H(i + 5) * .6).toFixed(2)}"></i>`).join("")}</div>`;
   return "";
 }
