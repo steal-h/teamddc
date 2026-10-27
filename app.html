@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='e8eb8608';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='1306da36';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -190,6 +190,10 @@ body.viewer .tbar .tb-share,body.viewer .tbar .tb-reel{display:none}body.viewer 
 .pc-earn{align-self:stretch}.pc-earn .badges .bdg{margin:0;padding:5px 9px}
 .pc-earn h4.newh{color:#B48CF2}
 .pc-none{margin:0;font-size:12px;color:var(--dust);opacity:.6}
+.pc-rows{display:grid;gap:4px}  /* v190 칭호·새 업적: 왼쪽 색 띠 행 */
+.pc-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;line-height:1.35;padding:4px 9px;border-left:3px solid var(--c);background:linear-gradient(90deg,color-mix(in srgb,var(--c) 13%,transparent),transparent 85%);color:var(--bone);text-align:left}
+.pc-row em{font-style:normal;font-size:10.5px;font-weight:700;color:var(--c);flex:none}
+.pc-row[data-tip-t]{cursor:help}.pc-row[data-tip-t]:hover,.pc-row[data-tip-t]:focus-visible{background:linear-gradient(90deg,color-mix(in srgb,var(--c) 24%,transparent),transparent 90%);outline:none}
 .pc-earned .badges .bdg{margin:0;padding:5px 9px}
 .pc-newh{font-size:11.5px;font-weight:700;letter-spacing:.06em;color:#B48CF2;margin:10px 0 -2px}
 
@@ -789,9 +793,9 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 /* 그래프 점에 마우스를 대면 그날 점수 */
 .chart{position:relative}
 .lc-hit{cursor:pointer;outline:none}
-.lc-tip{position:absolute;transform:translate(-50%,calc(-100% - 10px));background:#F3EEDB;border:0;color:#1d2117;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:8px;white-space:nowrap;pointer-events:none;z-index:20;box-shadow:0 6px 18px rgba(0,0,0,.35)}  /* v176 밝은 말풍선 */
+.lc-tip{position:absolute;transform:translate(-50%,calc(-100% - 10px));background:#F3EEDB;border:2px solid var(--tc,#F2B33D);color:#1d2117;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:8px;white-space:nowrap;pointer-events:none;z-index:20;box-shadow:0 6px 18px rgba(0,0,0,.35)}  /* v176 밝은 말풍선 */
 .lc-tip.below{transform:translate(-50%,12px)}.lc-tip.below::after{bottom:auto;top:-5px;transform:translateX(-50%) rotate(225deg)}
-.lc-tip::after{content:"";position:absolute;left:calc(50% + var(--ax,0px));bottom:-5px;width:10px;height:10px;background:#F3EEDB;transform:translateX(-50%) rotate(45deg);border-radius:2px}
+.lc-tip::after{content:"";position:absolute;left:calc(50% + var(--ax,0px));bottom:-5px;width:10px;height:10px;background:#F3EEDB;border:2px solid var(--tc,#F2B33D);border-width:0 2px 2px 0;transform:translateX(-50%) rotate(45deg);border-radius:0 0 2px 0}  /* v190 말풍선 테두리 색 */
 /* 무기별 성적 */
 .wst{display:flex;flex-direction:column;gap:7px}
 .wst>div{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:baseline}
@@ -1017,7 +1021,9 @@ html.share-mode .pc .beam,html.share-mode .pc .meteor,html.share-mode .pc .ldot{
 .prof-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
 .prof-head h3{margin:0;font:400 28px/1.1 var(--display)}
 .prof-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:22px}
-@media (max-width:820px){.prof-grid{grid-template-columns:1fr}}
+@media (max-width:820px){.prof-grid{grid-template-columns:minmax(0,1fr)}}
+.prof-grid>*{min-width:0}  /* v190 휴대폰에서 프로필이 옆으로 밀리지 않게 */
+@media (max-width:520px){.tier-tabs{overflow:visible}.tier-tabs .ts{flex:1 1 0;min-width:0;padding:6px 1px 7px}.tier-tabs .ts b{font-size:15px}.tier-tabs .ts b small{font-size:9.5px}.tier-tabs .ts span{font-size:10.5px;letter-spacing:-.03em}}
 .prof-grid .pc{cursor:default}
 .prof-grid .pc:hover{--ty:0px}
 .tier-prev{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
@@ -1688,13 +1694,14 @@ html,body{overscroll-behavior-y:none}
 
 /* v74 업적 설명 말풍선 */
 .bdg.ach-new[data-tip-t]{cursor:help}
-.ach-tip{position:fixed;z-index:200;max-width:min(280px,calc(100vw - 24px));background:rgba(16,18,12,.97);border:1px solid var(--tc,#5a5f4c);border-radius:8px;padding:9px 12px 10px;
+.ach-tip{position:fixed;z-index:200;max-width:min(280px,calc(100vw - 24px));background:rgba(16,18,12,.97);border:1.5px solid var(--tc,#5a5f4c);border-top-width:3px;border-radius:8px;padding:9px 12px 10px;
   box-shadow:0 10px 28px rgba(0,0,0,.55);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s;font-size:12.5px;line-height:1.45;color:#d9d3bd}
 .ach-tip.on{opacity:1;transform:none}
 .ach-tip b{display:block;font-size:14px;color:var(--tc,#EEE8D5);margin-bottom:2px}
 .ach-tip i{font-style:normal;font-size:11px;color:#9a9682;margin-left:6px;font-weight:600}
 .ach-tip .d{display:block;margin-top:3px}
-.ach-tip::after{content:"";position:absolute;left:var(--ax,50%);width:10px;height:10px;background:inherit;border:inherit;border-width:0 1px 1px 0;transform:translateX(-50%) rotate(45deg);bottom:-6px}
+.ach-tip::after{content:"";position:absolute;left:var(--ax,50%);width:10px;height:10px;background:inherit;border:inherit;border-width:0 1.5px 1.5px 0;transform:translateX(-50%) rotate(45deg);bottom:-6px}
+.ach-tip.on{box-shadow:0 10px 28px rgba(0,0,0,.55),0 0 0 3px color-mix(in srgb,var(--tc,#5a5f4c) 14%,transparent)}  /* v190 테두리 색이 잘 보이게 */
 .ach-tip.below::after{bottom:auto;top:-6px;transform:translateX(-50%) rotate(225deg)}
 
 /* v75 휴대폰 가로 화면: 설치한 앱·전체 화면에선 리플레이 밖에서 세로로 고정 (안내 화면 없음) */
@@ -2150,6 +2157,25 @@ html.share-mode body::before{display:none}
   .bgx-st{flex-direction:column;align-items:center;gap:0;font-size:14px}
   .bgx-maps{grid-template-columns:1fr}
   .bgx-rp{grid-template-columns:auto minmax(0,1fr);gap:14px;padding:16px}.bgx-rb{grid-column:1/-1;flex-direction:row}.bgx-rb .btn{flex:1}.bgx-rk b{font-size:42px}.bgx-rk{padding:6px 14px 4px}.bgx-rm>b{font-size:24px}
+}
+@media (max-width:620px){  /* v190 휴대폰: 1~4등을 더 짧게 */
+  .bgx{padding:16px 12px 14px}.bgx-head h2{font-size:19px}.bgx-d{font-size:11px;letter-spacing:.08em}
+  .bgx-rule{margin:12px 0 6px;letter-spacing:.32em;font-size:10px}
+  .bgx-mvp{gap:3px}.bgx-avw{margin:14px 0 4px}.bgx-halo{inset:-18px}.bgx-av.a1{width:72px;height:72px;font-size:30px}.bgx-tr{width:32px;height:32px;right:-12px;bottom:-6px}
+  .bgx-role{font-size:11.5px}.bgx-name{font-size:38px}
+  .bgx-score{flex-direction:row;align-items:baseline;gap:6px;margin-top:0}.bgx-score b{font-size:40px}
+  .bgx-st{flex-direction:row;gap:2px 14px;font-size:13px}.bgx-st b{font-size:15px;margin-left:3px}
+  .bgx-pod{gap:6px}.bgx-mini{gap:10px;padding:8px 10px}.bgx-mini .bgx-av{width:40px;height:40px;font-size:17px}.bgx-md{width:20px;height:25px;right:-7px;bottom:-6px}
+  .bgx-r{font-size:11px}.bgx-n{font-size:19px}.bgx-mi .badges{margin-top:2px}.bgx-s b{font-size:22px}
+  /* v190 오늘의 맵: 예전처럼 지도 위에 글자를 얹은 한 줄 타일 */
+  .bgx-map{min-height:112px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;isolation:isolate}
+  .bgx-mimg{position:absolute;inset:0;aspect-ratio:auto;z-index:-1}
+  .bgx-mimg::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(15,17,11,.94) 10%,rgba(15,17,11,.25) 70%)}
+  .bgx-ck{z-index:1}
+  .bgx-mb{display:block;padding:12px 14px}
+  .bgx-mn{display:block}
+  .bgx-mk{position:absolute;right:14px;top:10px;text-shadow:0 2px 10px rgba(0,0,0,.7);font-size:38px}
+  .bgx-ms{display:block}
 }
 @media (prefers-reduced-motion:reduce){.bgx-halo::after{animation:none}.reveal .bgx-mini,.reveal .bgx-mvp{animation:none}}
 
@@ -2718,6 +2744,9 @@ async function renderRecordsBroken(r) {
     push("total", "개인 최고 점수", cur.total, best("total"), "점");
     push("gd", "한 판 최고 딜", cur.gd, best("gd"), "");  /* v172 판 수가 많으면 저절로 늘어나는 하루 합계 대신 한 판 기준 */
     push("gk", "한 판 최다 킬", cur.gk, best("gk"), "킬");
+    for (const [k, label, unit, floor] of [["gn", "한 판 최다 기절", "기절", 3], ["ga", "한 판 최다 어시", "어시", 2], ["gr", "한 판 최다 소생", "회", 2],
+      ["gh", "한 판 최다 헤드샷", "헤드샷", 2], ["gl", "최장거리 킬", "m", 150]])  /* v190 한 판 기록 더 */
+      if ((cur[k] ?? 0) >= floor) push(k, label, cur[k], best(k), unit);
     let st = 0; for (let i = H.length - 1; i >= 0 && H[i].rank === 1; i--) st++;
     if (st >= 2) out.push({p, k: "streak", label: "연속 1위", v: st, unit: "일 연속", streak: true});
   }
@@ -2741,6 +2770,8 @@ function lineChart(points, {invert = false, min, max, h = 130, color = "#F2A900"
   return `<svg viewBox="0 0 ${W} ${h}" role="img">${grid}${xl}<polyline points="${poly}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"/>${dots}</svg>`;
 }
 const TIER_NAMES = ["동", "은", "금", "플래티넘", "다이아", "마스터", "서바이버"];
+const ACH_COL = ["#C9875A", "#C8CDD3", "#F2B33D", "#6FD3C3", "#8EC5FF", "#C59BFF", "#FF7A5C"];  /* v190 업적 등급 색 (새 업적 배지와 같음) */
+const BADGE_COL = {fire: "#F2B33D", record: "#F2B33D", good: "#9CC27A", bad: "#F08A70"};
 function tierOf(a) {  // 등급은 달성까지 걸리는 기간으로 미리 정해 둠 (서버의 ACH_LEVEL)
   return a.level ?? Math.min(6, (a.tier || 1) - 1);
 }
@@ -3058,11 +3089,11 @@ function renderDay(r, report, reveal) {
         t.suicides ? `자살 ${t.suicides}회` : "",
         t.downed ? `기절당함 ${t.downed}회` : ""].filter(Boolean).join(", ")}</div>` : ""}
       ${p.best ? `<div class="best">최고의 판: ${esc(p.best.map)}에서 딜 ${fmt(p.best.damage)}, ${p.best.kills}킬, ${p.best.rank}등</div>` : ""}</div>
-      <section class="pc-grp pc-earn"><h4>칭호</h4>${badgesHtml(p, "left") || `<p class="pc-none">없음</p>`}</section>
-      <section class="pc-grp pc-earn"><h4 class="newh">새 업적</h4>${(r.new_achievements?.[p.nick] || []).length ? `<div class="badges left">${r.new_achievements[p.nick].map(a => { const t = typeof a === "string" ? a : a.t, lv = typeof a === "string" ? 0 : (a.lv ?? 0);
+      <section class="pc-grp pc-earn"><h4>칭호</h4>${(p.badges || []).length ? `<div class="pc-rows">${p.badges.map(x => `<div class="pc-row" style="--c:${BADGE_COL[x.tone] || "#B7B39C"}">${esc(x.text)}</div>`).join("")}</div>` : `<p class="pc-none">없음</p>`}</section>  <!-- v190 왼쪽 색 띠 행 (시안 05) -->
+      <section class="pc-grp pc-earn"><h4 class="newh">새 업적</h4>${(r.new_achievements?.[p.nick] || []).length ? `<div class="pc-rows">${r.new_achievements[p.nick].map((a, i) => [a, i, typeof a === "string" ? 0 : (a.lv ?? 0)]).sort((x, y) => y[2] - x[2] || x[1] - y[1]).map(([a, , lv]) => { const t = typeof a === "string" ? a : a.t;  /* v190 등급 높은 것부터 */
           const ref = playersData.find(x => x.nick === p.nick)?.achievements?.find(x => x.title === t);  // 예전 결과에는 설명이 없어서 선수 업적 목록에서 찾음
           const d = (typeof a === "object" && a.d) || ref?.desc || "", cat = (typeof a === "object" && a.c) || ref?.cat || "";
-          return `<span class="bdg ach-new lv${lv}" tabindex="0" data-tip-t="${esc(t)}" data-tip-lv="${esc(TIER_NAMES[lv] || "")}" data-tip-c="${esc(cat)}" data-tip-d="${esc(d)}">${esc(t)}</span>`; }).join("")}</div>` : `<p class="pc-none">없음</p>`}</section>
+          return `<div class="pc-row" style="--c:${ACH_COL[lv] || ACH_COL[0]}" tabindex="0" data-tip-col="${ACH_COL[lv] || ACH_COL[0]}" data-tip-t="${esc(t)}" data-tip-lv="${esc(TIER_NAMES[lv] || "")}" data-tip-c="${esc(cat)}" data-tip-d="${esc(d)}">${esc(t)}<em>${esc(TIER_NAMES[lv] || "")}</em></div>`; }).join("")}</div>` : `<p class="pc-none">없음</p>`}</section>
     </article>`;
   }).join("");
   const hl = r.highlights.map(h => {  // v78 HL-09 큰 숫자 계기판: 기록 숫자를 가장 크게
@@ -8795,7 +8826,7 @@ function lcTip(dot) {
   const box = dot.closest(".chart, .trend"); if (!box) return;
   let tip = box.querySelector(".lc-tip"); if (!tip) { tip = document.createElement("div"); tip.className = "lc-tip"; box.appendChild(tip); }
   const r = dot.getBoundingClientRect(), b = box.getBoundingClientRect();
-  tip.textContent = dot.dataset.tip; tip.style.left = (r.left + r.width / 2 - b.left) + "px"; tip.style.top = (r.top + r.height / 2 - b.top) + "px"; tip.classList.toggle("below", r.top - b.top < 36); tip.hidden = false; tip.style.marginLeft = "0px"; tip.style.setProperty("--ax", "0px");
+  tip.textContent = dot.dataset.tip; tip.style.setProperty("--tc", dot.previousElementSibling?.getAttribute("fill") || "#F2B33D"); tip.style.left = (r.left + r.width / 2 - b.left) + "px"; tip.style.top = (r.top + r.height / 2 - b.top) + "px"; tip.classList.toggle("below", r.top - b.top < 36); tip.hidden = false; tip.style.marginLeft = "0px"; tip.style.setProperty("--ax", "0px");
   { const t = tip.getBoundingClientRect(), vw = document.documentElement.clientWidth, pad = 6; const dx = t.right > vw - pad ? vw - pad - t.right : t.left < pad ? pad - t.left : 0; if (dx) { tip.style.marginLeft = dx + "px"; tip.style.setProperty("--ax", -dx + "px"); } }  /* v175 화면 끝에서 잘리지 않게 */
 }
 const lcHide = el => { const t = el.closest(".chart, .trend")?.querySelector(".lc-tip"); if (t) t.hidden = true; };
@@ -8871,7 +8902,7 @@ if (Q.get("card")) {
     cur = el;
     const d = el.dataset.tipD, c = el.dataset.tipC;
     tip.innerHTML = `<b>${esc(el.dataset.tipT)}<i>${esc(el.dataset.tipLv)}${c ? " · " + esc(c) : ""}</i></b><span class="d">${d ? esc(d) : "설명이 없는 업적이에요"}</span>`;
-    tip.style.setProperty("--tc", getComputedStyle(el).color);
+    tip.style.setProperty("--tc", el.dataset.tipCol || getComputedStyle(el).getPropertyValue("--ac").trim() || getComputedStyle(el).color);  /* v190 등급 색 테두리 */
     const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
     const left = Math.max(12, Math.min(innerWidth - w - 12, r.left + r.width / 2 - w / 2));
     const below = r.top - h - 10 < 8;
