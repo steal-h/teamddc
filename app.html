@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='7e8187b2';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='d722b47a';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -12,7 +12,7 @@
 <title>TEAM DDC 게임 어워즈</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Saira+Stencil+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Saira+Stencil+One&family=Do+Hyeon&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
 <style>
 :root{
@@ -1694,15 +1694,16 @@ html,body{overscroll-behavior-y:none}
 
 /* v74 업적 설명 말풍선 */
 .bdg.ach-new[data-tip-t]{cursor:help}
-.ach-tip{position:fixed;z-index:200;max-width:min(280px,calc(100vw - 24px));background:rgba(16,18,12,.97);border:1.5px solid var(--tc,#5a5f4c);border-top-width:3px;border-radius:8px;padding:9px 12px 10px;
-  box-shadow:0 10px 28px rgba(0,0,0,.55);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s;font-size:12.5px;line-height:1.45;color:#d9d3bd}
+/* v204 말풍선 새 디자인: 등급 색 보석 + 등급 이름 머리줄, 이름, 등급 색 구분선, 설명 · 마우스를 따라다님 */
+.ach-tip{position:fixed;z-index:200;left:0;top:0;max-width:min(270px,calc(100vw - 24px));min-width:170px;background:linear-gradient(180deg,color-mix(in srgb,var(--tc,#5a5f4c) 16%,#14170f) 0,#14170f 44px);border:1px solid color-mix(in srgb,var(--tc,#5a5f4c) 60%,transparent);border-radius:6px;padding:9px 13px 11px;
+  box-shadow:0 12px 30px rgba(0,0,0,.6),0 0 18px color-mix(in srgb,var(--tc,#5a5f4c) 18%,transparent);pointer-events:none;opacity:0;transform:scale(.96);transform-origin:var(--to,0 0);transition:opacity .12s,transform .12s;font-size:12.5px;line-height:1.5;color:#d4cfb9}
 .ach-tip.on{opacity:1;transform:none}
-.ach-tip b{display:block;font-size:14px;color:var(--tc,#EEE8D5);margin-bottom:2px}
-.ach-tip i{font-style:normal;font-size:11px;color:#9a9682;margin-left:6px;font-weight:600}
-.ach-tip .d{display:block;margin-top:3px}
-.ach-tip::after{content:"";position:absolute;left:var(--ax,50%);width:10px;height:10px;background:inherit;border:inherit;border-width:0 1.5px 1.5px 0;transform:translateX(-50%) rotate(45deg);bottom:-6px}
-.ach-tip.on{box-shadow:0 10px 28px rgba(0,0,0,.55),0 0 0 3px color-mix(in srgb,var(--tc,#5a5f4c) 14%,transparent)}  /* v190 테두리 색이 잘 보이게 */
-.ach-tip.below::after{bottom:auto;top:-6px;transform:translateX(-50%) rotate(225deg)}
+.ach-tip .hd{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:700;letter-spacing:.14em;color:var(--tc,#B7B39C)}
+.ach-tip .hd::before{content:"";width:7px;height:7px;background:var(--tc,#B7B39C);transform:rotate(45deg);box-shadow:0 0 6px var(--tc,#B7B39C);flex:none}
+.ach-tip .hd em{margin-left:auto;font-style:normal;font-weight:500;letter-spacing:0;color:#8f8b76}
+.ach-tip b{display:block;font-size:15px;color:#F3EEDC;margin:4px 0 0;font-weight:700}
+.ach-tip hr{border:0;height:1px;margin:7px 0 6px;background:linear-gradient(90deg,var(--tc,#5a5f4c),transparent)}
+.ach-tip .d{display:block}
 
 /* v75 휴대폰 가로 화면: 설치한 앱·전체 화면에선 리플레이 밖에서 세로로 고정 (안내 화면 없음) */
 
@@ -2187,6 +2188,24 @@ html.share-mode body::before{display:none}
 }
 
 /* v196 NG 모음집 */
+/* v205 NG 모음집: LED 도트 전광판 */
+.ng-led{position:relative;background:linear-gradient(#0b0c08,#0b0c08) padding-box,linear-gradient(145deg,#5a5f4c,#2a2d22 40%,#3b3f31 60%,#1c1e17) border-box;border:10px solid transparent;box-shadow:0 6px 18px rgba(0,0,0,.5),inset 0 0 0 1px #000;padding:12px 14px;border-radius:4px;overflow:hidden;margin-bottom:8px}  /* v207 금속 베젤 + 나사 (시안 02) */
+.ng-led .sc{position:absolute;width:8px;height:8px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#b8b9a8,#4a4c40);box-shadow:inset 0 0 0 1px #222;z-index:1}
+.ng-led .sc::after{content:"";position:absolute;left:1px;right:1px;top:3.5px;height:1px;background:#222;transform:rotate(35deg)}
+.ng-led .sc:nth-child(1){left:4px;top:4px}.ng-led .sc:nth-child(2){right:4px;top:4px}.ng-led .sc:nth-child(3){left:4px;bottom:4px}.ng-led .sc:nth-child(4){right:4px;bottom:4px}
+.ng-scr{position:relative}
+.ng-scr::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,transparent 55%,rgba(11,12,8,.55) 70%) 0 0/3px 3px;pointer-events:none}
+.ng-mq{overflow:hidden;white-space:nowrap;border-bottom:1px dashed #3a2a08;padding:4px 0 8px;margin-bottom:6px}
+.ng-mq span{display:inline-block;padding-left:100%;font:28px "Do Hyeon",var(--display);color:#FFB020;text-shadow:0 0 6px #ff9d00,0 0 14px #ff7a00;animation:ngMq 16s linear infinite}
+@keyframes ngMq{to{transform:translateX(-100%)}}
+.ng-led .ngl{display:grid}
+.ng-led .ngr{appearance:none;cursor:pointer;background:none;border:0;text-align:left;display:grid;grid-template-columns:66px minmax(0,1fr) auto;gap:12px;width:100%;align-items:center;padding:6px 4px;font:22px "Do Hyeon",var(--display);color:#FFB020;text-shadow:0 0 6px #ff9d00}
+.ng-led .ngr:hover,.ng-led .ngr:focus-visible{background:rgba(255,160,0,.08);outline:none}
+.ng-led .ng-tm{color:#A9B85C;text-shadow:0 0 6px #7d8c30;font:20px "Share Tech Mono",monospace}  /* v207 시간: 올리브 LED */
+.ng-led .ng-t{font-size:inherit;line-height:1.3}.ng-led .ng-t em{font-style:normal;color:#ffe08a}
+.ng-led .ng-go{font-size:17px;color:#7dff6a;text-shadow:0 0 6px #3aff2a;border:0;padding:0;white-space:nowrap}.ng-led .ng-go::before{content:none}
+@media (max-width:620px){.ng-led{padding:10px;border-width:8px}.ng-led .sc{width:6px;height:6px}.ng-led .sc::after{top:2.5px}.ng-mq span{font-size:22px}.ng-led .ngr{font-size:18px;grid-template-columns:54px minmax(0,1fr) auto;gap:8px}.ng-led .ng-tm{font-size:16px}.ng-led .ng-go{font-size:14px}}
+@media (prefers-reduced-motion:reduce){.ng-mq span{animation:none;padding-left:0}}
 .ng-sub{margin:-4px 0 10px;text-align:center;color:var(--dust);font-size:13px}.ng-sub b{color:var(--bone)}
 .ngx{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:8px}
 .ng{appearance:none;font:inherit;color:var(--bone);text-align:left;cursor:pointer;display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px 10px;border:0;border-left:3px solid var(--c);border-radius:0 6px 6px 0;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 13%,transparent),rgba(0,0,0,.12) 85%)}
@@ -2229,7 +2248,30 @@ html.share-mode body::before{display:none}
 .bgfx .rn i{position:absolute;top:-80px;width:1px;height:70px;background:linear-gradient(180deg,transparent,rgba(190,215,235,.35));transform:rotate(12deg);animation:bgRn linear infinite}
 @keyframes bgRn{to{translate:-220px 1200px}}
 .bgfx .rn::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(40,55,70,.18),rgba(20,26,30,.25))}
-@media (prefers-reduced-motion:reduce){.bgfx .cf i,.bgfx .rn i,.bgfx .fw *{animation:none}.bgfx .cf,.bgfx .rn,.bgfx .fw{display:none}}
+/* v204 치킨 3번: 황금 햇살 + 금가루 + 큰 불꽃 */
+.bgfx .gl i{position:absolute;top:-10px;width:var(--s);height:var(--s);background:#FFE7A0;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);filter:drop-shadow(0 0 3px #FFC94A);animation:glFall linear infinite,glTw ease-in-out infinite alternate}
+@keyframes glFall{to{translate:20px 1100px}}
+@keyframes glTw{from{opacity:.15;scale:.6}to{opacity:1;scale:1.6}}
+.bgfx .fwb.big i{width:7px;height:7px;left:-3.5px;top:-3.5px}.bgfx .fwb.big{--r:190px!important}
+.mood-triple .bgfx .light{background:radial-gradient(ellipse 70% 60% at 50% 24%,rgba(255,205,95,.34),transparent 74%)}
+/* v204 안 좋은 날 4단계: 먹구름 → 비 → 폭우·번개 → 잿빛 폭풍 */
+.bgfx .cl b{position:absolute;width:var(--w);height:calc(var(--w) * .36);border-radius:50%;background:radial-gradient(ellipse 50% 45% at 50% 40%,rgba(128,136,142,calc(var(--a) * .8)),transparent 70%),radial-gradient(ellipse at 50% 60%,rgba(22,26,30,var(--a)),transparent 70%);filter:blur(6px);animation:clDrift linear infinite alternate}
+@keyframes clDrift{from{translate:-60px 0}to{translate:80px 0}}
+.mood-cloud .bgfx .light{background:radial-gradient(ellipse 55% 45% at 50% 22%,rgba(242,179,61,.05),transparent 70%),linear-gradient(180deg,rgba(18,22,26,.28),transparent 55%)}
+.mood-cloud .bgfx .dust{opacity:.55}
+.bgfx .rn.hv i{width:1.5px;height:90px;transform:rotate(20deg);background:linear-gradient(180deg,transparent,rgba(190,215,235,.45));animation-name:bgRnHv}
+@keyframes bgRnHv{to{translate:-420px 1200px}}
+.mood-storm .bgfx .pat{opacity:.04}.mood-storm .bgfx .dust{opacity:.15}
+.bgfx .ltg .flash{position:absolute;inset:0;background:rgba(205,215,255,0);animation:ltFlash 7s linear infinite}
+.bgfx .ltg .flash.f2{animation-delay:-3.5s;animation-duration:9s}
+@keyframes ltFlash{0%,86%,93%,100%{background:rgba(205,215,255,0)}88%{background:rgba(205,215,255,.18)}90%{background:rgba(205,215,255,.04)}91.5%{background:rgba(205,215,255,.13)}}
+.bgfx .bolt{position:absolute;top:0;width:70px;height:240px;opacity:0;fill:none;stroke:#E8ECFF;stroke-width:2.2;stroke-linejoin:round;filter:drop-shadow(0 0 6px #AFC0FF);animation:ltBolt 7s linear infinite}
+@keyframes ltBolt{0%,87%,93%,100%{opacity:0}88%,91.5%{opacity:.95}90%{opacity:.25}}
+.mood-wipe .bgfx>.pat,.mood-wipe .bgfx>.light,.mood-wipe .bgfx>.dust{filter:grayscale(1)}.mood-wipe{background:linear-gradient(180deg,#22251f,#1a1c18)}.mood-wipe .bgfx>.light{opacity:.5}
+.mood-wipe .bgfx .rn::after{background:linear-gradient(180deg,rgba(30,34,38,.32),rgba(14,16,18,.42))}
+.bgfx .spl i{position:absolute;width:26px;height:7px;margin-left:-13px;border:1px solid rgba(190,215,235,.5);border-radius:50%;animation:splRip ease-out infinite}
+@keyframes splRip{0%{transform:scale(.1);opacity:0}10%{opacity:.9}100%{transform:scale(2.2);opacity:0}}
+@media (prefers-reduced-motion:reduce){.bgfx .cf i,.bgfx .rn i,.bgfx .fw *{animation:none}.bgfx .cf,.bgfx .rn,.bgfx .fw,.bgfx .ltg,.bgfx .gl,.bgfx .spl{display:none}.bgfx .cl b{animation:none}}
 /* v195 오늘의 어워즈 배경: 육각 + 금빛 입자 */
 .bgx>.bgfx{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:inherit}
 .bgfx .dust i{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,230,160,1),rgba(242,179,61,0) 70%);opacity:var(--o);animation:bgDust linear infinite}
@@ -2888,7 +2930,7 @@ function openProfile(nick) {
       </div></div>
       <div class="prof-sec"><h4>카드 점수 변화 <small style="font-size:12px;font-weight:400;color:var(--dust);margin-left:6px">최근 기록 14일 기준</small></h4><div class="chart">${(() => { const CH = (p.card_hist || []).slice(-30); if (!CH.length) return `<p class="who">기록이 쌓이면 나와요.</p>`;  /* v202 게임 점수 대신 카드 점수 */
         const v = CH.map(h => h.ovr), lo = Math.floor(Math.min(...v)) - 1, hi = Math.ceil(Math.max(...v)) + 1;
-        return lineChart(v, {color: "#7FB2E5", min: lo, max: hi, labels: [[hi, hi + "점"], [lo, lo + "점"]],
+        return lineChart(v, {color: "#E0B04A", min: lo, max: hi, labels: [[hi, hi + "점"], [lo, lo + "점"]],  /* v204 테마 금색 */
           tips: CH.map(h => `${h.date.slice(5).replace("-", "/")} · 카드 ${h.ovr}점 · ${TIER[h.tier] || ""}`), xlabels: CH.map(h => h.date.slice(5).replace("-", "/"))}); })()}</div></div>
       ${p.best_day ? `<div class="prof-sec"><h4>개인 최고의 날</h4><p style="margin:0">${esc(p.best_day.date)}, ${p.best_day.total}점, 판당 딜량 ${fmt(p.best_day.damage)}, ${p.best_day.kills}킬</p></div>` : ""}
       ${p.wstats?.length ? `<div class="prof-sec"><h4>무기별 성적 <span class="who">누적, 적에게 준 피해 순</span></h4>${wstatsHtml(p.wstats, 6)}</div>` : p.weapons.length ? `<div class="prof-sec"><h4>주무기 순위</h4><div class="wlist">${p.weapons.map(([w, k, n]) => `<div><div><b>${esc(w)}</b><span class="who">${k}킬 ${n}기절</span><i><em style="width:${(k + n) / maxW * 100}%"></em></i></div></div>`).join("")}</div></div>` : ""}
@@ -3189,7 +3231,7 @@ function renderDay(r, report, reveal) {
 
   const bg = mapUrl(r);
   $("#awards").innerHTML = `
-    <div class="bgx ${moodOf(r) ? "mood-" + moodOf(r) : ""}">  <!-- v181 블랙 골드 (1위) + 블랙 크레이트 (2~4위) -->
+    <div class="bgx ${moodCls(r)}">  <!-- v181 블랙 골드 (1위) + 블랙 크레이트 (2~4위) -->
       <div class="bgfx" aria-hidden="true"><div class="pat"></div><div class="light"></div><div class="dust"><i style="left:16.5%;top:69.0%;width:4.1px;height:4.1px;--o:0.64;animation-duration:11.4s;animation-delay:-15.9s"></i><i style="left:80.8%;top:51.2%;width:3.8px;height:3.8px;--o:0.52;animation-duration:9.0s;animation-delay:-7.4s"></i><i style="left:58.5%;top:6.9%;width:4.5px;height:4.5px;--o:0.52;animation-duration:11.6s;animation-delay:-0.8s"></i><i style="left:99.8%;top:73.9%;width:4.7px;height:4.7px;--o:0.71;animation-duration:9.4s;animation-delay:-6.6s"></i><i style="left:49.8%;top:11.6%;width:4.9px;height:4.9px;--o:0.58;animation-duration:10.7s;animation-delay:-16.4s"></i><i style="left:12.5%;top:92.8%;width:3.6px;height:3.6px;--o:0.68;animation-duration:12.8s;animation-delay:-9.7s"></i><i style="left:18.7%;top:3.7%;width:4.7px;height:4.7px;--o:0.52;animation-duration:17.6s;animation-delay:-4.2s"></i><i style="left:96.9%;top:89.4%;width:4.4px;height:4.4px;--o:0.78;animation-duration:15.4s;animation-delay:-14.6s"></i><i style="left:12.2%;top:47.6%;width:4.6px;height:4.6px;--o:0.50;animation-duration:19.2s;animation-delay:-17.8s"></i><i style="left:41.0%;top:36.5%;width:3.6px;height:3.6px;--o:0.59;animation-duration:19.9s;animation-delay:-7.7s"></i><i style="left:2.7%;top:9.3%;width:4.3px;height:4.3px;--o:0.90;animation-duration:14.5s;animation-delay:-9.8s"></i><i style="left:55.0%;top:74.8%;width:3.1px;height:3.1px;--o:0.70;animation-duration:15.1s;animation-delay:-12.5s"></i><i style="left:18.1%;top:17.0%;width:3.4px;height:3.4px;--o:0.86;animation-duration:12.8s;animation-delay:-11.9s"></i><i style="left:30.7%;top:10.3%;width:2.7px;height:2.7px;--o:0.81;animation-duration:17.5s;animation-delay:-7.5s"></i><i style="left:68.3%;top:67.6%;width:4.7px;height:4.7px;--o:0.88;animation-duration:13.5s;animation-delay:-19.8s"></i><i style="left:96.1%;top:59.1%;width:4.7px;height:4.7px;--o:0.65;animation-duration:13.1s;animation-delay:-4.9s"></i><i style="left:87.6%;top:16.2%;width:2.7px;height:2.7px;--o:0.80;animation-duration:17.5s;animation-delay:-9.7s"></i><i style="left:83.7%;top:5.2%;width:3.1px;height:3.1px;--o:0.54;animation-duration:13.6s;animation-delay:-3.4s"></i><i style="left:6.9%;top:33.8%;width:4.7px;height:4.7px;--o:0.89;animation-duration:17.2s;animation-delay:-9.6s"></i><i style="left:25.2%;top:95.9%;width:3.8px;height:3.8px;--o:0.76;animation-duration:9.3s;animation-delay:-4.2s"></i><i style="left:83.8%;top:79.5%;width:4.7px;height:4.7px;--o:0.70;animation-duration:13.7s;animation-delay:-11.6s"></i><i style="left:84.9%;top:30.8%;width:3.8px;height:3.8px;--o:0.54;animation-duration:17.5s;animation-delay:-0.2s"></i><i style="left:68.5%;top:95.4%;width:2.6px;height:2.6px;--o:0.70;animation-duration:16.1s;animation-delay:-17.0s"></i><i style="left:58.4%;top:25.7%;width:3.5px;height:3.5px;--o:0.88;animation-duration:19.0s;animation-delay:-2.7s"></i><i style="left:9.5%;top:9.4%;width:2.6px;height:2.6px;--o:0.62;animation-duration:10.5s;animation-delay:-17.3s"></i><i style="left:65.5%;top:12.7%;width:3.8px;height:3.8px;--o:0.56;animation-duration:14.4s;animation-delay:-4.4s"></i><i style="left:16.6%;top:18.4%;width:3.4px;height:3.4px;--o:0.75;animation-duration:15.1s;animation-delay:-0.9s"></i><i style="left:71.1%;top:87.4%;width:4.4px;height:4.4px;--o:0.80;animation-duration:9.1s;animation-delay:-9.3s"></i><i style="left:6.3%;top:76.4%;width:2.9px;height:2.9px;--o:0.76;animation-duration:11.8s;animation-delay:-13.9s"></i><i style="left:31.4%;top:4.2%;width:3.5px;height:3.5px;--o:0.55;animation-duration:18.9s;animation-delay:-5.9s"></i><i style="left:50.3%;top:54.9%;width:4.9px;height:4.9px;--o:0.45;animation-duration:15.6s;animation-delay:-10.2s"></i><i style="left:73.5%;top:96.7%;width:3.3px;height:3.3px;--o:0.75;animation-duration:14.8s;animation-delay:-11.2s"></i><i style="left:6.4%;top:81.5%;width:4.9px;height:4.9px;--o:0.58;animation-duration:12.5s;animation-delay:-19.9s"></i><i style="left:10.8%;top:7.6%;width:2.7px;height:2.7px;--o:0.81;animation-duration:17.4s;animation-delay:-9.0s"></i><i style="left:62.1%;top:2.0%;width:4.1px;height:4.1px;--o:0.62;animation-duration:14.7s;animation-delay:-7.8s"></i><i style="left:40.2%;top:22.5%;width:2.6px;height:2.6px;--o:0.62;animation-duration:11.7s;animation-delay:-14.1s"></i><i style="left:81.7%;top:72.4%;width:3.6px;height:3.6px;--o:0.52;animation-duration:13.2s;animation-delay:-9.7s"></i><i style="left:63.2%;top:96.3%;width:2.7px;height:2.7px;--o:0.64;animation-duration:14.4s;animation-delay:-14.3s"></i><i style="left:89.0%;top:78.0%;width:4.1px;height:4.1px;--o:0.78;animation-duration:16.3s;animation-delay:-17.2s"></i><i style="left:69.9%;top:68.3%;width:3.1px;height:3.1px;--o:0.86;animation-duration:13.2s;animation-delay:-12.3s"></i></div>${moodLayer(r)}</div>  <!-- v195 배경: 육각 + 금빛 입자 · v196 그날 결과에 따라 축제/비 -->
     <div class="bgx-head"><span class="bgx-d">${dateLabel} · 같이 한 판 ${r.games_count}게임${r.solo_included ? " (솔로 판 포함)" : [r.four_only ? "4인 판만" : "", r.ranked_only ? "랭크만" : ""].filter(Boolean).map(x => ` (${x})`).join("")}</span>
       <h2>${esc(dayHeadline(r))}</h2></div>
@@ -4107,22 +4149,34 @@ const NG_KIND = {"자폭": ["", "#F08A70"], "아군 사격": ["", "#E8A23A"], "�
 function moodOf(r) {  /* v196 치킨 먹은 날 = 축제 · v201 치킨 없이 평균 8등 이하 = 비 */
   const ranks = (r.games || []).map(g => g.rank).filter(x => x > 0); if (!ranks.length) return "";
   const ck = ranks.filter(x => x === 1).length;
+  if (ck >= 3) return "triple";  /* v204 하루 치킨 3번 이상 = 황금 햇살 + 금가루 + 큰 불꽃 */
   if (ck >= 2) return "multi";  /* v202 하루 치킨 2번 이상 = 불꽃놀이 + 색종이 */
   if (ck) return "win";
-  if (ranks.reduce((a, b) => a + b, 0) / ranks.length >= 8) return "rain";  /* v201 평균 8등 이하면 비 */
+  const avg = ranks.reduce((a, b) => a + b, 0) / ranks.length;  /* v204 안 좋은 날은 평균 등수에 따라 4단계 */
+  if (avg >= 10) return "wipe";   /* v206 평균 10등 이하: 폭풍 = 잿빛 화면 + 폭우 + 번개 (빗물 파문 삭제) */
+  if (avg >= 8) return "rain";    /* 평균 8등 이하: 비 (v205 먹구름 단계 삭제) */
   return "";
+}
+function moodCls(r) {  /* v204 단계가 올라가면 아래 단계 연출도 같이 씀 */
+  const m = moodOf(r);
+  return ({triple: "mood-multi mood-triple", storm: "mood-rain mood-storm", wipe: "mood-rain mood-storm mood-wipe"})[m] || (m ? "mood-" + m : "");
 }
 function moodLayer(r) {
   /* v203 위치·시작 시점이 서로 엇갈리게 섞는 해시 (예전 곱셈 해시는 위치와 시작 시점이 같이 움직여 처음에 한 줄로 늘어섰음) */
   const m = moodOf(r), H = i => { let x = (i * 374761393 + 668265263) | 0; x = Math.imul(x ^ (x >>> 13), 1274126177); x ^= x >>> 16; return (x >>> 0) / 4294967296; };
   let fw = "";
-  if (m === "multi") { const C = ["#FFD36A", "#F2B33D", "#FFF1C4", "#E07B6A", "#9CCB6B", "#8FC3F0"], ck = (r.games || []).filter(g => g.rank === 1).length, nb = Math.min(8, 3 + ck * 2);  /* v202 연속 치킨: 하늘에서 터지는 불꽃 */
-    fw = `<div class="mood fw">${Array.from({length: nb}, (_, b) => { const c = C[b % C.length], c2 = C[(b + 2) % C.length], dur = 3.2 + H(b + 300) * 1.8, R = Math.round(85 + H(b + 310) * 65);
-      return `<div class="fwb" style="left:${(8 + H(b + 320) * 84).toFixed(1)}%;top:${(8 + H(b + 330) * 38).toFixed(1)}%;--r:${R}px;animation-duration:${dur.toFixed(2)}s;animation-delay:${(-H(b + 340) * dur).toFixed(2)}s"><span class="fwt" style="--c:${c}"></span>${Array.from({length: 16}, (_, k) => `<i style="--a:${(k * 22.5 + H(b * 16 + k) * 8).toFixed(1)}deg;--c:${k % 3 ? c : c2}"></i>`).join("")}</div>`; }).join("")}</div>`; }
-  if (m === "win" || m === "multi") { const C = ["#F2B33D", "#FFE08A", "#EEE8D5", "#9CCB6B", "#E8A23A", "#E07B6A"], n = 18 + 8 * Math.min(3, (r.games || []).filter(g => g.rank === 1).length);  /* v201 처음부터 흩어져 팔랑이며 떨어지게 */
+  if (m === "triple") fw += `<div class="mood gl">${Array.from({length: 40}, (_, i) => { const d = 6 + H(i + 400) * 6;  /* v204 치킨 3번: 반짝이며 내리는 금가루 (v207 황금 햇살 삭제) */
+    return `<i style="left:${(H(i + 410) * 100).toFixed(1)}%;--s:${(2 + H(i + 420) * 3).toFixed(1)}px;animation-duration:${d.toFixed(1)}s,${(.8 + H(i + 430) * 1.2).toFixed(2)}s;animation-delay:${(-H(i + 440) * d).toFixed(2)}s,${(-H(i + 450) * 2).toFixed(2)}s"></i>`; }).join("")}</div>`;
+  if (m === "multi" || m === "triple") { const C = ["#FFD36A", "#F2B33D", "#FFF1C4", "#E07B6A", "#9CCB6B", "#8FC3F0"], ck = (r.games || []).filter(g => g.rank === 1).length, nb = Math.min(9, 3 + ck * 2);  /* v202 연속 치킨: 하늘에서 터지는 불꽃 */
+    fw += `<div class="mood fw">${Array.from({length: nb}, (_, b) => { const c = C[b % C.length], c2 = C[(b + 2) % C.length], dur = 3.2 + H(b + 300) * 1.8, R = Math.round(85 + H(b + 310) * 65);
+      return `<div class="fwb${m === "triple" && b % 3 === 0 ? " big" : ""}" style="left:${(8 + H(b + 320) * 84).toFixed(1)}%;top:${(8 + H(b + 330) * 38).toFixed(1)}%;--r:${R}px;animation-duration:${dur.toFixed(2)}s;animation-delay:${(-H(b + 340) * dur).toFixed(2)}s"><span class="fwt" style="--c:${c}"></span>${Array.from({length: 16}, (_, k) => `<i style="--a:${(k * 22.5 + H(b * 16 + k) * 8).toFixed(1)}deg;--c:${k % 3 ? c : c2}"></i>`).join("")}</div>`; }).join("")}</div>`; }
+  if (m === "win" || m === "multi" || m === "triple") { const C = ["#F2B33D", "#FFE08A", "#EEE8D5", "#9CCB6B", "#E8A23A", "#E07B6A"], n = 18 + 8 * Math.min(3, (r.games || []).filter(g => g.rank === 1).length);  /* v201 처음부터 흩어져 팔랑이며 떨어지게 */
     return fw + `<div class="mood cf">${Array.from({length: n}, (_, i) => { const d = 9 + H(i + 9) * 8;
       return `<i style="left:${(H(i + 1) * 100).toFixed(1)}%;--c:${C[i % C.length]};--sw:${Math.round(14 + H(i + 50) * 26)}px;--dr:${Math.round(H(i + 70) * 60 - 30)}px;--rz:${Math.round(H(i + 7) * 360)}deg;--w:${(5 + H(i + 21) * 4).toFixed(1)}px;--h:${(8 + H(i + 33) * 6).toFixed(1)}px;animation-duration:${d.toFixed(1)}s,${(1.4 + H(i + 40) * 1.4).toFixed(2)}s;animation-delay:${(-H(i + 3) * d).toFixed(2)}s,${(-H(i + 44) * 2).toFixed(2)}s"></i>`; }).join("")}</div>`; }
-  if (m === "rain") return `<div class="mood rn">${Array.from({length: 46}, (_, i) => `<i style="left:${(H(i + 1) * 115).toFixed(1)}%;animation-duration:${(.9 + H(i + 9) * .7).toFixed(2)}s;animation-delay:${(-H(i + 3) * 2).toFixed(2)}s;opacity:${(.4 + H(i + 5) * .6).toFixed(2)}"></i>`).join("")}</div>`;
+  const rain = (n, hv) => `<div class="mood rn${hv ? " hv" : ""}">${Array.from({length: n}, (_, i) => `<i style="left:${(H(i + 1) * (hv ? 135 : 115)).toFixed(1)}%;animation-duration:${((hv ? .55 : .9) + H(i + 9) * (hv ? .4 : .7)).toFixed(2)}s;animation-delay:${(-H(i + 3) * 2).toFixed(2)}s;opacity:${(.4 + H(i + 5) * .6).toFixed(2)}"></i>`).join("")}</div>`;
+  const bolt = (x, dl) => `<svg class="bolt" viewBox="0 0 60 200" style="left:${x}%;animation-delay:${dl}s"><path d="M36 0 L24 64 L38 68 L18 138 L30 141 L12 200"/></svg>`;
+  if (m === "rain") return rain(46);
+  if (m === "storm" || m === "wipe") return rain(m === "wipe" ? 120 : 95, true) + `<div class="mood ltg"><i class="flash"></i><i class="flash f2"></i>${bolt(18, -1)}${bolt(72, -4.5)}</div>`;
   return "";
 }
 function ngText(n) {
@@ -4132,15 +4186,17 @@ function ngText(n) {
   if (n.kind === "차량 사고") return `차량 사고로 ${act}`;
   return `${n.kind}에 ${act}`;
 }
-function ngHtml(r) {
+function ngHtml(r) {  /* v205 LED 도트 전광판 (시안 01): 흐르는 자막 + 주황 LED 줄 */
   const L = r.ng || []; if (!L.length) return "";
   const cnt = {}; L.forEach(n => cnt[n.name] = (cnt[n.name] || 0) + 1);
   const king = Object.entries(cnt).sort((a, b) => b[1] - a[1])[0];
+  const mq = king && king[1] >= 2 ? `★ 오늘의 NG왕 ${king[0]} ${king[1]}회 ★ 오늘도 실수는 계속된다 ★` : `★ 오늘의 NG ★ 오늘도 실수는 계속된다 ★`;
   return `<div class="sec"><h3>NG 모음집</h3></div>
-    <div class="ng-panel"><div class="ng-hex"></div>  <!-- v199 블랙골드 패널 (시안 01) -->
-    <p class="ng-sub">오늘의 실수 ${L.length}개${king && king[1] >= 2 ? ` · NG왕 <b>${esc(king[0])}</b> ${king[1]}회` : ""}</p>
-    <div class="ngl">${L.map((n, i) => [n, i]).sort((a, b) => (a[0].time || "").localeCompare(b[0].time || "") || a[0].t - b[0].t).map(([n, i]) => { const col = (NG_KIND[n.kind] || ["", "#B7B39C"])[1];  /* v200 담백한 시간순 목록 (시안 03, 링 그래프 없이) */
-      return `<button type="button" class="ngr" data-ng="${i}" style="--c:${col}"><span class="ng-ic"><svg viewBox="0 0 24 24" aria-hidden="true">${NG_SVG[n.kind] || '<circle cx="12" cy="12" r="8"/>'}</svg></span><span class="ng-t"><b>${esc(n.name)}</b>, ${esc(ngText(n))}<small>${esc(n.kind)} · ${esc(n.map || "")} ${esc(n.time || "")} · ${mmss(n.t)}</small></span><span class="ng-go">장면 보기</span></button>`; }).join("")}</div></div>`;
+    <div class="ng-led"><i class="sc"></i><i class="sc"></i><i class="sc"></i><i class="sc"></i><div class="ng-scr">
+    <div class="ng-mq" aria-hidden="true"><span>${esc(mq)}</span></div>
+    <div class="ngl">${L.map((n, i) => [n, i]).sort((a, b) => (a[0].time || "").localeCompare(b[0].time || "") || a[0].t - b[0].t).map(([n, i]) =>
+      `<button type="button" class="ngr" data-ng="${i}" title="${esc(n.kind)} · ${esc(n.map || "")} · 경기 ${mmss(n.t)}"><span class="ng-tm">${esc(n.time || mmss(n.t))}</span><span class="ng-t"><em>${esc(n.name)}</em> ${esc(ngText(n))}</span><span class="ng-go">▶ 보기</span></button>`).join("")}</div>
+    </div></div>`;
 }
 async function playNg(n) {
   if (!n) return;
@@ -9027,22 +9083,24 @@ if (Q.get("card")) {
 (() => {
   let tip = null, cur = null;
   const hide = () => { if (tip) tip.classList.remove("on"); cur = null; };
-  const show = el => {
+  const place = (x, y) => {  /* v204 마우스 포인터 오른쪽 아래, 화면 끝이면 반대쪽으로 */
+    const w = tip.offsetWidth, h = tip.offsetHeight, rx = x + 16 + w > innerWidth - 8, by = y + 20 + h > innerHeight - 8;
+    tip.style.left = Math.max(8, rx ? x - w - 12 : x + 16) + "px"; tip.style.top = Math.max(8, by ? y - h - 12 : y + 20) + "px";
+    tip.style.setProperty("--to", `${rx ? "100%" : "0"} ${by ? "100%" : "0"}`);
+  };
+  const show = (el, ev) => {
     if (!tip) { tip = document.createElement("div"); tip.className = "ach-tip"; tip.setAttribute("role", "tooltip"); document.body.appendChild(tip); }
     cur = el;
     const d = el.dataset.tipD, c = el.dataset.tipC;
-    tip.innerHTML = `<b>${esc(el.dataset.tipT)}<i>${esc(el.dataset.tipLv)}${c ? " · " + esc(c) : ""}</i></b><span class="d">${d ? esc(d) : "설명이 없는 업적이에요"}</span>`;
+    tip.innerHTML = `<span class="hd">${esc(el.dataset.tipLv || "")}${c ? `<em>${esc(c)}</em>` : ""}</span><b>${esc(el.dataset.tipT)}</b><hr><span class="d">${d ? esc(d) : "설명이 없는 업적이에요"}</span>`;
     tip.style.setProperty("--tc", el.dataset.tipCol || getComputedStyle(el).getPropertyValue("--ac").trim() || getComputedStyle(el).color);  /* v190 등급 색 테두리 */
-    const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
-    const left = Math.max(12, Math.min(innerWidth - w - 12, r.left + r.width / 2 - w / 2));
-    const below = r.top - h - 10 < 8;
-    tip.classList.toggle("below", below);
-    tip.style.left = left + "px"; tip.style.top = (below ? r.bottom + 10 : r.top - h - 10) + "px";
-    tip.style.setProperty("--ax", Math.max(14, Math.min(w - 14, r.left + r.width / 2 - left)) + "px");
+    if (ev && ev.pointerType === "mouse") place(ev.clientX, ev.clientY);
+    else { const r = el.getBoundingClientRect(); place(r.left + r.width / 2 - 8, r.bottom - 12); }  /* 휴대폰·키보드: 항목 바로 아래 */
     tip.classList.add("on");
   };
-  document.addEventListener("pointerover", e => { if (e.pointerType !== "mouse") return; const el = e.target.closest("[data-tip-t]"); if (el && el !== cur) show(el); else if (!el && cur) hide(); });
-  document.addEventListener("click", e => { const el = e.target.closest("[data-tip-t]"); if (el) { if (cur === el && e.pointerType !== "mouse") hide(); else show(el); } else hide(); });
+  document.addEventListener("pointerover", e => { if (e.pointerType !== "mouse") return; const el = e.target.closest("[data-tip-t]"); if (el && el !== cur) show(el, e); else if (!el && cur) hide(); });
+  document.addEventListener("pointermove", e => { if (cur && tip && e.pointerType === "mouse" && e.target.closest("[data-tip-t]") === cur) place(e.clientX, e.clientY); }, {passive: true});
+  document.addEventListener("click", e => { const el = e.target.closest("[data-tip-t]"); if (el) { if (cur === el && e.pointerType !== "mouse") hide(); else show(el, e); } else hide(); });
   document.addEventListener("focusin", e => { const el = e.target.closest?.("[data-tip-t]"); if (el) show(el); });
   document.addEventListener("focusout", e => { if (e.target.closest?.("[data-tip-t]")) hide(); });
   addEventListener("scroll", hide, true); addEventListener("resize", hide);
