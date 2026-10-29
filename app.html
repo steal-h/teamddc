@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='d722b47a';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='426fd379';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2253,7 +2253,23 @@ html.share-mode body::before{display:none}
 @keyframes glFall{to{translate:20px 1100px}}
 @keyframes glTw{from{opacity:.15;scale:.6}to{opacity:1;scale:1.6}}
 .bgfx .fwb.big i{width:7px;height:7px;left:-3.5px;top:-3.5px}.bgfx .fwb.big{--r:190px!important}
+/* v208 치킨 3번: 테두리를 도는 금빛 (시안 T01) + 교차 서치라이트 (시안 T02) */
+@property --tra{syntax:"<angle>";inherits:false;initial-value:0deg}
+.bgx.mood-triple::after{content:"";position:absolute;inset:-1px;border-radius:5px;padding:2px;background:conic-gradient(from var(--tra),transparent 0 70%,#FFE08A 82%,#F2B33D 88%,transparent 95%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:trRing 4s linear infinite;z-index:3;pointer-events:none;filter:drop-shadow(0 0 6px #F2B33D)}
+@keyframes trRing{to{--tra:360deg}}
+.bgfx .sl b{position:absolute;bottom:-20px;width:150px;height:140%;transform-origin:50% 100%;background:linear-gradient(0deg,rgba(255,220,130,.26),rgba(255,220,130,0) 85%);clip-path:polygon(42% 100%,58% 100%,100% 0,0 0);filter:blur(2px);mix-blend-mode:screen}
+.bgfx .sl b:nth-child(1){left:4%;animation:slA 6s ease-in-out infinite alternate}.bgfx .sl b:nth-child(2){right:4%;animation:slB 6s ease-in-out infinite alternate}
+@keyframes slA{from{transform:rotate(-8deg)}to{transform:rotate(38deg)}}@keyframes slB{from{transform:rotate(8deg)}to{transform:rotate(-38deg)}}
+@media (prefers-reduced-motion:reduce){.bgx.mood-triple::after,.bgfx .sl b{animation:none}}
 .mood-triple .bgfx .light{background:radial-gradient(ellipse 70% 60% at 50% 24%,rgba(255,205,95,.34),transparent 74%)}
+/* v209 평균 12등 이하: 흑백 옛날 필름 */
+.bgx.mood-film{filter:grayscale(.85) sepia(.25)}
+.bgfx .flm{animation:flmF .18s steps(2) infinite}@keyframes flmF{50%{background:rgba(255,250,230,.03)}}
+.bgfx .flm i{position:absolute;top:0;bottom:0;width:1px;background:rgba(240,235,220,.35);animation:flmS steps(1) infinite}
+@keyframes flmS{0%{left:var(--x);opacity:.8}30%{left:calc(var(--x) + 3%);opacity:.3}60%,100%{opacity:0}}
+.bgfx .flm s{position:absolute;width:var(--s);height:var(--s);border-radius:50%;background:rgba(20,20,18,.7);animation:flmD .5s steps(1) infinite}@keyframes flmD{0%{opacity:1}30%,100%{opacity:0}}
+.bgfx .flm::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 90px rgba(0,0,0,.75)}
+@media (prefers-reduced-motion:reduce){.bgfx .flm,.bgfx .flm *{animation:none}.bgfx .flm i,.bgfx .flm s{display:none}}
 /* v204 안 좋은 날 4단계: 먹구름 → 비 → 폭우·번개 → 잿빛 폭풍 */
 .bgfx .cl b{position:absolute;width:var(--w);height:calc(var(--w) * .36);border-radius:50%;background:radial-gradient(ellipse 50% 45% at 50% 40%,rgba(128,136,142,calc(var(--a) * .8)),transparent 70%),radial-gradient(ellipse at 50% 60%,rgba(22,26,30,var(--a)),transparent 70%);filter:blur(6px);animation:clDrift linear infinite alternate}
 @keyframes clDrift{from{translate:-60px 0}to{translate:80px 0}}
@@ -2261,12 +2277,18 @@ html.share-mode body::before{display:none}
 .mood-cloud .bgfx .dust{opacity:.55}
 .bgfx .rn.hv i{width:1.5px;height:90px;transform:rotate(20deg);background:linear-gradient(180deg,transparent,rgba(190,215,235,.45));animation-name:bgRnHv}
 @keyframes bgRnHv{to{translate:-420px 1200px}}
-.mood-storm .bgfx .pat{opacity:.04}.mood-storm .bgfx .dust{opacity:.15}
-.bgfx .ltg .flash{position:absolute;inset:0;background:rgba(205,215,255,0);animation:ltFlash 7s linear infinite}
-.bgfx .ltg .flash.f2{animation-delay:-3.5s;animation-duration:9s}
-@keyframes ltFlash{0%,86%,93%,100%{background:rgba(205,215,255,0)}88%{background:rgba(205,215,255,.18)}90%{background:rgba(205,215,255,.04)}91.5%{background:rgba(205,215,255,.13)}}
-.bgfx .bolt{position:absolute;top:0;width:70px;height:240px;opacity:0;fill:none;stroke:#E8ECFF;stroke-width:2.2;stroke-linejoin:round;filter:drop-shadow(0 0 6px #AFC0FF);animation:ltBolt 7s linear infinite}
-@keyframes ltBolt{0%,87%,93%,100%{opacity:0}88%,91.5%{opacity:.95}90%{opacity:.25}}
+.mood-storm .bgfx>.light{background:radial-gradient(ellipse 60% 45% at 50% 20%,rgba(150,100,230,.14),transparent 70%)}.mood-storm .bgfx .pat{opacity:.04}.mood-storm .bgfx .dust{opacity:.15}
+/* v210 번개 강하게: 낙뢰마다 번쩍임 + 갈래 번개 + 잔광이 한 묶음으로 맞춰 침, 세 곳에서 엇갈려 침 */
+.bgfx .stk{position:absolute;inset:0}
+.bgfx .stk .flash{position:absolute;inset:0;animation:ltFlash var(--d) linear infinite;animation-delay:var(--dl)}
+/* v211 보라 번개 (S04) + 자라나는 번개 (S06) */
+@keyframes ltFlash{0%,84%,95%,100%{background:rgba(190,150,255,0)}85%{background:rgba(190,150,255,.4)}86.5%{background:rgba(190,150,255,.06)}88%{background:rgba(200,160,255,.32)}90%{background:rgba(190,150,255,.1)}92%{background:rgba(190,150,255,.04)}}
+.bgfx .bolt{position:absolute;top:-4px;width:150px;height:72%;margin-left:-75px;fill:none;stroke-linejoin:round;stroke-linecap:round;filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 14px #B98CFF) drop-shadow(0 0 30px #8A4BFF)}
+.bgfx .bolt path{stroke-dasharray:400;stroke-dashoffset:400;opacity:0;animation:ltGrow var(--d) linear infinite;animation-delay:var(--dl)}
+@keyframes ltGrow{0%,79.9%{stroke-dashoffset:400;opacity:0}80%{stroke-dashoffset:400;opacity:1}85%{stroke-dashoffset:0;opacity:1}86.5%{opacity:.2}88%{opacity:1}90%{opacity:.55}92%,100%{stroke-dashoffset:0;opacity:0}}
+.bgfx .bolt .m{stroke:#fff;stroke-width:3.2}.bgfx .bolt .b{stroke:#E6D8FF;stroke-width:1.6}
+@keyframes ltBolt{0%,84%,95%,100%{opacity:0}85%,88%{opacity:1}86.5%{opacity:.2}90%{opacity:.55}92%{opacity:.15}}
+.bgfx .stk .glow{position:absolute;left:var(--x);top:0;width:420px;height:100%;margin-left:-210px;background:radial-gradient(ellipse 50% 40% at 50% 10%,rgba(190,140,255,.5),transparent 70%);opacity:0;animation:ltBolt var(--d) linear infinite;animation-delay:var(--dl)}
 .mood-wipe .bgfx>.pat,.mood-wipe .bgfx>.light,.mood-wipe .bgfx>.dust{filter:grayscale(1)}.mood-wipe{background:linear-gradient(180deg,#22251f,#1a1c18)}.mood-wipe .bgfx>.light{opacity:.5}
 .mood-wipe .bgfx .rn::after{background:linear-gradient(180deg,rgba(30,34,38,.32),rgba(14,16,18,.42))}
 .bgfx .spl i{position:absolute;width:26px;height:7px;margin-left:-13px;border:1px solid rgba(190,215,235,.5);border-radius:50%;animation:splRip ease-out infinite}
@@ -4153,6 +4175,7 @@ function moodOf(r) {  /* v196 치킨 먹은 날 = 축제 · v201 치킨 없이 �
   if (ck >= 2) return "multi";  /* v202 하루 치킨 2번 이상 = 불꽃놀이 + 색종이 */
   if (ck) return "win";
   const avg = ranks.reduce((a, b) => a + b, 0) / ranks.length;  /* v204 안 좋은 날은 평균 등수에 따라 4단계 */
+  if (avg >= 12) return "film";   /* v209 평균 12등 이하: 흑백 옛날 필름 (시안 N01) */
   if (avg >= 10) return "wipe";   /* v206 평균 10등 이하: 폭풍 = 잿빛 화면 + 폭우 + 번개 (빗물 파문 삭제) */
   if (avg >= 8) return "rain";    /* 평균 8등 이하: 비 (v205 먹구름 단계 삭제) */
   return "";
@@ -4165,7 +4188,7 @@ function moodLayer(r) {
   /* v203 위치·시작 시점이 서로 엇갈리게 섞는 해시 (예전 곱셈 해시는 위치와 시작 시점이 같이 움직여 처음에 한 줄로 늘어섰음) */
   const m = moodOf(r), H = i => { let x = (i * 374761393 + 668265263) | 0; x = Math.imul(x ^ (x >>> 13), 1274126177); x ^= x >>> 16; return (x >>> 0) / 4294967296; };
   let fw = "";
-  if (m === "triple") fw += `<div class="mood gl">${Array.from({length: 40}, (_, i) => { const d = 6 + H(i + 400) * 6;  /* v204 치킨 3번: 반짝이며 내리는 금가루 (v207 황금 햇살 삭제) */
+  if (m === "triple") fw += `<div class="mood sl"><b></b><b></b></div><div class="mood gl">${Array.from({length: 40}, (_, i) => { const d = 6 + H(i + 400) * 6;  /* v204 치킨 3번: 반짝이며 내리는 금가루 (v207 황금 햇살 삭제) */
     return `<i style="left:${(H(i + 410) * 100).toFixed(1)}%;--s:${(2 + H(i + 420) * 3).toFixed(1)}px;animation-duration:${d.toFixed(1)}s,${(.8 + H(i + 430) * 1.2).toFixed(2)}s;animation-delay:${(-H(i + 440) * d).toFixed(2)}s,${(-H(i + 450) * 2).toFixed(2)}s"></i>`; }).join("")}</div>`;
   if (m === "multi" || m === "triple") { const C = ["#FFD36A", "#F2B33D", "#FFF1C4", "#E07B6A", "#9CCB6B", "#8FC3F0"], ck = (r.games || []).filter(g => g.rank === 1).length, nb = Math.min(9, 3 + ck * 2);  /* v202 연속 치킨: 하늘에서 터지는 불꽃 */
     fw += `<div class="mood fw">${Array.from({length: nb}, (_, b) => { const c = C[b % C.length], c2 = C[(b + 2) % C.length], dur = 3.2 + H(b + 300) * 1.8, R = Math.round(85 + H(b + 310) * 65);
@@ -4174,9 +4197,12 @@ function moodLayer(r) {
     return fw + `<div class="mood cf">${Array.from({length: n}, (_, i) => { const d = 9 + H(i + 9) * 8;
       return `<i style="left:${(H(i + 1) * 100).toFixed(1)}%;--c:${C[i % C.length]};--sw:${Math.round(14 + H(i + 50) * 26)}px;--dr:${Math.round(H(i + 70) * 60 - 30)}px;--rz:${Math.round(H(i + 7) * 360)}deg;--w:${(5 + H(i + 21) * 4).toFixed(1)}px;--h:${(8 + H(i + 33) * 6).toFixed(1)}px;animation-duration:${d.toFixed(1)}s,${(1.4 + H(i + 40) * 1.4).toFixed(2)}s;animation-delay:${(-H(i + 3) * d).toFixed(2)}s,${(-H(i + 44) * 2).toFixed(2)}s"></i>`; }).join("")}</div>`; }
   const rain = (n, hv) => `<div class="mood rn${hv ? " hv" : ""}">${Array.from({length: n}, (_, i) => `<i style="left:${(H(i + 1) * (hv ? 135 : 115)).toFixed(1)}%;animation-duration:${((hv ? .55 : .9) + H(i + 9) * (hv ? .4 : .7)).toFixed(2)}s;animation-delay:${(-H(i + 3) * 2).toFixed(2)}s;opacity:${(.4 + H(i + 5) * .6).toFixed(2)}"></i>`).join("")}</div>`;
-  const bolt = (x, dl) => `<svg class="bolt" viewBox="0 0 60 200" style="left:${x}%;animation-delay:${dl}s"><path d="M36 0 L24 64 L38 68 L18 138 L30 141 L12 200"/></svg>`;
+  const BOLTS = ["M76 0 L62 48 L80 54 L52 108 L70 114 L40 178 L56 182 L30 250", "M70 0 L84 40 L66 46 L90 98 L72 104 L96 160 L80 166 L104 250", "M80 0 L66 56 L86 62 L60 120 L78 126 L50 190 L64 194 L46 250"];
+  const BR = ["M62 48 L36 76 L28 102 M52 108 L84 140 L92 168 M40 178 L18 204", "M66 46 L44 70 M90 98 L116 124 L124 150 M80 166 L58 196", "M66 56 L96 84 L104 110 M60 120 L34 150 M64 194 L86 224"];
+  const bolt = (x, d, dl, k) => `<div class="stk" style="--d:${d}s;--dl:${dl}s;--x:${x}%"><i class="flash"></i><i class="glow"></i><svg class="bolt" viewBox="0 0 150 250" preserveAspectRatio="none" style="left:${x}%"><path class="b" d="${BR[k]}"/><path class="m" d="${BOLTS[k]}"/></svg></div>`;
   if (m === "rain") return rain(46);
-  if (m === "storm" || m === "wipe") return rain(m === "wipe" ? 120 : 95, true) + `<div class="mood ltg"><i class="flash"></i><i class="flash f2"></i>${bolt(18, -1)}${bolt(72, -4.5)}</div>`;
+  if (m === "film") return `<div class="mood flm">${Array.from({length: 4}, (_, i) => `<i style="--x:${(5 + H(i + 700) * 88).toFixed(0)}%;animation-duration:${(1.5 + H(i + 710) * 2).toFixed(1)}s;animation-delay:${(-H(i + 720) * 2).toFixed(1)}s"></i>`).join("")}${Array.from({length: 12}, (_, i) => `<s style="left:${(H(i + 730) * 96).toFixed(0)}%;top:${(H(i + 740) * 96).toFixed(0)}%;--s:${(2 + H(i + 750) * 4).toFixed(0)}px;animation-delay:${(-H(i + 760) * .5).toFixed(2)}s"></s>`).join("")}</div>`;  /* v209 흑백 필름: 세로 스크래치 + 먼지 + 밝기 떨림 + 가장자리 어둡게 */
+  if (m === "storm" || m === "wipe") return rain(m === "wipe" ? 120 : 95, true) + `<div class="mood ltg">${bolt(20, 5.2, -1, 0)}${bolt(76, 6.6, -3.8, 1)}${bolt(48, 8.3, -6.1, 2)}</div>`;
   return "";
 }
 function ngText(n) {
