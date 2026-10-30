@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='eb19cc91';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='589931f3';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2251,8 +2251,42 @@ html.share-mode body::before{display:none}
 /* v224 추억 판 (4인 스쿼드가 아닌 판) */
 .memo{display:inline-block;margin-left:6px;padding:1px 6px;border:1px solid #8a956c;color:#C9D19A;font:700 10.5px/1.4 var(--body);letter-spacing:.04em;border-radius:2px;vertical-align:middle;background:rgba(138,149,108,.14)}
 .glt tr.side td{opacity:.62}.glt tr.side td.tm{opacity:1}.glt tr.side:hover td{opacity:1}
+.history td:has(>.memo.hx){white-space:nowrap}
 .memo-day{margin:0 0 12px;padding:10px 14px;border:1px dashed #8a956c;background:rgba(138,149,108,.1);color:var(--bone);font-size:13.5px}.memo-day b{color:#C9D19A;margin-right:8px}
 .check.mainfull{display:flex;gap:10px;align-items:flex-start;margin:4px 0 14px}.check.mainfull span{display:flex;flex-direction:column;gap:3px}.check.mainfull small{color:var(--dust);font-size:12px;line-height:1.45}
+
+/* ═══ v228 공유 이미지: 블랙 골드 (오늘의 어워즈와 같은 테마) ═══ */
+#shareCard.sx{position:relative;width:1000px;padding:34px 38px 26px;color:var(--bone);border:1px solid var(--bx-line);
+  background:radial-gradient(ellipse 55% 30% at 50% 14%,rgba(242,179,61,.13),transparent 70%),linear-gradient(180deg,var(--bx-bg2),var(--bx-bg))!important}
+#shareCard.sx::before{content:"";position:absolute;inset:8px;border:1px solid rgba(242,179,61,.3);pointer-events:none;z-index:2}
+#shareCard.sx.vertical{width:720px;padding:34px 30px 24px}
+#shareCard.sx .sc-bg{opacity:.1;filter:saturate(.4) sepia(.3)}
+.sx-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sx-brand b{font:400 30px/1 var(--num);color:var(--bx-gold);letter-spacing:.04em}.sx-brand span{font:400 18px/1 var(--display);margin-left:8px;color:var(--bone)}
+.sx-date{color:var(--dust);font-size:14px;letter-spacing:.06em}
+.sx-hd{margin:16px 0 0;text-align:center;font:400 32px/1.25 var(--display);color:var(--bx-gold);text-wrap:balance;text-shadow:0 2px 0 rgba(0,0,0,.4)}
+#shareCard.sx .bgx-rule{margin:20px 0 12px}
+.sx-mvp{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:30px;text-align:left!important;padding:0 18px}
+.sx-mvp .bgx-avw{margin:18px 18px 14px}
+.sx-mi{display:flex;flex-direction:column;gap:4px;min-width:0}.sx-mi .bgx-name{padding:0;font-size:76px}.sx-mi .badges{justify-content:flex-start}
+.sx-ms{display:flex;flex-direction:column;align-items:flex-end;gap:6px}.sx-ms .bgx-score{align-items:flex-end}.sx-ms .bgx-st{justify-content:flex-end;flex-direction:column;align-items:flex-end;gap:2px}
+.vertical .sx-top{flex-direction:column;gap:6px}
+.vertical .sx-mvp{grid-template-columns:1fr;justify-items:center;text-align:center!important;gap:6px}.vertical .sx-mi{align-items:center}.vertical .sx-mi .badges{justify-content:center}.vertical .sx-mi .bgx-name{font-size:84px}
+.vertical .sx-ms,.vertical .sx-ms .bgx-score{align-items:center}.vertical .sx-ms .bgx-st{flex-direction:row;justify-content:center;gap:4px 22px}
+#shareCard.sx .bgx-pod{grid-template-columns:repeat(3,minmax(0,1fr))}#shareCard.sx.vertical .bgx-pod{grid-template-columns:1fr}
+.sx-table{width:100%;border-collapse:collapse;background:linear-gradient(160deg,var(--bx-c3),var(--bx-c1) 75%);border:1px solid var(--bx-edge)}
+.sx-table th{padding:8px 12px;font-size:12.5px;color:var(--bx-gold);font-weight:700;letter-spacing:.06em;border-bottom:1px solid rgba(242,179,61,.35);text-align:right}
+.sx-table td{padding:9px 12px;font-size:16px;text-align:right;font-variant-numeric:tabular-nums;border-top:1px solid rgba(79,86,64,.6)}
+.sx-table th:first-child,.sx-table td:first-child{text-align:left}.sx-table td:first-child{font:400 20px/1.2 var(--display)}
+.sx-table td i{display:inline-grid;place-items:center;width:22px;height:22px;margin-right:10px;border-radius:50%;font:700 12px/1 var(--body);font-style:normal;color:#1d1406;background:var(--bx-gold);vertical-align:2px}
+.sx-table tr.r2 td i{background:var(--bx-gold)}.sx-table tr.r3 td i{background:var(--bx-silver)}.sx-table tr.r4 td i{background:var(--bx-bronze);color:#fff}
+.sx-table tr.r1 td{background:rgba(242,179,61,.07)}.sx-table tr.r1 td:first-child{color:var(--bx-hi)}
+.sx-table td b{font:400 22px/1 var(--num);color:var(--bx-hi)}
+#shareCard.sx .bgx-maps{grid-template-columns:repeat(var(--n),minmax(0,1fr))}#shareCard.sx.vertical .bgx-maps{grid-template-columns:repeat(min(var(--n),3),minmax(0,1fr))}#shareCard.sx.vertical .bgx-mn{font-size:21px}#shareCard.sx.vertical .bgx-mk{font-size:30px}#shareCard.sx.vertical .bgx-ms{font-size:11.5px}#shareCard.sx.vertical .bgx-ck{transform:scale(.8);transform-origin:0 0}
+#shareCard.sx .bgx-ck svg{animation:none}
+.sx-hl{grid-template-columns:repeat(5,minmax(0,1fr))!important;border-color:var(--bx-edge)!important;background:var(--bx-edge)!important}.sx-hl>div{background:linear-gradient(160deg,var(--bx-c3),var(--bx-c1) 75%)!important}.sx-hl span{color:var(--bx-gold)!important}
+#shareCard.sx .hlx.sx-hl{grid-template-columns:repeat(5,minmax(0,1fr))!important}#shareCard.sx.vertical .hlx.sx-hl{grid-template-columns:repeat(3,minmax(0,1fr))!important}#shareCard.sx .hlx.sx-hl>div{grid-column:auto!important}
+.sx-foot{display:flex;justify-content:space-between;margin-top:18px;color:var(--dust);font-size:12.5px;letter-spacing:.08em}
 /* v196 NG 모음집 */
 /* v205 NG 모음집: LED 도트 전광판 */
 .ng-led{position:relative;background:linear-gradient(#0b0c08,#0b0c08) padding-box,linear-gradient(145deg,#5a5f4c,#2a2d22 40%,#3b3f31 60%,#1c1e17) border-box;border:10px solid transparent;box-shadow:0 6px 18px rgba(0,0,0,.5),inset 0 0 0 1px #000;padding:12px 14px;border-radius:4px;overflow:hidden;margin-bottom:8px}  /* v207 금속 베젤 + 나사 (시안 02) */
@@ -3135,8 +3169,8 @@ async function runJob(path, body) {
     }
     if (res.kind === "day" && res.result) {
       const show = path === "api/analyze" && $("#optShow").checked;
-      if (show && !res.result.memory) { $("#awards").classList.add("veil"); ceremony(res.result); }  // v224 추억 날은 시상식 없음  // 시상식을 먼저 띄우고, 결과(등수)는 시상식이 끝날 때까지 가려 둠
-      renderDay(res.result, res.report, !show || !!res.result.memory);
+      if (show) { $("#awards").classList.add("veil"); ceremony(res.result); }  // v227 번외 날도 재미로 시상식  // 시상식을 먼저 띄우고, 결과(등수)는 시상식이 끝날 때까지 가려 둠
+      renderDay(res.result, res.report, !show);
     } else if (res.kind === "day") renderEmpty(res.date);
     else if (res.days.length) await openDay(res.days[res.days.length - 1].date, true);
     else renderEmpty("최근 14일");
@@ -3357,10 +3391,10 @@ function renderDay(r, report, reveal) {
 
   const bg = mapUrl(r);
   $("#awards").innerHTML = `
-    ${r.memory ? `<div class="memo-day"><b>번외</b> 4인 스쿼드 판이 없는 날이라 업적·칭호·선수 카드 점수에는 들어가지 않아요.</div>` : ""}
+    ${r.memory ? `<div class="memo-day"><b>비공식</b> 4인 스쿼드 판이 없는 날이라 업적·칭호·선수 카드 점수에는 들어가지 않아요.</div>` : ""}
     <div class="bgx ${moodCls(r)}">  <!-- v181 블랙 골드 (1위) + 블랙 크레이트 (2~4위) -->
       <div class="bgfx" aria-hidden="true"><div class="pat"></div><div class="light"></div><div class="dust"><i style="left:16.5%;top:69.0%;width:4.1px;height:4.1px;--o:0.64;animation-duration:11.4s;animation-delay:-15.9s"></i><i style="left:80.8%;top:51.2%;width:3.8px;height:3.8px;--o:0.52;animation-duration:9.0s;animation-delay:-7.4s"></i><i style="left:58.5%;top:6.9%;width:4.5px;height:4.5px;--o:0.52;animation-duration:11.6s;animation-delay:-0.8s"></i><i style="left:99.8%;top:73.9%;width:4.7px;height:4.7px;--o:0.71;animation-duration:9.4s;animation-delay:-6.6s"></i><i style="left:49.8%;top:11.6%;width:4.9px;height:4.9px;--o:0.58;animation-duration:10.7s;animation-delay:-16.4s"></i><i style="left:12.5%;top:92.8%;width:3.6px;height:3.6px;--o:0.68;animation-duration:12.8s;animation-delay:-9.7s"></i><i style="left:18.7%;top:3.7%;width:4.7px;height:4.7px;--o:0.52;animation-duration:17.6s;animation-delay:-4.2s"></i><i style="left:96.9%;top:89.4%;width:4.4px;height:4.4px;--o:0.78;animation-duration:15.4s;animation-delay:-14.6s"></i><i style="left:12.2%;top:47.6%;width:4.6px;height:4.6px;--o:0.50;animation-duration:19.2s;animation-delay:-17.8s"></i><i style="left:41.0%;top:36.5%;width:3.6px;height:3.6px;--o:0.59;animation-duration:19.9s;animation-delay:-7.7s"></i><i style="left:2.7%;top:9.3%;width:4.3px;height:4.3px;--o:0.90;animation-duration:14.5s;animation-delay:-9.8s"></i><i style="left:55.0%;top:74.8%;width:3.1px;height:3.1px;--o:0.70;animation-duration:15.1s;animation-delay:-12.5s"></i><i style="left:18.1%;top:17.0%;width:3.4px;height:3.4px;--o:0.86;animation-duration:12.8s;animation-delay:-11.9s"></i><i style="left:30.7%;top:10.3%;width:2.7px;height:2.7px;--o:0.81;animation-duration:17.5s;animation-delay:-7.5s"></i><i style="left:68.3%;top:67.6%;width:4.7px;height:4.7px;--o:0.88;animation-duration:13.5s;animation-delay:-19.8s"></i><i style="left:96.1%;top:59.1%;width:4.7px;height:4.7px;--o:0.65;animation-duration:13.1s;animation-delay:-4.9s"></i><i style="left:87.6%;top:16.2%;width:2.7px;height:2.7px;--o:0.80;animation-duration:17.5s;animation-delay:-9.7s"></i><i style="left:83.7%;top:5.2%;width:3.1px;height:3.1px;--o:0.54;animation-duration:13.6s;animation-delay:-3.4s"></i><i style="left:6.9%;top:33.8%;width:4.7px;height:4.7px;--o:0.89;animation-duration:17.2s;animation-delay:-9.6s"></i><i style="left:25.2%;top:95.9%;width:3.8px;height:3.8px;--o:0.76;animation-duration:9.3s;animation-delay:-4.2s"></i><i style="left:83.8%;top:79.5%;width:4.7px;height:4.7px;--o:0.70;animation-duration:13.7s;animation-delay:-11.6s"></i><i style="left:84.9%;top:30.8%;width:3.8px;height:3.8px;--o:0.54;animation-duration:17.5s;animation-delay:-0.2s"></i><i style="left:68.5%;top:95.4%;width:2.6px;height:2.6px;--o:0.70;animation-duration:16.1s;animation-delay:-17.0s"></i><i style="left:58.4%;top:25.7%;width:3.5px;height:3.5px;--o:0.88;animation-duration:19.0s;animation-delay:-2.7s"></i><i style="left:9.5%;top:9.4%;width:2.6px;height:2.6px;--o:0.62;animation-duration:10.5s;animation-delay:-17.3s"></i><i style="left:65.5%;top:12.7%;width:3.8px;height:3.8px;--o:0.56;animation-duration:14.4s;animation-delay:-4.4s"></i><i style="left:16.6%;top:18.4%;width:3.4px;height:3.4px;--o:0.75;animation-duration:15.1s;animation-delay:-0.9s"></i><i style="left:71.1%;top:87.4%;width:4.4px;height:4.4px;--o:0.80;animation-duration:9.1s;animation-delay:-9.3s"></i><i style="left:6.3%;top:76.4%;width:2.9px;height:2.9px;--o:0.76;animation-duration:11.8s;animation-delay:-13.9s"></i><i style="left:31.4%;top:4.2%;width:3.5px;height:3.5px;--o:0.55;animation-duration:18.9s;animation-delay:-5.9s"></i><i style="left:50.3%;top:54.9%;width:4.9px;height:4.9px;--o:0.45;animation-duration:15.6s;animation-delay:-10.2s"></i><i style="left:73.5%;top:96.7%;width:3.3px;height:3.3px;--o:0.75;animation-duration:14.8s;animation-delay:-11.2s"></i><i style="left:6.4%;top:81.5%;width:4.9px;height:4.9px;--o:0.58;animation-duration:12.5s;animation-delay:-19.9s"></i><i style="left:10.8%;top:7.6%;width:2.7px;height:2.7px;--o:0.81;animation-duration:17.4s;animation-delay:-9.0s"></i><i style="left:62.1%;top:2.0%;width:4.1px;height:4.1px;--o:0.62;animation-duration:14.7s;animation-delay:-7.8s"></i><i style="left:40.2%;top:22.5%;width:2.6px;height:2.6px;--o:0.62;animation-duration:11.7s;animation-delay:-14.1s"></i><i style="left:81.7%;top:72.4%;width:3.6px;height:3.6px;--o:0.52;animation-duration:13.2s;animation-delay:-9.7s"></i><i style="left:63.2%;top:96.3%;width:2.7px;height:2.7px;--o:0.64;animation-duration:14.4s;animation-delay:-14.3s"></i><i style="left:89.0%;top:78.0%;width:4.1px;height:4.1px;--o:0.78;animation-duration:16.3s;animation-delay:-17.2s"></i><i style="left:69.9%;top:68.3%;width:3.1px;height:3.1px;--o:0.86;animation-duration:13.2s;animation-delay:-12.3s"></i></div>${moodLayer(r)}</div>  <!-- v195 배경: 육각 + 금빛 입자 · v196 그날 결과에 따라 축제/비 -->
-    <div class="bgx-head"><span class="bgx-d">${dateLabel} · 같이 한 판 ${r.games_count}게임${(r.side_games || []).length ? ` · 번외 ${r.side_games.length}판` : ""}${r.solo_included ? " (솔로 판 포함)" : [r.four_only ? "4인 판만" : "", r.ranked_only ? "랭크만" : ""].filter(Boolean).map(x => ` (${x})`).join("")}</span>
+    <div class="bgx-head"><span class="bgx-d">${dateLabel} · 같이 한 판 ${r.games_count}게임${(r.side_games || []).length ? ` · 비공식 ${r.side_games.length}판` : ""}${r.solo_included ? " (솔로 판 포함)" : [r.four_only ? "4인 판만" : "", r.ranked_only ? "랭크만" : ""].filter(Boolean).map(x => ` (${x})`).join("")}</span>
       <h2>${esc(dayHeadline(r))}</h2></div>
     <div class="${reveal ? "reveal" : ""}">
       <div class="bgx-rule">MOST VALUABLE PLAYER</div>
@@ -3408,7 +3442,6 @@ function renderDay(r, report, reveal) {
     $("#btnReelSave").onclick = () => reelVideo(r.date, false, $("#reelMsg"));
   }
   $("#btnReplay").onclick = () => { ensureAudio(); ceremony(r); };
-  $("#btnReplay").classList.toggle("hidden", !!r.memory);  // v224 추억 날은 시상식 없음
   $("#btnScore").onclick = () => openScore(r);
 }
 
@@ -8772,48 +8805,39 @@ function openScore(r) {  // v78: 설명만 간결하게 (점수 표는 뺌)
 $("#scoreClose").onclick = $("#scoreCloseTop").onclick = () => $("#scoreDlg").close();
 
 /* ───── 캡처용 카드 (?share=날짜) ───── */
-function renderShareCardVertical(r) {
+function renderShareCardVertical(r) { renderShareCard(r, true); }
+function renderShareCard(r, vertical = false) {  /* v228 공유 이미지: 오늘의 어워즈 메인 화면과 같은 블랙 골드 테마 */
   const [first, ...rest] = r.ranking;
-  const PRI = ["딜량왕", "킬왕", "오늘의 무기", "생명의 은인", "최장거리 킬", "선빵왕", "팀킬범", "소생 천사"];
-  const pick = [...r.highlights].sort((a, b) => (PRI.indexOf(a.label) + 99) % 99 - (PRI.indexOf(b.label) + 99) % 99).slice(0, 6);
-  const rows = r.ranking.map(p => `<tr><td>${esc(p.name)}</td><td>${fmt(p.metrics.damage)}</td><td>${p.metrics.kills}</td><td>${p.metrics.dbnos}</td><td><b>${sc(p.total)}</b></td></tr>`).join("");
-  const el = $("#shareCard"); el.classList.add("vertical");
-  const bgv = mapUrl(r);
-  el.innerHTML = (bgv ? `<img class="sc-bg" src="${bgv}" alt="" onerror="this.remove()">` : "") + `
-    <div class="vc-head"><b>TEAM DDC</b><span>게임 어워즈</span><p>${esc(r.date)} (${esc(r.weekday)}), 같이 한 판 ${r.games_count}게임</p></div>
-    <div class="sc-hd">${esc(dayHeadline(r))}</div>
-    <div class="vc-champ">${avatar(first, "x") || trophy()}<div class="r1t">1위</div><div class="award">최우수 플레이어</div>
-      <div class="name">${esc(first.name)}</div><div class="score"><b>${sc(first.total)}</b> 총점</div>${badgesHtml(first)}</div>
-    <div class="vc-list">${rest.map(p => `<div class="vc-row r${p.rank} ${p.rank === 4 ? "worst" : ""}">${avatar(p, "x") || medal(p.rank)}
-      <div><small>${p.rank}위 ${esc(p.award)}</small><b>${esc(p.name)}</b>${badgesHtml(p)}</div><em>${sc(p.total)}</em></div>`).join("")}</div>
-    <table class="sc-table"><thead><tr><th>판당 평균</th><th>딜량</th><th>킬</th><th>기절</th><th>점수</th></tr></thead><tbody>${rows}</tbody></table>
-    ${(r.maps || []).length ? `<div class="sc-maps"><span>오늘의 맵</span>${r.maps.map(m => `<b class="${m.most ? "most" : ""}">${esc(m.map)} ${m.count}판</b>`).join("")}</div>` : ""}
-    <div class="vc-hl">${pick.map(h => `<div><span>${esc(h.label)}</span><b>${esc(h.name)}${h.value ? " · " + esc(h.value) : ""}</b></div>`).join("")}</div>
-    <div class="sc-foot"><span>TEAM DDC 게임 어워즈</span><span>제작 스틸황</span></div>`;
-}
-function renderShareCard(r) {
-  const [first, ...rest] = r.ranking;
-  const rows = r.ranking.map(p => `<tr><td>${esc(p.name)}</td><td>${fmt(p.metrics.damage)}</td><td>${p.metrics.kills}</td>
-      <td>${p.metrics.dbnos}</td><td>${p.metrics.assists}</td><td>${p.metrics.revives}</td><td>${p.metrics.survival_min}분</td><td><b>${sc(p.total)}</b></td></tr>`).join("");
   const PRI = ["딜량왕", "킬왕", "오늘의 무기", "생명의 은인", "최장거리 킬", "선빵왕", "팀킬범", "소생 천사", "기절왕",
     "헤드샷 장인", "탱커", "투척 장인", "최장거리 기절", "자기장 맛집", "로드킬", "아군 사격", "약쟁이"];
-  const pick = [...r.highlights].sort((a, b) => (PRI.indexOf(a.label) + 99) % 99 - (PRI.indexOf(b.label) + 99) % 99).slice(0, 8);
-  const hl = pick.map(h => `<div><span>${esc(h.label)}</span><b>${esc(h.name)}${h.value ? " · " + esc(h.value) : ""}</b></div>`).join("");
-  const bgh = mapUrl(r);
-  $("#shareCard").innerHTML = (bgh ? `<img class="sc-bg" src="${bgh}" alt="" onerror="this.remove()">` : "") + `
-    <div class="sc-head"><div><b>TEAM DDC</b><span>게임 어워즈</span></div>
-      <p>${esc(r.date)} (${esc(r.weekday)})<br>같이 한 판 ${r.games_count}게임</p></div>
-    <div class="sc-hd">${esc(dayHeadline(r))}</div>
-    <div class="sc-champ">${avatar(first, "x") || trophy()}
-      <div><div class="award"><span class="r1t">1위</span> &nbsp;최우수 플레이어</div><div class="name">${esc(first.name)}</div>${badgesHtml(first)}</div>
-      <div class="score"><b>${sc(first.total)}</b>총점</div></div>
-    <div class="sc-medals">${rest.map(p => `<div class="r${p.rank} ${p.rank === 4 ? "worst" : ""}">${avatar(p, "x") || medal(p.rank)}
-      <div><small>${p.rank}위 ${esc(p.award)}</small><b>${esc(p.name)}</b>${badgesHtml(p)}</div><em>${sc(p.total)}</em></div>`).join("")}</div>
-    <table class="sc-table"><thead><tr><th>판당 평균</th><th>딜량</th><th>킬</th><th>기절</th><th>어시</th><th>소생</th><th>생존</th><th>점수</th></tr></thead>
-      <tbody>${rows}</tbody></table>
-    ${(r.maps || []).length ? `<div class="sc-maps"><span>오늘의 맵</span>${r.maps.map(m => `<b class="${m.most ? "most" : ""}">${esc(m.map)} ${m.count}판</b>`).join("")}</div>` : ""}
-    <div class="sc-hl">${hl}</div>
-    <div class="sc-foot"><span>TEAM DDC 게임 어워즈</span><span>제작 스틸황</span></div>`;
+  const pick = [...r.highlights].sort((a, b) => (PRI.indexOf(a.label) + 99) % 99 - (PRI.indexOf(b.label) + 99) % 99).slice(0, vertical ? 6 : 10);
+  const hl = pick.map(h => {
+    const m = String(h.value || "").match(/([\d,.]+)\s*([^\d\s,.]*)/), bad = h.label === "팀킬범" || h.tone === "bad";
+    if (h.label === "팀킬범") return `<div class="bad"><span>팀킬범</span><em><small>${esc(h.name)}</small></em><b>팀킬·팀원 기절</b></div>`;
+    return `<div class="${bad ? "bad" : ""}"><span>${esc(h.label)}</span><em>${m ? `${esc(m[1])}<small>${esc(m[2])}</small>` : `<small>${esc(h.value || "")}</small>`}</em><b>${esc(h.name)}</b></div>`; }).join("");
+  const cols = vertical ? [["딜량", p => fmt(p.metrics.damage)], ["킬", p => p.metrics.kills], ["기절", p => p.metrics.dbnos]]
+    : [["딜량", p => fmt(p.metrics.damage)], ["킬", p => p.metrics.kills], ["기절", p => p.metrics.dbnos], ["어시", p => p.metrics.assists], ["소생", p => p.metrics.revives], ["생존", p => p.metrics.survival_min + "분"]];
+  const rows = r.ranking.map(p => `<tr class="r${p.rank}"><td><i>${p.rank}</i>${esc(p.name)}</td>${cols.map(([, f]) => `<td>${f(p)}</td>`).join("")}<td><b>${sc(p.total)}</b></td></tr>`).join("");
+  const side = (r.side_games || []).length;
+  const el = $("#shareCard"); el.className = "sx" + (vertical ? " vertical" : "");
+  const bg = mapUrl(r), maps = mapsHtml(r).replace(/<div class="sec">.*?<\/div>/, "");
+  el.innerHTML = (bg ? `<img class="sc-bg" src="${bg}" alt="" onerror="this.remove()">` : "") + `
+    <div class="sx-top"><span class="sx-brand"><b>TEAM DDC</b><span>게임 어워즈</span></span>
+      <span class="sx-date">${esc(r.date)} (${esc(r.weekday)}) · 같이 한 판 ${r.games_count}게임${side ? ` · 비공식 ${side}판` : ""}${r.memory ? " · 비공식" : ""}</span></div>
+    <h2 class="sx-hd">${esc(dayHeadline(r))}</h2>
+    <div class="bgx-rule">MOST VALUABLE PLAYER</div>
+    <div class="bgx-mvp sx-mvp">
+      ${bgxAv(first, true)}
+      <div class="sx-mi"><span class="bgx-role">최우수 플레이어 · 1위</span><div class="bgx-name">${esc(first.name)}</div>${badgesHtml(first)}</div>
+      <div class="sx-ms"><div class="bgx-score"><b>${sc(first.total)}</b><small>총점</small></div>
+        <div class="bgx-st"><span>KDA<b>${kdaOf(first.totals)}</b></span><span>판당 킬<b>${first.metrics.kills}</b></span><span>판당 딜<b>${fmt(first.metrics.damage)}</b></span></div></div>
+    </div>
+    ${rest.length ? `<div class="bgx-rule">PODIUM</div><div class="bgx-pod">${rest.map(p => `<div class="bgx-mini r${p.rank}">${bgxAv(p)}<div class="bgx-mi"><span class="bgx-r">${p.rank}위 · ${esc(p.award)}</span><b class="bgx-n">${esc(p.name)}</b>${badgesHtml(p)}</div><div class="bgx-s"><b>${sc(p.total)}</b><small>점</small></div></div>`).join("")}</div>` : ""}
+    <div class="bgx-rule">판당 평균</div>
+    <table class="sx-table"><thead><tr><th>선수</th>${cols.map(([l]) => `<th>${l}</th>`).join("")}<th>점수</th></tr></thead><tbody>${rows}</tbody></table>
+    ${maps ? `<div class="bgx-rule">오늘의 맵</div>${maps}` : ""}
+    ${hl ? `<div class="bgx-rule">HIGHLIGHTS</div><div class="hlx sx-hl">${hl}</div>` : ""}
+    <div class="sx-foot"><span>TEAM DDC 게임 어워즈</span><span>제작 스틸황</span></div>`;
 }
 
 /* ───── 앱 설치 · 전체 화면 (폰) ───── */
@@ -8929,10 +8953,10 @@ function renderCumulative() {
   const mi = months.indexOf(histYM), inMonth = state.days.filter(d => d.date.startsWith(histYM));
   const mGames = inMonth.reduce((s, d) => s + (d.games || 0), 0), mWins = inMonth.reduce((s, d) => s + (d.wins || 0), 0), [hy, hm] = histYM.split("-").map(Number);
   const hist = inMonth.map(d => `<tr>
-      <td class="n">${d.has_detail ? `<button data-open="${d.date}">${d.date}</button>` : d.date}</td>
+      <td class="n">${d.has_detail ? `<button data-open="${d.date}">${d.date}</button>` : d.date}${d.memory ? `<span class="memo hx" title="4인 스쿼드 판이 없는 날: 업적·칭호·카드 점수에 안 들어가요">비공식</span>` : ""}</td>
       <td class="n">${d.games}게임</td>
       <td class="n win">${d.wins == null ? `<span class="nil">-</span>` : d.wins ? `<b><img class="chick" src="${CHICK_IMG}" alt="">${d.wins}번</b>` : `<span class="nil">0번</span>`}</td>
-      <td class="order">${d.memory ? `<span class="memo">번외</span> ` : ""}${d.ranking.map((n, i) => i === 0 ? `<b>${esc(n)}</b>` : esc(n)).join(" › ")}</td>
+      <td class="order">${d.ranking.map((n, i) => i === 0 ? `<b>${esc(n)}</b>` : esc(n)).join(" › ")}</td>
       <td class="n"><button class="del" data-del="${d.date}" aria-label="${d.date} 기록 삭제">삭제</button></td></tr>`).join("");
   $("#cum").innerHTML = state.days.length ? `
     <div class="sec"><h3>명예의 전당 (${rg.key === "all" ? "" : esc(rg.label) + " · "}${days.length}일)</h3></div>
