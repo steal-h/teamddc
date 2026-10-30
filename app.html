@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='c69991df';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='e610a569';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2190,8 +2190,15 @@ html.share-mode body::before{display:none}
 .bgx-map{background:var(--bx-bg);border:1px solid #66704f;position:relative;min-width:0}
 .bgx-map.most{border-color:#8a956c}  /* v186 오늘의 맵 테두리 올리브 */
 .bgx-mimg{aspect-ratio:21/8;max-width:100%;background:#20241A center/cover;position:relative}
-.bgx-ck{position:absolute;left:10px;top:10px;display:inline-flex;align-items:center;gap:5px;background:rgba(14,14,13,.85);border:1px solid rgba(242,179,61,.6);color:var(--bx-gold);font-size:12.5px;font-weight:700;padding:3px 9px}
-.bgx-ck img{width:16px;height:16px;image-rendering:pixelated}
+/* v224 치킨 표시: 블랙 골드 테마의 금빛 깃발 띠 (왼쪽 위 모서리에 붙음) */
+.bgx-ck{position:absolute;left:0;top:10px;display:inline-flex;align-items:center;gap:6px;padding:3px 18px 3px 4px;overflow:hidden;
+  background:linear-gradient(180deg,#FFE7A0 0%,#F2B33D 48%,#C98A16 100%);color:#2a1a04;clip-path:polygon(0 0,100% 0,calc(100% - 10px) 50%,100% 100%,0 100%);
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.55));font:400 14px/1 var(--display);letter-spacing:.02em}
+.bgx-ck::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;transform:skewX(-20deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:ckShine 4.5s ease-in-out infinite}
+@keyframes ckShine{0%,70%{left:-60%}100%{left:130%}}
+.bgx-ck i{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#1d1406;box-shadow:inset 0 0 0 1.5px #FFE08A}
+.bgx-ck img{width:15px;height:15px;image-rendering:pixelated}
+.bgx-ck b{font:400 17px/1 var(--num);color:#1d1406;margin-left:-1px}
 .bgx-mb{padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:2px 10px}
 .bgx-mn{font:400 26px/1.1 var(--display);color:color-mix(in srgb,var(--c) 65%,var(--bone))}
 .bgx-mk{grid-row:1/3;grid-column:2;font:400 40px/1 var(--num);color:#fff}  /* v186 판수 흰색 */
@@ -2244,6 +2251,12 @@ html.share-mode body::before{display:none}
   .bgx-ms{display:block}
 }
 
+
+/* v224 추억 판 (4인 스쿼드가 아닌 판) */
+.memo{display:inline-block;margin-left:6px;padding:1px 6px;border:1px solid #8a956c;color:#C9D19A;font:700 10.5px/1.4 var(--body);letter-spacing:.04em;border-radius:2px;vertical-align:middle;background:rgba(138,149,108,.14)}
+.glt tr.side td{opacity:.62}.glt tr.side td.tm{opacity:1}.glt tr.side:hover td{opacity:1}
+.memo-day{margin:0 0 12px;padding:10px 14px;border:1px dashed #8a956c;background:rgba(138,149,108,.1);color:var(--bone);font-size:13.5px}.memo-day b{color:#C9D19A;margin-right:8px}
+.check.mainfull{display:flex;gap:10px;align-items:flex-start;margin:4px 0 14px}.check.mainfull span{display:flex;flex-direction:column;gap:3px}.check.mainfull small{color:var(--dust);font-size:12px;line-height:1.45}
 /* v196 NG 모음집 */
 /* v205 NG 모음집: LED 도트 전광판 */
 .ng-led{position:relative;background:linear-gradient(#0b0c08,#0b0c08) padding-box,linear-gradient(145deg,#5a5f4c,#2a2d22 40%,#3b3f31 60%,#1c1e17) border-box;border:10px solid transparent;box-shadow:0 6px 18px rgba(0,0,0,.5),inset 0 0 0 1px #000;padding:12px 14px;border-radius:4px;overflow:hidden;margin-bottom:8px}  /* v207 금속 베젤 + 나사 (시안 02) */
@@ -2559,6 +2572,7 @@ html.share-mode body::before{display:none}
         <label class="field"><span>같이 한 판 기준</span>
           <select id="minTogether"><option value="2">2명 이상 같은 팀</option><option value="3">3명 이상 같은 팀</option><option value="4">4명 모두 같은 팀</option></select></label>
       </div>
+      <label class="check mainfull"><input type="checkbox" id="mainFullOnly"> <span><b>4인 스쿼드 판만 반영</b><small>켜면 4명이 다 같이 한 판만 점수·업적·칭호·선수 카드에 들어가요. 2·3인 판은 경기 목록에 '추억'으로 기록만 남아요. (이미 저장된 날은 다시 분석하면 바뀌어요)</small></span></label>
       <div class="field"><span>무기 이름 고치기 <small>한 줄에 '공식 이름 = 보여줄 이름'</small></span>
         <textarea id="wnames" spellcheck="false" placeholder="AUG A3 = AUG"></textarea></div>
     </section>
@@ -3125,8 +3139,8 @@ async function runJob(path, body) {
     }
     if (res.kind === "day" && res.result) {
       const show = path === "api/analyze" && $("#optShow").checked;
-      if (show) { $("#awards").classList.add("veil"); ceremony(res.result); }  // 시상식을 먼저 띄우고, 결과(등수)는 시상식이 끝날 때까지 가려 둠
-      renderDay(res.result, res.report, !show);
+      if (show && !res.result.memory) { $("#awards").classList.add("veil"); ceremony(res.result); }  // v224 추억 날은 시상식 없음  // 시상식을 먼저 띄우고, 결과(등수)는 시상식이 끝날 때까지 가려 둠
+      renderDay(res.result, res.report, !show || !!res.result.memory);
     } else if (res.kind === "day") renderEmpty(res.date);
     else if (res.days.length) await openDay(res.days[res.days.length - 1].date, true);
     else renderEmpty("최근 14일");
@@ -3203,7 +3217,7 @@ function mapsHtml(r) {  // v78 오늘의 맵 (MC-01 지도 타일)
   const killsOf = name => (r.games || []).filter(g => g.map === name).reduce((a, g) => a + g.players.reduce((b, p) => b + p.kills, 0), 0);
   return `<div class="sec"><h3>오늘의 맵</h3></div>
     <div class="bgx-maps" style="--n:${Math.min(maps.length, 4)}">${maps.map(m => { const code = codeOf(m.map);  /* v181 블랙 골드 */
-      return `<div class="bgx-map ${m.count === max ? "most" : ""}" style="--c:${mapColor(code || m.map)}"><div class="bgx-mimg" style="${code ? `background-image:url('api/map?code=${encodeURIComponent(code)}')` : ""}">${m.chickens ? `<span class="bgx-ck"><img src="${CHICK_IMG}" alt="">치킨 ${m.chickens}</span>` : ""}</div>
+      return `<div class="bgx-map ${m.count === max ? "most" : ""}" style="--c:${mapColor(code || m.map)}"><div class="bgx-mimg" style="${code ? `background-image:url('api/map?code=${encodeURIComponent(code)}')` : ""}">${m.chickens ? `<span class="bgx-ck" title="이 맵에서 치킨 ${m.chickens}번"><i><img src="${CHICK_IMG}" alt=""></i><span>치킨</span><b>${m.chickens}</b></span>` : ""}</div>
         <div class="bgx-mb"><span class="bgx-mn">${esc(m.map)}</span><span class="bgx-mk">${m.count}<small>판</small></span><span class="bgx-ms">평균 <b>${m.avg_rank}등</b> · 팀 <b>${killsOf(m.map)}킬</b></span></div></div>`; }).join("")}</div>`;
 }
 function dayHeadline(r) {  // 오늘의 어워즈 제목: 그날 성적에 맞는 멘트 (같은 날은 늘 같은 문구)
@@ -3310,14 +3324,15 @@ function renderDay(r, report, reveal) {
       return `<div class="bad tkx"><span>팀킬범 <small>팀킬·팀원 기절</small></span>${L ? `<div class="tkps">${L}</div>` : `<b>${esc(h.name)}</b>`}</div>`;
     }
     return `<div class="${bad ? "bad" : ""}"><span>${esc(h.label)}</span><em>${m ? `${esc(m[1])}<small>${esc(m[2])}</small>` : `<small>${esc(h.value || "")}</small>`}</em><b>${esc(h.name)}</b></div>`; }).join("");
-  const dmgMax = Math.max(1, ...r.games.flatMap(g => g.players.map(p => p.damage)));
+  const allG = [...r.games, ...(r.side_games || [])].sort((a, b) => String(a.time).localeCompare(String(b.time)));  // v224 추억 판도 시간 순으로 같이
+  const dmgMax = Math.max(1, ...allG.flatMap(g => g.players.map(p => p.damage)));
   const CROWN = `<svg class="crown" viewBox="0 0 24 18" aria-label="이 판 MVP"><path d="M2 15 L4 4 L9 9 L12 2 L15 9 L20 4 L22 15 Z" fill="#F2B33D" stroke="#8C6414" stroke-width="1.2" stroke-linejoin="round"/><rect x="2" y="15" width="20" height="2.6" rx="1" fill="#D99A22"/></svg>`;
   const ORD = (state?.players || []).map(q => (q.nickname || "").toLowerCase());  // v112 팀원 순서 고정 (설정의 플레이어 순서)
   const plOrder = ps => [...ps].sort((a, b) => { const ia = ORD.indexOf((a.nick || "").toLowerCase()), ib = ORD.indexOf((b.nick || "").toLowerCase()); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || String(a.name).localeCompare(String(b.name)); });
-  const games = r.games.map((g, i) => ({g, i})).reverse().map(({g, i}) => {  // v78 GL-03 촘촘한 표 + 팀원 킬·딜량 막대
+  const games = allG.map((g, i) => ({g, i})).reverse().map(({g, i}) => {  // v78 GL-03 촘촘한 표 + 팀원 킬·딜량 막대
     const mvp = [...g.players].sort((a, b) => b.kills - a.kills || b.damage - a.damage)[0], hasM = mvp && (mvp.kills || mvp.damage);
     const tk = g.players.reduce((a, p) => a + p.kills, 0), td = g.players.reduce((a, p) => a + (p.damage || 0), 0);
-    return `<tr class="${g.rank === 1 ? "w" : ""}"><td class="no">${i + 1}</td><td class="tm">${g.time}</td>
+    return `<tr class="${g.rank === 1 ? "w" : ""} ${g.side && !r.memory ? "side" : ""}"><td class="no">${i + 1}</td><td class="tm">${g.time}${g.side && !r.memory ? `<span class="memo" title="${g.players.length}명이 한 판: 점수·업적·칭호에는 안 들어가요">추억</span>` : ""}</td>
       <td><span class="mc" style="--c:${mapColor(g.map_code || g.map)}"><i></i>${esc(g.map)}</span></td>
       <td class="rk"><span class="rkg"><b>${g.rank === 1 ? `<img class="chick" src="${CHICK_IMG}" alt="">치킨` : g.rank + "등"}</b><small>/${g.teams}</small></span></td>
       <td class="n">${tk}</td><td class="n">${fmt(Math.round(td))}</td>
@@ -3326,9 +3341,10 @@ function renderDay(r, report, reveal) {
 
   const bg = mapUrl(r);
   $("#awards").innerHTML = `
+    ${r.memory ? `<div class="memo-day"><b>추억 기록</b> 이날은 4인 스쿼드 판이 없어서 업적·칭호·선수 카드 점수에는 반영하지 않았어요.</div>` : ""}
     <div class="bgx ${moodCls(r)}">  <!-- v181 블랙 골드 (1위) + 블랙 크레이트 (2~4위) -->
       <div class="bgfx" aria-hidden="true"><div class="pat"></div><div class="light"></div><div class="dust"><i style="left:16.5%;top:69.0%;width:4.1px;height:4.1px;--o:0.64;animation-duration:11.4s;animation-delay:-15.9s"></i><i style="left:80.8%;top:51.2%;width:3.8px;height:3.8px;--o:0.52;animation-duration:9.0s;animation-delay:-7.4s"></i><i style="left:58.5%;top:6.9%;width:4.5px;height:4.5px;--o:0.52;animation-duration:11.6s;animation-delay:-0.8s"></i><i style="left:99.8%;top:73.9%;width:4.7px;height:4.7px;--o:0.71;animation-duration:9.4s;animation-delay:-6.6s"></i><i style="left:49.8%;top:11.6%;width:4.9px;height:4.9px;--o:0.58;animation-duration:10.7s;animation-delay:-16.4s"></i><i style="left:12.5%;top:92.8%;width:3.6px;height:3.6px;--o:0.68;animation-duration:12.8s;animation-delay:-9.7s"></i><i style="left:18.7%;top:3.7%;width:4.7px;height:4.7px;--o:0.52;animation-duration:17.6s;animation-delay:-4.2s"></i><i style="left:96.9%;top:89.4%;width:4.4px;height:4.4px;--o:0.78;animation-duration:15.4s;animation-delay:-14.6s"></i><i style="left:12.2%;top:47.6%;width:4.6px;height:4.6px;--o:0.50;animation-duration:19.2s;animation-delay:-17.8s"></i><i style="left:41.0%;top:36.5%;width:3.6px;height:3.6px;--o:0.59;animation-duration:19.9s;animation-delay:-7.7s"></i><i style="left:2.7%;top:9.3%;width:4.3px;height:4.3px;--o:0.90;animation-duration:14.5s;animation-delay:-9.8s"></i><i style="left:55.0%;top:74.8%;width:3.1px;height:3.1px;--o:0.70;animation-duration:15.1s;animation-delay:-12.5s"></i><i style="left:18.1%;top:17.0%;width:3.4px;height:3.4px;--o:0.86;animation-duration:12.8s;animation-delay:-11.9s"></i><i style="left:30.7%;top:10.3%;width:2.7px;height:2.7px;--o:0.81;animation-duration:17.5s;animation-delay:-7.5s"></i><i style="left:68.3%;top:67.6%;width:4.7px;height:4.7px;--o:0.88;animation-duration:13.5s;animation-delay:-19.8s"></i><i style="left:96.1%;top:59.1%;width:4.7px;height:4.7px;--o:0.65;animation-duration:13.1s;animation-delay:-4.9s"></i><i style="left:87.6%;top:16.2%;width:2.7px;height:2.7px;--o:0.80;animation-duration:17.5s;animation-delay:-9.7s"></i><i style="left:83.7%;top:5.2%;width:3.1px;height:3.1px;--o:0.54;animation-duration:13.6s;animation-delay:-3.4s"></i><i style="left:6.9%;top:33.8%;width:4.7px;height:4.7px;--o:0.89;animation-duration:17.2s;animation-delay:-9.6s"></i><i style="left:25.2%;top:95.9%;width:3.8px;height:3.8px;--o:0.76;animation-duration:9.3s;animation-delay:-4.2s"></i><i style="left:83.8%;top:79.5%;width:4.7px;height:4.7px;--o:0.70;animation-duration:13.7s;animation-delay:-11.6s"></i><i style="left:84.9%;top:30.8%;width:3.8px;height:3.8px;--o:0.54;animation-duration:17.5s;animation-delay:-0.2s"></i><i style="left:68.5%;top:95.4%;width:2.6px;height:2.6px;--o:0.70;animation-duration:16.1s;animation-delay:-17.0s"></i><i style="left:58.4%;top:25.7%;width:3.5px;height:3.5px;--o:0.88;animation-duration:19.0s;animation-delay:-2.7s"></i><i style="left:9.5%;top:9.4%;width:2.6px;height:2.6px;--o:0.62;animation-duration:10.5s;animation-delay:-17.3s"></i><i style="left:65.5%;top:12.7%;width:3.8px;height:3.8px;--o:0.56;animation-duration:14.4s;animation-delay:-4.4s"></i><i style="left:16.6%;top:18.4%;width:3.4px;height:3.4px;--o:0.75;animation-duration:15.1s;animation-delay:-0.9s"></i><i style="left:71.1%;top:87.4%;width:4.4px;height:4.4px;--o:0.80;animation-duration:9.1s;animation-delay:-9.3s"></i><i style="left:6.3%;top:76.4%;width:2.9px;height:2.9px;--o:0.76;animation-duration:11.8s;animation-delay:-13.9s"></i><i style="left:31.4%;top:4.2%;width:3.5px;height:3.5px;--o:0.55;animation-duration:18.9s;animation-delay:-5.9s"></i><i style="left:50.3%;top:54.9%;width:4.9px;height:4.9px;--o:0.45;animation-duration:15.6s;animation-delay:-10.2s"></i><i style="left:73.5%;top:96.7%;width:3.3px;height:3.3px;--o:0.75;animation-duration:14.8s;animation-delay:-11.2s"></i><i style="left:6.4%;top:81.5%;width:4.9px;height:4.9px;--o:0.58;animation-duration:12.5s;animation-delay:-19.9s"></i><i style="left:10.8%;top:7.6%;width:2.7px;height:2.7px;--o:0.81;animation-duration:17.4s;animation-delay:-9.0s"></i><i style="left:62.1%;top:2.0%;width:4.1px;height:4.1px;--o:0.62;animation-duration:14.7s;animation-delay:-7.8s"></i><i style="left:40.2%;top:22.5%;width:2.6px;height:2.6px;--o:0.62;animation-duration:11.7s;animation-delay:-14.1s"></i><i style="left:81.7%;top:72.4%;width:3.6px;height:3.6px;--o:0.52;animation-duration:13.2s;animation-delay:-9.7s"></i><i style="left:63.2%;top:96.3%;width:2.7px;height:2.7px;--o:0.64;animation-duration:14.4s;animation-delay:-14.3s"></i><i style="left:89.0%;top:78.0%;width:4.1px;height:4.1px;--o:0.78;animation-duration:16.3s;animation-delay:-17.2s"></i><i style="left:69.9%;top:68.3%;width:3.1px;height:3.1px;--o:0.86;animation-duration:13.2s;animation-delay:-12.3s"></i></div>${moodLayer(r)}</div>  <!-- v195 배경: 육각 + 금빛 입자 · v196 그날 결과에 따라 축제/비 -->
-    <div class="bgx-head"><span class="bgx-d">${dateLabel} · 같이 한 판 ${r.games_count}게임${r.solo_included ? " (솔로 판 포함)" : [r.four_only ? "4인 판만" : "", r.ranked_only ? "랭크만" : ""].filter(Boolean).map(x => ` (${x})`).join("")}</span>
+    <div class="bgx-head"><span class="bgx-d">${dateLabel} · 같이 한 판 ${r.games_count}게임${(r.side_games || []).length ? ` · 추억 ${r.side_games.length}판` : ""}${r.solo_included ? " (솔로 판 포함)" : [r.four_only ? "4인 판만" : "", r.ranked_only ? "랭크만" : ""].filter(Boolean).map(x => ` (${x})`).join("")}</span>
       <h2>${esc(dayHeadline(r))}</h2></div>
     <div class="${reveal ? "reveal" : ""}">
       <div class="bgx-rule">MOST VALUABLE PLAYER</div>
@@ -3376,6 +3392,7 @@ function renderDay(r, report, reveal) {
     $("#btnReelSave").onclick = () => reelVideo(r.date, false, $("#reelMsg"));
   }
   $("#btnReplay").onclick = () => { ensureAudio(); ceremony(r); };
+  $("#btnReplay").classList.toggle("hidden", !!r.memory);  // v224 추억 날은 시상식 없음
   $("#btnScore").onclick = () => openScore(r);
 }
 
@@ -4388,7 +4405,7 @@ async function openReplay(id) {
   try { R = await getReplayData(id); }
   catch (e) { $("#rpLoading").textContent = e.message; return; }
   if ($("#replay").classList.contains("hidden")) return;
-  { const g = (current?.result?.games || []).find(x => x.id === id); if (g) { R._dayDmg = Object.fromEntries(g.players.map(q => [q.nick, q.damage])); R._dayKills = Object.fromEntries(g.players.map(q => [q.nick, q.kills])); } }  // v103 킬도 공식 기록 (경기 목록 MVP와 같게)  // 예전 리플레이: 결과표 딜량은 그날 기록에서
+  { const g = [...(current?.result?.games || []), ...(current?.result?.side_games || [])].find(x => x.id === id); if (g) { R._dayDmg = Object.fromEntries(g.players.map(q => [q.nick, q.damage])); R._dayKills = Object.fromEntries(g.players.map(q => [q.nick, q.kills])); } }  // v103 킬도 공식 기록 (경기 목록 MVP와 같게)  // 예전 리플레이: 결과표 딜량은 그날 기록에서
   rpSetup(R);
   const firstLand = Math.min(...R.players.map(p => p.landed ?? 0));
   rp.t = Math.max(0, firstLand - 6); rp.cam = {x: .5, y: .5, s: 1}; rp.follow = true;
@@ -7855,7 +7872,7 @@ function supplyPlaneSpr(seed) {  // 일반 보급 비행기: AP-02 공군 회색
   return sprImg("sup" + v, () => SPR.C130(SPR.pal("#F2A900"), v === "02" ? {body: "#8e959b", band: false, roundel: false} : {body: "#3e4448", band: false, roundel: false}));
 }
 function noRotor(f) { globalThis.__NOROTOR = true; try { return f(); } finally { globalThis.__NOROTOR = false; } }
-const HROT = {ch: [[50, 22.4, 22, 3, 1], [50, 78, 21, 3, -1]], sh0: [[50, 38, 34, 4, 1]], sh1: [[50, 38, 33, 4, 1]], sh2: [[50, 38, 33, 3, 1], [50, 38, 31, 3, -1]], sh3: [[50, 41, 29, 5, 1]]};
+const HROT = {ch: [[50, 22.4, 30, 3, 1], [50, 78, 29, 3, -1]], sh0: [[50, 38, 34, 4, 1]], sh1: [[50, 38, 33, 4, 1]], sh2: [[50, 38, 33, 3, 1], [50, 38, 31, 3, -1]], sh3: [[50, 41, 29, 5, 1]]};
 function drawRotors(ctx, x, y, ang, sz, list, now) {  // v153 도는 회전날개 (잔상 + 끝 노란 표시)
   const k = sz / 100; ctx.save(); ctx.translate(x, y); ctx.rotate(ang + Math.PI / 2); ctx.scale(k, k); ctx.translate(-50, -50);
   for (const [cx, cy, r, n, dir] of list) {
@@ -8833,7 +8850,7 @@ const PCOL = ["#F2A900", "#7FB2E5", "#6FCF7F", "#E07A5F", "#C49BE8", "#5FD0C8"];
 function cumHall(days) {  /* 명예의 전당: 고른 기간의 날별 순위로 다시 셈 */
   return (state.cumulative || []).map(c => {
     const counts = [0, 0, 0, 0];
-    for (const d of days) { const i = d.ranking.indexOf(c.name); if (i >= 0) counts[Math.min(i, 3)]++; }
+    for (const d of days) { if (d.memory) continue; const i = d.ranking.indexOf(c.name); if (i >= 0) counts[Math.min(i, 3)]++; }
     const n = counts.reduce((a, b) => a + b, 0), avg = n ? counts.reduce((a, x, i) => a + (i + 1) * x, 0) / n : null;
     return {...c, counts, days: n, avg: avg ? Math.round(avg * 100) / 100 : null};
   }).sort((a, b) => b.counts[0] - a.counts[0] || (a.avg ?? 9) - (b.avg ?? 9) || b.days - a.days);
@@ -8899,7 +8916,7 @@ function renderCumulative() {
       <td class="n">${d.has_detail ? `<button data-open="${d.date}">${d.date}</button>` : d.date}</td>
       <td class="n">${d.games}게임</td>
       <td class="n win">${d.wins == null ? `<span class="nil">-</span>` : d.wins ? `<b><img class="chick" src="${CHICK_IMG}" alt="">${d.wins}번</b>` : `<span class="nil">0번</span>`}</td>
-      <td class="order">${d.ranking.map((n, i) => i === 0 ? `<b>${esc(n)}</b>` : esc(n)).join(" › ")}</td>
+      <td class="order">${d.memory ? `<span class="memo">추억</span> ` : ""}${d.ranking.map((n, i) => i === 0 ? `<b>${esc(n)}</b>` : esc(n)).join(" › ")}</td>
       <td class="n"><button class="del" data-del="${d.date}" aria-label="${d.date} 기록 삭제">삭제</button></td></tr>`).join("");
   $("#cum").innerHTML = state.days.length ? `
     <div class="sec"><h3>명예의 전당 (${rg.key === "all" ? "" : esc(rg.label) + " · "}${days.length}일)</h3></div>
@@ -9007,6 +9024,7 @@ function openSettings() {
   $("#dayStart").innerHTML = [0,3,4,5,6,7,8,9,10,12].map(h =>
     `<option value="${h}" ${h === state.day_start_hour ? "selected" : ""}>${h === 0 ? "자정" : h === 12 ? "낮 12시" : (h < 7 ? "새벽 " : "오전 ") + h + "시"}부터</option>`).join("");
   $("#minTogether").value = String(state.min_together);
+  $("#mainFullOnly").checked = !!state.main_full_only;
   const have = ["trophy","gold","silver","bronze"].filter(k => state.images?.[k]);
   $("#imgStatus").textContent = have.length ? `사용 중: ${have.join(", ")}` : "기본 그림 사용 중";
   const WK = [["damage", "딜량"], ["kills", "킬"], ["dbnos", "기절"], ["assists", "어시"], ["revives", "소생"], ["survival", "생존"],
@@ -9134,7 +9152,7 @@ $("#settingsForm").addEventListener("submit", async e => {
   const nicks = [...document.querySelectorAll("[data-nick]")].map(i => i.value.trim());
   const names = [...document.querySelectorAll("[data-name]")].map(i => i.value.trim());
   const body = { players: nicks.map((n, i) => ({nickname: n, name: names[i]})),
-    day_start_hour: +$("#dayStart").value, min_together: +$("#minTogether").value };
+    day_start_hour: +$("#dayStart").value, min_together: +$("#minTogether").value, main_full_only: $("#mainFullOnly").checked };
   if ($("#apiKey").value.trim()) body.api_key = $("#apiKey").value.trim();
   if ($("#webhook").value.trim()) body.webhook = $("#webhook").value.trim();
   body.share = {enabled: false, pin: $("#sharePin").value.trim()};  // 친구 조회 공유(같은 네트워크)는 없앰 — 웹 공유만
