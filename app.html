@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='182fa1f5';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='61299e77';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -824,7 +824,7 @@ dialog.closing{animation:dlgout .2s ease-in forwards}dialog.closing::backdrop{an
 .show-card .stamp{font-family:'Yeon Sung',var(--display);font-size:clamp(20px,min(3.5vw,5.9vh),57px);letter-spacing:.03em;padding:.2em .26em .14em}  /* v236 2~4위 도장도 1위 칭호와 같은 연성 */
 .champ-top{position:relative;display:inline-block}
 /* 시상식 중에는 뒤 화면 애니메이션을 멈춰 렉을 줄임 */
-body.showing>:not(#show),body.showing>:not(#show) *{animation-play-state:paused!important}
+body.showing>:not(#show):not(.seal-ov),body.showing>:not(#show):not(.seal-ov) *{animation-play-state:paused!important}  /* v244 2위 팩 열기 창은 시상식 위에서도 움직임 */
 .stamp.top{position:absolute;left:50%;top:50%;margin:0;font-size:clamp(20px,min(3.6vw,5vh),64px);--sd:0s;transform:translate(-50%,-50%) rotate(-8deg);animation-name:stamptop}
 @keyframes stamptop{
   0%{opacity:0;transform:translate(-50%,-50%) rotate(-18deg) scale(2.4);filter:blur(5px)}
@@ -2320,6 +2320,13 @@ html.share-mode body::before{display:none}
 .pcard.seal-shake{animation:sealShake .48s}@keyframes sealShake{20%,60%{transform:translateX(-6px) rotate(-1.5deg)}40%,80%{transform:translateX(6px) rotate(1.5deg)}}
 .seal-ov{position:fixed;inset:0;z-index:300;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 40%,rgba(40,34,16,.92),rgba(10,11,7,.97));animation:sealIn .3s ease-out;cursor:pointer;padding:20px}
 .seal-ov.out{opacity:0;transition:opacity .35s}@keyframes sealIn{from{opacity:0}}
+.seal-mini{font:inherit;color:var(--bone);cursor:pointer;position:relative;border-color:var(--accent)!important;box-shadow:0 0 0 1px var(--accent),0 0 18px rgba(242,169,0,.45);animation:sealPulse 1.6s ease-in-out infinite}
+.seal-mini.down{border-color:#9aa0a6!important;box-shadow:0 0 0 1px #9aa0a6,0 0 14px rgba(160,170,180,.35)}
+.seal-mini em{font-style:normal;display:grid;justify-items:center;margin-left:4px;font:400 15px/1.1 'Yeon Sung',var(--display);color:var(--accent)}.seal-mini.down em{color:#C8CDD3}
+.seal-mini em i{font:500 10.5px 'Noto Sans KR',sans-serif;font-style:normal;color:var(--dust);animation:sealBlink 1.4s ease-in-out infinite}
+.seal-mini.seen{animation:none}.seal-mini.seen em i{animation:none;opacity:.6}
+@keyframes sealPulse{50%{box-shadow:0 0 0 2px var(--accent),0 0 30px rgba(242,169,0,.7)}}
+@media (max-width:620px){.seal-mini em{font-size:12px}.seal-mini em i{font-size:9px}}
 .seal-card .seal-hint{margin-top:2vh;color:var(--dust);font-size:13px}
 /* v237 기록 점검 */
 .day-warn{margin:0 0 14px;border:1px solid #8a6a1a;background:rgba(242,169,0,.08);padding:10px 14px;border-radius:4px}
@@ -3462,7 +3469,7 @@ function renderDay(r, report, reveal) {
     const lvl = ["common", "uncommon", "rare", "epic", "unique", "special", "legend"].indexOf(tr);
     const embers = n => `<div class="fx em">${Array.from({length: n}, (_, i) => `<i style="left:${(i * 37 + 11) % 97}%;--d:${(1.6 + (i * 7 % 10) / 6).toFixed(2)}s;--dx:${((i * 13) % 40) - 20}px;animation-delay:${((i * 5) % 30) / 10}s"></i>`).join("")}</div>`;
     const fx = (TFX_SET[tr] || []).map(id => TFX_HTML[id]).join("");  /* v212 등급 효과: 고른 조합이 등급마다 쌓임 */
-    const sealed = p.rank === 2 && cd && cd.move && !sealSeen(r.date, p.nick);  // v237 2위는 시상식에서 등급 바뀜이 안 나와서 '팩 열기'로 공개
+    const sealed = false;  // v244 '팩 열기'는 시상식 아래 2위 카드로 옮김
     return `<article class="pcard r${p.rank} ${tr ? "t-" + tr : ""} ${cd && cd.move > 0 ? "promo" : ""} ${sealed ? "sealed" : ""}">${sealed ? `<button type="button" class="pc-seal" data-seal="${esc(p.nick)}" aria-label="${esc(p.name)} 카드 열기"><b>DDC</b><span>${cd.move > 0 ? "등급이 올랐어요!" : "등급이 바뀌었어요"}</span><small>눌러서 카드 열기</small></button>` : ""}${fx}
       <header><b style="display:flex;align-items:center;gap:8px">${avatar(p, "sm", false)}${esc(p.name)}</b><span class="pc-rk"><em>${p.rank}위</em>${tierChip}</span></header>
       <div class="pc-key"><div class="kda"><b>${kdaOf(t)}</b><span>KDA</span></div><div><b>${fmt(m.damage)}</b><span>판당 딜량</span></div><div><b>${m.kills}</b><span>판당 킬</span></div></div>
@@ -3548,7 +3555,6 @@ function renderDay(r, report, reveal) {
   bindShare(r.date, report);
   document.querySelectorAll("[data-ng]").forEach(b => b.onclick = () => playNg((r.ng || [])[+b.dataset.ng]));
   renderRecordsBroken(r);
-  document.querySelectorAll("[data-seal]").forEach(b => b.onclick = () => openSeal(r, b.dataset.seal, b));
   renderWarnings(r);
   alignPcards(); setTimeout(alignPcards, 600);  /* v194 카드끼리 칸 높이 맞춤 */
   const aw = $("#awards"); aw.classList.remove("page-in"); void aw.offsetWidth; aw.classList.add("page-in");
@@ -4120,7 +4126,11 @@ async function ceremony(r) {
       bgmScene("slot");
       await slotDecide(t, stage, r.ranking.slice(0, 2));
       const s2 = r.ranking[1];
-      row.insertAdjacentHTML("afterbegin", `<div class="show-mini enter">${avatar(s2, "xs", false)}${medal(2, "mini-medal")}<div><small>2위</small><b>${esc(s2.name)}</b></div></div>`);
+      const s2cd = (r.cards || {})[s2.nick];
+      if (s2cd && s2cd.move) {  // v244 2위 등급 바뀜: 아래 2위 카드를 눌러서 '팩 열기'
+        row.insertAdjacentHTML("afterbegin", `<button type="button" class="show-mini enter seal-mini ${s2cd.move > 0 ? "up" : "down"}" aria-label="${esc(s2.name)} 등급 바뀜 확인">${avatar(s2, "xs", false)}${medal(2, "mini-medal")}<div><small>2위</small><b>${esc(s2.name)}</b></div><em>${s2cd.move > 0 ? "▲ 승급" : "▼ 강등"}<i>눌러서 확인</i></em></button>`);
+        const sb = row.querySelector(".seal-mini"); sb.onclick = () => openSeal(r, s2.nick, sb);
+      } else row.insertAdjacentHTML("afterbegin", `<div class="show-mini enter">${avatar(s2, "xs", false)}${medal(2, "mini-medal")}<div><small>2위</small><b>${esc(s2.name)}</b></div></div>`);
     }
     bgmScene("champ", .25); sfx.boom?.();
     sfx.fanfare();
@@ -4540,7 +4550,7 @@ function moodLayer(r) {
 }
 function ngText(n) {
   const act = n.k === "died" ? "사망" : "기절";
-  if (n.kind === "자폭") return n.w && n.w !== "Player" ? `자기 ${n.w}에 ${act}` : `스스로 ${act}`;
+  if (n.kind === "자폭") return n.w && n.w !== "Player" && n.w !== "주먹" ? `자기 ${n.w}에 ${act}` : `스스로 ${act}`;  // v244 낙사가 '자기 주먹'으로 뜨던 것
   if (n.kind === "아군 사격") return `${n.byname}의 ${n.w || "공격"}에 ${act}`;
   if (n.kind === "차량 사고") return `차량 사고로 ${act}`;
   return `${n.kind}에 ${act}`;
@@ -8934,7 +8944,8 @@ function sealSeen(d, n) { try { return localStorage.getItem(sealKey(d, n)) === "
 async function openSeal(r, nick, btn) {
   const p = r.ranking.find(x => x.nick === nick), cd = (r.cards || {})[nick]; if (!p || !cd) return;
   ensureAudio();
-  const pc = btn.closest(".pcard"); pc.classList.add("seal-shake");
+  if (btn.dataset.busy) return; btn.dataset.busy = "1";
+  btn.classList.add("seal-shake");
   await sleep(480);
   const ov = document.createElement("div"); ov.className = "seal-ov"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-label", `${p.name} 등급 바뀜`);
   ov.innerHTML = `<div class="show-card seal-card enter">${avatar(p, "show") || ""}<div class="show-rank">${p.rank}위</div><div class="show-award">${esc(p.award)}</div>
@@ -8943,8 +8954,8 @@ async function openSeal(r, nick, btn) {
   const fx = TierFX.attach(ov.querySelector(".av"), cd.prev_tier || cd.tier);
   let done = false;
   const close = () => { if (done) return; done = true; ov.classList.add("out"); setTimeout(() => ov.remove(), 350);
-    try { localStorage.setItem(sealKey(r.date, nick), "1"); } catch {} pc.classList.remove("sealed", "seal-shake"); btn.remove(); };
-  ov.onclick = close; addEventListener("keydown", function k(e) { if (e.key === "Escape") { close(); removeEventListener("keydown", k); } });
+    try { localStorage.setItem(sealKey(r.date, nick), "1"); } catch {} btn.classList.remove("seal-shake"); btn.classList.add("seen"); delete btn.dataset.busy; };
+  ov.onclick = e => { e.stopPropagation(); close(); }; addEventListener("keydown", function k(e) { if (e.key === "Escape") { close(); removeEventListener("keydown", k); } });
   try { await new Promise(ok => setTimeout(ok, 900)); await tierChange(ov, fx, cd, showToken); } catch {}
   navigator.vibrate?.([30, 40, 60]);
   setTimeout(close, 4200);
