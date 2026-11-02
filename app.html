@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='c23bc416';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='453a03eb';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -321,6 +321,8 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .pmx .pm-n{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:color-mix(in srgb,var(--c) 70%,var(--bone))}
 .pmx .pm-n i{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
 .pmx tr.pm-best td{background:rgba(242,179,61,.07)}
+.pmx tr.pm-tot td{border-top:1px solid rgba(242,179,61,.55);background:linear-gradient(180deg,rgba(242,179,61,.12),rgba(242,179,61,.04));color:#FFE7A0;font-weight:700;vertical-align:top}.pmx tr.pm-tot .pm-n{color:#F2B33D}
+.pmx td small{display:block;font-size:10.5px;font-weight:500;color:var(--dust);margin-top:1px}
 @media (max-width:620px){.pmx th,.pmx td{padding:8px 5px;font-size:12.5px}.pmx th{font-size:11px}.pmx .pm-n{gap:6px}}
 .wm{display:grid;gap:10px}.wm-r{display:grid;grid-template-columns:minmax(0,1fr) 150px;grid-template-areas:"n l" "s s";gap:4px 14px;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--line)}.wm-r:last-child{border-bottom:0}
 .wm-n{grid-area:n;display:flex;align-items:center;gap:8px;min-width:0}.wm-n b{font-size:15px}.wm-t{font:700 11px var(--body);padding:2px 7px;border-radius:999px;border:1px solid currentColor}
@@ -363,6 +365,8 @@ dialog h3{margin:0 0 4px;font:400 24px/1.2 var(--display)}
 .set-dlg .help.status{color:var(--bone);opacity:.85}
 .set-dlg .field>span small{font-weight:400;color:var(--dust);font-size:12px;margin-left:6px}
 .set-dlg textarea{min-height:110px;width:100%;resize:vertical}
+.cf-link{display:flex;align-items:center;gap:10px;margin:2px 0 6px}.cf-link input{width:18px!important;height:18px;flex:none;margin:0;accent-color:#F2B33D}.cf-link label{display:block!important;font-size:13.5px;color:var(--bone)}.cf-link small{color:var(--dust)}
+[data-cf]:disabled{opacity:.55}
 .set-sub{margin:14px 0 8px;font-size:12px;letter-spacing:.06em;color:var(--accent);font-weight:700}
 .three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 12px}
 .three label,.set-dlg .two label{display:grid;gap:5px;font-size:13px;color:var(--dust);min-width:0}
@@ -1228,7 +1232,7 @@ html.share-mode .pc .beam,html.share-mode .pc .meteor,html.share-mode .pc .ldot{
 .wgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
 .wgrid label{display:grid;gap:3px;font-size:13px;color:var(--dust)}
 .wgrid input{background:var(--field);border:1px solid var(--line);border-radius:3px;padding:7px 9px;color:var(--bone);width:100%}
-#wnames{width:100%;min-height:90px;background:var(--field);border:1px solid var(--line);border-radius:3px;padding:8px 10px;color:var(--bone);font:13px/1.5 var(--body);resize:vertical}
+#wnames,#guestList{width:100%;min-height:90px;background:var(--field);border:1px solid var(--line);border-radius:3px;padding:8px 10px;color:var(--bone);font:13px/1.5 var(--body);resize:vertical}
 .wsum{font-weight:700;color:var(--bone)}
 
 .hidden{display:none!important}
@@ -1875,7 +1879,10 @@ td.mapc .mapn{color:color-mix(in srgb,var(--mc) 70%,var(--bone));font-weight:700
 
 .share-row.tbar~.share-msg:empty,.share-row.tbar~.reel-msg:empty{display:none}.share-row.tbar~.sec{margin-top:26px}  /* v130 버튼 줄 위아래 간격 맞춤 */
 .tbl.mapwin td b{display:inline-flex;align-items:center;gap:4px;color:var(--gold)}.tbl.mapwin .chick{width:18px;height:18px}.mwbar{height:8px;border-radius:4px;background:rgba(255,255,255,.07);min-width:80px;overflow:hidden}.mwbar i{display:block;height:100%;background:linear-gradient(90deg,#8C6414,#F2B33D);border-radius:4px}  /* v139 맵별 치킨 */
-.tbl.mapwin tr.mw-tot td{border-top:2px solid #F2B33D;background:rgba(242,179,61,.07)}.tbl.mapwin tr.mw-tot td b{color:#FFE7A0}
+/* v257 맵별 치킨 '전체' 줄: 금빛 요약 띠 (위아래 금선 + 왼쪽 굵은 금 막대 + 큰 숫자) */
+.tbl.mapwin tr.mw-tot td{border-top:1px solid rgba(242,179,61,.7);border-bottom:1px solid rgba(242,179,61,.7);background:none;padding-top:12px;padding-bottom:12px;font-weight:700;color:#FFE7A0}
+.tbl.mapwin tr.mw-tot td:first-child{box-shadow:inset 4px 0 0 #F2B33D}.tbl.mapwin tr.mw-tot td:first-child b{font:400 18px var(--display);color:#F2B33D;letter-spacing:.1em}
+.tbl.mapwin tr.mw-tot td b{color:#FFE7A0;font-size:1.12em}.tbl.mapwin tr.mw-tot .mwbar{height:10px;background:rgba(0,0,0,.35);box-shadow:inset 0 0 0 1px rgba(242,179,61,.4)}.tbl.mapwin tr.mw-tot .mwbar i{background:linear-gradient(90deg,#c98a12,#FFE7A0);box-shadow:0 0 8px rgba(242,179,61,.7)}
 /* v78 점수 계산 안내: 표 없이 배점 칸 + 단계 목록 */
 #scoreDlg{width:min(760px,96vw)}
 #scoreDlg .body{display:flex;flex-direction:column;gap:14px;padding:20px 24px 16px}
@@ -2386,7 +2393,7 @@ body.viewer .day-warn{display:none}
 .cmp-pick{display:flex;gap:6px;flex-wrap:wrap}.cmp-pick button{background:none;border:1px solid var(--line);color:var(--bone);padding:6px 12px;border-radius:16px;cursor:pointer;font:inherit}
 .cmp-pick button.on{background:var(--c);color:#14170f;border-color:var(--c);font-weight:700}.cmp-pick button:disabled{opacity:.3;cursor:default}
 .cmp-vs{font:400 22px var(--display);color:var(--dust)}
-.cmp-body{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:18px;align-items:center;padding-left:clamp(0px,3vw,40px)}.cmp-body>.cmp-tbl{width:100%;max-width:540px;justify-self:start}  /* v256 방사형은 v254 자리 그대로 · 표만 왼쪽(방사형 쪽)으로 붙임 */  /* v245 방사형 크게 · 오른쪽으로 */
+.cmp-body{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:6px;align-items:center;padding-left:clamp(0px,3vw,40px)}.cmp-body>.cmp-tbl{width:100%;max-width:460px;justify-self:start}  /* v257 표 더 왼쪽 · 줄 길이 짧게 */  /* v256 방사형은 v254 자리 그대로 · 표만 왼쪽(방사형 쪽)으로 붙임 */  /* v245 방사형 크게 · 오른쪽으로 */
 @media(max-width:700px){.cmp-body{grid-template-columns:minmax(0,1fr)}}
 .cmp-radar{width:100%;max-width:400px;margin:0 0 0 auto;display:block}.cmp-poly{animation:cmpIn .6s cubic-bezier(.2,.9,.3,1.1) both;transform-origin:130px 118px}@keyframes cmpIn{from{transform:scale(.2);opacity:0}}
 .cmp-tbl{display:grid;gap:6px}
@@ -3122,7 +3129,7 @@ async function loadCards() {
   $("#cards").innerHTML = `<div class="notice">카드를 만드는 중...</div>`;
   try { playersData = (await api("api/players")).players; } catch (e) { $("#cards").innerHTML = `<div class="notice error">${esc(e.message)}</div>`; return; }
   $("#cards").innerHTML = `<div class="cards-head"><div><h3 class="sec" style="justify-content:flex-start;margin:0">선수 카드</h3></div>
-      <p>최근 14일 기록으로 계산한 능력치예요. 카드를 누르면 프로필과 업적이 나와요.</p>
+      <p>기록이 있는 최근 14일(쉰 날은 빼고)의 공식 판으로 계산한 능력치예요. 카드를 누르면 프로필과 업적이 나와요.</p>
       <div class="cards-btns"><button class="btn" id="btnCmp" type="button">두 선수 비교</button><button class="btn" id="btnTierInfo">카드 등급 안내</button></div></div>
     <div id="cmp" hidden></div>
     <div class="pcgrid">${playersData.map((p, i) => slotOpen(p, i) + cardHtml(p) + "</div>").join("")}</div>`;
@@ -3208,8 +3215,13 @@ function achTile(a) {
 function profMaps(p) {  /* v180 맵별 개인 성적: 판·판당 킬·판당 딜·KDA·평균 생존 (치킨·순위는 팀 공통이라 뺌) */
   const L = p.maps || []; if (!L.length) return "";
   const best = [...L].filter(m => m[2] >= 2).sort((a, b) => b[4] - a[4])[0];
-  return `<div class="prof-sec"><h4>맵별 성적 ${best ? `<span class="who">${esc(best[0])}에서 가장 잘해요</span>` : ""}</h4><div class="pmx"><table><thead><tr><th>맵</th><th>판</th><th>판당 킬</th><th>판당 딜</th><th>KDA</th><th>평균 생존</th></tr></thead><tbody>  <!-- v188 깔끔한 표 (시안 03, 막대 없이) -->
-    ${L.map(m => `<tr class="${m === best ? "pm-best" : ""}" style="--c:${mapColor(m[1] || m[0])}"><td><span class="pm-n"><i></i>${esc(m[0])}</span></td><td>${m[2]}</td><td>${m[3]}</td><td>${fmt(m[4])}</td><td>${m[5] ?? "-"}</td><td>${m[6] != null ? m[6] + "분" : "-"}</td></tr>`).join("")}</tbody></table></div></div>`;
+  /* v257 열 순서 KDA · 딜 · 킬 · 어시 + 맨 아래 전체 합계 */
+  const S = [0, 0, 0, 0, 0, 0, 0, 0]; L.forEach(m => (m[8] || []).forEach((v, i) => S[i] += v || 0));
+  const has = L.some(m => m[8]), n = S[0] || 1;
+  const tot = has ? `<tr class="pm-tot"><td><span class="pm-n">전체</span></td><td>${S[0]}</td><td>${S[5] ? (Math.round((S[6] + S[3]) / Math.max(1, S[4]) * 100) / 100) : "-"}</td>
+    <td>${fmt(Math.round(S[2] / n))}<small>총 ${fmt(S[2])}</small></td><td>${(S[1] / n).toFixed(2)}<small>총 ${fmt(S[1])}</small></td><td>${S[5] ? (S[3] / S[5]).toFixed(2) : "-"}${S[5] ? `<small>총 ${fmt(S[3])}</small>` : ""}</td><td>${S[5] ? (S[7] / S[5] / 60).toFixed(1) + "분" : "-"}</td></tr>` : "";
+  return `<div class="prof-sec"><h4>맵별 성적 ${best ? `<span class="who">${esc(best[0])}에서 가장 잘해요</span>` : ""}</h4><div class="pmx"><table><thead><tr><th>맵</th><th>판</th><th>KDA</th><th>판당 딜</th><th>판당 킬</th><th>판당 어시</th><th>평균 생존</th></tr></thead><tbody>
+    ${L.map(m => `<tr class="${m === best ? "pm-best" : ""}" style="--c:${mapColor(m[1] || m[0])}"><td><span class="pm-n"><i></i>${esc(m[0])}</span></td><td>${m[2]}</td><td>${m[5] ?? "-"}</td><td>${fmt(m[4])}</td><td>${m[3]}</td><td>${m[7] ?? "-"}</td><td>${m[6] != null ? m[6] + "분" : "-"}</td></tr>`).join("")}${tot}</tbody></table></div></div>`;
 }
 const MASTERY_TIER = ["", "브론즈", "실버", "골드", "플래티넘", "다이아몬드", "마스터"];
 function profMastery(p) {  /* v172 무기 숙련도 (PUBG 공식, 하루 한 번 받아 옴): [이름, 레벨, 티어, 경험치, 킬, 피해, 헤드샷, 최장 거리, 메달] */
@@ -3297,6 +3309,7 @@ function tdxSamples() {  /* v213 등급별 수상자 상세 기록 카드 견본
       <div class="mrows"><span>판당 기절<b>1.8</b></span><span>평균 생존<b>18.6분</b></span></div></article><small><b style="color:${i[3]}">${i[1]}</b> · ${TFX_DESC[t]}</small></div>`; }).join("");
 }
 function openTierInfo() {
+  const F = {damage: 450, fight: 7, survive: 24, support: 3.5, hs: 25, longest: 400, ...(state?.card_full || {})};  // v260 카드 만점 기준 (설정 › 점수)
   // 미리보기는 특정 선수 대신 빈 견본 카드로
   const base = {nick: "_sample", name: "선수", blank: true,
     card: {role: "돌격수", days: 9, games: 54, trend: null, stats: {fire: 90, fight: 88, aim: 84, survive: 86, support: 80, steady: 78}}};
@@ -3306,8 +3319,17 @@ function openTierInfo() {
   const prev = base ? TIER_INFO.map(([t, name], i) => { const fake = {...base, card: {...base.card, tier: t, ovr: ovrOf(t), trend: null}};
     return `<div class="ti-item"><div class="ti-stage">${slotOpen(fake, 0)}${cardHtml(fake, "div")}</div></div><small>${name}</small></div>`; }).join("") : "";
   $("#tierBody").innerHTML = `
-    <p class="help" style="margin:0 0 10px">카드 등급은 <b>종합 점수</b>로 정해져요 (레전드 90, 스페셜 85, 유니크 80, 에픽 75, 레어 70, 언커먼 65 이상). 종합 점수는 최근 14일 기록으로 매긴 여섯 능력치(40~99점)를 합친 값이에요:
-      화력 25%, 교전 20%, 생존 15%, 서포트 15%, 꾸준함 15%, 정확 10%.</p>
+    <p class="help" style="margin:0 0 10px">카드 등급은 <b>종합 점수(OVR)</b>로 정해져요 (레전드 90, 스페셜 85, 유니크 80, 에픽 75, 레어 70, 언커먼 65 이상).
+      종합 점수는 <b>기록이 있는 최근 14일</b>(쉰 날은 세지 않고, 비공식 판은 빼요)의 실제 기록으로 매긴 여섯 능력치(40~99점)를 합친 값이에요: 화력 25%, 교전 20%, 생존 15%, 서포트 15%, 꾸준함 15%, 정확 10%.
+      <br>만점 기준은 <b>설정 › 점수 › 선수 카드 만점 기준</b>에서 바꿀 수 있어요${(state?.card_full_cfg?.link ?? true) ? " (지금은 화력·교전·생존·서포트를 점수 만점 기준과 같게 쓰는 중)" : ""}. 항목별 배점(몇 점짜리인지)은 카드와 상관없어요.</p>
+    <div class="tbl" style="margin-bottom:14px"><table class="ti-tbl"><thead><tr><th>능력치</th><th>무엇으로</th><th>40점 → 99점(만점)</th></tr></thead><tbody>
+      <tr><td><b>화력</b> 25%</td><td>판당 딜량</td><td class="n">0 → ${fmt(F.damage)}</td></tr>
+      <tr><td><b>교전</b> 20%</td><td>판당 (킬 + 기절)</td><td class="n">0 → ${F.fight}</td></tr>
+      <tr><td><b>생존</b> 15%</td><td>판당 평균 생존 시간</td><td class="n">0분 → ${F.survive}분</td></tr>
+      <tr><td><b>서포트</b> 15%</td><td>판당 (소생 + 어시 + 블루칩×2)</td><td class="n">0 → ${F.support}</td></tr>
+      <tr><td><b>꾸준함</b> 15%</td><td>그날 순위 평균</td><td class="n">4등 → 1등</td></tr>
+      <tr><td><b>정확</b> 10%</td><td>헤드샷 비율 60% + 최장거리 킬 40%</td><td class="n">헤드샷 0 → ${F.hs}%(맞힌 총알 기준) · 거리 0 → ${F.longest}m</td></tr>
+    </tbody></table></div>
     <div class="tbl"><table class="ti-tbl"><thead><tr><th>등급</th><th>종합 점수</th><th>카드 효과</th></tr></thead><tbody>${rows}</tbody></table></div>
     <h4 style="margin:16px 0 8px;font:400 18px/1.2 var(--display)">등급별 모습</h4><div class="ti-grid">${prev}</div>
     <h4 style="margin:22px 0 4px;font:400 18px/1.2 var(--display)">수상자 상세 기록 카드</h4><p class="help" style="margin:0 0 6px">오늘의 어워즈 수상자 상세 기록 카드는 등급이 오를수록 효과가 하나씩 쌓여요.</p><div class="tdx-grid">${tdxSamples()}</div>
@@ -3868,13 +3890,13 @@ function confetti(t) {
   const parts = [];
   const add = (x, y, vx, vy, i) => parts.push({x, y, vx, vy, w: (6 + Math.random() * 7) * Math.max(.7, S), h: (9 + Math.random() * 10) * Math.max(.7, S),
     r: Math.random() * 6, vr: (Math.random() - .5) * .5, c: colors[i % colors.length], ph: Math.random() * 6});
-  const cannon = (x, dir) => { for (let i = 0; i < 150; i++) { const a = -Math.PI / 2 + dir * (.12 + Math.random() * .6), sp = (26 + Math.random() * 22) * S; add(x, H + 10, Math.cos(a) * sp, Math.sin(a) * sp, i); } };
+  const cannon = (x, dir) => { for (let i = 0; i < 110; i++) { const a = -Math.PI / 2 + dir * (.12 + Math.random() * .6), sp = (26 + Math.random() * 22) * S; add(x, H + 10, Math.cos(a) * sp, Math.sin(a) * sp, i); } };
   cannon(0, 1); cannon(W, -1);
   const start = performance.now(); let last = start, rained = false;
   const step = now => {
     if (t !== showToken) { ctx.clearRect(0, 0, W, H); return; }
     const dt = Math.min(2.5, (now - last) / 16.67); last = now;  // 실제 시간 기준이라 화면 속도와 무관
-    if (!rained && now - start > 350) { rained = true; for (let i = 0; i < 170; i++) add(Math.random() * W, -20 - Math.random() * H * .5, (Math.random() - .5) * 3 * S, (3 + Math.random() * 3) * S, i); }
+    if (!rained && now - start > 350) { rained = true; for (let i = 0; i < 120; i++) add(Math.random() * W, -20 - Math.random() * H * .5, (Math.random() - .5) * 3 * S, (3 + Math.random() * 3) * S, i); }
     ctx.clearRect(0, 0, W, H);
     for (const p of parts) {
       p.vy = Math.min(p.vy + .9 * S * dt, 7 * S); p.vx *= Math.pow(.97, dt); p.ph += .14 * dt;
@@ -4601,7 +4623,7 @@ function moodLayer(r) {
   if (m === "multi" || m === "triple") { const C = ["#FFD36A", "#F2B33D", "#FFF1C4", "#E07B6A", "#9CCB6B", "#8FC3F0"], ck = (r.games || []).filter(g => g.rank === 1).length, nb = Math.min(9, 3 + ck * 2);  /* v202 연속 치킨: 하늘에서 터지는 불꽃 */
     fw += `<div class="mood fw">${Array.from({length: nb}, (_, b) => { const c = C[b % C.length], c2 = C[(b + 2) % C.length], dur = 3.2 + H(b + 300) * 1.8, R = Math.round(85 + H(b + 310) * 65);
       return `<div class="fwb${m === "triple" && b % 3 === 0 ? " big" : ""}" style="left:${(8 + H(b + 320) * 84).toFixed(1)}%;top:${(8 + H(b + 330) * 38).toFixed(1)}%;--r:${R}px;animation-duration:${dur.toFixed(2)}s;animation-delay:${(-H(b + 340) * dur).toFixed(2)}s"><span class="fwt" style="--c:${c}"></span>${Array.from({length: 16}, (_, k) => `<i style="--a:${(k * 22.5 + H(b * 16 + k) * 8).toFixed(1)}deg;--c:${k % 3 ? c : c2}"></i>`).join("")}</div>`; }).join("")}</div>`; }
-  if (m === "win" || m === "multi" || m === "triple") { const C = ["#F2B33D", "#FFE08A", "#EEE8D5", "#9CCB6B", "#E8A23A", "#E07B6A"], n = 28 + 10 * Math.min(3, (r.games || []).filter(g => g.rank === 1).length);  /* v230 색종이 더 많이 · v201 처음부터 흩어져 팔랑이며 떨어지게 */
+  if (m === "win" || m === "multi" || m === "triple") { const C = ["#F2B33D", "#FFE08A", "#EEE8D5", "#9CCB6B", "#E8A23A", "#E07B6A"], n = 40 + 14 * Math.min(3, (r.games || []).filter(g => g.rank === 1).length);  /* v258 메인 화면 색종이: v257보다 줄임 */  /* v230 색종이 더 많이 · v201 처음부터 흩어져 팔랑이며 떨어지게 */
     return fw + `<div class="mood cf">${Array.from({length: n}, (_, i) => { const d = 9 + H(i + 9) * 8;
       return `<i style="left:${(H(i + 1) * 100).toFixed(1)}%;--c:${C[i % C.length]};--sw:${Math.round(14 + H(i + 50) * 26)}px;--dr:${Math.round(H(i + 70) * 60 - 30)}px;--rz:${Math.round(H(i + 7) * 360)}deg;--w:${(5 + H(i + 21) * 4).toFixed(1)}px;--h:${(8 + H(i + 33) * 6).toFixed(1)}px;animation-duration:${d.toFixed(1)}s,${(1.4 + H(i + 40) * 1.4).toFixed(2)}s;animation-delay:${(-H(i + 3) * d).toFixed(2)}s,${(-H(i + 44) * 2).toFixed(2)}s"></i>`; }).join("")}</div>`; }
   const rain = (n, hv) => `<div class="mood rn${hv ? " hv" : ""}">${Array.from({length: n}, (_, i) => `<i style="left:${(H(i + 1) * (hv ? 135 : 115)).toFixed(1)}%;animation-duration:${((hv ? .55 : .9) + H(i + 9) * (hv ? .4 : .7)).toFixed(2)}s;animation-delay:${(-H(i + 3) * 2).toFixed(2)}s;opacity:${(.4 + H(i + 5) * .6).toFixed(2)}"></i>`).join("")}</div>`;
@@ -9480,7 +9502,16 @@ function openSettings() {
   $("#wgrid").innerHTML = WK.map(([k, l]) => `<label>${l}<input type="number" min="0" max="200" step="0.5" data-w="${k}" value="${state.weights[k] ?? 0}"></label>`).join("")
 
     + `<p class="help" style="grid-column:1/-1;margin:6px 0 0">만점 기준 (판당 이만큼 하면 그 항목 만점)</p>`
-    + AK.map(([k, l]) => `<label>${l}<input type="number" min="0.1" step="0.1" data-abs="${k}" value="${state.abs_full?.[k] ?? ""}"></label>`).join("");
+    + AK.map(([k, l]) => `<label>${l}<input type="number" min="0" step="any" data-abs="${k}" value="${state.abs_full?.[k] ?? ""}"></label>`).join("")
+    /* v260 선수 카드 만점 기준 */
+    + (() => { const C = state.card_full_cfg || {}, CK = [["damage", "화력 · 판당 딜량", 10], ["fight", "교전 · 판당 킬+기절", .1], ["survive", "생존 · 평균 생존(분)", .5], ["support", "서포트 · 판당 소생+어시(+블루칩×2)", .1], ["hs", "정확 · 헤드샷 비율(%) 맞힌 총알 기준", 1], ["longest", "정확 · 최장거리 킬(m)", 10]];
+      return `<div class="cf-head" style="grid-column:1/-1"><p class="help" style="margin:14px 0 4px"><b>선수 카드 만점 기준</b> (이만큼 하면 그 능력치 99점 · 카드 등급에 쓰여요)</p>
+        <div class="cf-link"><input type="checkbox" id="cfLink" ${C.link !== false ? "checked" : ""}><label for="cfLink">화력·교전·생존·서포트는 위 점수 만점 기준과 같게 <small>(끄면 카드만 따로 정할 수 있어요)</small></label></div></div>`
+        + CK.map(([k, l, st]) => `<label>${l}<input type="number" min="0" step="any" data-cf="${k}" value="${C[k] ?? ""}"></label>`).join(""); })();
+  const cfSync = () => { const on = $("#cfLink").checked, A = k => +($(`[data-abs="${k}"]`)?.value || 0);
+    const linked = {damage: A("damage"), fight: +(A("kills") + A("dbnos")).toFixed(2), survive: A("survival_min"), support: +(A("revives") + A("assists")).toFixed(2)};
+    Object.entries(linked).forEach(([k, v]) => { const i = $(`[data-cf="${k}"]`); i.disabled = on; if (on) i.value = v; }); };
+  $("#cfLink").onchange = cfSync; document.querySelectorAll("[data-abs]").forEach(i => i.addEventListener("input", cfSync)); cfSync();
   const sumW = () => { const v = k => +($(`[data-w="${k}"]`).value || 0);
     $("#wsum").innerHTML = `총점 <span class="wsum">${["damage", "kills", "dbnos", "assists", "revives", "survival"].reduce((a, k) => a + v(k), 0)}점</span> (블루칩은 이 위에 더해지는 보너스). 100점이 아니어도 괜찮아요.`; };
   document.querySelectorAll("[data-w]").forEach(i => i.oninput = sumW); sumW();
@@ -9612,6 +9643,7 @@ $("#settingsForm").addEventListener("submit", async e => {
   body.weights = Object.fromEntries([...document.querySelectorAll("[data-w]")].map(i => [i.dataset.w, +i.value || 0]));
   body.fair = {shrink_games: 0};  // 판 수 보정은 없앰 (항상 끔)
   body.abs_full = Object.fromEntries([...document.querySelectorAll("[data-abs]")].map(i => [i.dataset.abs, +i.value || 0]));
+  body.card_full = {link: $("#cfLink").checked, ...Object.fromEntries([...document.querySelectorAll("[data-cf]")].map(i => [i.dataset.cf, +i.value || 0]))};  // v260
   body.weapon_names = Object.fromEntries($("#wnames").value.split("\n").map(l => l.split("=").map(x => x.trim())).filter(x => x.length === 2 && x[0] && x[1]));
   const changedScore = JSON.stringify(body.weights) !== JSON.stringify(Object.fromEntries(Object.keys(body.weights).map(k => [k, +state.weights[k] || 0])))
     || body.fair.shrink_games !== +(state.fair?.shrink_games ?? 2)
