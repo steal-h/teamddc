@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='453a03eb';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='7d907e08';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -281,7 +281,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 /* 누적 */
 .cum th.c,.cum td.c{text-align:center}
 .cum td.c{font:400 22px/1 var(--num)}
-.cum td.c.first{color:var(--gold)}
+.cum td.c.first{color:var(--gold)}.cum td.c.third{color:var(--bronze)}  /* v262 3등 갈색 (분포 막대와 같은 색) */
 .cum td.c.last{color:var(--flare)}
 .cum th img{width:22px;height:26px;object-fit:contain;vertical-align:middle;margin-right:4px}
 .dist{display:flex;height:10px;min-width:140px;border-radius:2px;overflow:hidden;background:var(--panel-2)}
@@ -321,6 +321,11 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .pmx .pm-n{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:color-mix(in srgb,var(--c) 70%,var(--bone))}
 .pmx .pm-n i{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
 .pmx tr.pm-best td{background:rgba(242,179,61,.07)}
+.pst{overflow-x:auto}.pst table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}.pst th{font-size:11.5px;font-weight:500;color:var(--dust);text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}.pst th:first-child,.pst th:nth-child(2){text-align:left}
+.pst td{padding:7px 8px;text-align:right;border-bottom:1px solid color-mix(in srgb,var(--line) 55%,transparent);white-space:nowrap}.pst td:first-child,.pst td:nth-child(2){text-align:left}.pst td button{background:none;border:0;color:var(--bone);font:inherit;cursor:pointer;padding:0;text-decoration:underline dotted rgba(242,179,61,.5);text-underline-offset:3px}.pst td button:hover{color:#F2B33D}
+.pst .t{font-weight:700;color:var(--bone)}.pst td.hi{color:#F2B33D;font-weight:700}.pst .z{color:color-mix(in srgb,var(--dust) 50%,transparent)}.pst .pen{color:#ff8a6a}
+.pst .pr{font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:9px;border:1px solid var(--line)}.pst .pr.r1{color:#14170f;background:#F2B33D;border-color:#F2B33D}.pst .pr.r2{color:#D3D8DE;border-color:#D3D8DE}.pst .pr.r3{color:#D08A52;border-color:#D08A52}.pst .pr.r4{color:#ff7a5a;border-color:#ff7a5a}
+.pst-more{margin-top:8px;font-size:12.5px;padding:5px 12px}
 .pmx tr.pm-tot td{border-top:1px solid rgba(242,179,61,.55);background:linear-gradient(180deg,rgba(242,179,61,.12),rgba(242,179,61,.04));color:#FFE7A0;font-weight:700;vertical-align:top}.pmx tr.pm-tot .pm-n{color:#F2B33D}
 .pmx td small{display:block;font-size:10.5px;font-weight:500;color:var(--dust);margin-top:1px}
 @media (max-width:620px){.pmx th,.pmx td{padding:8px 5px;font-size:12.5px}.pmx th{font-size:11px}.pmx .pm-n{gap:6px}}
@@ -2551,10 +2556,10 @@ body.viewer .day-warn{display:none}
 .mood-triple .bgfx .light{background:radial-gradient(ellipse 70% 60% at 50% 24%,rgba(255,205,95,.34),transparent 74%)}
 /* v209 평균 12등 이하: 흑백 옛날 필름 */
 .bgx.mood-film{filter:grayscale(.85) sepia(.25)}
-.bgfx .flm{animation:flmF .18s steps(2) infinite}@keyframes flmF{50%{background:rgba(255,250,230,.03)}}
+.bgfx .flm{animation:flmF 3.2s ease-in-out infinite alternate}@keyframes flmF{to{background:rgba(255,250,230,.015)}}  /* v262 깜빡임 줄임 (눈 피로) */
 .bgfx .flm i{position:absolute;top:0;bottom:0;width:1px;background:rgba(240,235,220,.35);animation:flmS steps(1) infinite}
-@keyframes flmS{0%{left:var(--x);opacity:.8}30%{left:calc(var(--x) + 3%);opacity:.3}60%,100%{opacity:0}}
-.bgfx .flm s{position:absolute;width:var(--s);height:var(--s);border-radius:50%;background:rgba(20,20,18,.7);animation:flmD .5s steps(1) infinite}@keyframes flmD{0%{opacity:1}30%,100%{opacity:0}}
+@keyframes flmS{0%{left:var(--x);opacity:.35}40%{left:calc(var(--x) + 2%);opacity:.15}60%,100%{opacity:0}}
+.bgfx .flm s{position:absolute;width:var(--s);height:var(--s);border-radius:50%;background:rgba(20,20,18,.5);animation:flmD 2.2s ease-in-out infinite}@keyframes flmD{0%,100%{opacity:0}50%{opacity:.6}}
 .bgfx .flm::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 90px rgba(0,0,0,.75)}
 @media (prefers-reduced-motion:reduce){.bgfx .flm,.bgfx .flm *{animation:none}.bgfx .flm i,.bgfx .flm s{display:none}}
 /* v204 안 좋은 날 4단계: 먹구름 → 비 → 폭우·번개 → 잿빛 폭풍 */
@@ -3212,6 +3217,23 @@ function achTile(a) {
     <small>${a.date ? esc(a.date) + " 달성" : `${fmt(Math.round(a.progress))} / ${fmt(a.target)}${u}`}</small>
     ${a.date ? "" : `<div class="prog"><em style="width:${Math.min(100, a.progress / a.target * 100)}%"></em></div>`}</div>`;
 }
+/* v263 날짜별 점수 구성 표: 날짜 × 항목 (가장 높은 칸 금색) · 날짜 누르면 그날 어워즈 */
+let pstAll = false;
+function profScoreTable(p) {
+  const H = (p.history || []).filter(h => h.parts).slice().reverse(); if (!H.length) return "";
+  const K = [["damage", "딜"], ["kills", "킬"], ["dbnos", "기절"], ["assists", "어시"], ["revives", "소생"], ["survival", "생존"], ["bluechip", "블루칩"]];
+  const L = pstAll ? H : H.slice(0, 14), mx = Object.fromEntries(K.map(([k]) => [k, Math.max(...H.map(h => +h.parts[k] || 0))])), mt = Math.max(...H.map(h => h.total || 0));
+  const f = v => v == null ? "-" : (Math.round(v * 10) / 10).toFixed(1);
+  const RK = ["", "r1", "r2", "r3", "r4"];
+  return `<div class="prof-sec" id="pstSec"><h4>날짜별 점수 구성 <span class="who">${H.length}일 · 날짜를 누르면 그날 어워즈로</span></h4><div class="pst"><table><thead><tr><th>날짜</th><th>순위</th><th class="t">총점</th>${K.map(([, l]) => `<th>${l}</th>`).join("")}<th>감점</th></tr></thead><tbody>
+    ${L.map(h => `<tr><td><button type="button" data-pst="${h.date}">${h.date.slice(2).replace(/-/g, ".")}</button></td><td><span class="pr ${RK[h.rank] || ""}">${h.rank}위</span></td><td class="t ${h.total === mt ? "hi" : ""}">${f(h.total)}</td>
+      ${K.map(([k]) => { const v = h.parts[k]; return `<td class="${v && v === mx[k] ? "hi" : ""}">${v ? f(v) : `<span class="z">0</span>`}</td>`; }).join("")}<td class="pen">${h.pen ? "−" + f(h.pen) : `<span class="z">0</span>`}</td></tr>`).join("")}
+    </tbody></table></div>${H.length > 14 ? `<button type="button" class="btn pst-more" data-pstall>${pstAll ? "최근 14일만 보기" : `전체 ${H.length}일 보기`}</button>` : ""}</div>`;
+}
+function bindProfScore(p) {
+  document.querySelectorAll("[data-pst]").forEach(b => b.onclick = () => { $("#profDlg")?.close(); openDay(b.dataset.pst); });
+  const m = document.querySelector("[data-pstall]"); if (m) m.onclick = () => { pstAll = !pstAll; $("#pstSec").outerHTML = profScoreTable(p); bindProfScore(p); };
+}
 function profMaps(p) {  /* v180 맵별 개인 성적: 판·판당 킬·판당 딜·KDA·평균 생존 (치킨·순위는 팀 공통이라 뺌) */
   const L = p.maps || []; if (!L.length) return "";
   const best = [...L].filter(m => m[2] >= 2).sort((a, b) => b[4] - a[4])[0];
@@ -3219,7 +3241,7 @@ function profMaps(p) {  /* v180 맵별 개인 성적: 판·판당 킬·판당 �
   const S = [0, 0, 0, 0, 0, 0, 0, 0]; L.forEach(m => (m[8] || []).forEach((v, i) => S[i] += v || 0));
   const has = L.some(m => m[8]), n = S[0] || 1;
   const tot = has ? `<tr class="pm-tot"><td><span class="pm-n">전체</span></td><td>${S[0]}</td><td>${S[5] ? (Math.round((S[6] + S[3]) / Math.max(1, S[4]) * 100) / 100) : "-"}</td>
-    <td>${fmt(Math.round(S[2] / n))}<small>총 ${fmt(S[2])}</small></td><td>${(S[1] / n).toFixed(2)}<small>총 ${fmt(S[1])}</small></td><td>${S[5] ? (S[3] / S[5]).toFixed(2) : "-"}${S[5] ? `<small>총 ${fmt(S[3])}</small>` : ""}</td><td>${S[5] ? (S[7] / S[5] / 60).toFixed(1) + "분" : "-"}</td></tr>` : "";
+    <td>${fmt(Math.round(S[2] / n))}</td><td>${(S[1] / n).toFixed(2)}</td><td>${S[5] ? (S[3] / S[5]).toFixed(2) : "-"}</td><td>${S[5] ? (S[7] / S[5] / 60).toFixed(1) + "분" : "-"}</td></tr>` : "";
   return `<div class="prof-sec"><h4>맵별 성적 ${best ? `<span class="who">${esc(best[0])}에서 가장 잘해요</span>` : ""}</h4><div class="pmx"><table><thead><tr><th>맵</th><th>판</th><th>KDA</th><th>판당 딜</th><th>판당 킬</th><th>판당 어시</th><th>평균 생존</th></tr></thead><tbody>
     ${L.map(m => `<tr class="${m === best ? "pm-best" : ""}" style="--c:${mapColor(m[1] || m[0])}"><td><span class="pm-n"><i></i>${esc(m[0])}</span></td><td>${m[2]}</td><td>${m[5] ?? "-"}</td><td>${fmt(m[4])}</td><td>${m[3]}</td><td>${m[7] ?? "-"}</td><td>${m[6] != null ? m[6] + "분" : "-"}</td></tr>`).join("")}${tot}</tbody></table></div></div>`;
 }
@@ -3246,10 +3268,10 @@ function openProfile(nick) {
       <p class="reel-msg" id="cardMsg"></p></div>
     <div>
       <div class="prof-sec"><h4>누적 기록</h4><div class="prof-nums">
-        <div><small>참여</small><b>${t.days}일</b></div><div><small>1등</small><b>${counts[0]}회</b></div>
-        <div><small>2등</small><b>${counts[1]}회</b></div><div><small>3등</small><b>${counts[2]}회</b></div>
-        <div><small>4등</small><b>${counts[3]}회</b></div><div><small>누적 킬</small><b>${fmt(t.kills)}</b></div>
-        <div><small>누적 딜량</small><b>${fmt(Math.round(t.damage))}</b></div><div><small>치킨</small><b>${t.chickens}번</b></div>
+        <div><small>1등</small><b>${counts[0]}회</b></div><div><small>2등</small><b>${counts[1]}회</b></div>
+        <div><small>3등</small><b>${counts[2]}회</b></div><div><small>4등</small><b>${counts[3]}회</b></div>
+        <div><small>누적 딜량</small><b>${fmt(Math.round(t.damage))}</b></div><div><small>누적 킬</small><b>${fmt(t.kills)}</b></div>
+        <div><small>누적 어시</small><b>${fmt(t.assists || 0)}</b></div><div><small>누적 기절</small><b>${fmt(t.dbnos || 0)}</b></div>  <!-- v262 참여·치킨 대신 어시·기절 -->
       </div></div>
       <div class="prof-sec"><h4>카드 점수 변화 <small style="font-size:12px;font-weight:400;color:var(--dust);margin-left:6px">최근 기록 14일 기준</small></h4><div class="chart">${(() => { const CH = (p.card_hist || []).slice(-30); if (!CH.length) return `<p class="who">기록이 쌓이면 나와요.</p>`;  /* v202 게임 점수 대신 카드 점수 */
         const v = CH.map(h => h.ovr), lo = Math.floor(Math.min(...v)) - 1, hi = Math.ceil(Math.max(...v)) + 1;
@@ -3257,6 +3279,7 @@ function openProfile(nick) {
           tips: CH.map(h => `${h.date.slice(5).replace("-", "/")} · 카드 ${h.ovr}점 · ${TIER[h.tier] || ""}`), xlabels: CH.map(h => h.date.slice(5).replace("-", "/"))}); })()}</div></div>
       ${p.best_day ? `<div class="prof-sec"><h4>개인 최고의 날</h4><p style="margin:0">${esc(p.best_day.date)}, ${p.best_day.total}점, 판당 딜량 ${fmt(p.best_day.damage)}, ${p.best_day.kills}킬</p></div>` : ""}
       ${p.wstats?.length ? `<div class="prof-sec"><h4>무기별 성적 <span class="who">누적, 적에게 준 피해 순</span></h4>${wstatsHtml(p.wstats, 6)}</div>` : p.weapons.length ? `<div class="prof-sec"><h4>주무기 순위</h4><div class="wlist">${p.weapons.map(([w, k, n]) => `<div><div><b>${esc(w)}</b><span class="who">${k}킬 ${n}기절</span><i><em style="width:${(k + n) / maxW * 100}%"></em></i></div></div>`).join("")}</div></div>` : ""}
+      ${profScoreTable(p)}
       ${profMaps(p)}
       <div class="prof-sec"><h4>업적 <span class="who">${p.achievements.filter(a => a.date).length} / ${p.achievements.length}</span></h4>
         <div class="tier-tabs" role="group" aria-label="등급으로 거르기">${[6, 5, 4, 3, 2, 1, 0].map(tr => { const all = p.achievements.filter(a => !a.tease && tierOf(a) === tr), n = all.filter(a => a.date).length;  /* v187 밑줄 탭 (누르면 그 등급만, 다시 누르면 전체) */
@@ -3293,6 +3316,7 @@ function openProfile(nick) {
     try { const j = await api("api/card_png", {nick}); const a = document.createElement("a"); a.href = j.image; a.download = `TEAM_DDC_card_${nick}.png`; a.click(); m.textContent = "저장했어요. reports 폴더에도 있어요."; }
     catch (e) { m.classList.add("err"); m.textContent = e.message; }
   };
+  pstAll = false; bindProfScore(p);  // v263
   $("#profDlg").showModal(); $("#profClose").focus();
 }
 $("#profClose").onclick = () => $("#profDlg").close();
@@ -3320,15 +3344,15 @@ function openTierInfo() {
     return `<div class="ti-item"><div class="ti-stage">${slotOpen(fake, 0)}${cardHtml(fake, "div")}</div></div><small>${name}</small></div>`; }).join("") : "";
   $("#tierBody").innerHTML = `
     <p class="help" style="margin:0 0 10px">카드 등급은 <b>종합 점수(OVR)</b>로 정해져요 (레전드 90, 스페셜 85, 유니크 80, 에픽 75, 레어 70, 언커먼 65 이상).
-      종합 점수는 <b>기록이 있는 최근 14일</b>(쉰 날은 세지 않고, 비공식 판은 빼요)의 실제 기록으로 매긴 여섯 능력치(40~99점)를 합친 값이에요: 화력 25%, 교전 20%, 생존 15%, 서포트 15%, 꾸준함 15%, 정확 10%.
+      종합 점수는 <b>기록이 있는 최근 14일</b>(쉰 날은 세지 않고, 비공식 판은 빼요)의 실제 기록으로 매긴 여섯 능력치(40~99점)를 합친 값이에요: 화력 25%, 교전 20%, 생존 15%, 서포트 15%, 정확 15%, 꾸준함 10%.
       <br>만점 기준은 <b>설정 › 점수 › 선수 카드 만점 기준</b>에서 바꿀 수 있어요${(state?.card_full_cfg?.link ?? true) ? " (지금은 화력·교전·생존·서포트를 점수 만점 기준과 같게 쓰는 중)" : ""}. 항목별 배점(몇 점짜리인지)은 카드와 상관없어요.</p>
     <div class="tbl" style="margin-bottom:14px"><table class="ti-tbl"><thead><tr><th>능력치</th><th>무엇으로</th><th>40점 → 99점(만점)</th></tr></thead><tbody>
       <tr><td><b>화력</b> 25%</td><td>판당 딜량</td><td class="n">0 → ${fmt(F.damage)}</td></tr>
       <tr><td><b>교전</b> 20%</td><td>판당 (킬 + 기절)</td><td class="n">0 → ${F.fight}</td></tr>
       <tr><td><b>생존</b> 15%</td><td>판당 평균 생존 시간</td><td class="n">0분 → ${F.survive}분</td></tr>
       <tr><td><b>서포트</b> 15%</td><td>판당 (소생 + 어시 + 블루칩×2)</td><td class="n">0 → ${F.support}</td></tr>
-      <tr><td><b>꾸준함</b> 15%</td><td>그날 순위 평균</td><td class="n">4등 → 1등</td></tr>
-      <tr><td><b>정확</b> 10%</td><td>헤드샷 비율 60% + 최장거리 킬 40%</td><td class="n">헤드샷 0 → ${F.hs}%(맞힌 총알 기준) · 거리 0 → ${F.longest}m</td></tr>
+      <tr><td><b>꾸준함</b> 10%</td><td>그날 순위 평균</td><td class="n">4등 → 1등</td></tr>
+      <tr><td><b>정확</b> 15%</td><td>헤드샷 비율 60% + 최장거리 킬 40%</td><td class="n">헤드샷 0 → ${F.hs}%(맞힌 총알 기준) · 거리 0 → ${F.longest}m</td></tr>
     </tbody></table></div>
     <div class="tbl"><table class="ti-tbl"><thead><tr><th>등급</th><th>종합 점수</th><th>카드 효과</th></tr></thead><tbody>${rows}</tbody></table></div>
     <h4 style="margin:16px 0 8px;font:400 18px/1.2 var(--display)">등급별 모습</h4><div class="ti-grid">${prev}</div>
@@ -4338,7 +4362,7 @@ const rpCfg = () => ({...RP_DEFAULTS, ...((typeof state !== "undefined" && state
 const RP_COLORS = ["#F2A900", "#4FC3F7", "#F06292", "#9CCC65"];
 const rp = {data: null, t: 0, playing: false, speed: 1, follow: true, cine: true, curSpeed: 20, focus: null, reel: null, cam: {x: .5, y: .5, s: 1}, img: null,
   avatars: {}, raf: 0, last: 0, seen: 0, flashes: [], dragging: false, legendAt: 0, names: {}};
-rp.speed = 1;  // 리플레이는 늘 1배로 시작
+rp.speed = 10;  // v262 리플레이는 자동 배속으로 시작
 const mmss = t => `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
 const rpCol = nick => { const p = rp.data?.players.find(x => x.nick === nick); return p ? RP_COLORS[p.slot % 4] : "#EEE8D5"; };
 const rpName = nick => rp.names[nick] || nick;
@@ -4694,7 +4718,7 @@ async function openReplay(id) {
   const firstLand = Math.min(...R.players.map(p => p.landed ?? 0));
   rp.t = Math.max(0, firstLand - 6); rp.cam = {x: .5, y: .5, s: 1}; rp.follow = true;
   rp.seen = R.events.filter(e => e.t <= rp.t).length; renderFeed();
-  rp.speed = 1;  // 열 때마다 1배속부터
+  rp.speed = 10;  // v262 열 때마다 자동 배속부터
   rp.playing = true; paintRpButtons();
   $("#rpLoading").classList.add("hidden");
   rpStartLoop();
@@ -4902,7 +4926,7 @@ function feedLine(e) {
   if (e.k === "kill") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 처치 ${foeTn(e.who)}${esc(e.who)} <small>${esc(wd)}</small>${kcw}</div>`;
   if (e.k === "knock") return `<div><time>${mmss(e.t)}</time><b style="color:${c}">${esc(rpName(e.by))}</b> 기절시킴 ${foeTn(e.who)}${esc(e.who)} <small>${esc(wd)}</small>${kcw}</div>`;
   if (e.k === "died") return `<div class="bad"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 사망, ${foeTn(e.by)}${esc(e.by)} <small>${esc(wd)}</small>${kcb}</div>`;
-  if (e.k === "downed") return `<div class="bad"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 기절당함, ${foeTn(e.by)}${esc(e.by)}${kcb}</div>`;
+  if (e.k === "downed") return `<div class="bad"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 기절당함, ${foeTn(e.by)}${esc(e.by)} <small>${esc(wd)}</small>${kcb}</div>`;  // v262 기절당한 무기도
   if (e.k === "revive") return `<div class="good"><time>${mmss(e.t)}</time><b>${esc(rpName(e.by))}</b> → ${esc(rpName(e.who))} 소생</div>`;
   if (e.k === "recall") return `<div class="good"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 블루칩 복귀 착지</div>`;
   if (e.k === "board") return `<div class="good"><time>${mmss(e.t)}</time><b>${esc(rpName(e.who))}</b> 블루칩 헬기 탑승</div>`;
@@ -4937,7 +4961,7 @@ function rpEvents(now) {
       try {
       if (e.k === "kill") { rpToast(`${rpName(e.by)} 처치! ${e.w}${e.d ? ", " + e.d + "m" : ""}`); snd.kill(); }
       else if (e.k === "knock") { rpToast(`${rpName(e.by)} 기절시킴! ${e.w || ""}${e.d ? ", " + e.d + "m" : ""}`); snd.knock(); }
-      else if (e.k === "downed") { rpToast(`${rpName(e.who)} 기절당함`, true); snd.knock(true); }
+      else if (e.k === "downed") { rpToast(`${rpName(e.who)} 기절당함${e.w ? " ← " + e.w : ""}${e.d ? ", " + e.d + "m" : ""}`, true); snd.knock(true); }
       else if (e.k === "died") { rpToast(`${rpName(e.who)} 사망`, true); snd.death(); }
       else if (e.k === "revive") { rpToast(`${rpName(e.by)}이(가) ${rpName(e.who)} 살림!`); snd.revive(); }
       else if (e.k === "empick") rpToast(`${rpName(e.by)} 비상호출!`);
@@ -9358,7 +9382,7 @@ function renderCumulative() {
   const rows = hall.map(c => {
     const total = c.days || 1;
     return `<tr><td><b>${esc(c.name)}</b><div class="who">${esc(c.nick)}</div></td>
-      ${c.counts.map((n, i) => `<td class="c ${i === 0 ? "first" : i === 3 ? "last" : ""}">${n}</td>`).join("")}
+      ${c.counts.map((n, i) => `<td class="c ${i === 0 ? "first" : i === 2 ? "third" : i === 3 ? "last" : ""}">${n}</td>`).join("")}
       <td class="n">${c.days}일</td><td class="n">${c.avg ?? "-"}${c.avg ? "등" : ""}</td>
       <td><div class="dist">${c.days ? c.counts.map(n => `<i style="width:${n / total * 100}%"></i>`).join("") : ""}</div></td></tr>`;
   }).join("");
