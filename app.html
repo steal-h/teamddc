@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='f136ba33';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='5f23cd4c';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2452,10 +2452,11 @@ body.viewer .day-warn{display:none}
 .wbd .wbw{color:var(--bone);font-weight:700}
 .wbd h4 small{font:500 12px var(--body);color:var(--dust);margin-left:4px}.wbd .rbr{cursor:default}.wbd .rbr:hover{background:none}
 .wbd .wb-bar{position:absolute;left:62px;bottom:0;height:2px;background:linear-gradient(90deg,var(--bx-gold,#F2B33D),transparent);opacity:.7;max-width:calc(100% - 62px);text-decoration:none}  /* v268 킬 막대 */
-.roles{background:linear-gradient(160deg,var(--bx-c3,#313828),var(--bx-c1,#21261a) 75%);border:1px solid var(--bx-edge,#4a5239);padding:12px 14px;margin-bottom:22px}  /* v273 역할 분담 */
-.role-tags{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:6px;font-size:13px;color:var(--dust)}.role-tag i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.role-tag b{color:var(--bone)}
-.role-r{padding:8px 0;border-top:1px solid rgba(79,86,64,.6)}.role-h{display:flex;justify-content:space-between;gap:8px;margin-bottom:5px;font-size:13px}.role-h b{color:var(--bx-gold,#F2B33D);font:400 16px var(--display)}.role-h span{color:var(--dust)}.role-h em{font-style:normal;color:#FFE7A0;font-weight:700}
-.role-bar{display:flex;height:22px;border-radius:3px;overflow:hidden;background:var(--panel-2)}.role-bar i{display:grid;place-items:center;min-width:0;border-right:1px solid rgba(0,0,0,.35)}.role-bar i:last-child{border-right:0}.role-bar span u{text-decoration:none}@media (max-width:600px){.role-bar span u{display:none}}.role-bar span{font:700 11.5px var(--body);color:#14170f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px}
+.roles2{background:linear-gradient(160deg,var(--bx-c3,#313828),var(--bx-c1,#21261a) 75%);border:1px solid var(--bx-edge,#4a5239);padding:14px 16px;margin-bottom:22px}  /* v276 역할 분담 M01 */
+.rl-hl{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--bx-edge,#4a5239)}.rl-hc{display:grid;justify-items:center;text-align:center;gap:1px}.rl-hc span{font:400 15px var(--display);color:var(--c)}.rl-hc b{font-size:13px;color:var(--bone)}.rl-hc em{font:400 22px var(--display);font-style:normal;color:#FFE7A0}.rl-hc em small{font-size:12px}
+.rl-pg{display:grid;grid-template-columns:1fr 1fr;gap:16px 22px}.rl-p{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start}.rl-p>img,.rl-ph{width:46px;height:46px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--c)}.rl-ph{display:grid;place-items:center;background:#2a2f20}.rl-p b{display:block;font:400 18px var(--display)}.rl-role{display:block;font-size:12.5px;font-weight:700;color:var(--c);margin-bottom:5px}
+.rl-ln{display:grid;grid-template-columns:34px minmax(0,1fr) 38px;gap:8px;align-items:center;height:20px;font-size:12px;color:var(--dust)}.rl-ln i{height:8px;background:#14170f;border-radius:4px;overflow:hidden}.rl-ln u{display:block;height:100%;background:var(--c);border-radius:4px;opacity:.6}.rl-ln em{font-style:normal;text-align:right}.rl-ln em small{font-size:10px}.rl-ln.on{color:#FFE7A0;font-weight:700}.rl-ln.on u{opacity:1}
+@media(max-width:640px){.rl-pg{grid-template-columns:1fr}.rl-hl{gap:2px}.rl-hc span{font-size:12px;line-height:1.15;word-break:keep-all}.rl-hc b{font-size:11.5px}.rl-hc em{font-size:18px}}
 .rboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:22px}
 .rbd{background:linear-gradient(160deg,var(--bx-c3,#313828),var(--bx-c1,#21261a) 75%);border:1px solid var(--bx-edge,#4a5239);padding:12px 12px 8px}
 .rbd h4{margin:0 0 8px;font:400 18px var(--display);color:var(--bx-gold,#F2B33D);letter-spacing:.02em}
@@ -9427,19 +9428,20 @@ function cumMvp(hall, days, rg) {  /* 시즌 MVP: 1등을 가장 많이 한 사�
     <div class="smvp-s"><div><em>${days.length}</em><small>일</small></div><div><em>${games}</em><small>게임</small></div><div><em>${wins}</em><small>치킨</small></div></div>
     <p class="smvp-d">${esc(sub)}</p></div>`;
 }
-function cumRoles() {  /* v273 팀 내 역할 분담: 팀 전체 중 각자 몇 % */
+function cumRoles() {  /* v273 팀 내 역할 분담 · v276 M01: 위에 항목별 1위 줄, 아래 선수별 5줄 */
   const C = (state.cumulative || []).filter(c => c.tot && c.tot.games); if (C.length < 2) return "";
-  const K = [["damage", "딜량", "딜 담당"], ["kills", "킬", "마무리 담당"], ["dbnos", "기절", "돌격 담당"], ["assists", "어시스트", "지원 담당"], ["revives", "소생", "메딕"]];
-  const col = {}; C.forEach((c, i) => col[c.nick] = PCOL[(state.players || []).findIndex(p => p.nickname === c.nick) % PCOL.length] || PCOL[i % PCOL.length]);
-  const fair = 100 / C.length;
-  const rows = K.map(([k, l, role]) => { const sum = C.reduce((a, c) => a + c.tot[k], 0); if (!sum) return "";
-    const L = C.map(c => ({c, v: c.tot[k], p: c.tot[k] / sum * 100})).sort((a, b) => b.p - a.p);
-    return `<div class="role-r"><div class="role-h"><b>${l}</b><span>${esc(L[0].c.name)} <em>${role}</em> ${Math.round(L[0].p)}%</span></div>
-      <div class="role-bar">${L.map(x => `<i style="width:${x.p}%;background:${col[x.c.nick]}" title="${esc(x.c.name)} ${Math.round(x.p)}% (${fmt(x.v)})">${x.p >= 7 ? `<span>${x.p >= 15 ? `<u>${esc(x.c.name)} </u>` : ""}${Math.round(x.p)}%</span>` : ""}</i>`).join("")}</div></div>`; }).join("");
-  const main = C.map(c => { const sh = K.map(([k]) => { const sum = C.reduce((a, x) => a + x.tot[k], 0); return sum ? c.tot[k] / sum * 100 : 0; }), j = sh.indexOf(Math.max(...sh));
-    return `<span class="role-tag"><i style="background:${col[c.nick]}"></i>${esc(c.name)} · <b>${K[j][2]}</b></span>`; }).join("");
-  return `<div class="sec"><h3>팀 내 역할 분담 <small style="font-size:13px;color:var(--dust);font-weight:400">공식 기록 누적 · 팀 전체 중 각자 몫 (똑같이 나누면 ${Math.round(fair)}%)</small></h3></div>
-    <div class="roles"><div class="role-tags">${main}</div>${rows}</div>`;
+  const K = [["damage", "딜량", "딜 담당"], ["kills", "킬", "마무리 담당"], ["dbnos", "기절", "돌격 담당"], ["assists", "어시", "지원 담당"], ["revives", "소생", "메딕"]];
+  const col = c => PCOL[Math.max(0, (state.players || []).findIndex(p => p.nickname === c.nick)) % PCOL.length];
+  const sums = K.map(([k]) => C.reduce((a, c) => a + c.tot[k], 0));
+  const L = C.map(c => ({c, col: col(c), sh: K.map(([k], i) => sums[i] ? c.tot[k] / sums[i] * 100 : 0)}));
+  L.forEach(o => o.main = o.sh.indexOf(Math.max(...o.sh)));
+  const top = K.map((_, i) => L.reduce((a, b) => b.sh[i] > a.sh[i] ? b : a));
+  const hl = K.map(([, , role], i) => sums[i] ? `<div class="rl-hc" style="--c:${top[i].col}"><span>${role}</span><b>${esc(top[i].c.name)}</b><em>${Math.round(top[i].sh[i])}<small>%</small></em></div>` : "").join("");
+  const pg = L.map(o => { const src = pimg({nick: o.c.nick, name: o.c.name});
+    return `<div class="rl-p" style="--c:${o.col}">${src ? `<img src="${src}" alt="">` : `<span class="rl-ph">${esc(o.c.name.slice(0, 1))}</span>`}<div><b>${esc(o.c.name)}</b><span class="rl-role">${K[o.main][2]}</span>
+      ${K.map(([, l], i) => `<div class="rl-ln${i === o.main ? " on" : ""}"><span>${l}</span><i><u style="width:${Math.min(100, o.sh[i] * 2)}%"></u></i><em>${Math.round(o.sh[i])}<small>%</small></em></div>`).join("")}</div></div>`; }).join("");
+  return `<div class="sec"><h3>팀 내 역할 분담 <small style="font-size:13px;color:var(--dust);font-weight:400">공식 기록 누적 · 팀 전체 중 각자 몫 (똑같이 나누면 ${Math.round(100 / C.length)}%)</small></h3></div>
+    <div class="roles2"><div class="rl-hl">${hl}</div><div class="rl-pg">${pg}</div></div>`;
 }
 function cumDuo() {  /* v175 듀오 궁합: 4명이 늘 같이 하니까 판 수·순위 대신 두 사람 사이에만 생기는 기록으로 */
   const nameOf = n => ((state.cumulative || []).find(c => c.nick.toLowerCase() === String(n).toLowerCase()) || {}).name || n;
