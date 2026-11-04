@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='7d85b2f6';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='dbf7a9a5';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -922,6 +922,7 @@ body.showing>:not(#show):not(.seal-ov),body.showing>:not(#show):not(.seal-ov) *{
 .rp-stage.kc #rpCanvas{filter:saturate(.75) contrast(1.08)}
 .rp-kc{position:absolute;top:calc(7% + 10px);left:50%;transform:translateX(-50%);z-index:7;display:flex;align-items:center;gap:10px;padding:7px 10px 7px 14px;border-radius:10px;background:rgba(14,10,10,.82);border:1px solid rgba(224,83,47,.7);box-shadow:0 6px 20px rgba(0,0,0,.45);white-space:nowrap;max-width:calc(100% - 24px)}
 .rp-kc[hidden]{display:none}
+#replay,#replay *{-webkit-tap-highlight-color:transparent}#replay .rp-stage,#replay .rp-side,#replay canvas,#replay .rp-kc,#replay [data-kc]{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}  /* v281 폰에서 누를 때 하늘색 선택 표시 안 나게 */
 .rp-kc .kc-tag{color:#FF6A55;font-weight:900;letter-spacing:.06em;font-size:12px;animation:kcblink 1s steps(2) infinite}
 .rp-kc b{font-size:14px;overflow:hidden;text-overflow:ellipsis}
 @keyframes kcblink{50%{opacity:.35}}
@@ -2341,8 +2342,8 @@ html.share-mode body::before{display:none}
 .sx-table th:first-child,.sx-table td:first-child{text-align:left}.sx-table td:first-child{font:400 20px/1.2 var(--display)}
 .sx-table td i{display:inline-grid;place-items:center;width:22px;height:22px;margin-right:10px;border-radius:50%;font:700 12px/1 var(--body);font-style:normal;color:#1d1406;background:var(--bx-gold);vertical-align:2px}
 .sx-table tr.r2 td i{background:var(--bx-gold)}.sx-table tr.r3 td i{background:var(--bx-silver)}.sx-table tr.r4 td i{background:var(--bx-bronze);color:#fff}
-.sx-table tr.r1 td{background:rgba(242,179,61,.13);border-top:1px solid rgba(242,179,61,.6);border-bottom:1px solid rgba(242,179,61,.6)}.sx-table tr.r1 td:first-child{color:var(--bx-hi);box-shadow:inset 4px 0 0 var(--bx-gold)}
-.sx-table tr.r1 td i{width:26px;height:26px;font:900 14px/1 'Arial Black',var(--body);color:#3a2808;background:radial-gradient(circle at 35% 30%,#FFF1B8,#F2B33D 55%,#8C6414);box-shadow:0 0 0 2px #FFE08A,0 0 12px rgba(242,179,61,.9)}  /* v266 I14 빛나는 금 원 */
+.sx-table tr.r1 td{background:rgba(242,179,61,.13);border-top:1px solid rgba(242,179,61,.6);border-bottom:1px solid rgba(242,179,61,.6)}.sx-table tr.r1 td:first-child{color:var(--bx-hi)}
+.sx-table tr.r1 td i{width:26px;height:26px;margin:0 8px 0 -2px;vertical-align:0;font:900 14px/1 'Arial Black',var(--body);color:#3a2808;background:radial-gradient(circle at 35% 30%,#FFF1B8,#F2B33D 55%,#8C6414);box-shadow:0 0 0 2px #FFE08A,0 0 12px rgba(242,179,61,.9)}  /* v266 I14 빛나는 금 원 */
 .sx-table tr.r1 td b{color:#FFE7A0;text-shadow:0 0 8px rgba(242,179,61,.6)}  /* v264 1위 줄 특별하게: 금 띠 + 왕관 배지 */
 .sx-table td b{font:400 20px/1 var(--num);color:var(--bx-hi)}
 #shareCard.sx:not(.vertical) .sx-table td,#shareCard.sx:not(.vertical) .sx-table th{padding-left:8px;padding-right:8px}
@@ -2406,9 +2407,9 @@ body.viewer .day-warn{display:none}
 .cmp-pick{display:flex;gap:6px;flex-wrap:wrap}.cmp-pick button{background:none;border:1px solid var(--line);color:var(--bone);padding:6px 12px;border-radius:16px;cursor:pointer;font:inherit}
 .cmp-pick button.on{background:var(--c);color:#14170f;border-color:var(--c);font-weight:700}.cmp-pick button:disabled{opacity:.3;cursor:default}
 .cmp-vs{font:400 22px var(--display);color:var(--dust)}
-.cmp-body{display:grid;grid-template-columns:minmax(0,380px) minmax(0,460px);justify-content:center;gap:24px;align-items:center}.cmp-body>.cmp-tbl{width:100%}.cmp-body .cmp-radar{margin:0 auto}  /* v264 그래프+표를 한 덩어리로 정가운데 */  /* v256 방사형은 v254 자리 그대로 · 표만 왼쪽(방사형 쪽)으로 붙임 */  /* v245 방사형 크게 · 오른쪽으로 */
+.cmp-body{display:grid;grid-template-columns:minmax(0,440px) minmax(0,460px);justify-content:center;gap:32px;align-items:center}.cmp-body>.cmp-tbl{width:100%}.cmp-body .cmp-radar{margin:0 auto}  /* v264 그래프+표를 한 덩어리로 정가운데 */  /* v256 방사형은 v254 자리 그대로 · 표만 왼쪽(방사형 쪽)으로 붙임 */  /* v245 방사형 크게 · 오른쪽으로 */
 @media(max-width:700px){.cmp-body{grid-template-columns:minmax(0,1fr)}}
-.cmp-radar{width:100%;max-width:400px;margin:0 0 0 auto;display:block}.cmp-poly{transform-box:view-box;transform-origin:130px 118px}#cmp.intro .cmp-poly{animation:cmpIn .9s .15s cubic-bezier(.22,1,.36,1) both}#cmp.intro .cmp-poly+.cmp-poly{animation-delay:.27s}@keyframes cmpIn{from{transform:scale(0);opacity:0}}
+.cmp-radar{width:100%;max-width:440px;margin:0 0 0 auto;display:block}.cmp-poly{transform-box:view-box;transform-origin:130px 118px}#cmp.intro .cmp-poly{animation:cmpIn .9s .15s cubic-bezier(.22,1,.36,1) both}#cmp.intro .cmp-poly+.cmp-poly{animation-delay:.27s}@keyframes cmpIn{from{transform:scale(0);opacity:0}}
 #cmp{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .55s cubic-bezier(.22,1,.36,1),opacity .4s ease}#cmp.open{grid-template-rows:1fr;opacity:1}#cmp>*{min-height:0;overflow:hidden}  /* v274 두 선수 비교 부드럽게 */
 #cmp.intro .cmp-cards>*,#cmp.intro .cmp-row,#cmp.intro .cmp-sum{animation:cmpUp .55s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i,0) * 45ms + 120ms)}#cmp.intro .cmp-row{animation-delay:calc(var(--i,0) * 55ms + 260ms)}#cmp.intro .cmp-sum{animation-delay:.7s}@keyframes cmpUp{from{opacity:0;transform:translateY(10px)}}
 #cmp.intro .cmp-mid em.c{animation:cmpX .7s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i,0) * 55ms + 320ms)}#cmp.intro .cmp-mid em.c.l{transform-origin:right}#cmp.intro .cmp-mid em.c.r{transform-origin:left}
@@ -2449,6 +2450,7 @@ body.viewer .day-warn{display:none}
 
 /* v238 역대 기록판 */
 .wbd h4{display:flex;align-items:center;gap:6px;white-space:nowrap}.wbd .wic{display:block;flex:none;height:16px;width:64px;margin-left:auto;opacity:.9;background:var(--bx-gold,#F2B33D);-webkit-mask:var(--w) right center/contain no-repeat;mask:var(--w) right center/contain no-repeat}  /* v271 W023 배그 공식 무기 실루엣 (금색) */
+.sub-tabs{display:flex;justify-content:center;gap:0;margin:0 auto 16px;width:max-content;border:1px solid var(--bx-edge,#4a5239);border-radius:20px;padding:3px;background:#14170f}.sub-tabs button{background:none;border:0;color:var(--dust);font:700 13.5px var(--body);padding:6px 18px;border-radius:16px;cursor:pointer}.sub-tabs button[aria-selected=true]{background:var(--bx-gold,#F2B33D);color:#14170f}  /* v282 */
 .wbd .wbw{color:var(--bone);font-weight:700}
 .wbd h4 small{font:500 12px var(--body);color:var(--dust);margin-left:4px}.wbd .rbr{cursor:default}.wbd .rbr:hover{background:none}
 .wbd .wb-bar{position:absolute;left:62px;bottom:0;height:2px;background:linear-gradient(90deg,var(--bx-gold,#F2B33D),transparent);opacity:.7;max-width:calc(100% - 62px);text-decoration:none}  /* v268 킬 막대 */
@@ -4153,7 +4155,7 @@ const TierFX = (() => {
     epic: [fx_("poly", "CL", [255, 140, 220], O_E), fx_("atom", "CL", [120, 230, 255], O_E)],  /* v232 E02 회전 다각형 + 원자 궤도 */
     unique: [fx_("corona", OR_, [255, 210, 120], O_Q), LOOP0.unique, fx_("rise", OR_, [255, 240, 200], O_Q), fx_("halo", OR_, [255, 210, 120], O_Q)],
     special: [fx_("halo", GD, WG2, O_S), fx_("medal", GD, WG2, O_S), fx_("laurel", GD, AMB, O_S), fx_("starOrb", GD, AMB, O_S), fx_("rise", GD, WG2, O_S)],  /* v221 + S10 후광 */
-    legend: [fx_("darkFlame", RD, BLD, O_L), fx_("meteorOrbit", RD, GD, {...O_L, m: 5, rx: 1.3, ry: 1.3}), fx_("ash", RD, BLD, O_L), fx_("skyStrike", RD, BLD, O_L), fx_("medal", GD, WG2, O_L), fx_("crown", GD, WG2, {...O_L, s: .45, n: 0}), fx_("laurel", GD, AMB, O_S),
+    legend: [fx_("darkFlame", RD, BLD, O_L), fx_("meteorOrbit", RD, GD, {...O_L, m: 5, rx: 1.3, ry: 1.3}), fx_("skyStrike", RD, BLD, O_L), fx_("medal", GD, WG2, O_L), fx_("crown", GD, WG2, {...O_L, s: .45, n: 0}), fx_("laurel", GD, AMB, O_S),
       fx_("rise", RD, GD, O_L), fx_("halo", RD, [255, 140, 60], O_L), fx_("pulse", RD, BLD, O_L), fx_("swords", GD, WG2, O_L)],  /* v233 불꽃 막대 빼고 금빛 검 고리 (L32) */  /* v221 + L77 떠오르는 빛 · L16 후광 · L72 숨쉬는 테두리 · L70 불꽃 막대 */
   };
   const LOOP = Object.fromEntries(Object.entries(SET).map(([t, fs]) => [t, () => fs.forEach(f => { X.save(); f(); X.restore(); })]));
@@ -8855,7 +8857,7 @@ function rpKillcam(e) {
   const R = rp.data; if (!R || !e || e.x == null) return;
   if (rp.kc) rpKillcamEnd(false);
   rp.kc = {e, saved: {t: rp.t, playing: rp.playing, manual: rp.manual, follow: rp.follow, cam: {...rp.cam}}};
-  rp.manual = false; rp.follow = true; rp.t = Math.max(0, e.t - 4); rp.flashes = []; rp.playing = true;
+  rp.manual = false; rp.follow = true; rp.t = Math.max(0, e.t - 4); rp.flashes = []; rp.playing = true; rp.curSpeed = 1.5;  // v281 빠른 배속에서 바로 킬캠 배속으로 (배속이 천천히 줄어드는 동안 소리가 꺼져 있던 문제)
   const wd = [e.w, e.d ? e.d + "m" : ""].filter(Boolean).join(" · ");
   const ours = e.k === "kill" || e.k === "knock";
   $("#rpKcText").textContent = ours ? `${rpName(e.by)} ${e.k === "kill" ? "처치" : "기절시킴"} → ${e.who || "?"}${wd ? " (" + wd + ")" : ""}`
@@ -8884,7 +8886,7 @@ function rpKillcamFocus() {  // 킬캠 카메라 대상: 쓰러진 사람 + 쏜 
   if (en && en.tr.length && rp.t >= en.tr[0][0]) { const q = interp(en.tr, Math.min(rp.t, en.d ?? 1e9)); if (q) a = q; }
   return {v, a};
 }
-$("#rpKcExit").onclick = () => { rp.ngExit = false; rpKillcamEnd(); };
+$("#rpKcExit").onclick = () => { if (rp.ngExit) { rp.ngExit = false; rpKillcamEnd(false); closeReplay(); return; } rpKillcamEnd(); };
 $("#rpFeed").addEventListener("click", ev => { const b = ev.target.closest("[data-kc]"); if (b && rp.data) rpKillcam(rp.data.events[+b.dataset.kc]); });
 function rpNextFight() {  // '다음 교전' 버튼: 다음 교전이 시작되는 곳(첫 총격 fight_pre초 전)으로
   if (rp.kc) try { rpKillcamEnd(false); } catch {}
@@ -9098,7 +9100,7 @@ $("#rpSeek").addEventListener("input", e => { if (!rp.data) return; rp.dragging 
 $("#rpSeek").addEventListener("change", () => { rp.dragging = false; });
 addEventListener("keydown", e => {
   if ($("#replay").classList.contains("hidden") || !rp.data) return;
-  if (e.key === "Escape") { if (PEN.on) rpPen(false); else if (rp.kc) rpKillcamEnd(); /* v170 킬캠만 나감 */ else if (rp.cinema) rpCinema(false); else closeReplay(); }
+  if (e.key === "Escape") { if (PEN.on) rpPen(false); else if (rp.kc && rp.ngExit) { rp.ngExit = false; rpKillcamEnd(false); closeReplay(); } /* v281 NG에서 연 킬캠은 리플레이까지 닫기 */ else if (rp.kc) rpKillcamEnd(); /* v170 킬캠만 나감 */ else if (rp.cinema) rpCinema(false); else closeReplay(); }
   else if (e.key === " " && e.target.tagName !== "BUTTON") { e.preventDefault(); $("#rpPlay").click(); }
   else if (e.key === "ArrowLeft" && e.target.tagName !== "INPUT") { rp.t = Math.max(0, rp.t - 10); rp.flashes = []; }
   else if (e.key === "ArrowRight" && e.target.tagName !== "INPUT") { rp.t = Math.min(rp.data.duration, rp.t + 10); rp.flashes = []; }
@@ -9409,6 +9411,7 @@ const WIMG = {"ACE32": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG4AAAAgCA
 Object.assign(WIMG, {"Pan": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAQAAAA2sdlBAAACQUlEQVR42p2UPWgUURRGz3uzkfiT+BMSMY1giCJiYSNIgmmEFBEEg2ClCCJYamMhaG1AtNRGQS0FK9FOQZuAWiiIShpDUAwiIlETs/OOxW4Sk5lkN36vGHbuzNlv3v3eDQYEOljLBNDHUQ6ynXX8Zpzn3OcZDRSMVLjGYaZ5z0b6iYvq8oSb5GzjHt+p/d1SiY/9bq8PrKlqblKTuVUXdE6sSHHhCX+72RF1ZtErziOrTjvrGcNyiKde8LSWvj6nWXVkeRfXfe/PuvnllExO2WMwliF6rOqKgDkft8WsiIhsYhYJDTqXIcN0kRefjBynlUTD5pNoYwDIioh+aOih3n26ywqRHU0iILCmHLG+aQTsKUf8oXm1QTHikc9lt5fZjfEyx5EX2ERHIBAYLUcfUXMbKak/7BRDMZ2tvmsCMqveKE8n4skGh8x6fcBYHvDIXd6QkTeIFRwglbU/IolfVJG8pDOSkwhI4jxbSEumGtRvbKBChYxAlZxUd5ioEsiIzNBCpJMrpOIZwSju85QDXnaysAe5jxxyh5ecUHVYbClu58Lq8qwP/eiU037zpRfdO1/r8KrJGfuWQmqXaMVsfrdb7Xa7Hc7VMmN95A361V8eEisL+VjsIlhZNNr+/RVsEXc7YfKMLGSkZJwajMZiCuvjd6df1Fu2z3kpQ6y0KuJ+p9QxB2sfulpEDXJM/Wbyju2rd0G9HyN+dcjXjtkbZNUKZFR5xScOM8qG/0HUjsVW3jLKLtr/50NqacG9fnDSwb/97Uaot2XCtwAAAABJRU5ErkJggg==", "Machete": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAQAAAA2sdlBAAAB0UlEQVR42p3VPWtUURDG8dm9NwmBKPiCaIiiaFR8RdDORsRK8APY+QVSWvlBQirTW1iJlRCRoEgU0pgmEskSU4UoBJPsy8/ibm42upu9d+8U98xw+DPnmTlzQiKE02ZNi7ZXykIYMWUVW86qqJZHPLMIdjAzSB7hPba1tMDt8pBwxALq2LTsk5CqlNViwgoa/ljAc2GoHCIRJq2ihbqWR0JaLotEuKrWBrRsuFVGkeyXCteto6GJmgvFIXuLVLjZhjTwzcmikP1lKtzwM4d8NCaKNFqnkx1nDQ11zBWDHHRT4ZpaDvngaP/j/BtIhct+5JB5x/pB/g+lwmQH5HM/YbsFE+Gi7zlk0fhhkO7hRDhnCXV1LDnfu2N7pZcIZ3xBXQMrrvSC9JYpEU6YzyFr7nSHHFauRBjzLodsuN/tFh/eNlVh1NscsuWJUD04T/q1b1UY8QZ1TbRM5fGCiGzzsFftUdDEa6OdRS5ynbPEZ7GraRdznT1bbKxkT8OM7NvGVxN79Sk63jLIS5t+tUHLe51SfMxmVThl3FM1sO6ekJZ5MSp5MS9ZV8dvD8tksY8ZFh5o2cG2x2EQGxKm28JuDIaoSBy3kukaA1pVuGvRphd/AcG0y8Qp6BiUAAAAAElFTkSuQmCC", "Crowbar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAQAAAA2sdlBAAABo0lEQVR42p2Vu0oEMRSG/8nEQvDS2KwXVLAQYRFrK0URBCt9AgsLQQQtFATtLARfQlRUbEQQfAMLL+9gYSFYCF6WFfezyIqzuzM7iSfFTBLmm5xvkjMiRnSzzwtlLhhGGBTShJjnCXjmhjJvjIdCxDIA23QiCtzyTDuGKARxygOTCGERA8BW9d4b0YNFxESIFsQZ73Ri/JNxl7jaNRh6KHMYsg7V5R0jloBFf0jjkEUcAWOJ1TVtEaqLSEYtuleHinqVVFFepHANYogS1wib/3nThy1iFtj1MZI1YREbwEI+JHvKIk6AkTytjTrrtbaqqA/3On+dSa2DfHLZXGtzVRYxDew0M5K3cSxiHZjLhuTvPos45puhrDqSrTOp1ehOrSrqS5UUrR6nwCD6KHGenozfgY4RU8BmGsS3NlnEGjDTuNH8y6wrAmX667Xm66zV+iCjUVVqtAaUe6f1k6NaI0E/HWLEBLCWhIQh3IOrwMSf1lCEgxxQovdXq7/OpNZIt4o1KlMVG9wMosAHp673H4SzUOSRPbr+k4gLo4ratKKCrn4AwA+qCFAtuMsAAAAASUVORK5CYII=", "Sickle": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAgCAQAAADQmBIFAAACBklEQVR42p3VT4hNYRjH8ee89wyZBTHyb4Gys2Cn/ImNkoWVUqIsLG1mY8NKY6xIykKxk52VSFEWlETKn5KymEmmSczCAnPvnTsfi3Muhjv3nnufd3NO532+7/v7vc/znhDlyNSE3HEPzJhyXiaX/f7eY7QfkhAOeq6IFq6IfkFJWOYaaJjXjkuWqFWDtTFrPUVTHU33XDetgTFhqBook6zwCrPgrm1CGMcPTXuFWhVQTbiLn6gbFUJuieUeo+WjEVnpYQ9pp0rMJ3uEJJVyN/hsDvdF7/MLa33VwGubFviRC/tLwefK966gcfDCyH+Tc+FMiTrQy6nwHm+s7jAxkwt3MOeLjd2dCk2T1i+yXpKsNKGFJ1K3mgrTdndxoCbs0FDHxW5OhV2/G6TzyMtzncWRxVFRoZ9y4Saavtmy2LLRu9Rkaoa9BS8t7exUtd6uCVt918CNzvIqXhJy4Vjp1IlOqKqgIvUqGn7a/n+5VAdlanLPMO+dYWmhU9VBxbFsNqOJW//K6wdUyDlUOjW6ENUfqEgdQ13Lzr+d6hdUNPJDtEwaKW+vAUAhyawxZQ73/lx5/YMKOfvMq+Ns26lBQEXq6dL0/QV6MFCBuo2Waetk0qCgJFlhwhweSfJBQcWejpbyxgaXVvxYh3zQMouTKQYNkaIZlyPF0mjGqsF31C7PC945LH4BGsH5KQ0sT08AAAAASUVORK5CYII=", "판처파우스트": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAQAAADdhmJCAAACS0lEQVR42p3VPYhcVRjG8efeOzO7M7Obnc0ua4hRdGMMKAppjGgR0CqClaTQSmFBEAloZxGxEDsb0UIhFkJIuZ2NX9iJEMWPwq+VFIqgosavLJmZ+7PYFVfdZObmvc09p/jzPuc9z3MKSZk6SVKkjO3/RlUoU+dgjud8Psu32UyVcTSkKN3oY4xtWPeYJTMKafJFrGHo7zqpr9MMUqbIV/ktrdSRUZK1HE47ZRM1Zap8ng8jSZFW6tyWRzOXTjNI8nPeTrElLkXkodyTTtpNDrbQdtQXYKw2xjm3mNWa9kyqZ5Iyv+Sj/JqVLKZInWR/lrORH1Jt9zexkyh0zLvOcad9D0bY8LCBjmq6EUdUevZadcJZ57dHPnTGEd3JsnYuKj1LVj3gHIZqvOMm/Und/HtZqPStOOZdjA2x7pDelTG7bXYsusPrGBvhDTdfGbP7dsfA7c6iNsIZB/SUzSDRNnDYy+rtWb1gn+7ljHl5pS17rHreJYyMPWnOTFNIVPa43tP+QO0DR/W1m0KiNO9aT/gJvO9Ovd1iYtJtLM3ZZ8134BPH9P4varK9Cn0rHvQ1+NJ9ev/NvmlcWuhadr9PwTdOmDO7EzOd2QuzltzrPfCjR8zvxEyfpDP2usub4ILHLfyDaRLIHYuOWAcXPWVRd+sWN0p1bQO3eg1c8qzlLUwzSLQsOOQlQ9RetN+ssikkKgtu8JxN8IqBdnPIlh0OOOVPvOUanVbz5zvj/J46p3Mhd+fVDKOQq6oi3bRTpcjFbF4tZOu9LDPOOP4Cr/y27lBz6+EAAAAASUVORK5CYII=", "박격포": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAQAAAA2sdlBAAAC0klEQVR42p2VS2hdVRSGv73PvqlYkFKxRVBLcWQR0wpW47sRq9UMVLCU4gv60CgoTq0oToRisdCZQlB0UKsDQYpUfGWgtlpaMqiCCCoStIimRpOa5N5zPgf35ObcG/K47gMH9uN8a629/rUO0vVTE1/xCy82GOT/AfZaVw+LWfeImrhL1bP2G4zdImriw6r+4SYxSneIJO6xUMe8rpx3haiJj6g6bt8cYPmI2RByZ7y7nHeFqIn3Wbdw2tvaARJZakQSde7hCImcUfpZRU6onFiWF1udUqftdbc/ixiWG0g0usVhz6uj7vSAk37pgBuqkKXv4EO1bu6w+50dHzd1uTQiiTc46pQzNlSdUUcccOPyvEjijZ5rWc6dsuGEj3aeXAxws+Nq4T7f8Gl7HVYHxRVNYS+OSOKt/q3q7nItOKIerOpyYUQSb3fCXH1W7DG5wug+ddwNs+W1MCKJ/U7aUF9s2czEXlVP2WO2mC5q4p2et6EeqDgdxLWedcJ/fLk9mPke3OW/1tXXxVSxFky+6zd+5aduXUgXURxwqtLUQgf+VV/wd/d63NVzu5GMRCKjBmznAxKJYzxGT9NE2/iVc3zLLRxkiJw0W4c5DRrk1ClYSwCOso1pZijaPhc4yYMUPMRp/uQJ6mQAiR1s4jIuYDUZlwAZkSHG+IW3+YvQ8qQAzjDOdk5ymq/Zxfd8TqTAU6X2VYuyFlSnXdfs0JWbetJJL3KPusXn1WQ04ON+5A7ft+4xL7XPwk98xjc9Mk+HmVd51D5XOiQG3/E5MeH9/uhG16n3iviDd3iln3nI0IFI4ks+JW72QoPR414veI0PiCsd8XKj0ZtcIw46WM196UVwp4eMhnLvWk+4ai7O9ZW4Q3trq9zG1b7XQmfifg9HApEC+KlMYiQgcZ4mmmkdYz1XlO1XIq9xIrUEFEtE9d2JCIzxHT2VNP/GW93/2bd1rvwH2dE1M4zCPswAAAAASUVORK5CYII="}, {"Pan Projectile": null, Crossbow: WIMG.Crossbow});  /* v277 근접·특수 무기 */
 WIMG["Pan Projectile"] = WIMG.Pan; WIMG["Machete Projectile"] = WIMG.Machete; WIMG["Crowbar Projectile"] = WIMG.Crowbar; WIMG["Sickle Projectile"] = WIMG.Sickle;
 const WDEF = {ar: "M416", dmr: "Mini 14", sr: "Kar98k", smg: "UMP", sg: "S1897", lmg: "M249", hg: "P1911", th: "수류탄", melee: "Pan", sp: "Crossbow"};
+let boardSub = (() => { try { return localStorage.getItem("ddcBoardSub") || ""; } catch { return ""; } })();
 function weaponBoard() {  /* v268 무기 종류별 킬 순위 (기록판 모양) · v275 총 하나하나로 순위 (한 사람이 여러 칸 가능) · 그림은 1등 총 */
   const W = state.wboard || []; if (!W.length) return "";
   const cards = W.map(c => { const top = c.rows[0].k || 1, img = WIMG[c.rows[0].w] || WIMG[WDEF[c.key]]; return `<div class="rbd wbd">
@@ -9519,7 +9522,7 @@ function renderCumulative() {
       <td class="n win">${d.wins == null ? `<span class="nil">-</span>` : d.wins ? `<b><img class="chick" src="${CHICK_IMG}" alt="">${d.wins}번</b>` : `<span class="nil">0번</span>`}</td>
       <td class="order">${d.ranking.map((n, i) => i === 0 ? `<b>${esc(n)}</b>` : esc(n)).join(" › ")}</td>
       <td class="n"><button class="del" data-del="${d.date}" aria-label="${d.date} 기록 삭제">삭제</button></td></tr>`).join("");
-  const P = [["rank", "순위"], ["board", "기록판"], ["grow", "성장"], ["mapduo", "궁합"], ["hist", "지난 기록"]];
+  const P = [["rank", "순위"], ["board", "기록판"], ["grow", "성장"], ["mapduo", "역할·궁합"], ["hist", "지난 기록"]];
   if (!P.some(p => p[0] === cumPane)) cumPane = "rank";
   $("#cum").innerHTML = state.days.length ? `
     <nav class="cum-tabs" role="tablist" aria-label="누적 기록 나눠 보기">${P.map(([k, l]) => `<button type="button" role="tab" aria-selected="${k === cumPane}" data-cp="${k}">${l}</button>`).join("")}</nav>
@@ -9529,7 +9532,10 @@ function renderCumulative() {
       <thead><tr><th>플레이어</th><th class="c">1등</th><th class="c">2등</th><th class="c">3등</th><th class="c">4등</th><th>참여</th><th>평균</th><th>분포</th></tr></thead>
       <tbody>${rows}</tbody></table></div>` : `<p class="pc-none">이 시즌에는 아직 기록이 없어요.</p>`}
     <div id="cumTrend"></div></div>
-    <div class="cum-pane" data-pane="board" ${cumPane === "board" ? "" : "hidden"}>${recordBoard() + weaponBoard() || `<p class="pc-none">아직 기록이 없어요</p>`}</div>
+    <div class="cum-pane" data-pane="board" ${cumPane === "board" ? "" : "hidden"}>${(() => { const a = recordBoard(), b = weaponBoard(); if (!a && !b) return `<p class="pc-none">아직 기록이 없어요</p>`;  /* v282 역대 기록 · 무기별 나눠 보기 */
+      if (!boardSub || (boardSub === "w" && !b) || (boardSub === "r" && !a)) boardSub = a ? "r" : "w";
+      return `<div class="sub-tabs" role="tablist">${a ? `<button type="button" role="tab" data-bs="r" aria-selected="${boardSub === "r"}">역대 기록</button>` : ""}${b ? `<button type="button" role="tab" data-bs="w" aria-selected="${boardSub === "w"}">무기별 순위</button>` : ""}</div>
+        <div data-bsp="r" ${boardSub === "r" ? "" : "hidden"}>${a}</div><div data-bsp="w" ${boardSub === "w" ? "" : "hidden"}>${b}</div>`; })()}</div>
     <div class="cum-pane" data-pane="grow" ${cumPane === "grow" ? "" : "hidden"}>${growthGraph()}</div>
     <div class="cum-pane" data-pane="mapduo" ${cumPane === "mapduo" ? "" : "hidden"}>${cumRoles() + cumDuo() || `<p class="pc-none">아직 기록이 없어요</p>`}</div>
     <div class="cum-pane" data-pane="hist" ${cumPane === "hist" ? "" : "hidden"}>
@@ -9551,6 +9557,8 @@ function renderCumulative() {
   document.querySelectorAll("[data-open]").forEach(b => b.onclick = () => openDay(b.dataset.open));
   document.querySelectorAll("[data-gr]").forEach(b => b.onclick = () => { growRange = b.dataset.gr; document.querySelectorAll("[data-gr]").forEach(x => x.classList.toggle("on", x === b)); $("#growBox").innerHTML = growthCharts(); });
   $("#growBox")?.addEventListener("click", e => { const k = e.target.closest("[data-gm]"); if (!k) return; growMetric = +k.dataset.gm; $("#growBox").innerHTML = growthCharts(); });
+  document.querySelectorAll("[data-bs]").forEach(b => b.onclick = () => { boardSub = b.dataset.bs; try { localStorage.setItem("ddcBoardSub", boardSub); } catch {}
+    document.querySelectorAll("[data-bs]").forEach(x => x.setAttribute("aria-selected", String(x === b))); document.querySelectorAll("[data-bsp]").forEach(x => x.hidden = x.dataset.bsp !== boardSub); });
   document.querySelectorAll("[data-bopen]").forEach(b => b.onclick = () => openDay(b.dataset.bopen));
   document.querySelectorAll("[data-recap]").forEach(b => b.onclick = () => openRecap(b.dataset.recap));
   document.querySelectorAll("[data-hm]").forEach(b => b.onclick = () => { const i = months.indexOf(histYM) + +b.dataset.hm; if (months[i]) { histYM = months[i]; renderCumulative(); } });
