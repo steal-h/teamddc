@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='dbf7a9a5';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='97b7d95f';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2500,7 +2500,10 @@ body.viewer .day-warn{display:none}
 .cum-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 18px;padding:6px;background:var(--bx-bg,#21261a);border:1px solid var(--bx-edge,#4a5239);border-radius:8px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
 .cum-tabs button{flex:1 1 auto;background:none;border:0;color:var(--dust);padding:8px 14px;border-radius:5px;cursor:pointer;font:700 14px var(--body);white-space:nowrap}
 .cum-tabs button[aria-selected=true]{background:#F2B33D;color:#1d1406}.cum-tabs button:hover{color:var(--bone)}.cum-tabs button[aria-selected=true]:hover{color:#1d1406}
-.cum-pane{animation:tabin .25s ease-out both}
+.cum-pane{animation:tabin .25s ease-out both}#cum.quiet .cum-pane{animation:none}
+.hm-prev{animation:hmPrev .38s cubic-bezier(.22,1,.36,1) both}.hm-next{animation:hmNext .38s cubic-bezier(.22,1,.36,1) both}@keyframes hmPrev{from{opacity:0;transform:translateX(-28px)}}@keyframes hmNext{from{opacity:0;transform:translateX(28px)}}  /* v283 지난 기록 달 넘김 */
+[data-bsp]:not([hidden]){animation:bsIn .4s cubic-bezier(.22,1,.36,1) both}@keyframes bsIn{from{opacity:0;transform:translateY(12px)}}.sub-tabs button{transition:background .25s,color .25s}  /* v283 기록판 나눠 보기 전환 */
+.recap,.recap *{-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}  /* v283 리캡: 폰에서 누를 때 하늘색 선택 표시 없앰 */
 @media(max-width:520px){.cum-tabs button{padding:7px 8px;font-size:13px}}
 /* v196 NG 모음집 */
 /* v205 NG 모음집: LED 도트 전광판 */
@@ -9247,10 +9250,10 @@ function openRecap(ym) {
   const ov = document.createElement("div"); ov.className = "recap"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-label", `${m}월 리캡`);
   ov.innerHTML = `<div class="rc-frame"><div class="rc-bars">${S.map(() => "<i><b></b></i>").join("")}</div><button type="button" class="rc-x" aria-label="닫기">✕</button>
     ${S.map(h => `<div class="rc-s">${h}</div>`).join("")}<div class="rc-nav"><span></span><span></span></div></div>`;
-  document.body.appendChild(ov); document.body.style.overflow = "hidden";
+  document.body.appendChild(ov); document.body.style.overflow = "hidden"; try { ensureAudio(); } catch {}  /* v283 리캡 넘김 소리: 소리 장치를 먼저 깨움 */
   let i = -1, tm = 0, paused = false; const slides = [...ov.querySelectorAll(".rc-s")], bars = [...ov.querySelectorAll(".rc-bars i")];
   const go = k => { i = Math.max(0, Math.min(S.length - 1, k)); slides.forEach((s, j) => s.classList.toggle("on", j === i)); bars.forEach((b, j) => b.className = j < i ? "done" : j === i ? "run" : "");
-    clearTimeout(tm); if (i < S.length - 1) tm = setTimeout(() => !paused && go(i + 1), 3600); try { sfx.tick(); } catch {} };
+    clearTimeout(tm); if (i < S.length - 1) tm = setTimeout(() => !paused && go(i + 1), 3600); try { ensureAudio(); sfx.tick(); } catch {} };
   const close = () => { clearTimeout(tm); ov.remove(); document.body.style.overflow = ""; removeEventListener("keydown", key); };
   const key = e => { if (e.key === "Escape") close(); if (e.key === "ArrowRight") go(i + 1); if (e.key === "ArrowLeft") go(i - 1); };
   addEventListener("keydown", key);
@@ -9502,7 +9505,18 @@ async function cumTrend(rg) {  /* v171 팀원 점수 추이 비교 (고른 기�
     <svg viewBox="0 0 ${Wd} ${H}" role="img" aria-label="팀원 점수 추이">${ticks}${xl}${lines}</svg></div>`;
   box.querySelectorAll("[data-tr]").forEach(b => b.onclick = () => { const on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", String(on)); box.querySelector(`.tr-l[data-i="${b.dataset.tr}"]`)?.classList.toggle("off", !on); });
 }
-function renderCumulative() {
+function bindHist(box, months, dir) {  /* v284 지난 기록 칸의 버튼들 */
+  if (!box) return;
+  if (dir) box.querySelectorAll(".hist-mon>div,.tbl.history").forEach(e => e.classList.add(dir > 0 ? "hm-prev" : "hm-next"));
+  box.querySelectorAll("[data-hm]").forEach(b => b.onclick = () => { const d = +b.dataset.hm, i = months.indexOf(histYM) + d; if (!months[i]) return; histYM = months[i]; renderCumulative(d); });
+  box.querySelectorAll("[data-open]").forEach(b => b.onclick = () => openDay(b.dataset.open));
+  box.querySelectorAll("[data-recap]").forEach(b => b.onclick = () => openRecap(b.dataset.recap));
+  box.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+    if (!confirm(`${b.dataset.del} 기록을 누적에서 삭제할까요?`)) return;
+    await api("api/delete_day", {date: b.dataset.del}); await loadState();
+  });
+}
+function renderCumulative(histOnly = 0) {
   const rg = {key: "all", from: "0000", to: "9999", label: "전체"}, days = state.days.filter(d => !d.memory);  /* v173 시즌 나눠 보기 뺌 · v230 비공식 날은 누적 통계에서 모두 뺌 */
   const hall = cumHall(days);
   const rows = hall.map(c => {
@@ -9524,7 +9538,7 @@ function renderCumulative() {
       <td class="n"><button class="del" data-del="${d.date}" aria-label="${d.date} 기록 삭제">삭제</button></td></tr>`).join("");
   const P = [["rank", "순위"], ["board", "기록판"], ["grow", "성장"], ["mapduo", "역할·궁합"], ["hist", "지난 기록"]];
   if (!P.some(p => p[0] === cumPane)) cumPane = "rank";
-  $("#cum").innerHTML = state.days.length ? `
+  const HTML = state.days.length ? `
     <nav class="cum-tabs" role="tablist" aria-label="누적 기록 나눠 보기">${P.map(([k, l]) => `<button type="button" role="tab" aria-selected="${k === cumPane}" data-cp="${k}">${l}</button>`).join("")}</nav>
     <div class="cum-pane" data-pane="rank" ${cumPane === "rank" ? "" : "hidden"}>
     <div class="sec"><h3>명예의 전당 (${rg.key === "all" ? "" : esc(rg.label) + " · "}${days.length}일)</h3></div>
@@ -9541,15 +9555,20 @@ function renderCumulative() {
     <div class="cum-pane" data-pane="hist" ${cumPane === "hist" ? "" : "hidden"}>
     ${cumMaps(days)}
     <div class="sec history-sec"><h3>지난 기록</h3></div>
-    <div class="hist-mon">
+    <div id="histBox"><div class="hist-mon">
       <button type="button" class="btn" data-hm="1" ${mi < months.length - 1 ? "" : "disabled"} aria-label="이전 달">‹</button>
       <div><b>${hy}년 ${hm}월</b><span>${inMonth.length}일 · ${mGames}게임 · 치킨 ${mWins}번</span>${state.recaps?.[histYM] && histYM < new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 7) ? `<button type="button" class="btn recap-btn" data-recap="${histYM}">▶ ${hm}월 리캡 보기</button>` : ""}</div>
       <button type="button" class="btn" data-hm="-1" ${mi > 0 ? "" : "disabled"} aria-label="다음 달">›</button>
     </div>
     <div class="tbl history"><table><thead><tr><th>날짜</th><th>게임 수</th><th>치킨</th><th>순위 (1등부터)</th><th class="del-col"></th></tr></thead>
-      <tbody>${hist}</tbody></table></div></div>`
+      <tbody>${hist}</tbody></table></div></div></div>`
     : `<div class="notice"><strong>아직 누적 기록이 없어요</strong>
        어워즈 탭에서 분석하거나 '최근 14일 한 번에 분석'을 누르면 여기에 쌓여요.</div>`;
+  if (histOnly && $("#histBox")) {  /* v284 지난 기록 달 넘김: 그 부분만 바꿔 끼움 (나머지 화면은 그대로) */
+    const tp = document.createElement("template"); tp.innerHTML = HTML; const nb = tp.content.querySelector("#histBox"), ob = $("#histBox");
+    if (nb) { ob.replaceWith(nb); bindHist(nb, months, histOnly); return; }
+  }
+  $("#cum").innerHTML = HTML;
   cumTrend(rg);
   document.querySelectorAll("[data-cp]").forEach(b => b.onclick = () => { cumPane = b.dataset.cp; try { localStorage.setItem("ddcCumPane", cumPane); } catch {}
     document.querySelectorAll("[data-cp]").forEach(x => x.setAttribute("aria-selected", String(x === b)));
@@ -9557,11 +9576,11 @@ function renderCumulative() {
   document.querySelectorAll("[data-open]").forEach(b => b.onclick = () => openDay(b.dataset.open));
   document.querySelectorAll("[data-gr]").forEach(b => b.onclick = () => { growRange = b.dataset.gr; document.querySelectorAll("[data-gr]").forEach(x => x.classList.toggle("on", x === b)); $("#growBox").innerHTML = growthCharts(); });
   $("#growBox")?.addEventListener("click", e => { const k = e.target.closest("[data-gm]"); if (!k) return; growMetric = +k.dataset.gm; $("#growBox").innerHTML = growthCharts(); });
-  document.querySelectorAll("[data-bs]").forEach(b => b.onclick = () => { boardSub = b.dataset.bs; try { localStorage.setItem("ddcBoardSub", boardSub); } catch {}
-    document.querySelectorAll("[data-bs]").forEach(x => x.setAttribute("aria-selected", String(x === b))); document.querySelectorAll("[data-bsp]").forEach(x => x.hidden = x.dataset.bsp !== boardSub); });
+  document.querySelectorAll("[data-bs]").forEach(b => b.onclick = () => { if (boardSub === b.dataset.bs) return; boardSub = b.dataset.bs; try { localStorage.setItem("ddcBoardSub", boardSub); } catch {}
+    document.querySelectorAll("[data-bs]").forEach(x => x.setAttribute("aria-selected", String(x === b))); document.querySelectorAll("[data-bsp]").forEach(x => x.hidden = x.dataset.bsp !== boardSub); try { sfx.tick(); } catch {} });
   document.querySelectorAll("[data-bopen]").forEach(b => b.onclick = () => openDay(b.dataset.bopen));
   document.querySelectorAll("[data-recap]").forEach(b => b.onclick = () => openRecap(b.dataset.recap));
-  document.querySelectorAll("[data-hm]").forEach(b => b.onclick = () => { const i = months.indexOf(histYM) + +b.dataset.hm; if (months[i]) { histYM = months[i]; renderCumulative(); } });
+  bindHist($("#histBox"), months);
   document.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
     if (!confirm(`${b.dataset.del} 기록을 누적에서 삭제할까요?`)) return;
     await api("api/delete_day", {date: b.dataset.del}); await loadState();
