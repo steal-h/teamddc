@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='97b7d95f';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='9b43e66d';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -326,7 +326,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .pmx tbody tr:last-child td{border-bottom:0}
 .pmx .pm-n{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:color-mix(in srgb,var(--c) 70%,var(--bone))}
 .pmx .pm-n i{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
-.pmx tr.pm-best td{background:rgba(242,179,61,.07)}
+.pmx tbody tr:not(.pm-tot) td:first-child{box-shadow:inset 4px 0 0 var(--c)}.pmx tbody tr:not(.pm-tot) .pm-n{color:var(--bone)}.pmx td.pm-top{color:#FFE7A0;font-weight:800}.pmx td.pm-top::after{content:"▲";font-size:9px;margin-left:2px;vertical-align:1px;color:#F2B33D}.pmx tbody td:first-child{padding-left:14px}@media(max-width:620px){.pmx td.pm-top::after{font-size:7.5px;margin-left:1px}.pmx tbody td:first-child{padding-left:10px}}  /* v286 P02 + 1등 값 */
 .pst{overflow-x:auto}.pst table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}.pst th{font-size:11.5px;font-weight:500;color:var(--dust);text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}.pst th:first-child,.pst th:nth-child(2){text-align:left}
 .pst td{padding:7px 8px;text-align:right;border-bottom:1px solid color-mix(in srgb,var(--line) 55%,transparent);white-space:nowrap}.pst td:first-child,.pst td:nth-child(2){text-align:left}.pst td button{background:none;border:0;color:var(--bone);font:inherit;cursor:pointer;padding:0;text-decoration:underline dotted rgba(242,179,61,.5);text-underline-offset:3px}.pst td button:hover{color:#F2B33D}
 .pst .t{font-weight:700;color:var(--bone)}.pst td.hi{color:#F2B33D;font-weight:700}.pst .z{color:color-mix(in srgb,var(--dust) 50%,transparent)}.pst .pen{color:#ff8a6a}
@@ -3309,7 +3309,9 @@ function profMaps(p) {  /* v180 맵별 개인 성적: 판·판당 킬·판당 �
   const tot = has ? `<tr class="pm-tot"><td><span class="pm-n">전체</span></td><td>${S[0]}</td><td>${S[5] ? (Math.round((S[6] + S[3]) / Math.max(1, S[4]) * 100) / 100) : "-"}</td>
     <td>${fmt(Math.round(S[2] / n))}</td><td>${(S[1] / n).toFixed(2)}</td><td>${S[5] ? (S[3] / S[5]).toFixed(2) : "-"}</td><td>${S[5] ? (S[7] / S[5] / 60).toFixed(1) + "분" : "-"}</td></tr>` : "";
   return `<div class="prof-sec"><h4>맵별 성적 ${best ? `<span class="who">${esc(best[0])}에서 가장 잘해요</span>` : ""}</h4><div class="pmx"><table><thead><tr><th>맵</th><th>판</th><th>KDA</th><th>판당 딜</th><th>판당 킬</th><th>판당 어시</th><th>평균 생존</th></tr></thead><tbody>
-    ${L.map(m => `<tr class="${m === best ? "pm-best" : ""}" style="--c:${mapColor(m[1] || m[0])}"><td><span class="pm-n"><i></i>${esc(m[0])}</span></td><td>${m[2]}</td><td>${m[5] ?? "-"}</td><td>${fmt(m[4])}</td><td>${m[3]}</td><td>${m[7] ?? "-"}</td><td>${m[6] != null ? m[6] + "분" : "-"}</td></tr>`).join("")}${tot}</tbody></table></div></div>`;
+    ${(() => { const IX = [2, 5, 4, 3, 7, 6], TOP = IX.map(j => Math.max(...L.map(m => +m[j] || 0)));  /* v286 P02 맵 색 왼쪽 띠 + 열마다 1등 값 금색 ▲ */
+      const c = (k, v, txt) => `<td${L.length > 1 && v != null && +v > 0 && +v === TOP[k] ? ` class="pm-top"` : ""}>${txt}</td>`;
+      return L.map(m => `<tr style="--c:${mapColor(m[1] || m[0])}"><td><span class="pm-n">${esc(m[0])}</span></td>${c(0, m[2], m[2])}${c(1, m[5], m[5] ?? "-")}${c(2, m[4], fmt(m[4]))}${c(3, m[3], m[3])}${c(4, m[7], m[7] ?? "-")}${c(5, m[6], m[6] != null ? m[6] + "분" : "-")}</tr>`).join(""); })()}${tot}</tbody></table></div></div>`;
 }
 const MASTERY_TIER = ["", "브론즈", "실버", "골드", "플래티넘", "다이아몬드", "마스터"];
 function profMastery(p) {  /* v172 무기 숙련도 (PUBG 공식, 하루 한 번 받아 옴): [이름, 레벨, 티어, 경험치, 킬, 피해, 헤드샷, 최장 거리, 메달] */
@@ -9577,7 +9579,7 @@ function renderCumulative(histOnly = 0) {
   document.querySelectorAll("[data-gr]").forEach(b => b.onclick = () => { growRange = b.dataset.gr; document.querySelectorAll("[data-gr]").forEach(x => x.classList.toggle("on", x === b)); $("#growBox").innerHTML = growthCharts(); });
   $("#growBox")?.addEventListener("click", e => { const k = e.target.closest("[data-gm]"); if (!k) return; growMetric = +k.dataset.gm; $("#growBox").innerHTML = growthCharts(); });
   document.querySelectorAll("[data-bs]").forEach(b => b.onclick = () => { if (boardSub === b.dataset.bs) return; boardSub = b.dataset.bs; try { localStorage.setItem("ddcBoardSub", boardSub); } catch {}
-    document.querySelectorAll("[data-bs]").forEach(x => x.setAttribute("aria-selected", String(x === b))); document.querySelectorAll("[data-bsp]").forEach(x => x.hidden = x.dataset.bsp !== boardSub); try { sfx.tick(); } catch {} });
+    document.querySelectorAll("[data-bs]").forEach(x => x.setAttribute("aria-selected", String(x === b))); document.querySelectorAll("[data-bsp]").forEach(x => x.hidden = x.dataset.bsp !== boardSub); });
   document.querySelectorAll("[data-bopen]").forEach(b => b.onclick = () => openDay(b.dataset.bopen));
   document.querySelectorAll("[data-recap]").forEach(b => b.onclick = () => openRecap(b.dataset.recap));
   bindHist($("#histBox"), months);
