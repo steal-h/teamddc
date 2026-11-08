@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='58426e35';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='ab8f38fc';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2451,6 +2451,7 @@ body.viewer .day-warn{display:none}
 /* v238 역대 기록판 */
 .wbd h4{display:flex;align-items:center;gap:6px;white-space:nowrap}.wbd .wic{display:block;flex:none;height:16px;width:64px;margin-left:auto;opacity:.9;background:var(--bx-gold,#F2B33D);-webkit-mask:var(--w) right center/contain no-repeat;mask:var(--w) right center/contain no-repeat}  /* v271 W023 배그 공식 무기 실루엣 (금색) */
 .sub-tabs{display:flex;justify-content:center;gap:0;margin:0 auto 16px;width:max-content;border:1px solid var(--bx-edge,#4a5239);border-radius:20px;padding:3px;background:#14170f}.sub-tabs button{background:none;border:0;color:var(--dust);font:700 13.5px var(--body);padding:6px 18px;border-radius:16px;cursor:pointer}.sub-tabs button[aria-selected=true]{background:var(--bx-gold,#F2B33D);color:#14170f}  /* v282 */
+.rbr b s.wb-mv{text-decoration:none;font:800 10.5px var(--body);margin-left:6px;color:var(--dust);background:none;padding:0;border:0;box-shadow:none}.rbr b s.wb-mv.up{color:#6FCF7F}.rbr b s.wb-mv.dn{color:#E07A5F}.rbr b s.wb-mv.new{color:#14170f;background:#F2B33D;padding:0 4px;border-radius:3px}.wb-gain{display:block;font:700 10px var(--body);color:#6FCF7F;text-align:right;margin-top:-2px}  /* v291 */
 .wbd .wbw{color:var(--bone);font-weight:700}
 .wbd h4 small{font:500 12px var(--body);color:var(--dust);margin-left:4px}.wbd .rbr{cursor:default}.wbd .rbr:hover{background:none}
 .wbd .wb-bar{position:absolute;left:62px;bottom:0;height:2px;background:linear-gradient(90deg,var(--bx-gold,#F2B33D),transparent);opacity:.7;max-width:calc(100% - 62px);text-decoration:none}  /* v268 킬 막대 */
@@ -5985,11 +5986,12 @@ function rpDraw(dt, now, view) {
       ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fillStyle = "#FFB347"; ctx.fill(); ctx.strokeStyle = "#000"; ctx.lineWidth = 1; ctx.stroke(); continue; }
     const a2 = age - 1.3, px = -Math.sin(ang), py = Math.cos(ang);
     const sz = Math.max(11, 6.5 * Mx);
-    if (a2 < 8) rpBeam(ctx, X(ix), Y(iy), a2, 8, "235,140,40", "255,200,120", "", col, now, co ? .85 : .65);  /* v288 엄폐물이 떨어진 자리에 주황 빛기둥 (8초) */
+    const CV_DROP = 3;  /* v292 실제 게임처럼: 신호탄이 떨어져 빛기둥(연기)이 먼저 오르고 약 3초 뒤 엄폐물이 하늘에서 떨어짐 */
+    if (a2 < CV_DROP + 8) rpBeam(ctx, X(ix), Y(iy), a2, CV_DROP + 8, "235,140,40", "255,200,120", "", col, now, co ? .85 : .65);  /* v288 주황 빛기둥 */
     ctx.save();
     for (const sd of [-1, 1]) {  /* v287 엄폐물이 위에서 '털썩' 떨어짐: 떨어지며 커졌다가 → 쿵 하고 살짝 튀고 → 흙먼지 */
       const cx = X(ix) + px * sd * Math.max(9, 3.6 * Mx), cy = Y(iy) + py * sd * Math.max(9, 3.6 * Mx);
-      const t = a2 - (sd > 0 ? .12 : 0), FALL = .34, H = Math.max(26, sz * 2.4);
+      const t = a2 - CV_DROP - (sd > 0 ? .12 : 0), FALL = .34, H = Math.max(26, sz * 2.4);
       if (t < 0) continue;
       let dy = 0, sc = 1, sq = 1;
       if (t < FALL) { const u = t / FALL; dy = -H * (1 - u * u); sc = 1.25 - .25 * u; }
@@ -6003,7 +6005,7 @@ function rpDraw(dt, now, view) {
       ctx.beginPath(); ctx.moveTo(0, -sz * .3); ctx.lineTo(sz * .3, sz * .25); ctx.lineTo(-sz * .3, sz * .25); ctx.closePath(); ctx.fillStyle = "rgba(255,255,255,.18)"; ctx.fill();
       ctx.restore();
     }
-    { const u = (a2 - .34) / .5; if (u > 0 && u < 1) { ctx.beginPath(); ctx.arc(X(ix), Y(iy), 6 + u * 24, 0, Math.PI * 2); ctx.strokeStyle = `rgba(255,220,150,${.8 * (1 - u)})`; ctx.lineWidth = 2; ctx.stroke(); } }
+    { const u = (a2 - CV_DROP - .34) / .5; if (u > 0 && u < 1) { ctx.beginPath(); ctx.arc(X(ix), Y(iy), 6 + u * 24, 0, Math.PI * 2); ctx.strokeStyle = `rgba(255,220,150,${.8 * (1 - u)})`; ctx.lineWidth = 2; ctx.stroke(); } }
     if (a2 < 6) { const lb = `${co ? rpName(cn) : (ctm ?? "") + "팀"} 긴급 엄폐`; ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText(lb).width + 12, ly = Y(iy) + sz + 10;
       ctx.fillStyle = "rgba(20,23,15,.85)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(X(ix) - tw / 2, ly, tw, 17, 8); else ctx.rect(X(ix) - tw / 2, ly, tw, 17); ctx.fill();
       ctx.fillStyle = co ? "#FFE3A0" : col; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lb, X(ix), ly + 9); }
@@ -9289,15 +9291,17 @@ function openRecap(ym) {
 }
 
 /* v238 역대 기록판 TOP 5 */
+/* v292 무기별 순위: 킬이 같으면 기절 많은 쪽이 위 (둘 다 같을 때만 공동) */
+function tieRanks(L, f) { return L.map(x => 1 + L.filter(y => f(y) > f(x)).length); }  /* v291 값이 똑같으면 공동 순위 (메달 색도 같게) */
 function recordBoard() {
   const B = state.board; if (!B) return "";
   const latest = (state.days || []).filter(d => !d.memory).map(d => d.date).sort().pop();
   const C = [["gk", "한 판 최다 킬", "킬"], ["gd", "한 판 최다 딜", ""], ["lk", "최장거리 킬", "m"], ["gn", "한 판 최다 기절", "기절"], ["ds", "하루 최고 점수", "점"], ["dr", "하루 최다 소생", "회"]];
   const cards = C.filter(([k]) => (B[k] || []).length).map(([k, t, u]) => `<div class="rbd">
-      <h4>${t}</h4>${B[k].map((x, i) => { const src = pimg({nick: x.nick, name: x.name});
-        return `<button type="button" class="rbr r${i + 1}" data-bopen="${x.date}" title="${x.date}${x.map ? " · " + esc(x.map) : ""} 열기">
-          ${i < 3 ? `<span class="rb-md">${medal(i + 2, "rb-medal", i + 1)}</span>` : `<i>${i + 1}</i>`}${src ? `<img src="${src}" alt="">` : `<span class="rbi">${esc((x.name || "?").slice(0, 1))}</span>`}<b><span class="rbn">${esc(x.name)}</span>${x.date === latest ? `<s>NEW</s>` : ""}</b>
-          <em>${k === "ds" ? sc(x.v) : fmt(x.v)}<small>${u}</small></em><small class="rbdt">${x.date.slice(2).replace(/-/g, ".")}${x.map ? ` · ${esc(x.map)}` : ""}</small></button>`; }).join("")}
+      <h4>${t}</h4>${(RK => B[k].map((x, i) => { const src = pimg({nick: x.nick, name: x.name}), n = RK[i];
+        return `<button type="button" class="rbr r${n}" data-bopen="${x.date}" title="${x.date}${x.map ? " · " + esc(x.map) : ""} 열기">
+          ${n <= 3 ? `<span class="rb-md">${medal(n + 1, "rb-medal", n)}</span>` : `<i>${n}</i>`}${src ? `<img src="${src}" alt="">` : `<span class="rbi">${esc((x.name || "?").slice(0, 1))}</span>`}<b><span class="rbn">${esc(x.name)}</span>${x.date === latest ? `<s>NEW</s>` : ""}</b>
+          <em>${k === "ds" ? sc(x.v) : fmt(x.v)}<small>${u}</small></em><small class="rbdt">${x.date.slice(2).replace(/-/g, ".")}${x.map ? ` · ${esc(x.map)}` : ""}</small></button>`; }).join(""))(tieRanks(B[k], x => +x.v))}
     </div>`).join("");
   return cards ? `<div class="sec"><h3>역대 기록판 <small style="font-size:13px;color:var(--dust);font-weight:400">공식 기록 TOP 5 · 누르면 그날로 이동</small></h3></div><div class="rboard">${cards}</div>` : "";
 }
@@ -9443,10 +9447,12 @@ let boardSub = (() => { try { return localStorage.getItem("ddcBoardSub") || ""; 
 function weaponBoard() {  /* v268 무기 종류별 킬 순위 (기록판 모양) · v275 총 하나하나로 순위 (한 사람이 여러 칸 가능) · 그림은 1등 총 */
   const W = state.wboard || []; if (!W.length) return "";
   const cards = W.map(c => { const top = c.rows[0].k || 1, img = WIMG[c.rows[0].w] || WIMG[WDEF[c.key]]; return `<div class="rbd wbd">
-      <h4>${esc(c.label)} <small>킬 순위</small>${img ? `<i class="wic" style="--w:url(${img})" title="1등 무기 ${esc(c.rows[0].w || "")}" aria-hidden="true"></i>` : ""}</h4>${c.rows.map((x, i) => { const src = pimg({nick: x.nick, name: x.name});
-        return `<div class="rbr r${i + 1}">
-          ${i < 3 ? `<span class="rb-md">${medal(i + 2, "rb-medal", i + 1)}</span>` : `<i>${i + 1}</i>`}${src ? `<img src="${src}" alt="">` : `<span class="rbi">${esc((x.name || "?").slice(0, 1))}</span>`}<b><span class="rbn">${esc(x.name)}</span></b>
-          <em>${x.k}<small>킬</small></em><small class="rbdt"><span class="wbw">${esc(x.w || "")}</span> · 기절 ${x.n}</small><s class="wb-bar" style="width:${x.k / top * 100}%"></s></div>`; }).join("")}
+      <h4>${esc(c.label)} <small>킬 순위</small>${img ? `<i class="wic" style="--w:url(${img})" title="1등 무기 ${esc(c.rows[0].w || "")}" aria-hidden="true"></i>` : ""}</h4>${(RK => c.rows.map((x, i) => { const src = pimg({nick: x.nick, name: x.name}), n = RK[i];
+        const mv = !x.pk ? `<s class="wb-mv new">NEW</s>` : x.pr == null ? "" : x.pr > n ? `<s class="wb-mv up">▲${x.pr - n}</s>` : x.pr < n ? `<s class="wb-mv dn">▼${n - x.pr}</s>` : "";  /* v291 지난 기록(마지막 날 빼고) 대비 순위 등락 */
+        const gain = x.pk != null && x.k > x.pk ? `<small class="wb-gain">+${x.k - x.pk}</small>` : "";
+        return `<div class="rbr r${n}">
+          ${n <= 3 ? `<span class="rb-md">${medal(n + 1, "rb-medal", n)}</span>` : `<i>${n}</i>`}${src ? `<img src="${src}" alt="">` : `<span class="rbi">${esc((x.name || "?").slice(0, 1))}</span>`}<b><span class="rbn">${esc(x.name)}</span>${mv}</b>
+          <em>${x.k}<small>킬</small>${gain}</em><small class="rbdt"><span class="wbw">${esc(x.w || "")}</span> · 기절 ${x.n}</small><s class="wb-bar" style="width:${x.k / top * 100}%"></s></div>`; }).join(""))(tieRanks(c.rows, x => x.k * 10000 + x.n))}
     </div>`; }).join("");
   return `<div class="sec"><h3>무기별 순위 <small style="font-size:13px;color:var(--dust);font-weight:400">공식 기록 누적 · 총마다 킬 TOP 5</small></h3></div><div class="rboard">${cards}</div>`;
 }
