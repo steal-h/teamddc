@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='a86c9b02';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='58426e35';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -267,7 +267,7 @@ th,td{padding:9px 12px;text-align:left;border-top:1px solid var(--line);vertical
 thead th{border-top:0;color:var(--dust);font-weight:600;font-size:13px;white-space:nowrap}
 td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .chicken{color:var(--accent);font-weight:700;white-space:nowrap}
-.chick{width:14px;height:22px;vertical-align:-5px;margin-right:5px;image-rendering:pixelated}
+.chick{width:auto;height:20px;vertical-align:-5px;margin-right:5px;image-rendering:pixelated}  /* v289 치킨 표시는 모두 오늘의 맵과 같은 치킨 */
 .gl{display:grid;gap:3px;min-width:240px}
 .gl-row{display:grid;grid-template-columns:78px 34px minmax(60px,1fr) 44px;gap:8px;align-items:center;font-size:13px;color:var(--dust)}
 .gl-name{display:flex;align-items:center;gap:4px;color:var(--bone);font-weight:600;white-space:nowrap;overflow:hidden}
@@ -317,7 +317,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .duo-sc i{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}.duo-sc i span{display:block;height:100%;background:linear-gradient(90deg,#8C6414,var(--gold))}.duo-c.duo-worst .duo-sc i span{background:var(--flare)}
 .duo-st{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;color:var(--dust);font-size:11.5px;text-align:center}  /* v176 다섯 항목 한 줄 */
 .duo-st span{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;background:var(--panel-2);border-radius:6px;white-space:nowrap}.duo-st b{color:var(--bone);font:600 16px/1 var(--num)}
-.pmap td,.pmap th{vertical-align:middle;white-space:nowrap}.pmap tr.pm-best td{background:rgba(242,169,0,.08)}.pmap .ck{display:inline-flex;align-items:center;gap:3px;color:var(--gold)}.pmap .chick{width:16px;height:16px}  /* v172 맵별 · 숙련도 */
+.pmap td,.pmap th{vertical-align:middle;white-space:nowrap}.pmap tr.pm-best td{background:rgba(242,169,0,.08)}.pmap .ck{display:inline-flex;align-items:center;gap:3px;color:var(--gold)}.pmap .chick{width:auto;height:17px}  /* v172 맵별 · 숙련도 */
 @media (max-width:620px){.pmap th,.pmap td{padding:7px 4px;font-size:12.5px}}
 .pmx{overflow-x:auto}  /* v188 맵별 성적 */
 .pmx table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
@@ -1890,7 +1890,7 @@ td.mapc .mapn{color:color-mix(in srgb,var(--mc) 70%,var(--bone));font-weight:700
 @media (max-width:620px){.visit{font-size:11px;padding:2px 8px;gap:5px}.visit .uic{display:none}}
 
 .share-row.tbar~.share-msg:empty,.share-row.tbar~.reel-msg:empty{display:none}.share-row.tbar~.sec{margin-top:26px}  /* v130 버튼 줄 위아래 간격 맞춤 */
-.tbl.mapwin td b{display:inline-flex;align-items:center;gap:4px;color:var(--gold)}.tbl.mapwin .chick{width:18px;height:18px}.mwbar{height:8px;border-radius:4px;background:rgba(255,255,255,.07);min-width:80px;overflow:hidden}.mwbar i{display:block;height:100%;background:linear-gradient(90deg,#8C6414,#F2B33D);border-radius:4px}  /* v139 맵별 치킨 */
+.tbl.mapwin td b{display:inline-flex;align-items:center;gap:4px;color:var(--gold)}.tbl.mapwin .chick{width:auto;height:19px}.mwbar{height:8px;border-radius:4px;background:rgba(255,255,255,.07);min-width:80px;overflow:hidden}.mwbar i{display:block;height:100%;background:linear-gradient(90deg,#8C6414,#F2B33D);border-radius:4px}  /* v139 맵별 치킨 */
 /* v257 맵별 치킨 '전체' 줄: 금빛 요약 띠 (위아래 금선 + 왼쪽 굵은 금 막대 + 큰 숫자) */
 .tbl.mapwin tr.mw-tot td{border-top:1px solid rgba(242,179,61,.7);border-bottom:1px solid rgba(242,179,61,.7);background:none;padding-top:12px;padding-bottom:12px;font-weight:700;color:#FFE7A0}
 .tbl.mapwin tr.mw-tot td:first-child{box-shadow:inset 4px 0 0 #F2B33D}.tbl.mapwin tr.mw-tot td:first-child b{font:400 18px var(--display);color:#F2B33D;letter-spacing:.1em}
@@ -1992,7 +1992,7 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .glt td.n{font-variant-numeric:tabular-nums;font-weight:700}
 .glt td.no,.glt td.tm{color:var(--dust);font-variant-numeric:tabular-nums}
 .glt .mc{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:color-mix(in srgb,var(--c) 70%,var(--bone))}.glt .mc i{width:10px;height:10px;border-radius:2px;background:var(--c)}
-.glt td.rk small{color:var(--dust);margin-left:3px;font-size:12px}.glt td.rk .chick{width:16px;height:16px;vertical-align:-3px;margin-right:3px}
+.glt td.rk small{color:var(--dust);margin-left:3px;font-size:12px}.glt td.rk .chick{width:auto;height:17px;vertical-align:-3px;margin-right:3px}
 .glt .rkg{display:inline-grid;grid-template-columns:4.4em auto;align-items:baseline}.glt .rkg b{font-weight:inherit;text-align:right;white-space:nowrap}  /* v82 치킨 그림 자리를 모든 줄에 두고 순위 글자는 오른쪽 맞춤 → '/팀 수'가 한 줄로 맞음 */
 .glt tr.w td{background:rgba(242,169,0,.08)}.glt tr.w td.rk{color:var(--accent);font-weight:700}
 .glt td.ps{width:44%;min-width:300px;padding-block:6px}
@@ -2457,7 +2457,9 @@ body.viewer .day-warn{display:none}
 .roles2{background:linear-gradient(160deg,var(--bx-c3,#313828),var(--bx-c1,#21261a) 75%);border:1px solid var(--bx-edge,#4a5239);padding:14px 16px;margin-bottom:22px}  /* v276 역할 분담 M01 */
 .rl-hl{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--bx-edge,#4a5239)}.rl-hc{display:grid;justify-items:center;text-align:center;gap:1px}.rl-hc span{font:400 15px var(--display);color:var(--c)}.rl-hc b{font-size:13px;color:var(--bone)}.rl-hc em{font:400 22px var(--display);font-style:normal;color:#FFE7A0}.rl-hc em small{font-size:12px}
 .rl-pg{display:grid;grid-template-columns:1fr 1fr;gap:16px 22px}.rl-p{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start}.rl-p>img,.rl-ph{width:46px;height:46px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--c)}.rl-ph{display:grid;place-items:center;background:#2a2f20}.rl-p b{display:block;font:400 18px var(--display)}.rl-role{display:block;font-size:12.5px;font-weight:700;color:var(--c);margin-bottom:5px}
-.rl-ln{display:grid;grid-template-columns:34px minmax(0,1fr) 38px;gap:8px;align-items:center;height:20px;font-size:12px;color:var(--dust)}.rl-ln i{height:8px;background:#14170f;border-radius:4px;overflow:hidden}.rl-ln u{display:block;height:100%;background:var(--c);border-radius:4px;opacity:.6}.rl-ln em{font-style:normal;text-align:right}.rl-ln em small{font-size:10px}.rl-ln.on{color:#FFE7A0;font-weight:700}.rl-ln.on u{opacity:1}
+.duo-d{text-decoration:none;font-size:12px;font-weight:700;color:var(--dust);margin:0 6px 0 4px}.duo-d.up{color:#6FCF7F}.duo-d.dn{color:#E07A5F}
+.rl-d{text-decoration:none;font-size:10.5px;font-weight:700;color:var(--dust);text-align:right}.rl-d.up{color:#6FCF7F}.rl-d.dn{color:#E07A5F}  /* v289 등락 */
+.rl-ln{display:grid;grid-template-columns:34px minmax(0,1fr) 38px 30px;gap:8px;align-items:center;height:20px;font-size:12px;color:var(--dust)}.rl-ln i{height:8px;background:#14170f;border-radius:4px;overflow:hidden}.rl-ln u{display:block;height:100%;background:var(--c);border-radius:4px;opacity:.6}.rl-ln em{font-style:normal;text-align:right}.rl-ln em small{font-size:10px}.rl-ln.on{color:#FFE7A0;font-weight:700}.rl-ln.on u{opacity:1}
 @media(max-width:640px){.rl-pg{grid-template-columns:1fr}.rl-hl{gap:2px}.rl-hc span{font-size:12px;line-height:1.15;word-break:keep-all}.rl-hc b{font-size:11.5px}.rl-hc em{font-size:18px}}
 .rboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:22px}
 .rbd{background:linear-gradient(160deg,var(--bx-c3,#313828),var(--bx-c1,#21261a) 75%);border:1px solid var(--bx-edge,#4a5239);padding:12px 12px 8px}
@@ -3667,7 +3669,7 @@ function renderDay(r, report, reveal) {
     const tk = g.players.reduce((a, p) => a + p.kills, 0), td = g.players.reduce((a, p) => a + (p.damage || 0), 0);
     return `<tr class="${g.rank === 1 ? "w" : ""} ${g.side && !r.memory ? "side" : ""}"><td class="no">${i + 1}</td><td class="tm">${g.time}${g.side && !r.memory ? `<span class="memo" title="${g.players.length}명이 한 판: 점수·업적·칭호에는 안 들어가요">${g.players.length}인</span>` : ""}</td>
       <td><span class="mc" style="--c:${mapColor(g.map_code || g.map)}"><i></i>${esc(g.map)}</span></td>
-      <td class="rk"><span class="rkg"><b>${g.rank === 1 ? `<img class="chick" src="${CHICK_IMG}" alt="">치킨` : g.rank + "등"}</b><small>/${g.teams}</small></span></td>
+      <td class="rk"><span class="rkg"><b>${g.rank === 1 ? `<img class="chick" src="${CHICK_HD}" alt="">치킨` : g.rank + "등"}</b><small>/${g.teams}</small></span></td>
       <td class="n">${tk}</td><td class="n">${fmt(Math.round(td))}</td>
       <td class="ps">${plOrder(g.players).map(p => `<div class="${p === mvp && hasM ? "m" : ""}"><span class="cw">${p === mvp && hasM ? CROWN : ""}</span><span class="nm">${esc(p.name)}</span><span class="k">${p.kills}킬</span><span class="br"><i style="width:${p.damage / dmgMax * 100}%"></i></span><span class="d">${fmt(p.damage)}</span></div>`).join("")}${(g.guests || []).map(p => `<div class="guest" title="게스트: 순위·누적에는 안 들어가요"><span class="cw"></span><span class="nm">${esc(p.name)}<em>게스트</em></span><span class="k">${p.kills}킬</span><span class="br"><i style="width:${Math.min(100, p.damage / dmgMax * 100)}%"></i></span><span class="d">${fmt(p.damage)}</span></div>`).join("")}</td>
       <td class="pl">${g.id ? `<button class="ib" type="button" data-rp="${esc(g.id)}" aria-label="${i + 1}판 리플레이" title="리플레이"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5"/><path d="M8.2 6.6v6.8l5.4-3.4z"/></svg></button>` : ""}</td></tr>`; }).join("");
@@ -4694,9 +4696,11 @@ function moodOf(r) {  /* v196 치킨 먹은 날 = 축제 · v201 치킨 없이 �
   if (ck >= 2) return "multi";  /* v202 하루 치킨 2번 이상 = 불꽃놀이 + 색종이 */
   if (ck) return "win";
   const RG = (r.games || []).filter(g => g.rank > 0), avg = RG.reduce((a, g) => a + g.rank / Math.max(1, g.teams || 25) * 25, 0) / RG.length;  /* v247 팀 수 비율로 (스쿼드 25팀 기준 등수로 바꿔 셈: 듀오 50팀 16등 = 8등) · v204 안 좋은 날은 평균 등수에 따라 4단계 */
-  if (avg >= 12) return "film";   /* v209 평균 12등 이하: 흑백 옛날 필름 (시안 N01) */
-  if (avg >= 10) return "wipe";   /* v206 평균 10등 이하: 폭풍 = 잿빛 화면 + 폭우 + 번개 (빗물 파문 삭제) */
-  if (avg >= 8) return "rain";    /* 평균 8등 이하: 비 (v205 먹구름 단계 삭제) */
+  /* v289 팀 수에 맞춘 '아래에서 몇 %' 기준으로: 경쟁전 16팀에서 평균 8등(중간)인데 25팀 기준 12.5등으로 바뀌어 번개가 치던 문제 */
+  const pc = RG.reduce((a, g) => a + (g.rank - 1) / Math.max(1, (g.teams || 25) - 1), 0) / RG.length;  // 0 = 늘 1등, 1 = 늘 꼴찌
+  if (pc >= .72) return "film";   /* 거의 꼴찌권 (16팀 약 12등 · 25팀 약 18등): 흑백 옛날 필름 */
+  if (pc >= .58) return "wipe";   /* 하위권 (16팀 약 10등 · 25팀 약 15등): 폭풍 + 번개 */
+  if (pc >= .44) return "rain";   /* 중간 아래 (16팀 약 8등 · 25팀 약 12등): 비 */
   return "";
 }
 function moodCls(r) {  /* v204 단계가 올라가면 아래 단계 연출도 같이 씀 */
@@ -4793,7 +4797,7 @@ async function openReplay(id) {
   { const g = [...(current?.result?.games || []), ...(current?.result?.side_games || [])].find(x => x.id === id); if (g) { R._dayDmg = Object.fromEntries(g.players.map(q => [q.nick, q.damage])); R._dayKills = Object.fromEntries(g.players.map(q => [q.nick, q.kills])); } }  // v103 킬도 공식 기록 (경기 목록 MVP와 같게)  // 예전 리플레이: 결과표 딜량은 그날 기록에서
   rpSetup(R);
   const firstLand = Math.min(...R.players.map(p => p.landed ?? 0));
-  rp.t = Math.max(0, firstLand - 6); rp.cam = {x: .5, y: .5, s: 1}; rp.follow = true;
+  rp.t = Math.max(0, firstLand - 6); rp.cam = {x: .5, y: .5, s: 1}; rp.follow = true; rp.uz = 1;
   rp.seen = R.events.filter(e => e.t <= rp.t).length; renderFeed();
   rp.speed = 10;  // v262 열 때마다 자동 배속부터
   rp.playing = true; paintRpButtons();
@@ -5279,7 +5283,7 @@ function rpShowSummary() {  // 판 결과표 (RS-01 배그 결과창): 왼쪽 �
   const mvp = S.rows.slice().sort((a, b) => b.kills - a.kills || (dmgOf(b) || 0) - (dmgOf(a) || 0))[0];  // v103 경기 목록 왕관과 같은 기준 (킬 → 딜)
   const av = r => { const src = pimg(r.p); return src ? `<img src="${src}" alt="">` : `<span class="noav">${esc((r.p.name || "?").slice(0, 1))}</span>`; };
   el.innerHTML = `<div class="rs1"><button class="x" aria-label="닫기">×</button>
-    <div class="side"><div class="rk">${R.rank === 1 ? `<img class="rk-chick" src="${CHICK_IMG_ALT}" alt="치킨">` : "#" + R.rank}<span>/${R.teams}</span></div><div class="ttl">${R.rank === 1 ? "치킨! · " : ""}${esc(R.map_name)}</div><div class="sub">${esc(R.time)} 시작 · ${esc(R.mode)}</div>
+    <div class="side"><div class="rk">${R.rank === 1 ? `<img class="rk-chick" src="${CHICK_HD}" alt="치킨">` : "#" + R.rank}<span>/${R.teams}</span></div><div class="ttl">${R.rank === 1 ? "치킨! · " : ""}${esc(R.map_name)}</div><div class="sub">${esc(R.time)} 시작 · ${esc(R.mode)}</div>
       <div class="mini"><div><b>${tk}</b><span>팀 킬</span></div><div><b>${hasDmg ? fmt(td) : "-"}</b><span>팀 딜량</span></div><div><b>${mmss(surv)}</b><span>팀 생존</span></div><div><b>${S.won}/${S.fights.length}</b><span>교전 승</span></div></div></div>
     <div class="main"><div class="tw"><table><thead><tr><th>팀원</th><th>킬</th><th>기절</th><th>딜량</th><th>생존</th><th>기절당함</th><th>이동</th></tr></thead><tbody>
     ${S.rows.map(r => `<tr class="${r === mvp ? "mvp" : ""}" style="--pc:${RP_COLORS[r.p.slot % 4]}"><td><div class="who">${av(r)}<b>${esc(r.p.name)}</b>${r === mvp ? '<span class="tag">MVP</span>' : ""}</div></td>
@@ -5631,6 +5635,7 @@ function rpCamera(dt) {
   }
   const k = Math.min(1, dt * 2.4), ks = Math.min(1, dt * (fz ? 2.4 : 1.1));  // 따라가기 줌은 더 부드럽게
   if (rp.reel) ts *= .72;  /* v170 오늘의 명장면은 기본으로 조금 더 확대 */
+  if (rp.uz && rp.uz !== 1) ts = Math.min(1, Math.max(Math.min(1, 120 / R.size_m), ts * rp.uz));  /* v290 자동 카메라 위에 내가 고른 확대 배율 */
   rp.cam.s += (ts - rp.cam.s) * ks; rp.cam.x += (tx - rp.cam.x) * k; rp.cam.y += (ty - rp.cam.y) * k;
   rpClampCam();
 }
@@ -8933,7 +8938,12 @@ $("#rpLegend").addEventListener("keydown", e => { const el = e.target.closest("[
   const manual = () => { if (!rp.manual) { rp.manual = true; paintRpButtons(); } $("#rpHint").classList.add("off"); };
   cv.addEventListener("wheel", e => {
     if (!rp.data) return;
-    e.preventDefault(); manual();
+    e.preventDefault();
+    if (rpAuto()) {  /* v290 자동 카메라일 땐 확대·축소만 해도 자동은 그대로 (교전 감속 유지) — 따라가는 화면에 내 확대 배율만 곱함 */
+      const lo = Math.min(1, 120 / rp.data.size_m) / Math.max(1e-6, rp.cam.s / (rp.uz || 1));
+      rp.uz = Math.max(Math.max(.2, lo), Math.min(2.5, (rp.uz || 1) * Math.exp(e.deltaY * .0015))); rp.cam.s *= Math.exp(e.deltaY * .0015); rpClampCam(); return;
+    }
+    manual();
     const {r, S} = view(), mx = e.clientX - r.left, my = e.clientY - r.top;
     const wx = rp.cam.x + (mx - r.width / 2) / S, wy = rp.cam.y + (my - r.height / 2) / S;  // 커서 아래 지점
     const ns = Math.min(1, Math.max(Math.min(1, 120 / rp.data.size_m), rp.cam.s * Math.exp(e.deltaY * .0015)));
@@ -8952,7 +8962,7 @@ $("#rpLegend").addEventListener("keydown", e => { const el = e.target.closest("[
     rp.cam.x = drag.cx - (e.clientX - drag.x) / S; rp.cam.y = drag.cy - (e.clientY - drag.y) / S; rpClampCam();
   });
   addEventListener("mouseup", () => { drag = null; cv.classList.remove("drag"); });
-  cv.addEventListener("dblclick", () => { rp.manual = false; rp.follow = true; paintRpButtons(); });
+  cv.addEventListener("dblclick", () => { rp.manual = false; rp.follow = true; rp.uz = 1; paintRpButtons(); });  // v290 두 번 클릭 = 자동 카메라 + 확대 배율 처음대로
   let tch = null, lastTap = 0;  // 휴대폰 터치
   const pts = e => [...e.touches].map(t => [t.clientX, t.clientY]);
   cv.addEventListener("touchstart", e => {
@@ -8970,6 +8980,10 @@ $("#rpLegend").addEventListener("keydown", e => { const el = e.target.closest("[
     e.preventDefault();
     const p = pts(e), {r} = view(), W = Math.min(r.width, r.height);
     if (p.length >= 2 && tch.p.length >= 2) {  // 두 손가락: 가운데 지점 기준으로 확대·축소 + 이동
+      if (rpAuto()) {  /* v290 자동 카메라: 두 손가락 확대도 자동 유지 */
+        const d0 = Math.hypot(tch.p[0][0] - tch.p[1][0], tch.p[0][1] - tch.p[1][1]) || 1, d1 = Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]) || 1;
+        tch.uz = tch.uz || rp.uz || 1; rp.uz = Math.max(.2, Math.min(2.5, tch.uz * d0 / d1)); rpClampCam(); return;
+      }
       manual();
       const d0 = Math.hypot(tch.p[0][0] - tch.p[1][0], tch.p[0][1] - tch.p[1][1]) || 1, d1 = Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]) || 1;
       const ns = Math.min(1, Math.max(Math.min(1, 120 / rp.data.size_m), tch.s * d0 / d1));
@@ -9443,9 +9457,9 @@ function cumMaps(days) {  // v139 맵별 치킨 누적 (판 목록이 있는 날
   const maxW = Math.max(1, ...L.map(x => x[1].w)), tw = L.reduce((a, x) => a + x[1].w, 0), tn = L.reduce((a, x) => a + x[1].n, 0);
   return `<div class="sec"><h3>맵별 치킨 (${tn}게임 · 치킨 ${tw}번 · 전체 치킨 비율 ${tn ? (tw / tn * 100).toFixed(1) : 0}%)</h3></div>
     <div class="tbl mapwin"><table><thead><tr><th>맵</th><th class="c">치킨</th><th class="c">판 수</th><th class="c">치킨 비율</th><th>치킨</th></tr></thead><tbody>
-    ${L.map(([k, o]) => `<tr><td><span class="mc" style="--c:${mapColor(o.code || k)}"><i></i>${esc(k)}</span></td><td class="c"><b>${o.w ? `<img class="chick" src="${CHICK_IMG}" alt="">${o.w}` : "0"}</b></td><td class="c">${o.n}</td><td class="c">${o.n ? Math.round(o.w / o.n * 100) : 0}%</td>
+    ${L.map(([k, o]) => `<tr><td><span class="mc" style="--c:${mapColor(o.code || k)}"><i></i>${esc(k)}</span></td><td class="c"><b>${o.w ? `<img class="chick" src="${CHICK_HD}" alt="">${o.w}` : "0"}</b></td><td class="c">${o.n}</td><td class="c">${o.n ? Math.round(o.w / o.n * 100) : 0}%</td>
       <td><div class="mwbar" title="치킨 ${o.w} / ${o.n}판"><i style="width:${o.n ? Math.min(100, o.w / o.n * 100) : 0}%"></i></div></td></tr>`).join("")}
-      <tr class="mw-tot"><td><b>전체</b></td><td class="c"><b><img class="chick" src="${CHICK_IMG}" alt="">${tw}</b></td><td class="c">${tn}</td><td class="c"><b>${tn ? (tw / tn * 100).toFixed(1) : 0}%</b></td>
+      <tr class="mw-tot"><td><b>전체</b></td><td class="c"><b><img class="chick" src="${CHICK_HD}" alt="">${tw}</b></td><td class="c">${tn}</td><td class="c"><b>${tn ? (tw / tn * 100).toFixed(1) : 0}%</b></td>
       <td><div class="mwbar"><i style="width:${tn ? Math.min(100, tw / tn * 100) : 0}%"></i></div></td></tr></tbody></table></div>`;  /* v245 전체 치킨 비율 */
 }
 const PCOL = ["#F2A900", "#7FB2E5", "#6FCF7F", "#E07A5F", "#C49BE8", "#5FD0C8"];
@@ -9473,22 +9487,26 @@ function cumRoles() {  /* v273 팀 내 역할 분담 · v276 M01: 위에 항목�
   const RCOL = {kkanbu1998: "#F2A900", steal_h: "#9CCC65", rizcyy: "#F06292", lecco_lee: "#4FC3F7"};  /* v277 리플레이 색과 같게: 깐부 노랑 · 황희권 초록 · 조성용 빨강 · 이현진 파랑 */
   const col = c => RCOL[String(c.nick).toLowerCase()] || PCOL[Math.max(0, (state.players || []).findIndex(p => p.nickname === c.nick)) % PCOL.length];
   const sums = K.map(([k]) => C.reduce((a, c) => a + c.tot[k], 0));
-  const L = C.map(c => ({c, col: col(c), sh: K.map(([k], i) => sums[i] ? c.tot[k] / sums[i] * 100 : 0)}));
+  const psums = K.map(([k]) => C.reduce((a, c) => a + ((c.tot_prev || {})[k] || 0), 0));  /* v289 지난 기록(마지막 날 빼고) 대비 등락 */
+  const L = C.map(c => ({c, col: col(c), sh: K.map(([k], i) => sums[i] ? c.tot[k] / sums[i] * 100 : 0), ps: K.map(([k], i) => psums[i] ? ((c.tot_prev || {})[k] || 0) / psums[i] * 100 : null)}));
+  const dlt = (v, p) => { if (p == null) return ""; const d = Math.round(v - p); return d ? `<s class="rl-d ${d > 0 ? "up" : "dn"}">${d > 0 ? "▲" : "▼"}${Math.abs(d)}</s>` : `<s class="rl-d">-</s>`; };
   L.forEach(o => o.main = o.sh.indexOf(Math.max(...o.sh)));
   const top = K.map((_, i) => L.reduce((a, b) => b.sh[i] > a.sh[i] ? b : a));
   const hl = K.map(([, , role], i) => sums[i] ? `<div class="rl-hc" style="--c:${top[i].col}"><span>${role}</span><b>${esc(top[i].c.name)}</b><em>${Math.round(top[i].sh[i])}<small>%</small></em></div>` : "").join("");
   const pg = L.map(o => { const src = pimg({nick: o.c.nick, name: o.c.name});
     return `<div class="rl-p" style="--c:${o.col}">${src ? `<img src="${src}" alt="">` : `<span class="rl-ph">${esc(o.c.name.slice(0, 1))}</span>`}<div><b>${esc(o.c.name)}</b><span class="rl-role">${K[o.main][2]}</span>
-      ${K.map(([, l], i) => `<div class="rl-ln${i === o.main ? " on" : ""}"><span>${l}</span><i><u style="width:${Math.min(100, o.sh[i] * 2)}%"></u></i><em>${Math.round(o.sh[i])}<small>%</small></em></div>`).join("")}</div></div>`; }).join("");
+      ${K.map(([, l], i) => `<div class="rl-ln${i === o.main ? " on" : ""}"><span>${l}</span><i><u style="width:${Math.min(100, o.sh[i] * 2)}%"></u></i><em>${Math.round(o.sh[i])}<small>%</small></em>${dlt(o.sh[i], o.ps[i])}</div>`).join("")}</div></div>`; }).join("");
   return `<div class="sec"><h3>팀 내 역할 분담 <small style="font-size:13px;color:var(--dust);font-weight:400">공식 기록 누적 · 팀 전체 중 각자 몫 (똑같이 나누면 ${Math.round(100 / C.length)}%)</small></h3></div>
     <div class="roles2"><div class="rl-hl">${hl}</div><div class="rl-pg">${pg}</div></div>`;
 }
 function cumDuo() {  /* v175 듀오 궁합: 4명이 늘 같이 하니까 판 수·순위 대신 두 사람 사이에만 생기는 기록으로 */
   const nameOf = n => ((state.cumulative || []).find(c => c.nick.toLowerCase() === String(n).toLowerCase()) || {}).name || n;
-  const L = (state.duo || []).filter(r => r[8] > 0).map(([a, b, near, alive, rv, bc, co, rg, g]) => {
-    const tog = alive ? near / alive : 0, per = x => x / g;
-    const score = Math.round(Math.min(100, tog * 40 + Math.min(20, per(rv + bc * 2) * 40) + Math.min(20, per(co) * 40) + Math.min(20, per(rg) * 40)));
-    return {a, b, tog, rv, bc, co, rg, g, score};
+  const SC = (near, alive, rv, bc, co, rg, g) => { if (!g) return null; const tog = alive ? near / alive : 0, per = x => x / g;
+    return Math.round(Math.min(100, tog * 40 + Math.min(20, per(rv + bc * 2) * 40) + Math.min(20, per(co) * 40) + Math.min(20, per(rg) * 40))); };
+  const L = (state.duo || []).filter(r => r[8] > 0).map(([a, b, near, alive, rv, bc, co, rg, g, ...P]) => {
+    const tog = alive ? near / alive : 0;
+    const score = SC(near, alive, rv, bc, co, rg, g), prev = P.length >= 7 && P[6] < g ? SC(...P) : null;  /* v289 지난 기록(마지막 날 빼고) 대비 점수 등락 */
+    return {a, b, tog, rv, bc, co, rg, g, score, d: prev == null ? null : score - prev};
   });
   if (!L.length) return "";
   L.sort((x, y) => y.score - x.score);
@@ -9497,7 +9515,7 @@ function cumDuo() {  /* v175 듀오 궁합: 4명이 늘 같이 하니까 판 수
   return `<div class="sec"><h3>듀오 궁합</h3></div><p class="who duo-note">리플레이로 두 사람 사이에서만 생긴 일을 셌어요 (${best.g}판). 같이 다님 = 둘 다 살아 있을 때 60m 안에 붙어 있던 비율 · 살림 = 서로 기절에서 일으켜 세움 · 블루칩 = 죽은 짝을 블루칩으로 불러옴 · 합작 킬 = 한 명이 기절시키거나 거든 적을 다른 한 명이 처치 · 복수 = 짝을 쓰러뜨린 적을 1분 안에 잡음.</p>
     <div class="duo">${L.map(o => `<div class="duo-c ${o === best ? "duo-best" : o === worst ? "duo-worst" : ""}">
       <div class="duo-h"><b>${esc(nameOf(o.a))} <i>×</i> ${esc(nameOf(o.b))}</b>${o === best ? `<span class="duo-tag">최고의 듀오</span>` : o === worst ? `<span class="duo-tag bad">환장의 듀오</span>` : ""}</div>
-      <div class="duo-sc"><em>${o.score}</em><small>점</small><i><span style="width:${o.score}%"></span></i></div>
+      <div class="duo-sc"><em>${o.score}</em><small>점</small>${o.d == null ? "" : `<s class="duo-d ${o.d > 0 ? "up" : o.d < 0 ? "dn" : ""}">${o.d > 0 ? "▲" + o.d : o.d < 0 ? "▼" + -o.d : "-"}</s>`}<i><span style="width:${o.score}%"></span></i></div>
       <div class="duo-st">${st("같이 다님", Math.round(o.tog * 100) + "%", "둘 다 살아 있을 때 60m 안에 있던 시간 비율")}${st("살림", o.rv + "번", "서로 기절에서 일으켜 세운 횟수")}${st("블루칩", o.bc + "번", "죽은 짝을 블루칩으로 불러온 횟수")}${st("합작 킬", o.co + "번", "한 명이 기절시키거나 거든 적을 다른 한 명이 처치")}${st("복수", o.rg + "번", "짝을 쓰러뜨린 적을 1분 안에 기절·처치")}</div></div>`).join("")}</div>`;
 }
 async function cumTrend(rg) {  /* v171 팀원 점수 추이 비교 (고른 기간의 최근 20일) */
@@ -9544,7 +9562,7 @@ function renderCumulative(histOnly = 0) {
   const hist = inMonth.map(d => `<tr>
       <td class="n">${d.has_detail ? `<button data-open="${d.date}">${d.date}</button>` : d.date}${d.memory ? `<span class="memo hx" title="4인 스쿼드 판이 없는 날: 업적·칭호·카드 점수에 안 들어가요">비공식</span>` : ""}</td>
       <td class="n">${d.games}게임</td>
-      <td class="n win">${d.wins == null ? `<span class="nil">-</span>` : d.wins ? `<b><img class="chick" src="${CHICK_IMG}" alt="">${d.wins}번</b>` : `<span class="nil">0번</span>`}</td>
+      <td class="n win">${d.wins == null ? `<span class="nil">-</span>` : d.wins ? `<b><img class="chick" src="${CHICK_HD}" alt="">${d.wins}번</b>` : `<span class="nil">0번</span>`}</td>
       <td class="order">${d.ranking.map((n, i) => i === 0 ? `<b>${esc(n)}</b>` : esc(n)).join(" › ")}</td>
       <td class="n"><button class="del" data-del="${d.date}" aria-label="${d.date} 기록 삭제">삭제</button></td></tr>`).join("");
   const P = [["rank", "순위"], ["board", "기록판"], ["grow", "성장"], ["mapduo", "역할·궁합"], ["hist", "지난 기록"]];
