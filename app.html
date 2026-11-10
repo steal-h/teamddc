@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='2b1d5b33';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='377d0094';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -3403,7 +3403,7 @@ let tierObs = null;
 const TFX_DESC = {common: "효과 없음", uncommon: "등급색 물들임", rare: "+ 은은한 빛 테두리 · 흐르는 결 띠", epic: "+ 띠에서 솟는 에너지", unique: "+ 달궈진 테두리 · 아지랑이 · 숯가루 상승", special: "에픽 위에 더 강하게 솟는 에너지 · 아지랑이 · 깜빡이지 않는 금빛 네온 띠 · 금실 이중선 반짝 · 금빛 후광 · 떠오르는 금빛 눈 · 금 별똥별", legend: "+ 더 강하게 솟는 에너지 · 붉은 소용돌이 · 크고 선명한 축하 전광판 · 또렷한 포토월 패턴 · 가장자리 연기 · 띠 위 흐르는 LEGEND 문구 · 위로 솟는 화살표 · 더 굵은 금빛 네온 (금 별똥별 없음)"};
 const CER_FACE = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#343a2a"/><circle cx="32" cy="25" r="11" fill="#8a8b74"/><path d="M12 60c2-14 10-20 20-20s18 6 20 20z" fill="#8a8b74"/></svg>`);
 function tdxSamples() {  /* v213 등급별 수상자 상세 기록 카드 견본 */
-  return ["common", "uncommon", "rare", "epic", "unique", "special", "legend"].map(t => { const i = TIER_INFO.find(x => x[0] === t);
+  return ["legend", "special", "unique", "epic", "rare", "uncommon", "common"].map(t => { const i = TIER_INFO.find(x => x[0] === t);
     return `<div class="tdx-item"><article class="pcard mini t-${t}">${(TFX_SET[t] || []).map(id => TFX_HTML[id]).join("")}
       <header><b>선수</b><span class="pc-tier">${i[1]} <b>${({legend: 93, special: 87, unique: 82, epic: 77, rare: 72, uncommon: 67, common: 60})[t]}</b></span></header>
       <div class="pc-key"><div class="kda"><b>3.2</b><span>KDA</span></div><div><b>412</b><span>딜량</span></div><div><b>2.4</b><span>킬</span></div></div>
@@ -3424,7 +3424,7 @@ function openTierInfo() {
     ["서포트", 15, "판당 소생 + 어시 + 블루칩×2", `${F.support}`], ["정확", 15, "헤드샷 60% + 최장거리 40%", `${F.hs}% · ${F.longest}m`], ["꾸준함", 10, "그날 순위 평균", "1등"]];
   $("#tierBody").innerHTML = `
     <p class="ti-lead">카드 등급은 <b>종합 점수(OVR)</b>로 정해져요. 최근 기록이 있는 <b>14일</b>(쉰 날·비공식 판 제외)로 계산해요.</p>
-    <div class="ti-ladder">${[...TIER_INFO].reverse().map(([t, name, min, col]) => `<div style="--c:${col}"><b>${name}</b><span>${min ? min + "+" : "~64"}</span></div>`).join("")}</div>
+    <div class="ti-ladder">${TIER_INFO.map(([t, name, min, col]) => `<div style="--c:${col}"><b>${name}</b><span>${min ? min + "+" : "~64"}</span></div>`).join("")}</div>
     <h4 class="ti-h">종합 점수 = 능력치 6개 <small>각 40~99점 · 만점 기준만큼 하면 99점</small></h4>
     <div class="ti-ab">${AB.map(([n, w, how, full]) => `<div><div class="ti-abh"><b>${n}</b><em>${w}%</em></div><i><u style="width:${w * 4}%"></u></i><span>${how}</span><small>만점 ${full}</small></div>`).join("")}</div>
     <p class="help ti-note">만점 기준은 <b>설정 › 점수 › 선수 카드 만점 기준</b>에서 바꿔요${(state?.card_full_cfg?.link ?? true) ? " (지금은 화력·교전·생존·서포트를 점수 만점 기준과 같게 씀)" : ""}. 감점과 항목별 배점은 카드 등급에 들어가지 않아요.</p>
@@ -4677,6 +4677,13 @@ function rpSetup(R) {
   rp.flashes = []; rp.focus = null; rp.reel = null; rp.curSpeed = rp.speed; rp.manual = false;
   rp.seed = R.id;
 
+}
+function drawRandMate(ctx, x, y, r, down) {  /* v301 I04 랜덤 팀원: 회색 사람 모양 + 금 테두리 (기절하면 빨간 테두리) */
+  ctx.save(); ctx.beginPath(); ctx.arc(x, y, r + 1.5, 0, Math.PI * 2); ctx.fillStyle = "rgba(0,0,0,.6)"; ctx.fill();
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = "#3a3e33"; ctx.fill(); ctx.lineWidth = r * .2; ctx.strokeStyle = down ? "#E0532F" : "#F2A900"; ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.arc(x, y, r - ctx.lineWidth / 2, 0, Math.PI * 2); ctx.clip(); ctx.fillStyle = down ? "#b9a7a0" : "#d9d4c0";
+  ctx.beginPath(); ctx.arc(x, y - r * .3, r * .34, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x, y + r * .7, r * .6, r * .5, 0, Math.PI, 0); ctx.fill(); ctx.restore(); ctx.restore();
 }
 function rpStartLoop() {
   cancelAnimationFrame(rp.raf);
@@ -6102,7 +6109,7 @@ function rpDraw(dt, now, view) {
       }
       if (chute) {
         const x = X(chute[0]), y = Y(chute[1]); drawChute(ctx, x, y, "#F2A900", null);
-        ctx.font = "800 9px Pretendard, sans-serif"; ctx.fillStyle = "#14170F"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("R", x, y + .5);
+        drawRandMate(ctx, x, y, 7, false); ctx.textAlign = "center"; ctx.textBaseline = "middle";
         const lb = en.n || "랜덤"; ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText(lb).width + 10;
         ctx.fillStyle = "rgba(20,23,15,.85)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y - 46, tw, 16, 8); else ctx.rect(x - tw / 2, y - 46, tw, 16); ctx.fill();
         ctx.fillStyle = "#e8e2c8"; ctx.fillText(lb, x, y - 38);
@@ -6114,8 +6121,13 @@ function rpDraw(dt, now, view) {
     const x = X(q[0]), y = Y(q[1]), down = (en.kn || []).some(k => rp.t >= k[0] && rp.t < k[1]);
     ctx.save();
     if (dead) { ctx.globalAlpha = .7; ctx.strokeStyle = "rgba(0,0,0,.6)"; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(x - 7, y - 7); ctx.lineTo(x + 7, y + 7); ctx.moveTo(x + 7, y - 7); ctx.lineTo(x - 7, y + 7); ctx.stroke(); ctx.strokeStyle = "#cfcfcf"; ctx.lineWidth = 2.5; ctx.stroke(); }
-    else { ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI * 2); ctx.fillStyle = down ? "#E0532F" : "#F2A900"; ctx.fill(); ctx.lineWidth = 2.5; ctx.strokeStyle = "#000"; ctx.stroke();
-      ctx.fillStyle = "#14170f"; ctx.font = "800 10px Pretendard, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("R", x, y + .5); }
+    else if ((en.vh || []).some(v => rp.t >= v[0] && rp.t <= (v[1] ?? Infinity))) {  /* v300 랜덤 팀원도 차에 타면 탈것 표시 */
+      const vh = en.vh.find(v => rp.t >= v[0] && rp.t <= (v[1] ?? Infinity)), hd = () => rpHeading("m:" + en.n, t => interp(en.tr, t));
+      if (vh[2] === 2) drawMortarSeat(ctx, x, y, 9, "#F2A900", rp.t, en.n);
+      else if (vh[2]) drawBRDM(ctx, x, y, 28, hd(), "#F2A900");
+      else drawVeh(ctx, x, y, 9, "#F2A900", vh[4], hd, now);
+    }
+    else drawRandMate(ctx, x, y, 10, down);
     const lb = (en.n || "랜덤") + (dead ? " 사망" : down ? " 기절" : ""); ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText(lb).width + 10;
     ctx.fillStyle = "rgba(20,23,15,.85)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y - 29, tw, 16, 8); else ctx.rect(x - tw / 2, y - 29, tw, 16); ctx.fill();
     ctx.fillStyle = "#e8e2c8"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lb, x, y - 21);
