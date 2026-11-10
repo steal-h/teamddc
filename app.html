@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='ba6b2adc';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='bb0c9bba';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -4140,6 +4140,7 @@ const TierFX = (() => {
     magmaOrbs: ["마그마 구슬", "용암 구슬이 타원 궤도로 돎", o => () => S_(o.m || 3, j => { const t = T * 1.3 * o.sp + j * TAU / (o.m || 3); S_(10, k => { const x = C + Math.cos(t - k * .08) * R * 1.6, y = C + Math.sin(t - k * .08) * R * .7; dot(x, y, R * (.15 - k * .012), k < 2 ? o.c2 : o.c, (1 - k / 10) * F, k === 0); }); })],
     ash: ["잿가루", "잿빛 가루가 천천히 흩날림", o => () => S_(24, i => { const ph = cycle(i, 4 / o.sp, 411), x = C + (rnd(i, 412) - .5) * R * 3.6 + Math.sin(T + i) * R * .3, y = C - R * 2 + ph * R * 4; X.fillStyle = `rgba(150,140,135,${Math.sin(ph * Math.PI) * .7 * F})`; X.fillRect(x, y, R * .05, R * .03); })],
     skyStrike: ["하늘 낙뢰", "위에서 굵은 번개가 사진에 내리꽂힘", o => () => { const L = 2.2 / o.sp, ph = (T % L) / L; if (ph < .18) { glow(bolt(C + (rnd(Math.floor(T / L), 431) - .5) * R, 0, C, C - R, Math.floor(T * 30), .3, 5), W(2.5, .06), o.c2, (1 - ph / .18) * F); halo(R, R * 1.8, o.c, (1 - ph / .18) * .5 * F); } }],
+    rune: ["떠오르는 문양", "문양이 떠올라 사라짐", o => () => S_(o.n * 2, i => { const ph = cycle(i, 2.4 / o.sp, 71), [x, y] = P(rnd(i, 72) * TAU, R * (1.2 + o.k * .2)); X.globalAlpha = Math.sin(ph * Math.PI) * F; X.fillStyle = rg(o.c, 1); X.shadowColor = rg(o.c, 1); X.shadowBlur = R * .2; X.font = `${Math.round(R * .28 * o.s)}px sans-serif`; X.textAlign = "center"; X.fillText("ᚠᚢᚦᚨᚱᚲᛉᛟ✦◇"[i % 10], x, y - ph * R * .5); X.globalAlpha = 1; })],  /* v304 에픽 E21 */
     atom: ["원자 궤도", "타원 궤도에 빛이 돎", o => () => S_(Math.min(4, o.n), k => ellipseOrbit(R * (1.35 + o.k * .2), R * .5, k * Math.PI / Math.min(4, o.n), (2.2 + k * .4) * o.sp, k % 2 ? o.c2 : o.c, .9))],  /* v232 에픽 E02 */
     meteorOrbit: ["운석 궤도", "운석이 꼬리를 끌며 궤도를 돎", o => () => S_(o.m || 5, j => { const t0 = T * 1.3 * o.sp + j * TAU / (o.m || 5), rot = (o.rot || 0) * Math.PI / 180;  /* v232 레전드 L01: 원 궤도 */
       S_(10, k => { const t = t0 - k * .08, ex = Math.cos(t) * R * (o.rx || 1.6), ey = Math.sin(t) * R * (o.ry || .7), x = C + ex * Math.cos(rot) - ey * Math.sin(rot), y = C + ex * Math.sin(rot) + ey * Math.cos(rot);
@@ -4165,11 +4166,11 @@ const TierFX = (() => {
   const SET = {  /* 고른 번호: U00 / R01 / E12 / Q17+Q00+Q03+Q11 / S46+S05+S08+S13 / L114+L113(구슬 5개)+L102+L111+L153+L152(작은 왕관)+S05 */
     uncommon: [LOOP0.uncommon],
     rare: [fx_("sweep", "CL", [240, 250, 230], {sp: .8, n: 2, s: .85, k: .15})],  /* v297 레어 U02 쫓는 호 */
-    epic: [fx_("poly", "CL", [255, 140, 220], O_E), fx_("sweep", "CL", "COL", O_R), fx_("atom", [235, 225, 255], [255, 140, 220], {...O_E, k: 1})],  /* v302 + 원자 궤도 */  /* v297 에픽 E24 회전 다각형 + R01 쫓는 호 */
-    unique: [fx_("corona", OR_, [255, 210, 120], O_Q), LOOP0.unique, fx_("rise", OR_, [255, 240, 200], O_Q), fx_("halo", OR_, [255, 210, 120], O_Q)],
+    epic: [fx_("poly", "CL", [255, 140, 220], O_E), fx_("sweep", "CL", "COL", O_R), fx_("rune", "CL", [255, 140, 220], O_E)],  /* v304 E21 떠오르는 문양 */  /* v297 에픽 E24 회전 다각형 + R01 쫓는 호 */
+    unique: [fx_("corona", OR_, [255, 210, 120], O_Q), LOOP0.unique, fx_("rise", OR_, [255, 240, 200], O_Q), fx_("halo", OR_, [255, 210, 120], O_Q), fx_("sweep", OR_, [255, 210, 120], {...O_R, n: 4})],  /* v307 + R01 쫓는 호 4개 */
     special: [fx_("halo", GD, WG2, O_S), fx_("medal", GD, WG2, O_S), fx_("laurel", GD, AMB, O_S), fx_("starOrb", GD, AMB, O_S), fx_("gems", [255, 205, 95], [255, 240, 190], O_S), fx_("rise", GD, WG2, {...O_S, n: 5.5, s: 1.6, k: .95})],  /* v302 떠오르는 빛 더 많이·크게 */  /* v297 + S49 보석 고리 */  /* v221 + S10 후광 */
     legend: [fx_("darkFlame", RD, BLD, O_L), fx_("meteorOrbit", RD, GD, {...O_L, m: 5, rx: 1.3, ry: 1.3}), fx_("skyStrike", RD, BLD, O_L), fx_("medal", GD, WG2, O_L), fx_("crown", GD, WG2, {...O_L, s: .45, n: 0}), fx_("laurel", GD, AMB, O_S),
-      fx_("rise", RD, GD, {...O_L, n: 8, s: 2, k: 1.2}), fx_("rise", GD, WG2, {...O_L, n: 4, s: 1.5, k: 1, sp: 1.6}), fx_("halo", RD, [255, 140, 60], O_L), fx_("pulse", RD, BLD, O_L), fx_("swords", GD, WG2, O_L)],  /* v233 불꽃 막대 빼고 금빛 검 고리 (L32) */  /* v221 + L77 떠오르는 빛 · L16 후광 · L72 숨쉬는 테두리 · L70 불꽃 막대 */
+      fx_("rise", RD, GD, {...O_S, n: 5.5, s: 1.6, k: .95}), fx_("halo", RD, [255, 140, 60], O_L), fx_("pulse", RD, BLD, O_L), fx_("swords", GD, WG2, O_L)],  /* v233 불꽃 막대 빼고 금빛 검 고리 (L32) */  /* v221 + L77 떠오르는 빛 · L16 후광 · L72 숨쉬는 테두리 · L70 불꽃 막대 */
   };
   const LOOP = Object.fromEntries(Object.entries(SET).map(([t, fs]) => [t, () => fs.forEach(f => { X.save(); f(); X.restore(); })]));
   /* 승급 순간 한 번 */
@@ -4678,15 +4679,31 @@ function rpSetup(R) {
   rp.seed = R.id;
 
 }
+function rpRideBoomed(v, t) {  /* v303 이 탑승의 차가 t 전에 이미 터졌나 */
+  const R = rp.data; if (!R?.cars) return false; const B = rpBoomRides(R);
+  for (const key in B) { const b = R.cars[key].boom; if (t >= b[0] && B[key].some(r => r.v === v)) return true; }
+  return false;
+}
+function rpBoomRides(R) {  /* v303 터진 차에 타고 있던 탑승 기록: 열쇠가 같거나, 터질 때쯤(−2~+6초) 내렸고 내린 자리가 터진 자리 80m 안 (달리는 차는 열쇠가 바뀌기도 함) */
+  if (R._boomRides) return R._boomRides;
+  const M = R.size_m || 8000, out = {};
+  const all = [...R.players.flatMap(p => (p.veh || []).map(v => ({v, key: v[4], vid: v[3], end: Math.min(v[1] ?? R.duration, p.death ?? Infinity), pos: tt => posAt(p, tt)}))),
+    ...[...(R.enemies || []), ...(R._mates || [])].flatMap(en => (en.vh || []).map(v => ({v, key: v[3], vid: v[4] || "", end: Math.min(v[1] ?? R.duration, en.d ?? Infinity), pos: tt => interp(en.tr, tt)})))];
+  for (const key in R.cars || {}) {
+    const c = R.cars[key], b = c.boom; if (!b) continue;
+    const z = c.hp.find(q => q[1] <= 0 && q[0] <= b[0]), burn = z ? Math.max(z[0], b[0] - 8) : b[0] - 2.5;  /* v306 불붙기 시작한 뒤에 내렸어도 (불붙은 채 달리다 세우고 내림) 같은 차 */
+    out[key] = all.filter(r => r.v[0] <= b[0] && (r.key === key || (r.vid === c.vid && r.end >= burn - .5 && (q => q && Math.hypot(q[0] - b[1], q[1] - b[2]) * M < 40)(r.pos(Math.min(r.end, b[0]))))));  /* v304 터질 때 타고 있던 사람 (터진 순간 위치를 차 자리로 맞춰 두므로 40m) */
+  }
+  return (R._boomRides = out);
+}
 function rpCarRider(R, key, t) {  /* v302 그 차에 지금 탄 사람 자리 (우리 팀·랜덤 팀원·적) */
-  for (const p of R.players) for (const v of p.veh || []) if (v[4] === key && t >= v[0] && t <= (v[1] ?? R.duration) && !(p.death != null && t >= p.death)) { const q = posAt(p, t); if (q) return q; }
-  for (const en of [...(R.enemies || []), ...(R._mates || [])]) for (const v of en.vh || []) if (v[3] === key && t >= v[0] && t <= (v[1] ?? R.duration) && !(en.d != null && t >= en.d)) { const q = interp(en.tr, t); if (q) return q; }
+  for (const r of rpBoomRides(R)[key] || []) if (t >= r.v[0] && t <= r.end) { const q = r.pos(t); if (q) return q; }
   return null;
 }
-function drawRandMate(ctx, x, y, r, down) {  /* v301 I04 랜덤 팀원: 회색 사람 모양 + 금 테두리 (기절하면 빨간 테두리) */
+function drawRandMate(ctx, x, y, r, down) {  /* v301 I04 랜덤 팀원: 회색 사람 모양 + 금 테두리 (v307 기절하면 우리 팀처럼 회색) */
   ctx.save(); ctx.beginPath(); ctx.arc(x, y, r + 1.5, 0, Math.PI * 2); ctx.fillStyle = "rgba(0,0,0,.6)"; ctx.fill();
-  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = "#3a3e33"; ctx.fill(); ctx.lineWidth = r * .2; ctx.strokeStyle = down ? "#E0532F" : "#F2A900"; ctx.stroke();
-  ctx.save(); ctx.beginPath(); ctx.arc(x, y, r - ctx.lineWidth / 2, 0, Math.PI * 2); ctx.clip(); ctx.fillStyle = down ? "#b9a7a0" : "#d9d4c0";
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = "#3a3e33"; ctx.fill(); ctx.lineWidth = r * .2; ctx.strokeStyle = down ? "#8C8C82" : "#F2A900"; ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.arc(x, y, r - ctx.lineWidth / 2, 0, Math.PI * 2); ctx.clip(); ctx.fillStyle = down ? "#9a9a90" : "#d9d4c0";
   ctx.beginPath(); ctx.arc(x, y - r * .3, r * .34, 0, Math.PI * 2); ctx.fill();
   ctx.beginPath(); ctx.ellipse(x, y + r * .7, r * .6, r * .5, 0, Math.PI, 0); ctx.fill(); ctx.restore(); ctx.restore();
 }
@@ -4977,7 +4994,7 @@ function curPos(p, t) {  // 비행기·낙하산 중이면 하늘 위치, 아니
   return sg ? interp(sg.pts, t) : posAt(p, t);
 }
 function vehAt(p, t) {  // 차에 타 있으면 [탄 시각, 내린 시각, 운전석이면 1, 차 종류]
-  for (const v of p.veh || []) if (t >= v[0] && t <= v[1]) { const bm = v[4] && rp.data?.cars?.[v[4]]?.boom; if (bm && t >= bm[0] && bm[0] >= v[0]) continue; return v; }  /* v302 차가 터진 뒤엔 탄 걸로 안 그림 */
+  for (const v of p.veh || []) if (t >= v[0] && t <= v[1]) { if (rpRideBoomed(v, t)) continue; return v; }  /* v302 차가 터진 뒤엔 탄 걸로 안 그림 */
   return null;
 }
 function statusAt(p, t) {
@@ -5801,10 +5818,10 @@ function rpDraw(dt, now, view) {
     }
     if (lt - st < 3) st = lt - (pk === "b" ? 22 : 15);  // 떨어지기 시작한 기록이 없으면(착지 기록만 있음) 착지 전 몇 초를 낙하산으로
     const box = pk === "f" ? "flarepackage" : "carepackage", bsz = pk === "f" ? 26 : 30;  // v193 호출 보급은 노란 뚜껑·검은 몸통이라 같은 크기여도 커 보여서 살짝 작게 · v162 호출 보급도 일반 보급과 같은 크기
-    const hb = pk === "f" || pk === "b" ? 22 : 5, ha = pk === "f" || pk === "b" ? 22 : 7;  /* v193 호출 보급 헬기도 미리 나타나서 떨어뜨리고 지나간 뒤 사라짐 */
+    const hb = pk === "f" || pk === "b" ? 22 : 20, ha = pk === "f" || pk === "b" ? 22 : 25;  /* v307 일반 보급 비행기도 미리 나타나 25초 더 날아가며 흐려짐 (예전 5초·7초) */  /* v193 호출 보급 헬기도 미리 나타나서 떨어뜨리고 지나간 뒤 사라짐 */
     if (pk !== "s" && rp.t >= st - hb && rp.t < st + ha) {  // 보급·플레어 보급·BRDM: 치누크 헬기가 지나가며 떨어뜨림
       const rt = R.plane, dx = rt ? rt.vx : 1, dy = rt ? rt.vy : 0, dl = Math.hypot(dx, dy) || 1, v = 60 / R.size_m, u = (rp.t - st) * v;
-      const qx = px + dx / dl * u, qy = py + dy / dl * u, fa = Math.max(0, Math.min(1, (rp.t - st + hb) / 1.2, (st + ha - rp.t) / 1.2));
+      const qx = px + dx / dl * u, qy = py + dy / dl * u, fa = Math.max(0, Math.min(1, (rp.t - st + hb) / 2, (st + ha - rp.t) / 4));
       ctx.globalAlpha = fa; { const seed = Math.round(st * 7 + px * 1000);  // v149 일반 보급 = 수송기 (AP-02/06), 플레어 보급·BRDM = 보급 헬기 (HE-02/05/08/04)
         if (pk === "f" || pk === "b") drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, airSz(12, 26, 10, 28), now, "supply:" + seed);  /* v193 살짝 작게 */
         else { const im = supplyPlaneSpr(seed); if (im) sprDrawAir(ctx, im, X(qx), Y(qy), Math.atan2(dy, dx), airSz(14, 40, 9, 34) * 7.2); /* v192 조금 더 크게 · v156 비상호출 비행기만큼 */ else drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, 13, now, "heli_5"); } } ctx.globalAlpha = 1;
@@ -6132,7 +6149,8 @@ function rpDraw(dt, now, view) {
       else if (vh[2]) { const C = rpCfg(); drawBRDM(ctx, x, y, C.avatar_r * 2.9, hd(), "#F2A900"); }  /* v302 우리 팀 BRDM과 같은 크기 */
       else drawVeh(ctx, x, y, 9, "#F2A900", vh[4], hd, now);
     }
-    else drawRandMate(ctx, x, y, 10, down);
+    else { if (down) { ctx.beginPath(); ctx.arc(x, y, 10 + 7 + Math.sin(now / 140) * 3, 0, Math.PI * 2); ctx.strokeStyle = "#E0532F"; ctx.lineWidth = 2.5; ctx.stroke(); }  /* v307 기절: 우리 팀과 같은 깜빡이는 붉은 고리 + 회색 */
+      drawRandMate(ctx, x, y, 10, down); }
     const lb = (en.n || "랜덤") + (dead ? " 사망" : down ? " 기절" : ""); ctx.font = "700 11px Pretendard, 'Malgun Gothic', sans-serif"; const tw = ctx.measureText(lb).width + 10;
     ctx.fillStyle = "rgba(20,23,15,.85)"; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - tw / 2, y - 29, tw, 16, 8); else ctx.rect(x - tw / 2, y - 29, tw, 16); ctx.fill();
     ctx.fillStyle = "#e8e2c8"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lb, x, y - 21);
@@ -6350,7 +6368,7 @@ function rpDraw(dt, now, view) {
     const c = R.cars[key]; if (!c.boom) continue;
     const [tb, bx, by] = c.boom, z = c.hp.find(q => q[1] <= 0 && q[0] <= tb), burn = z ? Math.max(z[0], tb - 8) : tb - 2.5;
     if (rp.t < burn || rp.t > tb + (c.k === "b" ? 20 : 12)) continue;
-    const x = X(bx), y = Y(by), brdm = c.k === "b", big = brdm ? 1.5 : 1;
+    const rb = c._rb !== undefined ? c._rb : (c._rb = rpCarRider(R, key, tb - .05)), x = X(rb ? rb[0] : bx), y = Y(rb ? rb[1] : by), brdm = c.k === "b", big = brdm ? 1.5 : 1;  /* v303 달리던 차는 타고 있던 사람이 그 순간 있던 자리에서 터짐 */
     if (rp.t < tb) {  // 불붙어 깜빡깜빡
       const on = Math.floor(now / 110) % 2 === 0, k = (rp.t - burn) / Math.max(.5, tb - burn);
       const rq = rpCarRider(R, key, rp.t);  /* v302 아직 누가 타고 달리는 중이면: 터질 자리에 미리 그리지 않고 달리는 차 위에 불길만 */
