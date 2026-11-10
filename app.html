@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='377d0094';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='ba6b2adc';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -215,7 +215,7 @@ body.viewer .tbar .tb-share,body.viewer .tbar .tb-reel{display:none}body.viewer 
 
 .pc-key{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 12px}
 .pc-key div{background:var(--panel-2);border-radius:4px;padding:8px 6px 7px;text-align:center;min-width:0}
-.pc-key b{display:block;font:400 22px/1.1 var(--num);color:var(--bone);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:clamp(15px,5.2cqi,22px)}.pc-key div{container-type:inline-size}  /* v298 두 자리 KDA도 한 줄 */
+.pc-key b{display:block;font:400 22px/1.1 var(--num);color:var(--bone);font-variant-numeric:tabular-nums;white-space:nowrap}.pc-key div{container-type:inline-size}.pc-key b.lg{font-size:clamp(14px,4.8cqi,19px)}  /* v298 두 자리 KDA도 한 줄 */
 .pc-key span{display:block;font-size:11.5px;color:var(--dust);margin-top:3px;white-space:nowrap}
 .pc-grp{border-top:1px solid var(--line);padding:9px 0 8px}
 .pc-sc h4{display:flex;align-items:center;justify-content:space-between;gap:8px}.pc-dn{display:inline-flex;align-items:center;gap:2px;font-weight:700;letter-spacing:0}
@@ -3639,7 +3639,7 @@ function renderDay(r, report, reveal) {
     const sealed = false;  // v244 '팩 열기'는 시상식 아래 2위 카드로 옮김
     return `<article class="pcard r${p.rank} ${tr ? "t-" + tr : ""} ${cd && cd.move > 0 ? "promo" : ""} ${sealed ? "sealed" : ""}">${sealed ? `<button type="button" class="pc-seal" data-seal="${esc(p.nick)}" aria-label="${esc(p.name)} 카드 열기"><b>DDC</b><span>${cd.move > 0 ? "등급이 올랐어요!" : "등급이 바뀌었어요"}</span><small>눌러서 카드 열기</small></button>` : ""}${fx}
       <header><b style="display:flex;align-items:center;gap:8px">${avatar(p, "sm", false)}${esc(p.name)}</b><span class="pc-rk"><em>${p.rank}위</em>${tierChip}</span></header>
-      <div class="pc-key"><div class="kda"><b>${kdaOf(t)}</b><span>KDA</span></div><div><b>${fmt(m.damage)}</b><span>판당 딜량</span></div><div><b>${m.kills}</b><span>판당 킬</span></div></div>
+      <div class="pc-key"><div class="kda"><b${String(kdaOf(t)).length >= 5 ? ' class="lg"' : ""}>${kdaOf(t)}</b><span>KDA</span></div><div><b>${fmt(m.damage)}</b><span>판당 딜량</span></div><div><b>${m.kills}</b><span>판당 킬</span></div></div>
       ${group("전투", [row("판당 기절", m.dbnos), row("판당 어시", m.assists), row("헤드샷 비율", m.headshot_pct + "%"), row("최장거리 킬", t.longest + "m")])}
       ${group("생존 · 팀", [row("평균 생존", m.survival_min + "분"), row("판당 소생", m.revives), row("기절당함", (t.downed ?? 0) + "회"), ...(tl ? [row("판당 받은 피해", fmt(tl.taken_pg))] : []), row("팀킬", t.teamkills + "회")])}
       ${telRows || "<div></div>"}
@@ -4165,11 +4165,11 @@ const TierFX = (() => {
   const SET = {  /* 고른 번호: U00 / R01 / E12 / Q17+Q00+Q03+Q11 / S46+S05+S08+S13 / L114+L113(구슬 5개)+L102+L111+L153+L152(작은 왕관)+S05 */
     uncommon: [LOOP0.uncommon],
     rare: [fx_("sweep", "CL", [240, 250, 230], {sp: .8, n: 2, s: .85, k: .15})],  /* v297 레어 U02 쫓는 호 */
-    epic: [fx_("poly", "CL", [255, 140, 220], O_E), fx_("sweep", "CL", "COL", O_R)],  /* v297 에픽 E24 회전 다각형 + R01 쫓는 호 */
+    epic: [fx_("poly", "CL", [255, 140, 220], O_E), fx_("sweep", "CL", "COL", O_R), fx_("atom", [235, 225, 255], [255, 140, 220], {...O_E, k: 1})],  /* v302 + 원자 궤도 */  /* v297 에픽 E24 회전 다각형 + R01 쫓는 호 */
     unique: [fx_("corona", OR_, [255, 210, 120], O_Q), LOOP0.unique, fx_("rise", OR_, [255, 240, 200], O_Q), fx_("halo", OR_, [255, 210, 120], O_Q)],
-    special: [fx_("halo", GD, WG2, O_S), fx_("medal", GD, WG2, O_S), fx_("laurel", GD, AMB, O_S), fx_("starOrb", GD, AMB, O_S), fx_("gems", [255, 205, 95], [255, 240, 190], O_S), fx_("rise", GD, WG2, O_S)],  /* v297 + S49 보석 고리 */  /* v221 + S10 후광 */
+    special: [fx_("halo", GD, WG2, O_S), fx_("medal", GD, WG2, O_S), fx_("laurel", GD, AMB, O_S), fx_("starOrb", GD, AMB, O_S), fx_("gems", [255, 205, 95], [255, 240, 190], O_S), fx_("rise", GD, WG2, {...O_S, n: 5.5, s: 1.6, k: .95})],  /* v302 떠오르는 빛 더 많이·크게 */  /* v297 + S49 보석 고리 */  /* v221 + S10 후광 */
     legend: [fx_("darkFlame", RD, BLD, O_L), fx_("meteorOrbit", RD, GD, {...O_L, m: 5, rx: 1.3, ry: 1.3}), fx_("skyStrike", RD, BLD, O_L), fx_("medal", GD, WG2, O_L), fx_("crown", GD, WG2, {...O_L, s: .45, n: 0}), fx_("laurel", GD, AMB, O_S),
-      fx_("rise", RD, GD, O_L), fx_("halo", RD, [255, 140, 60], O_L), fx_("pulse", RD, BLD, O_L), fx_("swords", GD, WG2, O_L)],  /* v233 불꽃 막대 빼고 금빛 검 고리 (L32) */  /* v221 + L77 떠오르는 빛 · L16 후광 · L72 숨쉬는 테두리 · L70 불꽃 막대 */
+      fx_("rise", RD, GD, {...O_L, n: 8, s: 2, k: 1.2}), fx_("rise", GD, WG2, {...O_L, n: 4, s: 1.5, k: 1, sp: 1.6}), fx_("halo", RD, [255, 140, 60], O_L), fx_("pulse", RD, BLD, O_L), fx_("swords", GD, WG2, O_L)],  /* v233 불꽃 막대 빼고 금빛 검 고리 (L32) */  /* v221 + L77 떠오르는 빛 · L16 후광 · L72 숨쉬는 테두리 · L70 불꽃 막대 */
   };
   const LOOP = Object.fromEntries(Object.entries(SET).map(([t, fs]) => [t, () => fs.forEach(f => { X.save(); f(); X.restore(); })]));
   /* 승급 순간 한 번 */
@@ -4678,6 +4678,11 @@ function rpSetup(R) {
   rp.seed = R.id;
 
 }
+function rpCarRider(R, key, t) {  /* v302 그 차에 지금 탄 사람 자리 (우리 팀·랜덤 팀원·적) */
+  for (const p of R.players) for (const v of p.veh || []) if (v[4] === key && t >= v[0] && t <= (v[1] ?? R.duration) && !(p.death != null && t >= p.death)) { const q = posAt(p, t); if (q) return q; }
+  for (const en of [...(R.enemies || []), ...(R._mates || [])]) for (const v of en.vh || []) if (v[3] === key && t >= v[0] && t <= (v[1] ?? R.duration) && !(en.d != null && t >= en.d)) { const q = interp(en.tr, t); if (q) return q; }
+  return null;
+}
 function drawRandMate(ctx, x, y, r, down) {  /* v301 I04 랜덤 팀원: 회색 사람 모양 + 금 테두리 (기절하면 빨간 테두리) */
   ctx.save(); ctx.beginPath(); ctx.arc(x, y, r + 1.5, 0, Math.PI * 2); ctx.fillStyle = "rgba(0,0,0,.6)"; ctx.fill();
   ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = "#3a3e33"; ctx.fill(); ctx.lineWidth = r * .2; ctx.strokeStyle = down ? "#E0532F" : "#F2A900"; ctx.stroke();
@@ -4972,7 +4977,7 @@ function curPos(p, t) {  // 비행기·낙하산 중이면 하늘 위치, 아니
   return sg ? interp(sg.pts, t) : posAt(p, t);
 }
 function vehAt(p, t) {  // 차에 타 있으면 [탄 시각, 내린 시각, 운전석이면 1, 차 종류]
-  for (const v of p.veh || []) if (t >= v[0] && t <= v[1]) return v;
+  for (const v of p.veh || []) if (t >= v[0] && t <= v[1]) { const bm = v[4] && rp.data?.cars?.[v[4]]?.boom; if (bm && t >= bm[0] && bm[0] >= v[0]) continue; return v; }  /* v302 차가 터진 뒤엔 탄 걸로 안 그림 */
   return null;
 }
 function statusAt(p, t) {
@@ -6124,7 +6129,7 @@ function rpDraw(dt, now, view) {
     else if ((en.vh || []).some(v => rp.t >= v[0] && rp.t <= (v[1] ?? Infinity))) {  /* v300 랜덤 팀원도 차에 타면 탈것 표시 */
       const vh = en.vh.find(v => rp.t >= v[0] && rp.t <= (v[1] ?? Infinity)), hd = () => rpHeading("m:" + en.n, t => interp(en.tr, t));
       if (vh[2] === 2) drawMortarSeat(ctx, x, y, 9, "#F2A900", rp.t, en.n);
-      else if (vh[2]) drawBRDM(ctx, x, y, 28, hd(), "#F2A900");
+      else if (vh[2]) { const C = rpCfg(); drawBRDM(ctx, x, y, C.avatar_r * 2.9, hd(), "#F2A900"); }  /* v302 우리 팀 BRDM과 같은 크기 */
       else drawVeh(ctx, x, y, 9, "#F2A900", vh[4], hd, now);
     }
     else drawRandMate(ctx, x, y, 10, down);
@@ -6348,6 +6353,8 @@ function rpDraw(dt, now, view) {
     const x = X(bx), y = Y(by), brdm = c.k === "b", big = brdm ? 1.5 : 1;
     if (rp.t < tb) {  // 불붙어 깜빡깜빡
       const on = Math.floor(now / 110) % 2 === 0, k = (rp.t - burn) / Math.max(.5, tb - burn);
+      const rq = rpCarRider(R, key, rp.t);  /* v302 아직 누가 타고 달리는 중이면: 터질 자리에 미리 그리지 않고 달리는 차 위에 불길만 */
+      if (rq) { const rx = X(rq[0]), ry = Y(rq[1]); rpGlowC(ctx, rx, ry, 26 * big, "255,80,30", on ? .55 : .3); for (let j = 0; j < 4; j++) rpTongue(ctx, rx - 6 + j * 4, ry - 4, 10 * big * (.6 + k * .6), 5 * big, now / 70 + j, .9); continue; }
       for (let j = 0; j < 4; j++) rpTongue(ctx, x - 6 + j * 4, y - 2, 10 * big * (.6 + k * .6), 5 * big, now / 70 + j, .9);
       if (brdm) drawBRDM(ctx, x, y, 34, rp.heads?.["car:" + key] ?? -Math.PI / 2, on ? "#FF3B3B" : "#7A1A12", "#FF3B3B", on ? .55 : .15);
       else { const [vk, vv] = carKindOf(R, key, c); if (!drawWreck(ctx, x, y, rp.heads?.["car:" + key] ?? -Math.PI / 2, vk, vv, "burn", on ? 1 : .7)) drawWheel(ctx, x, y, 11, on ? "#FF3B3B" : "#7A1A12"); }  // v154 탈것 모양대로
@@ -7403,9 +7410,9 @@ function rpParkedBrdms(R, t) {  // 지금 아무도 안 탄 BRDM들: 마지막�
       const t1 = p.death != null ? Math.min(v[1] ?? R.duration, p.death) : (v[1] ?? R.duration);
       rides.push({t0: v[0], t1, key: v[4] || null, pos: tt => posAt(p, tt), tm: R.our_team ?? null, ours: true});
     }
-    for (const en of R.enemies || []) for (const v of en.vh || []) if (v[2] === 1) {
+    for (const en of [...(R.enemies || []), ...(R._mates || [])]) for (const v of en.vh || []) if (v[2] === 1) {  /* v302 랜덤 팀원이 내린 BRDM도 남김 */
       const t1 = en.d != null ? Math.min(v[1] ?? R.duration, en.d) : (v[1] ?? R.duration);
-      rides.push({t0: v[0], t1, key: v[3] || null, pos: tt => interp(en.tr, tt), tm: en.tm ?? null, ours: false});
+      rides.push({t0: v[0], t1, key: v[3] || null, pos: tt => interp(en.tr, tt), tm: en.tm ?? null, ours: !!en.mate});
     }
     const dist = (a, b) => a && b ? Math.hypot(a[0] - b[0], a[1] - b[1]) * M : Infinity;
     const out = [];
@@ -7435,7 +7442,7 @@ function rpParkedBrdms(R, t) {  // 지금 아무도 안 탄 BRDM들: 마지막�
   const M = R.size_m || 8000, cur = R._brdmPark.filter(b => t > b.t0 && t < b.t1).sort((a, b) => b.t0 - a.t0);
   const riding = [];  // v81 지금 BRDM을 타고 있는 사람 자리: 세워 둔 차 바로 옆이면 그 차를 다시 탄 것 → 세워 둔 그림은 지움
   for (const p of R.players) { const v = vehAt(p, t); if (v && /brdm/i.test(v[3] || "") && statusAt(p, t) !== "dead") { const q = posAt(p, t); if (q) riding.push(q); } }
-  for (const en of R.enemies || []) for (const v of en.vh || []) if (v[2] === 1 && t >= v[0] && t <= (v[1] ?? R.duration) && !(en.d != null && t >= en.d)) { const q = interp(en.tr, t); if (q) riding.push(q); }
+  for (const en of [...(R.enemies || []), ...(R._mates || [])]) for (const v of en.vh || []) if (v[2] === 1 && t >= v[0] && t <= (v[1] ?? R.duration) && !(en.d != null && t >= en.d)) { const q = interp(en.tr, t); if (q) riding.push(q); }
   return cur.filter((b, i) => !cur.slice(0, i).some(o => Math.hypot(o.x - b.x, o.y - b.y) * M < 15)  // 같이 내린 사람들: 한 대만
     && !riding.some(q => t > b.t0 + .5 && Math.hypot(q[0] - b.x, q[1] - b.y) * M < 30));
 }
