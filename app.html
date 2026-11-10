@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='ab8f38fc';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='2b1d5b33';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -215,7 +215,7 @@ body.viewer .tbar .tb-share,body.viewer .tbar .tb-reel{display:none}body.viewer 
 
 .pc-key{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 12px}
 .pc-key div{background:var(--panel-2);border-radius:4px;padding:8px 6px 7px;text-align:center;min-width:0}
-.pc-key b{display:block;font:400 22px/1.1 var(--num);color:var(--bone);font-variant-numeric:tabular-nums}
+.pc-key b{display:block;font:400 22px/1.1 var(--num);color:var(--bone);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:clamp(15px,5.2cqi,22px)}.pc-key div{container-type:inline-size}  /* v298 두 자리 KDA도 한 줄 */
 .pc-key span{display:block;font-size:11.5px;color:var(--dust);margin-top:3px;white-space:nowrap}
 .pc-grp{border-top:1px solid var(--line);padding:9px 0 8px}
 .pc-sc h4{display:flex;align-items:center;justify-content:space-between;gap:8px}.pc-dn{display:inline-flex;align-items:center;gap:2px;font-weight:700;letter-spacing:0}
@@ -233,6 +233,7 @@ body.viewer .tbar .tb-share,body.viewer .tbar .tb-reel{display:none}body.viewer 
 .pcard .bar{grid-template-columns:44px 1fr 36px}
 .pcard .penalty,.pcard .best{font-size:12.5px;line-height:1.45;margin:6px 0 0;padding:6px 9px;border-radius:4px;background:var(--panel-2)}
 .pcard .penalty{background:rgba(224,83,47,.1)}
+.penalty.pen4{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;border-left:4px solid #E0532F;padding:6px 10px}.penalty.pen4 b{font:400 18px/1 var(--display);color:#ff7a5c}.penalty.pen4 span{font-size:12.5px;color:#d8b4a8;line-height:1.4}
 .pc-earned .badges,.pc-earn .badges{display:flex!important;flex-direction:row!important;flex-wrap:wrap;gap:6px;justify-content:flex-start;margin:0}
 .cards .pcard{display:flex;flex-direction:column}  /* v194 높이는 alignPcards 가 맞춤 */
 .pcard>header,.pcard>.pc-key{align-self:stretch}
@@ -936,6 +937,11 @@ body.showing>:not(#show):not(.seal-ov),body.showing>:not(#show):not(.seal-ov) *{
 #tierDlg{width:min(1100px,96vw);max-height:94vh;overflow:auto}
 #tierDlg .body{padding:18px 22px 22px}
 .ti-tbl td,.ti-tbl th{padding:7px 12px;vertical-align:middle}
+.ti-lead{margin:0 0 12px;font-size:14px;color:var(--bone)}.ti-h{margin:18px 0 8px;font:400 18px/1.2 var(--display)}.ti-h small{font:400 12px var(--body);color:var(--dust);margin-left:6px}  /* v295 카드 등급 안내 정리 */
+.ti-ladder{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.ti-ladder div{text-align:center;padding:8px 2px;border-radius:4px;background:color-mix(in srgb,var(--c) 16%,#14170f);border-top:3px solid var(--c)}.ti-ladder b{display:block;font:400 15px var(--display);color:var(--c)}.ti-ladder span{font:700 13px var(--num);color:var(--bone)}
+.ti-ab{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ti-ab>div{background:#1b1f15;border:1px solid var(--line);padding:10px}.ti-abh{display:flex;justify-content:space-between;align-items:baseline}.ti-abh b{font:400 17px var(--display)}.ti-abh em{font:700 14px var(--num);font-style:normal;color:var(--accent)}.ti-ab i{display:block;height:4px;background:#14170f;margin:5px 0 6px;border-radius:2px}.ti-ab u{display:block;height:100%;background:var(--accent);border-radius:2px}.ti-ab span{display:block;font-size:12.5px;color:var(--bone)}.ti-ab small{font-size:11.5px;color:var(--dust)}
+.ti-note{margin:8px 0 0;font-size:12px}.ti-more{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}.ti-more summary{cursor:pointer;font:400 17px var(--display);color:var(--accent);list-style:none}.ti-more summary::before{content:"▸ ";color:var(--dust)}.ti-more[open] summary::before{content:"▾ "}
+@media(max-width:620px){.ti-ladder{grid-template-columns:repeat(4,minmax(0,1fr))}.ti-ab{grid-template-columns:1fr 1fr}}
 .ti-tbl td:first-child{white-space:nowrap}
 .tsw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:8px;vertical-align:-1px}
 .ti-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 10px}
@@ -1994,7 +2000,7 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .glt .mc{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:color-mix(in srgb,var(--c) 70%,var(--bone))}.glt .mc i{width:10px;height:10px;border-radius:2px;background:var(--c)}
 .glt td.rk small{color:var(--dust);margin-left:3px;font-size:12px}.glt td.rk .chick{width:auto;height:17px;vertical-align:-3px;margin-right:3px}
 .glt .rkg{display:inline-grid;grid-template-columns:4.4em auto;align-items:baseline}.glt .rkg b{font-weight:inherit;text-align:right;white-space:nowrap}  /* v82 치킨 그림 자리를 모든 줄에 두고 순위 글자는 오른쪽 맞춤 → '/팀 수'가 한 줄로 맞음 */
-.glt tr.w td{background:rgba(242,169,0,.08)}.glt tr.w td.rk{color:var(--accent);font-weight:700}
+.glt tr.w td{background:rgba(242,179,61,.04);border-bottom:2px solid transparent;border-image:linear-gradient(90deg,transparent,#F2B33D,transparent) 1}.glt tr.w{outline:1px solid #F2B33D;outline-offset:-1px;box-shadow:0 0 12px rgba(242,179,61,.45)}.glt tr.w td.rk{color:#FFE7A0;font-weight:800;text-shadow:0 0 8px rgba(242,179,61,.7)}  /* v296 C11 네온 금 외곽선 + C07 금 밑줄 반짝 */
 .glt td.ps{width:44%;min-width:300px;padding-block:6px}
 .glt .ps>div{display:grid;grid-template-columns:14px 76px 32px minmax(40px,1fr) 38px;gap:8px;align-items:center;font-size:12.5px;line-height:1.55}
 .glt .ps .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.glt .ps .cw{display:flex;align-items:center;justify-content:center;margin-right:-4px}.glt .ps .cw .crown{width:14px;height:11px;flex:none}
@@ -2002,14 +2008,15 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .glt .ps .br{height:5px;border-radius:3px;background:var(--panel-2);overflow:hidden}.glt .ps .br i{display:block;height:100%;background:var(--dust);border-radius:3px}
 .glt .ps .m .nm{color:var(--accent);font-weight:700}.glt .ps .m .br i{background:var(--accent)}
 .glt td.pl{width:1%;padding-right:12px}
-.glt .ib{width:38px;height:38px;border-radius:3px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:rgba(242,169,0,.06);color:var(--accent);display:grid;place-items:center;cursor:pointer}
-.glt .ib:hover{background:rgba(242,169,0,.16);border-color:var(--accent)}
+.glt .ib{width:38px;height:38px;border-radius:3px;border:1px solid #4a5239;background:#0e100a;color:#F2B33D;display:grid;place-items:center;cursor:pointer;transition:border-color .2s,box-shadow .2s}  /* v295 R04 어두운 판 + 금 아이콘 */
+.glt .ib:hover{border-color:#F2B33D;box-shadow:0 0 8px rgba(242,179,61,.35)}
 .glt .ib svg{width:20px;height:20px}.glt .ib circle{fill:none;stroke:currentColor;stroke-width:1.5}.glt .ib path{fill:currentColor}
+@media (min-width:761px){.glt-wrap{border:0;background:none}.glt{border-collapse:separate;border-spacing:0 6px}.glt td{border-top:0;background:var(--panel)}.glt td:first-child{border-radius:6px 0 0 6px}.glt td.pl{padding:0;border-radius:0 6px 6px 0;background:#1e2318;border-left:1px solid rgba(90,98,72,.45)}.glt .ib{width:46px;height:100%;min-height:92px;border:0;border-radius:0 6px 6px 0;background:transparent}.glt .ib:hover{background:#262b1d;box-shadow:none}.glt tr.w{border-radius:6px}.glt tr.w td{background:color-mix(in srgb,#F2B33D 5%,var(--panel))}}
 @media (max-width:760px){
   .glt-wrap{overflow:visible;border:0;background:none}
   .glt thead{display:none}.glt,.glt tbody{display:block}
   .glt tr{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto;grid-template-areas:"no tm mc rk pl" "ps ps ps ps ps";gap:4px 10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin-bottom:8px}
-  .glt tr.w{background:rgba(242,169,0,.08);border-color:rgba(242,169,0,.35)}.glt tr.w td{background:transparent}
+  .glt tr.w{background:rgba(242,179,61,.04);border-color:#F2B33D;box-shadow:0 0 12px rgba(242,179,61,.45);outline:0}.glt tr.w td{background:transparent;border-image:none}
   .glt td{border:0;padding:0}.glt td.no{grid-area:no}.glt td.tm{grid-area:tm}.glt td:nth-child(3){grid-area:mc}.glt td.rk{grid-area:rk}.glt td.pl{grid-area:pl;padding:0}
   .glt td.n{display:none}.glt td.ps{grid-area:ps;width:auto;min-width:0;padding-top:4px}
   .glt .ps>div{grid-template-columns:14px 70px 30px minmax(0,1fr) 36px}
@@ -3412,24 +3419,21 @@ function openTierInfo() {
       <td class="n">${min ? min + "점 이상" : "65점 미만"}</td><td>${esc(desc)}</td></tr>`).join("");
   const prev = base ? TIER_INFO.map(([t, name], i) => { const fake = {...base, card: {...base.card, tier: t, ovr: ovrOf(t), trend: null}};
     return `<div class="ti-item"><div class="ti-stage">${slotOpen(fake, 0)}${cardHtml(fake, "div")}</div></div><small>${name}</small></div>`; }).join("") : "";
+  /* v295 카드 등급 안내 정리: ① 등급 사다리 ② 능력치 6칸 ③ 등급별 모습 ④ 효과 설명은 접어 두기 */
+  const AB = [["화력", 25, "판당 딜량", `${fmt(F.damage)}`], ["교전", 20, "판당 킬 + 기절", `${F.fight}`], ["생존", 15, "판당 생존 시간", `${F.survive}분`],
+    ["서포트", 15, "판당 소생 + 어시 + 블루칩×2", `${F.support}`], ["정확", 15, "헤드샷 60% + 최장거리 40%", `${F.hs}% · ${F.longest}m`], ["꾸준함", 10, "그날 순위 평균", "1등"]];
   $("#tierBody").innerHTML = `
-    <p class="help" style="margin:0 0 10px">카드 등급은 <b>종합 점수(OVR)</b>로 정해져요 (레전드 90, 스페셜 85, 유니크 80, 에픽 75, 레어 70, 언커먼 65 이상).
-      종합 점수는 <b>기록이 있는 최근 14일</b>(쉰 날은 세지 않고, 비공식 판은 빼요)의 실제 기록으로 매긴 여섯 능력치(40~99점)를 합친 값이에요: 화력 25%, 교전 20%, 생존 15%, 서포트 15%, 정확 15%, 꾸준함 10%.
-      <br>만점 기준은 <b>설정 › 점수 › 선수 카드 만점 기준</b>에서 바꿀 수 있어요${(state?.card_full_cfg?.link ?? true) ? " (지금은 화력·교전·생존·서포트를 점수 만점 기준과 같게 쓰는 중)" : ""}. 항목별 배점(몇 점짜리인지)은 카드와 상관없어요.</p>
-    <div class="tbl" style="margin-bottom:14px"><table class="ti-tbl"><thead><tr><th>능력치</th><th>무엇으로</th><th>40점 → 99점(만점)</th></tr></thead><tbody>
-      <tr><td><b>화력</b> 25%</td><td>판당 딜량</td><td class="n">0 → ${fmt(F.damage)}</td></tr>
-      <tr><td><b>교전</b> 20%</td><td>판당 (킬 + 기절)</td><td class="n">0 → ${F.fight}</td></tr>
-      <tr><td><b>생존</b> 15%</td><td>판당 평균 생존 시간</td><td class="n">0분 → ${F.survive}분</td></tr>
-      <tr><td><b>서포트</b> 15%</td><td>판당 (소생 + 어시 + 블루칩×2)</td><td class="n">0 → ${F.support}</td></tr>
-      <tr><td><b>꾸준함</b> 10%</td><td>그날 순위 평균</td><td class="n">4등 → 1등</td></tr>
-      <tr><td><b>정확</b> 15%</td><td>헤드샷 비율 60% + 최장거리 킬 40%</td><td class="n">헤드샷 0 → ${F.hs}%(맞힌 총알 기준) · 거리 0 → ${F.longest}m</td></tr>
-    </tbody></table></div>
-    <div class="tbl"><table class="ti-tbl"><thead><tr><th>등급</th><th>종합 점수</th><th>카드 효과</th></tr></thead><tbody>${rows}</tbody></table></div>
-    <h4 style="margin:16px 0 8px;font:400 18px/1.2 var(--display)">등급별 모습</h4><div class="ti-grid">${prev}</div>
-    <h4 style="margin:22px 0 4px;font:400 18px/1.2 var(--display)">수상자 상세 기록 카드</h4><p class="help" style="margin:0 0 6px">오늘의 어워즈 수상자 상세 기록 카드는 등급이 오를수록 효과가 하나씩 쌓여요.</p><div class="tdx-grid">${tdxSamples()}</div>
-    <h4 style="margin:22px 0 4px;font:400 18px/1.2 var(--display)">시상식 등급 효과</h4><p class="help" style="margin:0 0 6px">오늘의 어워즈 시상식에서 수상자 사진 둘레에 나오는 등급별 효과예요.</p>
+    <p class="ti-lead">카드 등급은 <b>종합 점수(OVR)</b>로 정해져요. 최근 기록이 있는 <b>14일</b>(쉰 날·비공식 판 제외)로 계산해요.</p>
+    <div class="ti-ladder">${[...TIER_INFO].reverse().map(([t, name, min, col]) => `<div style="--c:${col}"><b>${name}</b><span>${min ? min + "+" : "~64"}</span></div>`).join("")}</div>
+    <h4 class="ti-h">종합 점수 = 능력치 6개 <small>각 40~99점 · 만점 기준만큼 하면 99점</small></h4>
+    <div class="ti-ab">${AB.map(([n, w, how, full]) => `<div><div class="ti-abh"><b>${n}</b><em>${w}%</em></div><i><u style="width:${w * 4}%"></u></i><span>${how}</span><small>만점 ${full}</small></div>`).join("")}</div>
+    <p class="help ti-note">만점 기준은 <b>설정 › 점수 › 선수 카드 만점 기준</b>에서 바꿔요${(state?.card_full_cfg?.link ?? true) ? " (지금은 화력·교전·생존·서포트를 점수 만점 기준과 같게 씀)" : ""}. 감점과 항목별 배점은 카드 등급에 들어가지 않아요.</p>
+    <h4 class="ti-h">등급별 모습</h4><div class="ti-grid">${prev}</div>
+    <details class="ti-more"><summary>등급별 카드 효과 설명</summary><div class="tbl"><table class="ti-tbl"><thead><tr><th>등급</th><th>종합 점수</th><th>카드 효과</th></tr></thead><tbody>${rows}</tbody></table></div></details>
+    <details class="ti-more"><summary>수상자 상세 기록 카드</summary><p class="help" style="margin:6px 0">등급이 오를수록 효과가 하나씩 쌓여요.</p><div class="tdx-grid">${tdxSamples()}</div></details>
+    <details class="ti-more" open><summary>시상식 등급 효과</summary><p class="help" style="margin:6px 0">시상식에서 수상자 사진 둘레에 나오는 효과예요.</p>
     <div class="cer-grid">${["legend", "special", "unique", "epic", "rare", "uncommon", "common"].map(t => { const i = TIER_INFO.find(x => x[0] === t);
-      return `<div class="cer-item"><div class="cer-stage"><span class="av cer-av" data-tier="${t}"><img class="face" src="${CER_FACE}" alt=""></span></div><small style="color:${i[3]}">${i[1]}</small></div>`; }).join("")}</div>`;
+      return `<div class="cer-item"><div class="cer-stage"><span class="av cer-av" data-tier="${t}"><img class="face" src="${CER_FACE}" alt=""></span></div><small style="color:${i[3]}">${i[1]}</small></div>`; }).join("")}</div></details>`;
   tierObs?.disconnect();
   tierObs = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle("paused", !e.isIntersecting)), {root: $("#tierDlg"), threshold: .05});
   $("#tierBody").querySelectorAll(".pc").forEach(c => tierObs.observe(c));
@@ -3641,10 +3645,10 @@ function renderDay(r, report, reveal) {
       ${telRows || "<div></div>"}
       ${wsec || "<div></div>"}
       <section class="pc-grp pc-sc" data-pcs="${esc(p.nick)}" data-day="${r.date}"><h4>점수 구성 <span class="pc-dn"><button type="button" data-pcd="-1" aria-label="이전 날">‹</button><em>${r.date.slice(5).replace("-", "/")}</em><button type="button" data-pcd="1" aria-label="다음 날">›</button></span></h4><div class="bars">${bars}</div><p class="pc-dinfo"></p></section>
-      <div class="pc-notes">${p.penalty ? `<div class="penalty">감점 −${p.penalty}점: ${[
+      <div class="pc-notes">${p.penalty ? `<div class="penalty pen4"><b>−${p.penalty}</b><span>${[  /* v295 P04 왼쪽 빨간 띠 + 큰 숫자 */
         (t.teamkills || t.teamknocks) ? `팀킬·팀원 기절 ${(t.teamkills || 0) + (t.teamknocks || 0)}회` : "",
         t.suicides ? `자살 ${t.suicides}회` : "",
-        t.downed ? `기절당함 ${t.downed}회` : ""].filter(Boolean).join(", ")}</div>` : ""}
+        t.downed ? `기절당함 ${t.downed}회` : ""].filter(Boolean).join(" · ")}</span></div>` : ""}
       </div><div class="pc-notes">${p.best ? `<div class="best">최고의 판: ${esc(p.best.map)}에서 딜 ${fmt(p.best.damage)}, ${p.best.kills}킬, ${p.best.rank}등</div>` : ""}</div>
       <section class="pc-grp pc-earn"><h4>칭호</h4>${(p.badges || []).length ? `<div class="pc-rows">${p.badges.map(x => `<div class="pc-row" style="--c:${BADGE_COL[x.tone] || "#B7B39C"}">${esc(x.text)}</div>`).join("")}</div>` : `<p class="pc-none">없음</p>`}</section>  <!-- v190 왼쪽 색 띠 행 (시안 05) -->
       <section class="pc-grp pc-earn"><h4 class="newh">새 업적</h4>${(r.new_achievements?.[p.nick] || []).length ? `<div class="pc-rows">${r.new_achievements[p.nick].map((a, i) => [a, i, typeof a === "string" ? 0 : (a.lv ?? 0)]).sort((x, y) => y[2] - x[2] || x[1] - y[1]).map(([a, , lv]) => { const t = typeof a === "string" ? a : a.t;  /* v190 등급 높은 것부터 */
@@ -4131,6 +4135,7 @@ const TierFX = (() => {
     medal: ["흔들리는 메달", "사진 아래 메달이 흔들림", o => () => { X.save(); X.translate(C, C + R * .9); X.rotate(Math.sin(T * 2.4 * o.sp) * .25); X.strokeStyle = "rgba(200,40,40,.9)"; X.lineWidth = R * .08; X.beginPath(); X.moveTo(-R * .1, 0); X.lineTo(0, R * .5); X.lineTo(R * .1, 0); X.stroke(); X.beginPath(); X.arc(0, R * .62, R * .2, 0, TAU); X.fillStyle = rg(o.c, F); X.shadowColor = rg(o.c, 1); X.shadowBlur = R * .3; X.fill(); X.restore(); }],
     laurel: ["월계관", "잎사귀 관이 사진 아래를 감쌈", o => () => S_(2, s => S_(6 + o.n, k => { const an = Math.PI / 2 + (s ? 1 : -1) * (k + 1) * (1.5 / (6 + o.n)), [x, y] = P(an, R * (1.15 + o.k * .08)); X.save(); X.translate(x, y); X.rotate(an + (s ? .6 : -.6)); X.fillStyle = rg(o.c, (.7 + .3 * Math.sin(T * 2 * o.sp + k)) * F); X.beginPath(); X.ellipse(0, 0, R * .15 * o.s, R * .055 * o.s, 0, 0, TAU); X.fill(); X.restore(); }))],
     starOrb: ["별 궤도", "작은 별이 둘레를 돌며 반짝", o => () => S_(o.n + 2, j => star(...P(T * .8 * o.sp + j * TAU / (o.n + 2), R * (1.15 + o.k * .12)), R * .1 * o.s, o.c, F, T * 2 + j))],
+    gems: ["보석 고리", "색 보석이 둘레를 돌며 반짝", o => () => S_(o.n + 2, k => { const [x, y] = P(T * .8 * o.sp + (k + .5) * TAU / (o.n + 2), R * (1.15 + o.k * .12)); X.save(); X.translate(x, y); X.rotate(Math.PI / 4); X.fillStyle = ["#ff5a6a", "#5ad1ff", "#7dff6a", "#ffd36b"][k % 4]; X.globalAlpha = (.6 + .4 * Math.sin(T * 3 + k)) * F; X.shadowColor = X.fillStyle; X.shadowBlur = R * .3; X.fillRect(-R * .07, -R * .07, R * .14, R * .14); X.restore(); })],  /* v299 별 궤도와 같은 개수·반지름, 별과 별 사이 한가운데 */
     darkFlame: ["검은 불길", "검붉은 불길이 일렁임", o => () => { flames(90, 1.2, "255,90,60", "120,10,10"); }],
     magmaOrbs: ["마그마 구슬", "용암 구슬이 타원 궤도로 돎", o => () => S_(o.m || 3, j => { const t = T * 1.3 * o.sp + j * TAU / (o.m || 3); S_(10, k => { const x = C + Math.cos(t - k * .08) * R * 1.6, y = C + Math.sin(t - k * .08) * R * .7; dot(x, y, R * (.15 - k * .012), k < 2 ? o.c2 : o.c, (1 - k / 10) * F, k === 0); }); })],
     ash: ["잿가루", "잿빛 가루가 천천히 흩날림", o => () => S_(24, i => { const ph = cycle(i, 4 / o.sp, 411), x = C + (rnd(i, 412) - .5) * R * 3.6 + Math.sin(T + i) * R * .3, y = C - R * 2 + ph * R * 4; X.fillStyle = `rgba(150,140,135,${Math.sin(ph * Math.PI) * .7 * F})`; X.fillRect(x, y, R * .05, R * .03); })],
@@ -4159,10 +4164,10 @@ const TierFX = (() => {
   const OR_ = [255, 140, 50], GD = [255, 205, 95], WG2 = [255, 240, 190], AMB = [255, 170, 60], RD = [255, 64, 64], BLD = [200, 30, 60];
   const SET = {  /* 고른 번호: U00 / R01 / E12 / Q17+Q00+Q03+Q11 / S46+S05+S08+S13 / L114+L113(구슬 5개)+L102+L111+L153+L152(작은 왕관)+S05 */
     uncommon: [LOOP0.uncommon],
-    rare: [fx_("sweep", "CL", "COL", O_R)],
-    epic: [fx_("poly", "CL", [255, 140, 220], O_E), fx_("atom", "CL", [120, 230, 255], O_E)],  /* v232 E02 회전 다각형 + 원자 궤도 */
+    rare: [fx_("sweep", "CL", [240, 250, 230], {sp: .8, n: 2, s: .85, k: .15})],  /* v297 레어 U02 쫓는 호 */
+    epic: [fx_("poly", "CL", [255, 140, 220], O_E), fx_("sweep", "CL", "COL", O_R)],  /* v297 에픽 E24 회전 다각형 + R01 쫓는 호 */
     unique: [fx_("corona", OR_, [255, 210, 120], O_Q), LOOP0.unique, fx_("rise", OR_, [255, 240, 200], O_Q), fx_("halo", OR_, [255, 210, 120], O_Q)],
-    special: [fx_("halo", GD, WG2, O_S), fx_("medal", GD, WG2, O_S), fx_("laurel", GD, AMB, O_S), fx_("starOrb", GD, AMB, O_S), fx_("rise", GD, WG2, O_S)],  /* v221 + S10 후광 */
+    special: [fx_("halo", GD, WG2, O_S), fx_("medal", GD, WG2, O_S), fx_("laurel", GD, AMB, O_S), fx_("starOrb", GD, AMB, O_S), fx_("gems", [255, 205, 95], [255, 240, 190], O_S), fx_("rise", GD, WG2, O_S)],  /* v297 + S49 보석 고리 */  /* v221 + S10 후광 */
     legend: [fx_("darkFlame", RD, BLD, O_L), fx_("meteorOrbit", RD, GD, {...O_L, m: 5, rx: 1.3, ry: 1.3}), fx_("skyStrike", RD, BLD, O_L), fx_("medal", GD, WG2, O_L), fx_("crown", GD, WG2, {...O_L, s: .45, n: 0}), fx_("laurel", GD, AMB, O_S),
       fx_("rise", RD, GD, O_L), fx_("halo", RD, [255, 140, 60], O_L), fx_("pulse", RD, BLD, O_L), fx_("swords", GD, WG2, O_L)],  /* v233 불꽃 막대 빼고 금빛 검 고리 (L32) */  /* v221 + L77 떠오르는 빛 · L16 후광 · L72 숨쉬는 테두리 · L70 불꽃 막대 */
   };
@@ -4576,7 +4581,7 @@ function mapRow(o, code, z, y, now) {
   }
   return row;
 }
-const MAP_SHIFT = {Baltic_Main: [.00204, .00270], Erangel_Main: [.00204, .00270]};  // v166 오른쪽 2m · 아래 2m  // v165 오른쪽 5m 더  // v164 오른쪽 5m · 아래 5m  // v163 왼쪽으로 10m 더  // v162 왼쪽으로 5m 더  // v161 왼쪽으로 4m 더  // v159 왼쪽으로 3m 더  // v124 아래로 15m  // v118 위로 2m  // v115 위로 5m (10m 올렸다가 5m 내림)  // v112 에란겔 지도 그림이 살짝 왼쪽에 있어서 오른쪽으로 (맵 크기 비율, +면 오른쪽/아래)
+const MAP_SHIFT = {Baltic_Main: [.00114, .00244], Erangel_Main: [.00114, .00244]};  // v294 손으로 맞추던 값 대신 계산: 차로 달린 자리 약 2천 곳이 지도 그림의 길 위에 가장 잘 놓이는 위치 (오른쪽 3.5px · 아래 7.5px, 3072px 기준)  // v166 오른쪽 2m · 아래 2m  // v165 오른쪽 5m 더  // v164 오른쪽 5m · 아래 5m  // v163 왼쪽으로 10m 더  // v162 왼쪽으로 5m 더  // v161 왼쪽으로 4m 더  // v159 왼쪽으로 3m 더  // v124 아래로 15m  // v118 위로 2m  // v115 위로 5m (10m 올렸다가 5m 내림)  // v112 에란겔 지도 그림이 살짝 왼쪽에 있어서 오른쪽으로 (맵 크기 비율, +면 오른쪽/아래)
 function mapShift(code) { return MAP_SHIFT[code] || [0, 0]; }
 const CHIP_TOWERS = {"Tiger_Main":[[0.1999,0.186],[0.204,0.3956],[0.2303,0.7116],[0.2946,0.2992],[0.3325,0.3902],[0.3625,0.2001],[0.3744,0.4473],[0.4183,0.6343],[0.5524,0.3071],[0.5648,0.4486],[0.6125,0.6183],[0.7762,0.553],[0.781,0.2728],[0.8868,0.3809]],"Neon_Main":[[0.1272,0.6793],[0.262,0.6241],[0.3289,0.872],[0.3466,0.2983],[0.3603,0.5495],[0.3786,0.4228],[0.4247,0.7029],[0.4566,0.7902],[0.517,0.5422],[0.567,0.7791],[0.5914,0.46],[0.6116,0.581],[0.8008,0.8773]],"Desert_Main":[[0.2305,0.3645],[0.3026,0.1792],[0.3417,0.6663],[0.3471,0.5874],[0.3573,0.3807],[0.465,0.3761],[0.4678,0.54],[0.4719,0.7368],[0.4786,0.1709],[0.4939,0.4286],[0.5324,0.225],[0.5358,0.3366],[0.5653,0.6854],[0.5747,0.5603],[0.6146,0.2355],[0.6302,0.4584],[0.7214,0.674],[0.7834,0.5844],[0.793,0.3232]],"Baltic_Main":[[0.2032,0.6465],[0.217,0.2584],[0.2212,0.3453],[0.3253,0.7076],[0.3267,0.4095],[0.4177,0.3802],[0.4274,0.4869],[0.4523,0.6324],[0.4639,0.8649],[0.484,0.2093],[0.4988,0.3777],[0.6219,0.4407],[0.6679,0.2825],[0.7171,0.5924],[0.7547,0.7285],[0.7615,0.3717],[0.8694,0.4127],[0.8836,0.5312]]};  // v119 블루칩 송신기 자리 (지금까지 리플레이에서 블루칩을 쓴 곳을 모아 만든 목록 + 이번 판에서 쓴 곳)
 function rpTowers(R) {  // 이 맵의 송신기 자리 + 이번 판에서 블루칩을 쓴 자리 (가까운 것은 하나로)
