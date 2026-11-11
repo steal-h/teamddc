@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='c18b4889';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='b15033c8';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2463,7 +2463,7 @@ body.viewer .day-warn{display:none}
 /* v238 역대 기록판 */
 .wbd h4{display:flex;align-items:center;gap:6px;white-space:nowrap}.wbd .wic{display:block;flex:none;height:16px;width:64px;margin-left:auto;opacity:.9;background:var(--bx-gold,#F2B33D);-webkit-mask:var(--w) right center/contain no-repeat;mask:var(--w) right center/contain no-repeat}  /* v271 W023 배그 공식 무기 실루엣 (금색) */
 .sub-tabs{display:flex;justify-content:center;gap:0;margin:0 auto 16px;width:max-content;border:1px solid var(--bx-edge,#4a5239);border-radius:20px;padding:3px;background:#14170f}.sub-tabs button{background:none;border:0;color:var(--dust);font:700 13.5px var(--body);padding:6px 18px;border-radius:16px;cursor:pointer}.sub-tabs button[aria-selected=true]{background:var(--bx-gold,#F2B33D);color:#14170f}  /* v282 */
-.rbr b s.wb-mv{text-decoration:none;font:800 10.5px var(--body);margin-left:6px;color:var(--dust);background:none;padding:0;border:0;box-shadow:none}.rbr b s.wb-mv.up{color:#6FCF7F}.rbr b s.wb-mv.dn{color:#E07A5F}.rbr b s.wb-mv.new{color:#14170f;background:#F2B33D;padding:0 4px;border-radius:3px}.wb-gain{display:block;font:700 10px var(--body);color:#6FCF7F;text-align:right;margin-top:-2px}  /* v291 */
+.rbr b s.wb-mv{text-decoration:none;font:800 10.5px var(--body);margin-left:6px;color:var(--dust);background:none;padding:0;border:0;box-shadow:none}.rbr b s.wb-mv.up{color:#6FCF7F}.rbr b s.wb-mv.dn{color:#E07A5F}.rbr b s.wb-mv.new{color:#1d1406!important;background:#FFD23F!important;padding:3px 5px!important;border-radius:3px!important;box-shadow:0 0 6px rgba(255,210,63,.5)!important;font:800 9.5px/1 var(--body)!important}.rbr b s.wb-mv.new.x{color:#14170f;background:#F2B33D;padding:0 4px;border-radius:3px}.wb-gain{display:block;font:700 10px var(--body);color:#6FCF7F;text-align:right;margin-top:-2px}  /* v291 */
 .wbd .wbw{color:var(--bone);font-weight:700}
 .wbd h4 small{font:500 12px var(--body);color:var(--dust);margin-left:4px}.wbd .rbr{cursor:default}.wbd .rbr:hover{background:none}
 .wbd .wb-bar{position:absolute;left:62px;bottom:0;height:2px;background:linear-gradient(90deg,var(--bx-gold,#F2B33D),transparent);opacity:.7;max-width:calc(100% - 62px);text-decoration:none}  /* v268 킬 막대 */
@@ -3650,7 +3650,7 @@ function renderDay(r, report, reveal) {
       ${telRows || "<div></div>"}
       ${wsec || "<div></div>"}
       <section class="pc-grp pc-sc" data-pcs="${esc(p.nick)}" data-day="${r.date}"><h4>점수 구성 <span class="pc-dn"><button type="button" data-pcd="-1" aria-label="이전 날">‹</button><em>${r.date.slice(5).replace("-", "/")}</em><button type="button" data-pcd="1" aria-label="다음 날">›</button></span></h4><div class="bars">${bars}</div><p class="pc-dinfo"></p></section>
-      <div class="pc-notes">${p.penalty ? `<div class="penalty pen4"><b>−${p.penalty}<small style="font-size:.62em;margin-left:1px">점</small></b><span>${[  /* v295 P04 왼쪽 빨간 띠 + 큰 숫자 */
+      <div class="pc-notes">${p.penalty ? `<div class="penalty pen4"><b>−${p.penalty}<small style="font:700 13px var(--body);margin-left:2px;color:#ff9a80">점</small></b><span>${[  /* v295 P04 왼쪽 빨간 띠 + 큰 숫자 */
         (t.teamkills || t.teamknocks) ? `팀킬·팀원 기절 ${(t.teamkills || 0) + (t.teamknocks || 0)}회` : "",
         t.suicides ? `자살 ${t.suicides}회` : "",
         t.downed ? `기절당함 ${t.downed}회` : ""].filter(Boolean).join(" · ")}</span></div>` : ""}
@@ -6481,9 +6481,11 @@ function rpDraw(dt, now, view) {
   const HT = R.hits || [];
   let lo2 = 0, hi2 = HT.length;
   while (lo2 < hi2) { const m = (lo2 + hi2) >> 1; if (HT[m][0] < rp.t - 6) lo2 = m + 1; else hi2 = m; }  // 박격포·로켓은 2초 남짓 그려서
-  for (let hi = lo2; hi < HT.length && HT[hi][0] <= rp.t; hi++) {
+  for (let hi = lo2; hi < HT.length && HT[hi][0] <= rp.t + .5; hi++) {
     const [ht, ax, ay, vx, vy, kind, side, dmg] = HT[hi], age = rp.t - ht;
     if (ax == null || vx == null) continue;
+    if (kind === "p") { if (age >= -.45) rpHeavy(ctx, "p", X(ax), Y(ay), X(vx), Y(vy), age + .45, side, dmg, hi); continue; }  /* v316 판처파우스트: 맞은 시각에 '도착'하게 0.45초 먼저 쏨 (예전엔 맞은 뒤에 날아가서 상대가 먼저 죽었음) */
+    if (age < 0) continue;
     const x1 = X(ax), y1 = Y(ay), x2 = X(vx), y2 = Y(vy), dd = Math.hypot(x2 - x1, y2 - y1), r0 = side === 0 ? 16 : foeR + 2;
     if (kind === "m" && R.mortars) continue;  // 박격포는 '박격포 궤적'이 그림 (데미지 숫자는 위에서)
     if (kind === "p" || kind === "m") { rpHeavy(ctx, kind, x1, y1, x2, y2, age, side, dmg, hi); continue; }  // 판처파우스트·박격포
