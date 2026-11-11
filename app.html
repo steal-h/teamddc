@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='c36516af';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='c18b4889';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -314,7 +314,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .duo-c.duo-best{border-color:color-mix(in srgb,var(--gold) 60%,var(--line));background:linear-gradient(120deg,rgba(242,179,61,.12),var(--panel) 60%)}.duo-c.duo-worst{border-color:color-mix(in srgb,var(--flare) 50%,var(--line))}
 .duo-h{display:flex;align-items:center;justify-content:space-between;gap:8px}.duo-h b{font-size:16px}.duo-h b i{font-style:normal;color:var(--dust);margin:0 4px}
 .duo-tag{font:700 11.5px var(--body);color:#14170f;background:var(--gold);border-radius:999px;padding:3px 9px;white-space:nowrap}.duo-tag.bad{background:var(--flare);color:#fff}
-.duo-sc{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:4px 8px}.duo-sc em{font:400 28px/1 var(--num);font-style:normal;color:var(--bone)}.duo-c.duo-best .duo-sc em{color:var(--gold)}.duo-sc small{color:var(--dust);font-size:12px}
+.duo-sc{display:flex;align-items:center;gap:4px 8px}.duo-sc i{flex:1;min-width:0;height:8px!important}.duo-sc em{font:400 28px/1 var(--num);font-style:normal;color:var(--bone)}.duo-c.duo-best .duo-sc em{color:var(--gold)}.duo-sc small{color:var(--dust);font-size:12px}
 .duo-sc i{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}.duo-sc i span{display:block;height:100%;background:linear-gradient(90deg,#8C6414,var(--gold))}.duo-c.duo-worst .duo-sc i span{background:var(--flare)}
 .duo-st{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;color:var(--dust);font-size:11.5px;text-align:center}  /* v176 다섯 항목 한 줄 */
 .duo-st span{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;background:var(--panel-2);border-radius:6px;white-space:nowrap}.duo-st b{color:var(--bone);font:600 16px/1 var(--num)}
@@ -344,7 +344,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .sea-rows{display:grid;gap:6px}.sea-row{display:flex;align-items:center;gap:12px}.sea-row span{min-width:70px;font-weight:600}.sea-row input{max-width:200px}
 .trend{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}.trend svg{width:100%;height:auto;display:block}  /* v171 점수 추이 · 라이벌 */
 .tr-leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:6px}.tr-leg button{display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--bone);font:600 13px var(--body);cursor:pointer;padding:4px 0}
-.tr-leg button i{width:14px;height:4px;border-radius:2px}.tr-leg button[aria-pressed=false]{opacity:.4}.tr-l{transition:opacity .2s}.tr-l.off{opacity:.06}
+.tr-leg button i{width:14px;height:4px;border-radius:2px}.tr-leg button[aria-pressed=false]{opacity:.4}.tr-l{transition:opacity .2s}.tr-l.off{opacity:.06;pointer-events:none}.tr-l.off .lc-hit{display:none}
 .cum td,.history td,.tbl.mapwin td{vertical-align:middle}  /* v171 표 줄: 이름(두 줄)과 숫자·막대를 세로 가운데로 */
 .order b{color:var(--bone)}
 
@@ -2021,6 +2021,9 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
   .glt tr.w{background:rgba(242,179,61,.04);border-color:#F2B33D;box-shadow:0 0 12px rgba(242,179,61,.45);outline:0}.glt tr.w td{background:transparent;border-image:none}
   .glt td{border:0;padding:0}.glt td.no{grid-area:no}.glt td.tm{grid-area:tm}.glt td:nth-child(3){grid-area:mc}.glt td.rk{grid-area:rk}.glt td.pl{grid-area:pl;padding:0}
   .glt td.n{display:none}.glt td.ps{grid-area:ps;width:auto;min-width:0;padding-top:4px}
+  .glt tr{position:relative;overflow:hidden;padding-right:58px;border-color:transparent;grid-template-areas:"no tm mc rk" "ps ps ps ps";grid-template-columns:auto auto minmax(0,1fr) auto}  /* v312 G04 모바일도: 오른쪽 끝 세로 띠에 리플레이 */
+  .glt td.pl{position:absolute;right:0;top:0;bottom:0;width:46px;background:#1e2318;border-left:1px solid rgba(90,98,72,.45)}
+  .glt td.pl .ib{width:100%;height:100%;border:0;border-radius:0;background:transparent;box-shadow:none}
   .glt .ps>div{grid-template-columns:14px 70px 30px minmax(0,1fr) 36px}
 }
 
@@ -3647,7 +3650,7 @@ function renderDay(r, report, reveal) {
       ${telRows || "<div></div>"}
       ${wsec || "<div></div>"}
       <section class="pc-grp pc-sc" data-pcs="${esc(p.nick)}" data-day="${r.date}"><h4>점수 구성 <span class="pc-dn"><button type="button" data-pcd="-1" aria-label="이전 날">‹</button><em>${r.date.slice(5).replace("-", "/")}</em><button type="button" data-pcd="1" aria-label="다음 날">›</button></span></h4><div class="bars">${bars}</div><p class="pc-dinfo"></p></section>
-      <div class="pc-notes">${p.penalty ? `<div class="penalty pen4"><b>−${p.penalty}</b><span>${[  /* v295 P04 왼쪽 빨간 띠 + 큰 숫자 */
+      <div class="pc-notes">${p.penalty ? `<div class="penalty pen4"><b>−${p.penalty}<small style="font-size:.62em;margin-left:1px">점</small></b><span>${[  /* v295 P04 왼쪽 빨간 띠 + 큰 숫자 */
         (t.teamkills || t.teamknocks) ? `팀킬·팀원 기절 ${(t.teamkills || 0) + (t.teamknocks || 0)}회` : "",
         t.suicides ? `자살 ${t.suicides}회` : "",
         t.downed ? `기절당함 ${t.downed}회` : ""].filter(Boolean).join(" · ")}</span></div>` : ""}
@@ -4692,7 +4695,7 @@ function rpBoomRides(R) {  /* v303 터진 차에 타고 있던 탑승 기록: �
   const all = [...R.players.flatMap(p => (p.veh || []).map(v => ({v, key: v[4], vid: v[3], end: Math.min(v[1] ?? R.duration, p.death ?? Infinity), pos: tt => posAt(p, tt)}))),
     ...[...(R.enemies || []), ...(R._mates || [])].flatMap(en => (en.vh || []).map(v => ({v, key: v[3], vid: v[4] || "", end: Math.min(v[1] ?? R.duration, en.d ?? Infinity), pos: tt => interp(en.tr, tt)})))];
   for (const key in R.cars || {}) {
-    const c = R.cars[key], b = c.boom; if (!b) continue;
+    const c = R.cars[key], b = c.boom; if (!b || /glider/i.test(c.vid || "")) continue;  /* v314 글라이더는 안 터짐 */
     const z = c.hp.find(q => q[1] <= 0 && q[0] <= b[0]), burn = z ? Math.max(z[0], b[0] - 8) : b[0] - 2.5;  /* v306 불붙기 시작한 뒤에 내렸어도 (불붙은 채 달리다 세우고 내림) 같은 차 */
     out[key] = all.filter(r => r.v[0] <= b[0] && (r.key === key || (r.vid === c.vid && r.end >= burn - .5 && (q => q && Math.hypot(q[0] - b[1], q[1] - b[2]) * M < 40)(r.pos(Math.min(r.end, b[0]))))));  /* v304 터질 때 타고 있던 사람 (터진 순간 위치를 차 자리로 맞춰 두므로 40m) */
   }
@@ -6142,9 +6145,10 @@ function rpDraw(dt, now, view) {
         if (rp.t >= a) { const k = (rp.t - a) / Math.max(1, t0 - a), L = [en.tr[0][1], en.tr[0][2]], S = J ? J.q : L; chute = [S[0] + (L[0] - S[0]) * k, S[1] + (L[1] - S[1]) * k]; }
         else continue;
       } else {
-        const em = (en.em || []).find(a => rp.t >= a[0] && rp.t < a[2]) || (en.rc || []).find(a => rp.t >= a[0] && rp.t < a[2]);
+        const em = (en.em || []).find(a => rp.t >= a[0] && rp.t < a[2] && a[2] - a[0] <= 240) || (en.rc || []).find(a => rp.t >= a[0] && rp.t < a[2]);
         if (em && rp.t < em[1]) continue;  // 헬기 안 (우리 팀 헬기 그림에 같이 탐)
         if (em) chute = interp(en.tr, rp.t);
+        else if ((en.bj || []).some(a => rp.t >= a[0] && rp.t < a[1])) chute = interp(en.tr, rp.t);  /* v313 높은 곳에서 뛰어내려 낙하산 */
       }
       if (chute) {
         const x = X(chute[0]), y = Y(chute[1]); drawChute(ctx, x, y, "#F2A900", null);
@@ -6209,6 +6213,12 @@ function rpDraw(dt, now, view) {
     const pos = posAt(p, rp.t); if (!pos) continue;
     const st = statusAt(p, rp.t), av = rp.avatars[p.nick], hasAv = av && av.complete && av.naturalWidth;
     const inCar = st !== "dead" && vehAt(p, rp.t);
+    if (st !== "dead" && !inCar && (p.bj || []).some(a => rp.t >= a[0] && rp.t < a[1])) {  /* v313 높은 곳에서 뛰어내려 낙하산 */
+      const x = X(pos[0]), y = Y(pos[1]), col = RP_COLORS[p.slot % 4]; drawChute(ctx, x, y, col, av);
+      rp.dispPos[p.nick] = [x, y]; rp.dispR[p.nick] = 13;
+      ctx.font = "700 12px Pretendard, 'Malgun Gothic', sans-serif"; labels.push({x, ly: y - 44, tw: ctx.measureText("낙하 중").width + 12, label: "낙하 중", st: "ok", col});
+      continue;
+    }
     ground.push({p, x: X(pos[0]), y: Y(pos[1]), m: pos, st, col: RP_COLORS[p.slot % 4], av, hasAv, inCar, drv: inCar && inCar[2]});
   }
   // 가까이 붙은 팀원: 위치는 그대로, 사진만 작게 (설정의 crowd_scale·crowd_dist)
@@ -6320,9 +6330,14 @@ function rpDraw(dt, now, view) {
       let q = interp(en.tr, rp.t); if (!q) continue;
       let x = X(q[0]), y = Y(q[1]); if (x < -20 || y < -20 || x > W + 20 || y > H + 20) continue;
       const r = big ? 8 : 4;
-      let em = (en.em || []).find(a => rp.t >= a[0] && rp.t < a[2]) || (en.rc || []).find(a => rp.t >= a[0] && rp.t < a[2]);
+      let em = (en.em || []).find(a => rp.t >= a[0] && rp.t < a[2] && a[2] - a[0] <= 240) || (en.rc || []).find(a => rp.t >= a[0] && rp.t < a[2]);
       if (em && rp.t < em[1]) { const A = interp(en.tr, rp.t - 3), B = interp(en.tr, rp.t + 3); if (A && B && Math.hypot(B[0] - A[0], B[1] - A[1]) * R.size_m / 6 < 12 && rp.t - em[0] > 8) em = null; }  // v104 헬기 구간이라도 땅에서 걷는 속도면 헬기로 그리지 않음 (갑자기 헬기 타는 오류)
       const guessAir = !en.em && !en.vh && rpFoeInCar(en, rp.t) === "air";
+      if (!em && !guessAir && (en.bj || []).some(a => rp.t >= a[0] && rp.t < a[1])) {  /* v313 높은 곳에서 뛰어내려 낙하산 */
+        const col = teamColor(en.tm || 0); drawChute(ctx, x, y, col, null);
+        ctx.font = "700 9px Pretendard, 'Malgun Gothic', sans-serif"; ctx.fillStyle = "#14170F"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(String(en.tm ?? ""), x, y + .5);
+        rpHpBar(ctx, en.hp, x, y + 13, big ? 20 : 16, 3); continue;
+      }
       if (em || guessAir) {  // 비상호출·블루칩 헬기에 탄 적 (내리면 낙하산)
         const col = teamColor(en.tm || 0);
         if (guessAir || rp.t < em[1]) {
@@ -6344,11 +6359,12 @@ function rpDraw(dt, now, view) {
       if (rpFoeInCar(en, rp.t) && !(down && !(en.vh || []).some(v => rp.t >= v[0] && rp.t <= v[1]))) {  // v101 차 안에서 기절해도 차는 그대로 (예전엔 차가 사라졌다 나타남)  // 차에 타면 핸들 (같은 차의 같은 팀은 하나만), BRDM은 장갑차
         const vh = (en.vh || []).find(v => rp.t >= v[0] && rp.t <= (v[1] ?? Infinity));
         const cA = interp(en.tr, rp.t - 1), cB = interp(en.tr, rp.t + 1), cSp = cA && cB ? Math.hypot(cB[0] - cA[0], cB[1] - cA[1]) * R.size_m / 2 : 0;  // v161 빠르게 달릴 땐 같은 차 판정 거리를 속도만큼 넓힘 (팀원마다 위치 기록 시각이 달라 수십 m 벌어짐)
-        if (!foeCars.some(o => o.tm === en.tm && (o.key && vh && vh[3] ? o.key === vh[3] : Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 18))) {  /* v169 맨 처음 방식: 탑승 기록의 차 번호가 같을 때만 한 대 (번호가 없을 때만 18m) */  // v159 30m (기록 시각이 달라 잠깐 벌어져도 한 대로)  // v158 열쇠가 달라도 같은 팀이 18m 안이면 같은 차  // v101 다른 차에 탄 같은 팀원이 90m 안에 있다고 통째로 숨기지 않게
+        const isB = !!(vh && vh[2] === 1);  /* v312 BRDM은 차 번호가 자꾸 바뀌어서(열쇠 없음), 같은 팀이 가까이 있으면 번호가 달라도 한 대 */
+        if (!foeCars.some(o => o.tm === en.tm && ((o.key && vh && vh[3] && o.key === vh[3]) || (isB && o.brdm && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 60 + 4 * Math.max(cSp, o.sp || 0)) || (!isB && vh && vh[4] && o.vid === vh[4] && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 12 + 2.5 * Math.max(cSp, o.sp || 0)) ||  /* v314 같은 팀·같은 종류 차가 바로 붙어 있으면 번호가 달라도 한 대 */ (!(o.key && vh && vh[3]) && Math.hypot(o.q[0] - q[0], o.q[1] - q[1]) * R.size_m < 18)))) {  /* v169 맨 처음 방식: 탑승 기록의 차 번호가 같을 때만 한 대 (번호가 없을 때만 18m) */  // v159 30m (기록 시각이 달라 잠깐 벌어져도 한 대로)  // v158 열쇠가 달라도 같은 팀이 18m 안이면 같은 차  // v101 다른 차에 탄 같은 팀원이 90m 안에 있다고 통째로 숨기지 않게
           if (vh && vh[2] === 2) drawMortarSeat(ctx, x, y, big ? 9 : 7, teamColor(en.tm || 0), rp.t, en.n);
           else if (vh && vh[2]) { drawBRDM(ctx, x, y, big ? 28 : 20, rpHeading("e:" + en.n, t => interp(en.tr, t)), teamColor(en.tm || 0)); drawTeamTag(ctx, x + (big ? 12 : 9), y - (big ? 11 : 8), en.tm, teamColor(en.tm || 0)); drawSeats(ctx, x - 14.5, y + (big ? 26 : 21), Math.max(1, rpBrdmCount(R, vh[3], en.tm)), teamColor(en.tm || 0)); rpHpBar(ctx, rpCarHp(vh[3]), x, y + (big ? 18 : 14), big ? 26 : 20, 3, true); }
           else drawVeh(ctx, x, y, big ? 9 : 6, teamColor(en.tm || 0), vh && vh[4], () => rpHeading("e:" + en.n, t => interp(en.tr, t)), now);
-          foeCars.push({q, tm: en.tm, key: vh && vh[3], sp: cSp});
+          foeCars.push({q, tm: en.tm, key: vh && vh[3], sp: cSp, brdm: isB, vid: vh && vh[4]});
         }
         rpHpBar(ctx, en.hp, x, y + (big ? 13 : 10), big ? 20 : 14, 3);
         continue;
@@ -6382,7 +6398,7 @@ function rpDraw(dt, now, view) {
   try { drawFoes(); } catch (e) { console.warn("drawFoes", e); }  // v109 그림 하나가 잘못돼도 나머지 적은 그려지게
   // 차량 폭발: 체력 0이 되면 불이 붙어 붉게 깜빡이다가 쾅 (일반 차는 핸들, BRDM은 장갑차 그림)
   for (const key in R.cars || {}) {
-    const c = R.cars[key]; if (!c.boom) continue;
+    const c = R.cars[key]; if (!c.boom || /glider/i.test(c.vid || "")) continue;  /* v314 글라이더는 엔진이 부서져도 터지지 않고 활공 → 폭발·잔해 안 그림 */
     const [tb, bx, by] = c.boom, z = c.hp.find(q => q[1] <= 0 && q[0] <= tb), burn = z ? Math.max(z[0], tb - 8) : tb - 2.5;
     if (rp.t < burn || rp.t > tb + (c.k === "b" ? 20 : 12)) continue;
     const rb = c._rb !== undefined ? c._rb : (c._rb = rpCarRider(R, key, tb - .05)), x = X(rb ? rb[0] : bx), y = Y(rb ? rb[1] : by), brdm = c.k === "b", big = brdm ? 1.5 : 1;  /* v303 달리던 차는 타고 있던 사람이 그 순간 있던 자리에서 터짐 */
@@ -6427,8 +6443,8 @@ function rpDraw(dt, now, view) {
     let lo = 0, hi = FS.length;
     while (lo < hi) { const m = (lo + hi) >> 1; if (FS[m][0] < rp.t - 1) lo = m + 1; else hi = m; }
     for (let i = lo; i < FS.length && FS[i][0] <= rp.t; i++) {
-      const [ts, fx, fy, tx, ty] = FS[i], x1 = X(fx), y1 = Y(fy);
-      for (const off of [.05, .3, .55, .8]) {
+      const [ts, fx, fy, tx, ty, fn] = FS[i], x1 = X(fx), y1 = Y(fy);
+      for (const off of fn ? Array.from({length: Math.min(fn, 12)}, (_, j) => .03 + j / Math.min(fn, 12)) : [.05, .3, .55, .8]) {  /* v313 그 1초에 실제로 쏜 발수만큼 */
         const k = (rp.t - ts - off) / .09; if (k < 0 || k > 1) continue;
         // 우리 팀과 같은 총구 화염 (방향을 모르면 마지막으로 움직인 방향으로)
         const ang = tx != null ? Math.atan2(Y(ty) - y1, X(tx) - x1) : rpFoeHeading(fx, fy, ts);
@@ -6438,7 +6454,19 @@ function rpDraw(dt, now, view) {
   }
 
   // 우리 팀 사격: 쏜 방향으로 총구 화염만 (선은 실제로 맞힌 총알만 그림)
-  for (const [ts, slot, tx, ty] of R.shots || []) {
+  if (R.shot_v >= 2) {  /* v313 실제로 쏜 시각마다 한 발씩 · 겨눈 곳을 모르면 방향 없는 둥근 섬광 */
+    const SH = R.shots || []; let lo3 = 0, hi3 = SH.length;
+    while (lo3 < hi3) { const m = (lo3 + hi3) >> 1; if (SH[m][0] < rp.t - .1) lo3 = m + 1; else hi3 = m; }
+    for (let i = lo3; i < SH.length && SH[i][0] <= rp.t; i++) {
+      const [ts, slot, tx, ty] = SH[i], k = (rp.t - ts) / .09; if (k < 0 || k > 1) continue;
+      const pl = R.players.find(p => p.slot === slot), sp = pl && curPos(pl, rp.t);
+      if (!sp || statusAt(pl, rp.t) === "dead") continue;
+      const x1 = X(sp[0]), y1 = Y(sp[1]), r0 = (rp.dispR[pl.nick] || 13) + 3;
+      if (tx == null) rpMuzzleRound(ctx, x1, y1, 1 - k, r0);
+      else rpMuzzle(ctx, x1, y1, Math.atan2(Y(ty) - y1, X(tx) - x1), 1 - k, r0, Math.hypot(X(tx) - x1, Y(ty) - y1));
+    }
+  }
+  else for (const [ts, slot, tx, ty] of R.shots || []) {
     if (rp.t < ts || rp.t > ts + 1) continue;
     const pl = R.players.find(p => p.slot === slot); const sp = pl && curPos(pl, rp.t);
     if (!sp || statusAt(pl, rp.t) === "dead" || tx == null) continue;
@@ -7337,6 +7365,11 @@ function rpMuzzle(ctx, x, y, ang, alpha, start = 10, dist = 99) {  // 총구 화
   ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.globalAlpha = Math.max(0, alpha);
   ctx.fillStyle = "#FFD45A"; ctx.beginPath(); ctx.moveTo(s0, 0); ctx.lineTo(s0 + 14 * L, -5 * L); ctx.lineTo(s0 + 10 * L, 0); ctx.lineTo(s0 + 14 * L, 5 * L); ctx.closePath(); ctx.fill();
   ctx.fillStyle = "#FFFFFF"; ctx.beginPath(); ctx.arc(s0 + 2 * L, 0, 3 * L, 0, Math.PI * 2); ctx.fill(); ctx.restore(); ctx.globalAlpha = 1;
+}
+function rpMuzzleRound(ctx, x, y, alpha, r) {  /* v313 겨눈 곳을 모르는 사격: 아이콘 둘레에 방향 없는 짧은 섬광 */
+  ctx.save(); ctx.globalAlpha = Math.max(0, alpha) * .9; ctx.strokeStyle = "#FFD45A"; ctx.lineWidth = 2;
+  for (let n = 0; n < 6; n++) { const a = n / 6 * Math.PI * 2 + .3; ctx.beginPath(); ctx.moveTo(x + Math.cos(a) * r, y + Math.sin(a) * r); ctx.lineTo(x + Math.cos(a) * (r + 6), y + Math.sin(a) * (r + 6)); ctx.stroke(); }
+  ctx.restore(); ctx.globalAlpha = 1;
 }
 function rpFoeHeading(fx, fy, t) {  // 맞힌 대상을 모르는 적 사격: 그 자리에 있던 적이 움직이던 방향 (모르면 오른쪽)
   let best = null, bd = 1e9;
@@ -8817,7 +8850,7 @@ function drawSeats(ctx, x, y, n, col, max = 4) {  // BRDM 탑승 인원: 좌석 
 function rpBrdmCount(R, key, foeTeam) {  // 지금 그 BRDM에 탄 사람 수 (우리 팀: 탑승 기록 차 번호, 적: 그 팀 탑승 기록)
   if (key == null) return 0; const t = rp.t;
   if (foeTeam == null) return R.players.filter(p => statusAt(p, t) !== "dead" && (vehAt(p, t) || [])[4] === key).length;
-  return (R.enemies || []).filter(e => (e.d == null || t <= e.d) && (e.vh || []).some(v => t >= v[0] && t <= v[1] && v[3] === key)).length;
+  return (R.enemies || []).filter(e => e.tm === foeTeam && (e.d == null || t <= e.d) && (e.vh || []).some(v => t >= v[0] && t <= v[1] && v[2] === 1)).length;  /* v312 번호가 바뀌어도 그 팀이 BRDM에 탄 사람 수 */
 }
 function drawTeamTag(ctx, x, y, tm, col, parked = false) {  // BRDM 위의 작은 팀 번호 (세워 둔 차는 점선 테두리)
   if (tm == null) return;
@@ -9507,7 +9540,7 @@ function weaponBoard() {  /* v268 무기 종류별 킬 순위 (기록판 모양)
   const W = state.wboard || []; if (!W.length) return "";
   const cards = W.map(c => { const top = c.rows[0].k || 1, img = WIMG[c.rows[0].w] || WIMG[WDEF[c.key]]; return `<div class="rbd wbd">
       <h4>${esc(c.label)} <small>킬 순위</small>${img ? `<i class="wic" style="--w:url(${img})" title="1등 무기 ${esc(c.rows[0].w || "")}" aria-hidden="true"></i>` : ""}</h4>${(RK => c.rows.map((x, i) => { const src = pimg({nick: x.nick, name: x.name}), n = RK[i];
-        const mv = !x.pk ? `<s class="wb-mv new">NEW</s>` : x.pr == null ? "" : x.pr > n ? `<s class="wb-mv up">▲${x.pr - n}</s>` : x.pr < n ? `<s class="wb-mv dn">▼${n - x.pr}</s>` : "";  /* v291 지난 기록(마지막 날 빼고) 대비 순위 등락 */
+        const mv = !x.pk || x.pr == null || x.pr > c.rows.length ? `<s class="wb-mv new">NEW</s>` : x.pr == null ? "" : x.pr > n ? `<s class="wb-mv up">▲${x.pr - n}</s>` : x.pr < n ? `<s class="wb-mv dn">▼${n - x.pr}</s>` : "";  /* v291 지난 기록(마지막 날 빼고) 대비 순위 등락 */
         const gain = x.pk != null && x.k > x.pk ? `<small class="wb-gain">+${x.k - x.pk}</small>` : "";
         return `<div class="rbr r${n}">
           ${n <= 3 ? `<span class="rb-md">${medal(n + 1, "rb-medal", n)}</span>` : `<i>${n}</i>`}${src ? `<img src="${src}" alt="">` : `<span class="rbi">${esc((x.name || "?").slice(0, 1))}</span>`}<b><span class="rbn">${esc(x.name)}</span>${mv}</b>
