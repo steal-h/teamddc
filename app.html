@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='bb0c9bba';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='c36516af';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -1963,12 +1963,14 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 @media (max-width:900px){.nav .visit,.nav .pub-badge,body.viewer .nav .viewer-badge{min-height:0}}
 
 /* v78 하이라이트: HL-09 큰 숫자 계기판 */
-.hlx{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
-.hlx>div{background:var(--panel);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.hlx{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;--ha:#F2B33D;--hr:242,179,61}  /* v308 H01 아이콘 원 카드 + H08 네온 글씨 */
+.hlx>div{position:relative;background:var(--panel);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.hlx>div.bad{--ha:#FF6B4A;--hr:255,107,74}
+.hlx .hi{position:absolute;left:12px;top:14px;width:34px;height:34px;padding:7px;border-radius:50%;background:rgba(var(--hr),.14);color:var(--ha);fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(var(--hr),.6))}
 .hlx span{font-size:12.5px;color:var(--accent);font-weight:700}
 .hlx em{font-style:normal;font:400 30px/1.05 var(--num);color:var(--bone);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}.hlx em small{font:500 12.5px var(--body);color:var(--dust);margin-left:2px}
+.hlx .bad span{color:var(--flare)}  /* v310 글씨는 예전대로, 둥근 카드만 유지 */
 .hlx b{font-size:13.5px;font-weight:500;color:var(--dust);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hlx .bad span{color:var(--flare)}
 .pbx{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-bottom:8px}  /* v171 기록 갱신 */
 .pb{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 14px;background:linear-gradient(120deg,rgba(242,169,0,.13),var(--panel) 55%);border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line));border-radius:8px;animation:fadeup .5s ease-out both}
 .pb.st{background:linear-gradient(120deg,rgba(224,83,47,.16),var(--panel) 55%);border-color:color-mix(in srgb,var(--flare) 45%,var(--line))}
@@ -2362,7 +2364,7 @@ html.share-mode body::before{display:none}
 #shareCard.sx .bgx-maps{grid-template-columns:repeat(var(--n),minmax(0,1fr))}#shareCard.sx.vertical .bgx-maps{grid-template-columns:repeat(min(var(--n),3),minmax(0,1fr))}#shareCard.sx.vertical .bgx-mn{font-size:21px}#shareCard.sx.vertical .bgx-mk{font-size:30px}#shareCard.sx.vertical .bgx-ms{font-size:11.5px}#shareCard.sx.vertical .bgx-ck{transform:scale(.8);transform-origin:0 0}
 
 .sx-hl{grid-template-columns:repeat(5,minmax(0,1fr))!important;border-color:var(--bx-edge)!important;background:var(--bx-edge)!important}.sx-hl>div{background:linear-gradient(160deg,var(--bx-c3),var(--bx-c1) 75%)!important}.sx-hl span{color:var(--bx-gold)!important}.sx-hl>div.bad>span{color:#F0604A!important}.sx-hl>div.bad>span small{color:#B7B39C;font-weight:500}.sx-hl .tkx .tkp em{color:#fff!important;font-size:30px!important;font-style:normal}.sx-hl .tkx .tkp em small{font-size:14px;color:#fff}.sx-hl .tkx .tkp b{color:var(--bone)!important}.sx-hl>div.bad{box-shadow:inset 0 3px 0 #E0532F}  /* v278 공유 팀킬범 */
-#shareCard.sx .hlx.sx-hl{grid-template-columns:repeat(5,minmax(0,1fr))!important}#shareCard.sx.vertical .hlx.sx-hl{grid-template-columns:repeat(3,minmax(0,1fr))!important}#shareCard.sx .hlx.sx-hl>div{grid-column:auto!important}
+#shareCard.sx .hlx.sx-hl{grid-template-columns:repeat(5,minmax(0,1fr))!important}#shareCard.sx.vertical .hlx.sx-hl{grid-template-columns:repeat(3,minmax(0,1fr))!important}#shareCard.sx .hlx.sx-hl>div{grid-column:auto!important}#shareCard .hlx.sx-hl{gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}#shareCard .hlx.sx-hl>div{border-radius:0}  /* v311 공유 이미지 하이라이트는 예전 붙은 칸 그대로 */
 .sx-foot{display:flex;justify-content:space-between;margin-top:18px;color:var(--dust);font-size:12.5px;letter-spacing:.08em}
 
 /* v234 레전드 카드: C01 C02 C04 C05 C06 C08 C09 C10 C11 C12 + N017 가장자리 연기 · B014 띠 위 흐르는 문구 · A59 위로 솟는 화살표 */
@@ -3658,12 +3660,12 @@ function renderDay(r, report, reveal) {
     </article>`;
   }).join("");
   const hl = r.highlights.map(h => {  // v78 HL-09 큰 숫자 계기판: 기록 숫자를 가장 크게
-    const m = String(h.value || "").match(/([\d,.]+)\s*([^\d\s,.]*)/), bad = h.label === "팀킬범" || h.tone === "bad";
+    const m = String(h.value || "").match(/([\d,.]+)\s*([^\d\s,.]*)/), bad = h.label === "팀킬범" || h.tone === "bad", ic = hlIcon(h.label);
     if (h.label === "팀킬범") {  /* v170 팀킬범: 이름과 횟수를 크게 (팀원 기절 포함) */
       const L = [...String(h.name || "").matchAll(/\s*([^,]+?)\s+(\d+)회/g)].map(q => `<div class="tkp"><em>${q[2]}<small>회</small></em><b>${esc(q[1])}</b></div>`).join("");  /* v179 다른 하이라이트처럼 위 횟수 · 아래 이름 */
-      return `<div class="bad tkx"><span>팀킬범 <small>팀킬·팀원 기절</small></span>${L ? `<div class="tkps">${L}</div>` : `<b>${esc(h.name)}</b>`}</div>`;
+      return `<div class="bad tkx">${ic}<span>팀킬범 <small>팀킬·팀원 기절</small></span>${L ? `<div class="tkps">${L}</div>` : `<b>${esc(h.name)}</b>`}</div>`;
     }
-    return `<div class="${bad ? "bad" : ""}"><span>${esc(h.label)}</span><em>${m ? `${esc(m[1])}<small>${esc(m[2])}</small>` : `<small>${esc(h.value || "")}</small>`}</em><b>${esc(h.name)}</b></div>`; }).join("");
+    return `<div class="${bad ? "bad" : ""}">${ic}<span>${esc(h.label)}</span><em>${m ? `${esc(m[1])}<small>${esc(m[2])}</small>` : `<small>${esc(h.value || "")}</small>`}</em><b>${esc(h.name)}</b></div>`; }).join("");
   const allG = [...r.games, ...(r.side_games || [])].sort((a, b) => String(a.time).localeCompare(String(b.time)));  // v224 추억 판도 시간 순으로 같이
   const dmgMax = Math.max(1, ...allG.flatMap(g => g.players.map(p => p.damage)));
   const CROWN = `<svg class="crown" viewBox="0 0 24 18" aria-label="이 판 MVP"><path d="M2 15 L4 4 L9 9 L12 2 L15 9 L20 4 L22 15 Z" fill="#F2B33D" stroke="#8C6414" stroke-width="1.2" stroke-linejoin="round"/><rect x="2" y="15" width="20" height="2.6" rx="1" fill="#D99A22"/></svg>`;
@@ -4700,6 +4702,21 @@ function rpCarRider(R, key, t) {  /* v302 그 차에 지금 탄 사람 자리 (�
   for (const r of rpBoomRides(R)[key] || []) if (t >= r.v[0] && t <= r.end) { const q = r.pos(t); if (q) return q; }
   return null;
 }
+const HL_ICON = {  /* v308 하이라이트 아이콘 (선 그림) */
+  dmg: '<path d="M4 20l6-6M14 4l6 6-8 8-6-6z"/>', kill: '<circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/>',
+  fist: '<path d="M7 11V7a2 2 0 0 1 4 0v4M11 10V6a2 2 0 0 1 4 0v5M15 10a2 2 0 0 1 4 0v3a7 7 0 0 1-7 7h-1a6 6 0 0 1-6-6v-2a2 2 0 0 1 2-2h3"/>',
+  scope: '<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="1.5"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/>',
+  head: '<circle cx="12" cy="9" r="5"/><path d="M5 21c1-4 4-6 7-6s6 2 7 6"/>', heal: '<path d="M10 4h4v6h6v4h-6v6h-4v-6H4v-4h6z"/>',
+  pill: '<rect x="3" y="9" width="18" height="7" rx="3.5" transform="rotate(-35 12 12)"/>',
+  car: '<path d="M3 15l2-6h14l2 6v3H3z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/>',
+  gun: '<path d="M3 10h14l3-2v4h-6l-2 5H9l1-5H3z"/>', bolt: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>', bomb: '<circle cx="11" cy="14" r="7"/><path d="M15 8l3-3M18 5l2-1"/>',
+  tank: '<path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>', zone: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>',
+  warn: '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/>', chip: '<rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/>',
+  hand: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/>',
+  star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>'};
+const HL_KEY = {"딜량왕": "dmg", "킬왕": "kill", "기절왕": "fist", "최장거리 킬": "scope", "헤드샷 장인": "head", "소생 천사": "heal", "약쟁이": "pill", "로드킬": "car", "팀킬범": "warn",
+  "오늘의 무기": "gun", "생명의 은인": "hand", "블루칩 구조대": "chip", "선빵왕": "bolt", "최장거리 기절": "scope", "투척 장인": "bomb", "탱커": "tank", "자기장 맛집": "zone", "아군 사격": "warn"};
+const hlIcon = () => "";  /* v309 동그란 아이콘 뺌 */
 function drawRandMate(ctx, x, y, r, down) {  /* v301 I04 랜덤 팀원: 회색 사람 모양 + 금 테두리 (v307 기절하면 우리 팀처럼 회색) */
   ctx.save(); ctx.beginPath(); ctx.arc(x, y, r + 1.5, 0, Math.PI * 2); ctx.fillStyle = "rgba(0,0,0,.6)"; ctx.fill();
   ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = "#3a3e33"; ctx.fill(); ctx.lineWidth = r * .2; ctx.strokeStyle = down ? "#8C8C82" : "#F2A900"; ctx.stroke();
@@ -9413,11 +9430,11 @@ function renderShareCard(r, vertical = false) {  /* v228 공유 이미지: 오�
     "헤드샷 장인", "탱커", "투척 장인", "최장거리 기절", "자기장 맛집", "로드킬", "아군 사격", "약쟁이"];
   const pick = [...r.highlights].sort((a, b) => (PRI.indexOf(a.label) + 99) % 99 - (PRI.indexOf(b.label) + 99) % 99).slice(0, vertical ? 6 : 10);
   const hl = pick.map(h => {
-    const m = String(h.value || "").match(/([\d,.]+)\s*([^\d\s,.]*)/), bad = h.label === "팀킬범" || h.tone === "bad";
+    const m = String(h.value || "").match(/([\d,.]+)\s*([^\d\s,.]*)/), bad = h.label === "팀킬범" || h.tone === "bad", ic = hlIcon(h.label);
     if (h.label === "팀킬범") {  /* v278 어워즈 하이라이트처럼: 빨간 제목 · 큰 흰 횟수 · 아래 이름 */
       const L = [...String(h.name || "").matchAll(/\s*([^,]+?)\s+(\d+)회/g)].map(q => `<div class="tkp"><em>${q[2]}<small>회</small></em><b>${esc(q[1])}</b></div>`).join("");
-      return `<div class="bad tkx"><span>팀킬범 <small>팀킬·팀원 기절</small></span>${L ? `<div class="tkps">${L}</div>` : `<b>${esc(h.name)}</b>`}</div>`; }
-    return `<div class="${bad ? "bad" : ""}"><span>${esc(h.label)}</span><em>${m ? `${esc(m[1])}<small>${esc(m[2])}</small>` : `<small>${esc(h.value || "")}</small>`}</em><b>${esc(h.name)}</b></div>`; }).join("");
+      return `<div class="bad tkx">${ic}<span>팀킬범 <small>팀킬·팀원 기절</small></span>${L ? `<div class="tkps">${L}</div>` : `<b>${esc(h.name)}</b>`}</div>`; }
+    return `<div class="${bad ? "bad" : ""}">${ic}<span>${esc(h.label)}</span><em>${m ? `${esc(m[1])}<small>${esc(m[2])}</small>` : `<small>${esc(h.value || "")}</small>`}</em><b>${esc(h.name)}</b></div>`; }).join("");
   // v229 판당 평균: 점수 대신 KDA·헤드샷·최장거리 킬 (점수는 위 카드에 이미 있음)
   const cols = vertical ? [["KDA", p => `<b>${kdaOf(p.totals)}</b>`], ["딜량", p => fmt(p.metrics.damage)], ["킬", p => p.metrics.kills], ["기절", p => p.metrics.dbnos], ["생존", p => p.metrics.survival_min + "분"]]
     : [["KDA", p => `<b>${kdaOf(p.totals)}</b>`], ["딜량", p => fmt(p.metrics.damage)], ["킬", p => p.metrics.kills], ["기절", p => p.metrics.dbnos], ["어시", p => p.metrics.assists], ["소생", p => p.metrics.revives], ["생존", p => p.metrics.survival_min + "분"], ["헤드샷", p => p.metrics.headshot_pct + "%"], ["최장 킬", p => (p.totals.longest || 0) + "m"]];
