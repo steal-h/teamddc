@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='c1cfca57';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='84a60ce7';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -4721,14 +4721,14 @@ const HL_ICON = {  /* v308 하이라이트 아이콘 (선 그림) */
 const HL_KEY = {"딜량왕": "dmg", "킬왕": "kill", "기절왕": "fist", "최장거리 킬": "scope", "헤드샷 장인": "head", "소생 천사": "heal", "약쟁이": "pill", "로드킬": "car", "팀킬범": "warn",
   "오늘의 무기": "gun", "생명의 은인": "hand", "블루칩 구조대": "chip", "선빵왕": "bolt", "최장거리 기절": "scope", "투척 장인": "bomb", "탱커": "tank", "자기장 맛집": "zone", "아군 사격": "warn"};
 const hlIcon = () => "";  /* v309 동그란 아이콘 뺌 */
-function rpPkPlane(R) {  /* v318 일반 보급: 4초 안·500m 안에 떨어지기 시작한 상자들 = 비행기 한 대 */
+function rpPkPlane(R) {  /* v318 일반 보급: 비행기 한 대가 여러 개를 떨굼 · v319 8초 안, 1.2km 안, 그 사이를 비행기 속도(초당 50~170m)로 갈 수 있으면 한 대 */
   if (R._pkPlane) return R._pkPlane;
   const out = {}, L = (R.packages || []).filter(q => (q[7] || "") === "").sort((a, b) => a[0] - b[0]);
   for (let i = 0; i < L.length; i++) {
     const q = L[i], k = q[0] + ":" + q[2]; if (out[k]) continue;
-    const grp = [q]; for (let j = i + 1; j < L.length; j++) { const w = L[j], z = grp[grp.length - 1]; if (w[0] - z[0] <= 4 && Math.hypot(w[2] - z[2], w[3] - z[3]) * R.size_m < 500) grp.push(w); }
+    const grp = [q]; for (let j = i + 1; j < L.length; j++) { const w = L[j], z = grp[grp.length - 1]; const dt_ = w[0] - z[0], dm_ = Math.hypot(w[2] - z[2], w[3] - z[3]) * R.size_m; if (dt_ <= 8 && dm_ < 1200 && (dm_ < 60 || (dm_ / Math.max(dt_, .1) >= 50 && dm_ / Math.max(dt_, .1) <= 170))) grp.push(w); }
     const a = grp[0], b = grp[grp.length - 1], dt = b[0] - a[0], dm = Math.hypot(b[2] - a[2], b[3] - a[3]) * R.size_m;
-    const info = grp.length > 1 && dt > .2 && dm > 20 ? {dx: b[2] - a[2], dy: b[3] - a[3], v: Math.min(160, Math.max(40, dm / dt))} : {};
+    const info = grp.length > 1 && dt > .2 && dm > 20 ? {dx: b[2] - a[2], dy: b[3] - a[3], v: Math.min(170, Math.max(40, dm / dt))} : {};
     grp.forEach((w, n) => out[w[0] + ":" + w[2]] = {...info, lead: n === 0});
   }
   return R._pkPlane = out;
