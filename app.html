@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='b15033c8';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='c1cfca57';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2342,7 +2342,8 @@ html.share-mode body::before{display:none}
 #shareCard.sx .bgx-rule{margin:20px 0 12px}
 .sx-mvp{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:30px;text-align:left!important;padding:0 18px}
 .sx-mvp .bgx-avw{margin:18px 18px 14px}
-.sx-mi{display:flex;flex-direction:column;gap:4px;min-width:0}.sx-mi .bgx-name{padding:0;font-size:76px}.sx-mi .badges{justify-content:flex-start}
+.sx-mi{display:flex;flex-direction:column;gap:4px;min-width:0}.sx-nrow{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px}.sx-nrow .badges{margin:0}  /* v317 1위 칭호는 이름 옆에 */
+.vertical .sx-nrow{justify-content:center}.sx-mi .bgx-name{padding:0;font-size:76px}.sx-mi .badges{justify-content:flex-start}
 .sx-ms{display:flex;flex-direction:column;align-items:flex-end;gap:6px}.sx-ms .bgx-score{align-items:flex-end}.sx-ms .bgx-st{justify-content:flex-end;flex-direction:column;align-items:flex-end;gap:2px}
 .vertical .sx-top{flex-direction:column;gap:6px}
 .vertical .sx-mvp{grid-template-columns:1fr;justify-items:center;text-align:center!important;gap:6px}.vertical .sx-mi{align-items:center}.vertical .sx-mi .badges{justify-content:center}.vertical .sx-mi .bgx-name{font-size:84px}
@@ -4482,14 +4483,14 @@ function rpFoeAir(R) {  // v157 적 팀 비상호출·블루칩 헬기 묶음: [
   const G = [];
   for (const en of R.enemies || []) for (const [kd, e] of [...(en.em || []).map(e => ["em", e]), ...(en.rc || []).map(e => ["rc", e])]) {
     if (e[1] == null || e[1] <= e[0] || e[1] - e[0] > 220) continue;  // 기록이 이상하게 긴 구간은 빼기
-    let g = G.find(q => q.kd === kd && q.tm === en.tm && Math.abs(q.lift - e[0]) < (kd === "rc" ? 25 : 10));
+    let g = G.find(q => q.kd === kd && (q.tm === en.tm ? Math.abs(q.lift - e[0]) < (kd === "rc" ? 25 : 10) : kd === "rc" && Math.abs(q.lift - e[0]) < 3));  /* v317 같은 순간(3초 안)에 블루칩으로 살아난 사람들은 팀이 달라도 같은 비행기 하나 */
     if (!g) G.push(g = {kd, tm: en.tm, lift: e[0], j: -1, pts: [], segs: []});
-    g.lift = Math.min(g.lift, e[0]); g.j = Math.max(g.j, e[1]); g.segs.push(e);
+    g.lift = Math.min(g.lift, e[0]); g.j = Math.max(g.j, e[1]); g.segs.push(e); if (en.tm !== g.tm) g.mix = true;
     for (const q of en.tr) if (q[1] != null && q[0] >= e[0] + (kd === "em" ? 3 : 0) && q[0] <= e[1]) g.pts.push(q);
   }
   for (const g of G) {  // 직선: 태운 자리(시작) → 사람들이 뛰어내린 자리(끝)를 시간에 맞춰 잇기
     const S = [], E = [];
-    for (const en of R.enemies || []) if (en.tm === g.tm) for (const e of g.segs) if ((en.em || []).includes(e) || (en.rc || []).includes(e)) {
+    for (const en of R.enemies || []) for (const e of g.segs) if ((en.em || []).includes(e) || (en.rc || []).includes(e)) {
       const a = interp(en.tr, e[0]), b = interp(en.tr, e[1]); if (a) S.push([e[0], ...a]); if (b) E.push([e[1], ...b]);
     }
     if (g.kd === "rc" && g.pts.length >= 3) {  // 블루칩 헬기: 날아가는 동안 기록된 위치로 직선 맞추기 (탄 자리 = 죽은 자리라 시작점으로 쓰면 안 됨)
@@ -4720,6 +4721,18 @@ const HL_ICON = {  /* v308 하이라이트 아이콘 (선 그림) */
 const HL_KEY = {"딜량왕": "dmg", "킬왕": "kill", "기절왕": "fist", "최장거리 킬": "scope", "헤드샷 장인": "head", "소생 천사": "heal", "약쟁이": "pill", "로드킬": "car", "팀킬범": "warn",
   "오늘의 무기": "gun", "생명의 은인": "hand", "블루칩 구조대": "chip", "선빵왕": "bolt", "최장거리 기절": "scope", "투척 장인": "bomb", "탱커": "tank", "자기장 맛집": "zone", "아군 사격": "warn"};
 const hlIcon = () => "";  /* v309 동그란 아이콘 뺌 */
+function rpPkPlane(R) {  /* v318 일반 보급: 4초 안·500m 안에 떨어지기 시작한 상자들 = 비행기 한 대 */
+  if (R._pkPlane) return R._pkPlane;
+  const out = {}, L = (R.packages || []).filter(q => (q[7] || "") === "").sort((a, b) => a[0] - b[0]);
+  for (let i = 0; i < L.length; i++) {
+    const q = L[i], k = q[0] + ":" + q[2]; if (out[k]) continue;
+    const grp = [q]; for (let j = i + 1; j < L.length; j++) { const w = L[j], z = grp[grp.length - 1]; if (w[0] - z[0] <= 4 && Math.hypot(w[2] - z[2], w[3] - z[3]) * R.size_m < 500) grp.push(w); }
+    const a = grp[0], b = grp[grp.length - 1], dt = b[0] - a[0], dm = Math.hypot(b[2] - a[2], b[3] - a[3]) * R.size_m;
+    const info = grp.length > 1 && dt > .2 && dm > 20 ? {dx: b[2] - a[2], dy: b[3] - a[3], v: Math.min(160, Math.max(40, dm / dt))} : {};
+    grp.forEach((w, n) => out[w[0] + ":" + w[2]] = {...info, lead: n === 0});
+  }
+  return R._pkPlane = out;
+}
 function drawRandMate(ctx, x, y, r, down) {  /* v301 I04 랜덤 팀원: 회색 사람 모양 + 금 테두리 (v307 기절하면 우리 팀처럼 회색) */
   ctx.save(); ctx.beginPath(); ctx.arc(x, y, r + 1.5, 0, Math.PI * 2); ctx.fillStyle = "rgba(0,0,0,.6)"; ctx.fill();
   ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = "#3a3e33"; ctx.fill(); ctx.lineWidth = r * .2; ctx.strokeStyle = down ? "#8C8C82" : "#F2A900"; ctx.stroke();
@@ -5839,8 +5852,9 @@ function rpDraw(dt, now, view) {
     if (lt - st < 3) st = lt - (pk === "b" ? 22 : 15);  // 떨어지기 시작한 기록이 없으면(착지 기록만 있음) 착지 전 몇 초를 낙하산으로
     const box = pk === "f" ? "flarepackage" : "carepackage", bsz = pk === "f" ? 26 : 30;  // v193 호출 보급은 노란 뚜껑·검은 몸통이라 같은 크기여도 커 보여서 살짝 작게 · v162 호출 보급도 일반 보급과 같은 크기
     const hb = pk === "f" || pk === "b" ? 22 : 20, ha = pk === "f" || pk === "b" ? 22 : 25;  /* v307 일반 보급 비행기도 미리 나타나 25초 더 날아가며 흐려짐 (예전 5초·7초) */  /* v193 호출 보급 헬기도 미리 나타나서 떨어뜨리고 지나간 뒤 사라짐 */
-    if (pk !== "s" && rp.t >= st - hb && rp.t < st + ha) {  // 보급·플레어 보급·BRDM: 치누크 헬기가 지나가며 떨어뜨림
-      const rt = R.plane, dx = rt ? rt.vx : 1, dy = rt ? rt.vy : 0, dl = Math.hypot(dx, dy) || 1, v = 60 / R.size_m, u = (rp.t - st) * v;
+    const pg_ = pk === "" ? rpPkPlane(R)[st + ":" + px] : null;  /* v318 비행기 한 대가 상자 여러 개를 떨어뜨림 → 첫 상자에서만 한 대, 상자 사이를 잇는 방향·속도로 */
+    if (pk !== "s" && !(pg_ && !pg_.lead) && rp.t >= st - hb && rp.t < st + ha) {  // 보급·플레어 보급·BRDM: 치누크 헬기가 지나가며 떨어뜨림
+      const rt = R.plane, dx = pg_ && pg_.dx != null ? pg_.dx : rt ? rt.vx : 1, dy = pg_ && pg_.dx != null ? pg_.dy : rt ? rt.vy : 0, dl = Math.hypot(dx, dy) || 1, v = (pg_ && pg_.v ? pg_.v : 60) / R.size_m, u = (rp.t - st) * v;
       const qx = px + dx / dl * u, qy = py + dy / dl * u, fa = Math.max(0, Math.min(1, (rp.t - st + hb) / 2, (st + ha - rp.t) / 4));
       ctx.globalAlpha = fa; { const seed = Math.round(st * 7 + px * 1000);  // v149 일반 보급 = 수송기 (AP-02/06), 플레어 보급·BRDM = 보급 헬기 (HE-02/05/08/04)
         if (pk === "f" || pk === "b") drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, airSz(12, 26, 10, 28), now, "supply:" + seed);  /* v193 살짝 작게 */
@@ -6130,7 +6144,7 @@ function rpDraw(dt, now, view) {
       if (rp.t < g.lift || rp.t > g.j + 25) continue;
       const tt = rp.t, px = g.x0 + g.vx * (tt - g.t0), py = g.y0 + g.vy * (tt - g.t0), ha = Math.atan2(Y(py + g.vy) - Y(py), X(px + g.vx) - X(px));
       ctx.globalAlpha = rp.t > g.j ? Math.max(0, Math.min(1, (g.j + 25 - rp.t) / 6)) * .95 : 1;
-      if (g.kd === "rc") drawHeli(ctx, X(px), Y(py), ha, teamColor(g.tm || 0), airSz(12, 30, 12, 34), now, "heli_5");
+      if (g.kd === "rc") drawHeli(ctx, X(px), Y(py), ha, g.mix ? "#9FD4FF" : teamColor(g.tm || 0), airSz(12, 30, 12, 34), now, "heli_5");
       else drawEmPlane(ctx, X(px), Y(py), ha, teamColor(g.tm || 0), airSz(11, 40, 9, 22), g.lift);
       ctx.globalAlpha = 1;
     }
@@ -9225,7 +9239,7 @@ $("#rpSeek").addEventListener("change", () => { rp.dragging = false; });
 addEventListener("keydown", e => {
   if ($("#replay").classList.contains("hidden") || !rp.data) return;
   if (e.key === "Escape") { if (PEN.on) rpPen(false); else if (rp.kc && rp.ngExit) { rp.ngExit = false; rpKillcamEnd(false); closeReplay(); } /* v281 NG에서 연 킬캠은 리플레이까지 닫기 */ else if (rp.kc) rpKillcamEnd(); /* v170 킬캠만 나감 */ else if (rp.cinema) rpCinema(false); else closeReplay(); }
-  else if (e.key === " " && e.target.tagName !== "BUTTON") { e.preventDefault(); $("#rpPlay").click(); }
+  else if (e.key === " " && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) && !e.target.closest("[data-path]")) { e.preventDefault(); if (e.target.tagName === "BUTTON") e.target.blur(); $("#rpPlay").click(); }  /* v317 버튼을 누른 뒤에도 스페이스바 = 일시정지 */
   else if (e.key === "ArrowLeft" && e.target.tagName !== "INPUT") { rp.t = Math.max(0, rp.t - 10); rp.flashes = []; }
   else if (e.key === "ArrowRight" && e.target.tagName !== "INPUT") { rp.t = Math.min(rp.data.duration, rp.t + 10); rp.flashes = []; }
 });
@@ -9484,7 +9498,7 @@ function renderShareCard(r, vertical = false) {  /* v228 공유 이미지: 오�
     <div class="bgx-rule">MOST VALUABLE PLAYER</div>
     <div class="bgx-mvp sx-mvp">
       ${bgxAv(first, true)}
-      <div class="sx-mi"><span class="bgx-role">최우수 플레이어 · 1위</span><div class="bgx-name">${esc(first.name)}</div>${badgesHtml(first)}</div>
+      <div class="sx-mi"><span class="bgx-role">최우수 플레이어 · 1위</span><div class="sx-nrow"><div class="bgx-name">${esc(first.name)}</div>${badgesHtml(first)}</div></div>
       <div class="sx-ms"><div class="bgx-score"><b>${sc(first.total)}</b><small>총점</small></div>
 </div>
     </div>
@@ -9618,6 +9632,11 @@ function cumDuo() {  /* v175 듀오 궁합: 4명이 늘 같이 하니까 판 수
       <div class="duo-sc"><em>${o.score}</em><small>점</small>${o.d == null ? "" : `<s class="duo-d ${o.d > 0 ? "up" : o.d < 0 ? "dn" : ""}">${o.d > 0 ? "▲" + o.d : o.d < 0 ? "▼" + -o.d : "-"}</s>`}<i><span style="width:${o.score}%"></span></i></div>
       <div class="duo-st">${st("같이 다님", Math.round(o.tog * 100) + "%", "둘 다 살아 있을 때 60m 안에 있던 시간 비율")}${st("살림", o.rv + "번", "서로 기절에서 일으켜 세운 횟수")}${st("블루칩", o.bc + "번", "죽은 짝을 블루칩으로 불러온 횟수")}${st("합작 킬", o.co + "번", "한 명이 기절시키거나 거든 적을 다른 한 명이 처치")}${st("복수", o.rg + "번", "짝을 쓰러뜨린 적을 1분 안에 기절·처치")}</div></div>`).join("")}</div>`;
 }
+const TREND_FIX = {"황희권": "#5FD068", "조성용": "#E5484D"};  /* v317 점수 추이: 황희권 녹색 · 조성용 빨강 (나머지는 겹치지 않게 차례로) */
+function trendColors(list) {
+  const used = new Set(list.map(p => TREND_FIX[p.name]).filter(Boolean)), pool = PCOL.filter(c => !["#6FCF7F", "#E07A5F"].includes(c) && !used.has(c)); let k = 0;
+  return list.map(p => TREND_FIX[p.name] || pool[k++ % pool.length]);
+}
 async function cumTrend(rg) {  /* v171 팀원 점수 추이 비교 (고른 기간의 최근 20일) */
   const box = $("#cumTrend"); if (!box) return;
   try { if (!playersData.length) playersData = (await api("api/players")).players || []; } catch { return; }
@@ -9628,9 +9647,10 @@ async function cumTrend(rg) {  /* v171 팀원 점수 추이 비교 (고른 기�
   const X = i => pl + i * (Wd - pl - pr) / (dates.length - 1), Y = v => pt + (hi - v) / Math.max(1, hi - lo) * (H - pt - pb);
   const ticks = [lo, (lo + hi) / 2, hi].map(v => `<line x1="${pl}" x2="${Wd - pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(183,179,156,.14)"/><text x="${pl - 6}" y="${Y(v) + 4}" font-size="11" fill="#8f8b76" text-anchor="end">${Math.round(v)}</text>`).join("");
   const xl = [...new Set([0, Math.floor((dates.length - 1) / 2), dates.length - 1])].map(i => `<text x="${X(i)}" y="${H - 6}" font-size="11" fill="#8f8b76" text-anchor="${i === 0 ? "start" : i === dates.length - 1 ? "end" : "middle"}">${dates[i].slice(5).replace("-", "/")}</text>`).join("");
-  const lines = playersData.map((p, pi) => { const col = PCOL[pi % PCOL.length], pts = dates.map((d, i) => { const h = (p.history || []).find(q => q.date === d); return h ? [X(i), Y(h.total), h] : null; }).filter(Boolean);
+  const TC = trendColors(playersData);
+  const lines = playersData.map((p, pi) => { const col = TC[pi], pts = dates.map((d, i) => { const h = (p.history || []).find(q => q.date === d); return h ? [X(i), Y(h.total), h] : null; }).filter(Boolean);
     return `<g class="tr-l" data-i="${pi}"><polyline points="${pts.map(q => q[0] + "," + q[1]).join(" ")}" fill="none" stroke="${col}" stroke-width="2.4" stroke-linejoin="round"/>${pts.map(q => `<circle cx="${q[0]}" cy="${q[1]}" r="3.2" fill="${col}"/><circle class="lc-hit" cx="${q[0]}" cy="${q[1]}" r="10" fill="transparent" tabindex="0" data-tip="${esc(p.name)} · ${q[2].date.slice(5).replace("-", "/")} · ${sc(q[2].total)}점 · ${q[2].rank}위"/>`).join("")}</g>`; }).join("");
-  box.innerHTML = `<div class="sec"><h3>점수 추이 (최근 ${dates.length}일)</h3></div><div class="trend"><div class="tr-leg">${playersData.map((p, pi) => `<button type="button" data-tr="${pi}" aria-pressed="true"><i style="background:${PCOL[pi % PCOL.length]}"></i>${esc(p.name)}</button>`).join("")}</div>
+  box.innerHTML = `<div class="sec"><h3>점수 추이 (최근 ${dates.length}일)</h3></div><div class="trend"><div class="tr-leg">${playersData.map((p, pi) => `<button type="button" data-tr="${pi}" aria-pressed="true"><i style="background:${TC[pi]}"></i>${esc(p.name)}</button>`).join("")}</div>
     <svg viewBox="0 0 ${Wd} ${H}" role="img" aria-label="팀원 점수 추이">${ticks}${xl}${lines}</svg></div>`;
   box.querySelectorAll("[data-tr]").forEach(b => b.onclick = () => { const on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", String(on)); box.querySelector(`.tr-l[data-i="${b.dataset.tr}"]`)?.classList.toggle("off", !on); });
 }
