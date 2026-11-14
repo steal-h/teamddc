@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<script>(()=>{const V='84a60ce7';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
+<script>(()=>{const V='05358b25';const chk=async()=>{try{const t=await (await fetch('index.html?t='+Date.now(),{cache:'no-store'})).text();const m=/app\.html\?v=(\w+)/.exec(t);if(m&&m[1]!==V){let k='ddcUpd'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,1);}catch{return;}location.replace('app.html?v='+m[1]);}}catch{}};chk();document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk();});setInterval(chk,300000);})();</script>
 <meta name="robots" content="noindex">
 <script>if(!('serviceWorker' in navigator)||!navigator.serviceWorker.controller)location.replace('index.html?r=1');</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1D2117"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TEAM DDC"><link rel="apple-touch-icon" href="icon-192.png">
@@ -2013,7 +2013,7 @@ table.games .btn.rpb span{font-size:13px;font-weight:700}
 .glt .ib{width:38px;height:38px;border-radius:3px;border:1px solid #4a5239;background:#0e100a;color:#F2B33D;display:grid;place-items:center;cursor:pointer;transition:border-color .2s,box-shadow .2s}  /* v295 R04 어두운 판 + 금 아이콘 */
 .glt .ib:hover{border-color:#F2B33D;box-shadow:0 0 8px rgba(242,179,61,.35)}
 .glt .ib svg{width:20px;height:20px}.glt .ib circle{fill:none;stroke:currentColor;stroke-width:1.5}.glt .ib path{fill:currentColor}
-@media (min-width:761px){.glt-wrap{border:0;background:none}.glt{border-collapse:separate;border-spacing:0 6px}.glt td{border-top:0;background:var(--panel)}.glt td:first-child{border-radius:6px 0 0 6px}.glt td.pl{padding:0;border-radius:0 6px 6px 0;background:#1e2318;border-left:1px solid rgba(90,98,72,.45)}.glt .ib{width:46px;height:100%;min-height:92px;border:0;border-radius:0 6px 6px 0;background:transparent}.glt .ib:hover{background:#262b1d;box-shadow:none}.glt tr.w{border-radius:6px}.glt tr.w td{background:color-mix(in srgb,#F2B33D 5%,var(--panel))}}
+@media (min-width:761px){.glt-wrap{border:0;background:none}.glt{border-collapse:separate;border-spacing:0 6px}.glt td{border-top:0;background:var(--panel)}.glt td:first-child{border-radius:6px 0 0 6px}.glt td.pl{padding:0;border-radius:0 6px 6px 0;background:#1e2318;border-left:1px solid rgba(90,98,72,.45)}.glt .ib{width:46px;height:100%;min-height:92px;border:0;border-radius:0 6px 6px 0;background:transparent}.glt .ib:hover{background:#262b1d;box-shadow:none}.glt tr.w{border-radius:6px}.glt tr.w td{background:color-mix(in srgb,#F2B33D 5%,var(--panel))}.glt tr.w td.pl{background:#1e2318}}  /* v320 치킨 판도 리플레이 띠는 다른 판과 같은 색 (예전엔 금빛 바탕이 덮어서 반전돼 보였음) */
 @media (max-width:760px){
   .glt-wrap{overflow:visible;border:0;background:none}
   .glt thead{display:none}.glt,.glt tbody{display:block}
@@ -4721,15 +4721,27 @@ const HL_ICON = {  /* v308 하이라이트 아이콘 (선 그림) */
 const HL_KEY = {"딜량왕": "dmg", "킬왕": "kill", "기절왕": "fist", "최장거리 킬": "scope", "헤드샷 장인": "head", "소생 천사": "heal", "약쟁이": "pill", "로드킬": "car", "팀킬범": "warn",
   "오늘의 무기": "gun", "생명의 은인": "hand", "블루칩 구조대": "chip", "선빵왕": "bolt", "최장거리 기절": "scope", "투척 장인": "bomb", "탱커": "tank", "자기장 맛집": "zone", "아군 사격": "warn"};
 const hlIcon = () => "";  /* v309 동그란 아이콘 뺌 */
-function rpPkPlane(R) {  /* v318 일반 보급: 비행기 한 대가 여러 개를 떨굼 · v319 8초 안, 1.2km 안, 그 사이를 비행기 속도(초당 50~170m)로 갈 수 있으면 한 대 */
+function rpPkPlane(R) {  /* v318 일반 보급: 비행기 한 대가 여러 개를 떨굼 · v319 8초·1.2km·비행기 속도로 갈 수 있으면 한 대
+  v320 태이고처럼 큰 상자 + 작은 탄약 상자(멀티 보급)도 같은 비행기 → 모든 상자가 떨어진 자리를 지나는 직선 경로 (가운데 + 주축 방향, 떨어진 시각 순서로 방향) */
   if (R._pkPlane) return R._pkPlane;
-  const out = {}, L = (R.packages || []).filter(q => (q[7] || "") === "").sort((a, b) => a[0] - b[0]);
+  const out = {}, L = (R.packages || []).filter(q => (q[7] || "") === "" || (q[7] === "s" && q[8] == null)).sort((a, b) => a[0] - b[0]), used = new Set(), SZ = R.size_m;
   for (let i = 0; i < L.length; i++) {
-    const q = L[i], k = q[0] + ":" + q[2]; if (out[k]) continue;
-    const grp = [q]; for (let j = i + 1; j < L.length; j++) { const w = L[j], z = grp[grp.length - 1]; const dt_ = w[0] - z[0], dm_ = Math.hypot(w[2] - z[2], w[3] - z[3]) * R.size_m; if (dt_ <= 8 && dm_ < 1200 && (dm_ < 60 || (dm_ / Math.max(dt_, .1) >= 50 && dm_ / Math.max(dt_, .1) <= 170))) grp.push(w); }
-    const a = grp[0], b = grp[grp.length - 1], dt = b[0] - a[0], dm = Math.hypot(b[2] - a[2], b[3] - a[3]) * R.size_m;
-    const info = grp.length > 1 && dt > .2 && dm > 20 ? {dx: b[2] - a[2], dy: b[3] - a[3], v: Math.min(170, Math.max(40, dm / dt))} : {};
-    grp.forEach((w, n) => out[w[0] + ":" + w[2]] = {...info, lead: n === 0});
+    if (used.has(i) || (L[i][7] || "") !== "" && !L.slice(Math.max(0, i - 12), i + 12).some(w => (w[7] || "") === "" && Math.abs(w[0] - L[i][0]) <= 8)) continue;
+    const gi = [i]; used.add(i);
+    for (let j = i + 1; j < L.length; j++) { if (used.has(j)) continue; const w = L[j], z = L[gi[gi.length - 1]], dt_ = w[0] - z[0], dm_ = Math.min(...gi.map(k => Math.hypot(w[2] - L[k][2], w[3] - L[k][3]))) * SZ;
+      if (dt_ > 8) break; if (dm_ < 1200 && (dm_ < 150 || (dm_ / Math.max(dt_, .1) >= 50 && dm_ / Math.max(dt_, .1) <= 170))) { gi.push(j); used.add(j); } }
+    const grp = gi.map(k => L[k]), n = grp.length, cx = grp.reduce((a, q) => a + q[2], 0) / n, cy = grp.reduce((a, q) => a + q[3], 0) / n, ct = grp.reduce((a, q) => a + q[0], 0) / n;
+    let info = {};
+    if (n > 1) {
+      let sxx = 0, syy = 0, sxy = 0; for (const q of grp) { const ax = q[2] - cx, ay = q[3] - cy; sxx += ax * ax; syy += ay * ay; sxy += ax * ay; }
+      const th = .5 * Math.atan2(2 * sxy, sxx - syy); let dx = Math.cos(th), dy = Math.sin(th);
+      const cor = grp.reduce((a, q) => a + ((q[2] - cx) * dx + (q[3] - cy) * dy) * (q[0] - ct), 0); if (cor < 0) { dx = -dx; dy = -dy; }
+      const proj = grp.map(q => ((q[2] - cx) * dx + (q[3] - cy) * dy) * SZ), span = Math.max(...proj) - Math.min(...proj), tspan = grp[n - 1][0] - grp[0][0];
+      const spread = Math.sqrt((sxx + syy) / n) * SZ;
+      if (spread > 8) info = {dx, dy, v: tspan >= 1.2 && span > 30 ? Math.min(170, Math.max(50, span / tspan)) : 90, ox: cx, oy: cy, ot: ct};
+    }
+    let lead = grp.findIndex(q => (q[7] || "") === ""); if (lead < 0) lead = 0;
+    grp.forEach((w, k) => out[w[0] + ":" + w[2]] = {...info, lead: k === lead});
   }
   return R._pkPlane = out;
 }
@@ -5854,8 +5866,8 @@ function rpDraw(dt, now, view) {
     const hb = pk === "f" || pk === "b" ? 22 : 20, ha = pk === "f" || pk === "b" ? 22 : 25;  /* v307 일반 보급 비행기도 미리 나타나 25초 더 날아가며 흐려짐 (예전 5초·7초) */  /* v193 호출 보급 헬기도 미리 나타나서 떨어뜨리고 지나간 뒤 사라짐 */
     const pg_ = pk === "" ? rpPkPlane(R)[st + ":" + px] : null;  /* v318 비행기 한 대가 상자 여러 개를 떨어뜨림 → 첫 상자에서만 한 대, 상자 사이를 잇는 방향·속도로 */
     if (pk !== "s" && !(pg_ && !pg_.lead) && rp.t >= st - hb && rp.t < st + ha) {  // 보급·플레어 보급·BRDM: 치누크 헬기가 지나가며 떨어뜨림
-      const rt = R.plane, dx = pg_ && pg_.dx != null ? pg_.dx : rt ? rt.vx : 1, dy = pg_ && pg_.dx != null ? pg_.dy : rt ? rt.vy : 0, dl = Math.hypot(dx, dy) || 1, v = (pg_ && pg_.v ? pg_.v : 60) / R.size_m, u = (rp.t - st) * v;
-      const qx = px + dx / dl * u, qy = py + dy / dl * u, fa = Math.max(0, Math.min(1, (rp.t - st + hb) / 2, (st + ha - rp.t) / 4));
+      const rt = R.plane, dx = pg_ && pg_.dx != null ? pg_.dx : rt ? rt.vx : 1, dy = pg_ && pg_.dx != null ? pg_.dy : rt ? rt.vy : 0, dl = Math.hypot(dx, dy) || 1, v = (pg_ && pg_.v ? pg_.v : 60) / R.size_m, u = (rp.t - (pg_ && pg_.ot != null ? pg_.ot : st)) * v;
+      const qx = (pg_ && pg_.ox != null ? pg_.ox : px) + dx / dl * u, qy = (pg_ && pg_.oy != null ? pg_.oy : py) + dy / dl * u, fa = Math.max(0, Math.min(1, (rp.t - st + hb) / 2, (st + ha - rp.t) / 4));
       ctx.globalAlpha = fa; { const seed = Math.round(st * 7 + px * 1000);  // v149 일반 보급 = 수송기 (AP-02/06), 플레어 보급·BRDM = 보급 헬기 (HE-02/05/08/04)
         if (pk === "f" || pk === "b") drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, airSz(12, 26, 10, 28), now, "supply:" + seed);  /* v193 살짝 작게 */
         else { const im = supplyPlaneSpr(seed); if (im) sprDrawAir(ctx, im, X(qx), Y(qy), Math.atan2(dy, dx), airSz(14, 40, 9, 34) * 7.2); /* v192 조금 더 크게 · v156 비상호출 비행기만큼 */ else drawHeli(ctx, X(qx), Y(qy), Math.atan2(dy, dx), null, 13, now, "heli_5"); } } ctx.globalAlpha = 1;
@@ -9239,7 +9251,7 @@ $("#rpSeek").addEventListener("change", () => { rp.dragging = false; });
 addEventListener("keydown", e => {
   if ($("#replay").classList.contains("hidden") || !rp.data) return;
   if (e.key === "Escape") { if (PEN.on) rpPen(false); else if (rp.kc && rp.ngExit) { rp.ngExit = false; rpKillcamEnd(false); closeReplay(); } /* v281 NG에서 연 킬캠은 리플레이까지 닫기 */ else if (rp.kc) rpKillcamEnd(); /* v170 킬캠만 나감 */ else if (rp.cinema) rpCinema(false); else closeReplay(); }
-  else if (e.key === " " && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) && !e.target.closest("[data-path]")) { e.preventDefault(); if (e.target.tagName === "BUTTON") e.target.blur(); $("#rpPlay").click(); }  /* v317 버튼을 누른 뒤에도 스페이스바 = 일시정지 */
+  else if (e.key === " " && !(e.target.tagName === "TEXTAREA" || (e.target.tagName === "INPUT" && !/^(range|checkbox|radio|button)$/i.test(e.target.type))) && !e.target.isContentEditable) { e.preventDefault(); if (/^(BUTTON|INPUT|SELECT)$/.test(e.target.tagName)) e.target.blur(); $("#rpPlay").click(); }  /* v320 시간바·버튼을 누른 뒤에도 스페이스바 = 무조건 일시정지/재생 (글 쓰는 칸만 빼고) */
   else if (e.key === "ArrowLeft" && e.target.tagName !== "INPUT") { rp.t = Math.max(0, rp.t - 10); rp.flashes = []; }
   else if (e.key === "ArrowRight" && e.target.tagName !== "INPUT") { rp.t = Math.min(rp.data.duration, rp.t + 10); rp.flashes = []; }
 });
